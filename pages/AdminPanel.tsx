@@ -50,6 +50,89 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     }, 1500);
   };
 
+  const handleLoadDemoData = () => {
+    const demoUsers: User[] = [
+      {
+        id: 'demo-1',
+        name: 'Ahmet Yılmaz',
+        email: 'ahmet@insaat.com',
+        role: UserRole.SUBSCRIBER,
+        plan: SubscriptionPlan.MONTHLY,
+        remainingDownloads: 25,
+        companyName: 'Yılmaz İnşaat Ltd.',
+        isActive: true,
+        subscriptionStartDate: new Date().toISOString(),
+        password: '123'
+      },
+      {
+        id: 'demo-2',
+        name: 'Ayşe Demir',
+        email: 'ayse@mimarlik.com',
+        role: UserRole.SUBSCRIBER,
+        plan: SubscriptionPlan.YEARLY,
+        remainingDownloads: 'UNLIMITED',
+        companyName: 'Demir Mimarlık',
+        isActive: true,
+        subscriptionStartDate: new Date().toISOString(),
+        password: '123'
+      },
+      {
+         id: 'demo-3',
+         name: 'Mehmet Kara',
+         email: 'mehmet@lojistik.com',
+         role: UserRole.SUBSCRIBER,
+         plan: SubscriptionPlan.FREE,
+         remainingDownloads: 3,
+         companyName: 'Kara Lojistik',
+         isActive: false,
+         subscriptionStartDate: new Date().toISOString(),
+         password: '123'
+      },
+      {
+         id: 'demo-4',
+         name: 'Zeynep Çelik',
+         email: 'zeynep@teknoloji.com',
+         role: UserRole.SUBSCRIBER,
+         plan: SubscriptionPlan.MONTHLY,
+         remainingDownloads: 20,
+         companyName: 'Çelik Teknoloji A.Ş.',
+         isActive: true,
+         subscriptionStartDate: new Date().toISOString(),
+         password: '123'
+      }
+    ];
+    
+    // Filter duplicates
+    const currentEmails = allUsers.map(u => u.email);
+    const toAdd = demoUsers.filter(u => !currentEmails.includes(u.email));
+    
+    if (toAdd.length === 0) {
+        setEmailNotification({ type: 'error', message: 'Demo verileri zaten yüklü.' });
+        return;
+    }
+
+    const updatedUsers = [...allUsers, ...toAdd];
+    setAllUsers(updatedUsers);
+    localStorage.setItem('allUsers', JSON.stringify(updatedUsers));
+    
+    // Recalc statistics
+    const activeCount = updatedUsers.filter(u => u.isActive).length;
+    // Recalc revenue
+    const revenue = updatedUsers.reduce((acc, curr) => {
+        if (curr.plan === SubscriptionPlan.YEARLY) return acc + 4999;
+        if (curr.plan === SubscriptionPlan.MONTHLY) return acc + 499;
+        return acc;
+    }, 0);
+
+    setStats(prev => ({ 
+        ...prev, 
+        activeUsers: activeCount,
+        revenue: revenue
+    }));
+
+     setEmailNotification({ type: 'success', message: `${toAdd.length} demo kullanıcısı başarıyla eklendi.` });
+  };
+
   // Sync tab when currentView changes externally
   useEffect(() => {
     setActiveTab(getInitialTab());
@@ -155,10 +238,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
           <h1 className="text-3xl font-bold text-slate-900">{t?.admin?.title || 'Yönetici Paneli'}</h1>
           <p className="text-slate-600 mt-1">{t?.admin?.statistics || 'Sistem genel durum özeti ve yönetimi'}</p>
         </div>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2" onClick={() => setActiveTab('subscribers')}>
-            <Users size={18} />
-            {t?.admin?.subscribers || 'Aboneleri Yönet'}
-        </button>
+        <div className="flex gap-2">
+            <button 
+                onClick={handleLoadDemoData}
+                className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium transition flex items-center gap-2"
+                title="Sistemi test etmek için örnek kullanıcılar ekler"
+            >
+                <Plus size={18} />
+                Demo Veri
+            </button>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2" onClick={() => setActiveTab('subscribers')}>
+                <Users size={18} />
+                {t?.admin?.subscribers || 'Aboneleri Yönet'}
+            </button>
+        </div>
       </div>
 
        {/* Email Notification Toast */}
