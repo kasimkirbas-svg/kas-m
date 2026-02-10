@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, FileText, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle } from 'lucide-react';
+import { Users, FileText, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle, Mail, Send, Loader2 } from 'lucide-react';
 import { User, UserRole, SubscriptionPlan } from '../types';
 
 interface AdminPanelProps {
@@ -20,6 +20,35 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   };
 
   const [activeTab, setActiveTab] = useState(getInitialTab());
+
+  // Email Notification State
+  const [emailSending, setEmailSending] = useState<{ [key: string]: boolean }>({});
+  const [emailNotification, setEmailNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  useEffect(() => {
+    if (emailNotification) {
+      const timer = setTimeout(() => setEmailNotification(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [emailNotification]);
+
+  const handleSendWelcomeEmail = (targetUser: User) => {
+    // Start loading for specific user
+    setEmailSending(prev => ({ ...prev, [targetUser.id]: true }));
+
+    // Simulate Network Delay (1.5s)
+    setTimeout(() => {
+        // Success
+        setEmailSending(prev => ({ ...prev, [targetUser.id]: false }));
+        setEmailNotification({
+            type: 'success',
+            message: `Hoş geldin maili gönderildi: ${targetUser.email}`
+        });
+
+        // Add to recent logs (in local state only for this session/component as logs aren't fully persisted yet)
+        console.log(`Email sent to ${targetUser.email} at ${new Date().toLocaleTimeString()}`);
+    }, 1500);
+  };
 
   // Sync tab when currentView changes externally
   useEffect(() => {
@@ -131,6 +160,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             {t?.admin?.subscribers || 'Aboneleri Yönet'}
         </button>
       </div>
+
+       {/* Email Notification Toast */}
+      {emailNotification && (
+        <div className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white z-[60] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 ${
+          emailNotification.type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        }`}>
+          {emailNotification.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
+          {emailNotification.message}
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -345,7 +384,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                         {u.role === UserRole.ADMIN ? <b className="text-purple-600">Yönetici</b> : 'Kullanıcı'}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 justify-end">
+                        <button 
+                            onClick={() => handleSendWelcomeEmail(u)}
+                            disabled={emailSending[u.id]}
+                            className={`flex items-center gap-1 px-2 py-1.5 rounded text-xs font-medium transition ${
+                                emailSending[u.id] 
+                                ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed' 
+                                : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                            }`}
+                            title="Hoş Geldin Maili Gönder"
+                        >
+                           {emailSending[u.id] ? <Loader2 size={14} className="animate-spin"/> : <Send size={14} />}
+                           {emailSending[u.id] ? '...' : (t?.admin?.sendMail || 'Mail At')}
+                        </button>
                         <button 
                             onClick={() => handleEditUser(u)}
                             className="p-1.5 hover:bg-slate-100 rounded transition" 
