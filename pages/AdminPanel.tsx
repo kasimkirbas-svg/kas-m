@@ -32,36 +32,48 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     }
   }, [emailNotification]);
 
-  const handleSendWelcomeEmail = (targetUser: User) => {
+  const handleSendWelcomeEmail = async (targetUser: User) => {
     // Start loading for specific user
     setEmailSending(prev => ({ ...prev, [targetUser.id]: true }));
 
-    const subject = "Kırbaş Doküman Platformuna Hoş Geldiniz";
-    const body = `Sayın ${targetUser.name},
-
-Kırbaş Doküman platformuna üyeliğiniz başarıyla tamamlanmıştır.
-
-Hesap Bilgileri:
-----------------
-Firma: ${targetUser.companyName || '-'}
-E-posta: ${targetUser.email}
-Paket: ${targetUser.plan === 'YEARLY' ? 'Yıllık Pro' : targetUser.plan === 'MONTHLY' ? 'Aylık Plan' : 'Ücretsiz'}
-
-Sisteme giriş yaparak dokümanlarınızı oluşturmaya başlayabilirsiniz.
-
-İyi Çalışmalar,
-Kırbaş Doküman Yönetimi`;
-
-    // Mailto linkini oluştur ve aç
-    setTimeout(() => {
-        window.location.href = `mailto:${targetUser.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        
-        setEmailSending(prev => ({ ...prev, [targetUser.id]: false }));
-        setEmailNotification({
-            type: 'success',
-            message: `Mail taslağı oluşturuldu: ${targetUser.email}`
+    try {
+        const response = await fetch('http://localhost:3001/api/send-welcome-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                recipientEmail: targetUser.email,
+                recipientName: targetUser.name,
+                companyName: targetUser.companyName,
+                plan: targetUser.plan
+            })
         });
-    }, 500);
+
+        const data = await response.json();
+
+        if (data.success) {
+             setEmailNotification({
+                type: 'success',
+                message: `Mail başarıyla gönderildi: ${targetUser.email}`
+            });
+        } else {
+             // Fallback to mailto if server is down or returns error
+             console.error("Backend error, falling back:", data.message);
+             setEmailNotification({
+                type: 'error',
+                message: `Sunucu hatası: ${data.message || 'Mail gönderilemedi'}.`
+            });
+        }
+    } catch (error) {
+        // Backend çalışmıyorsa kullanıcıya bilgi ver
+        setEmailNotification({
+            type: 'error',
+            message: 'Backend sunucusu çalışmıyor (localhost:3001). Node sunucusunu başlattınız mı?'
+        });
+    } finally {
+        setEmailSending(prev => ({ ...prev, [targetUser.id]: false }));
+    }
   };
 
   const handleLoadDemoData = () => {
