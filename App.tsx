@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { DocumentEditor } from './pages/DocumentEditor';
 import { DocumentsList } from './pages/DocumentsList';
 import { AdminPanel } from './pages/AdminPanel';
+import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
 import { Settings } from './pages/Settings';
 import { Button } from './components/Button';
@@ -13,103 +14,64 @@ import { Check, Lock, Shield, Star, Users, FileText, DollarSign, TrendingUp, Sea
 const App = () => {
   // State
   const [user, setUser] = useState<User | null>(null);
-  const [currentView, setCurrentView] = useState('landing'); // landing, dashboard, templates, editor, profile, admin, settings
+  const [currentView, setCurrentView] = useState('auth');
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Auth Handlers (Simulated)
-  const handleLogin = () => {
-    setUser({
-      id: '1',
-      name: 'Ahmet Yılmaz',
-      email: 'ahmet@firma.com',
-      role: UserRole.SUBSCRIBER,
-      plan: SubscriptionPlan.MONTHLY,
-      remainingDownloads: 12,
-      companyName: 'Yılmaz İnşaat Ltd.'
-    });
-    setCurrentView('dashboard');
-  };
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+        setCurrentView('dashboard');
+      } catch (error) {
+        console.error('Error loading user:', error);
+      }
+    }
+    setIsLoading(false);
+  }, []);
 
-  const handleAdminLogin = () => {
-    setUser({
-      id: '99',
-      name: 'System Admin',
-      email: 'admin@kirbas.com',
-      role: UserRole.ADMIN,
-      plan: SubscriptionPlan.YEARLY,
-      remainingDownloads: 'UNLIMITED',
-      companyName: 'Kırbaş Yönetim A.Ş.'
-    });
-    setCurrentView('admin');
+  // Auth Handlers
+  const handleLogin = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('currentUser', JSON.stringify(userData));
+    
+    // Belirle admin mi user mi
+    if (userData.role === UserRole.ADMIN) {
+      setCurrentView('admin');
+    } else {
+      setCurrentView('dashboard');
+    }
   };
 
   const handleLogout = () => {
     setUser(null);
-    setCurrentView('landing');
+    setCurrentView('auth');
     setSelectedTemplate(null);
+    localStorage.removeItem('currentUser');
   };
 
   // Navigation Logic
   const renderContent = () => {
-    // 1. Landing Page
-    if (!user && currentView === 'landing') {
+    // Loading
+    if (isLoading) {
       return (
-        <div className="min-h-screen bg-slate-50 flex flex-col">
-          {/* Hero Section */}
-          <header className="bg-slate-900 text-white py-6 px-4 md:px-12 flex justify-between items-center sticky top-0 z-50">
-             <div className="font-bold text-xl tracking-wider">{APP_NAME}</div>
-             <div className="space-x-4">
-               <button onClick={handleLogin} className="text-slate-300 hover:text-white font-medium">Giriş Yap</button>
-               <Button onClick={handleLogin} variant="primary">Ücretsiz Dene</Button>
-             </div>
-          </header>
-
-          <section className="bg-slate-900 text-white py-20 px-6 text-center">
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6">
-              Profesyonel Dokümanlarınızı <br/> <span className="text-blue-500">Dakikalar İçinde</span> Oluşturun
-            </h1>
-            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10">
-              Acil durum planları, denetim raporları ve sertifikalar. 
-              Bulut tabanlı panelinizden yönetin, fotoğraflı PDF çıktıları alın.
-            </p>
-            <div className="flex justify-center gap-4">
-              <Button onClick={handleLogin} size="lg">Hemen Başla</Button>
-              <Button onClick={handleAdminLogin} variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">Admin Demo</Button>
-            </div>
-          </section>
-
-          {/* Pricing */}
-          <section className="py-20 px-6 max-w-6xl mx-auto w-full">
-            <h2 className="text-3xl font-bold text-center text-slate-800 mb-12">Abonelik Paketleri</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              {PLANS.map(plan => (
-                <div key={plan.id} className={`bg-white p-8 rounded-2xl shadow-sm border ${plan.popular ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200'}`}>
-                  {plan.popular && <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block">EN ÇOK TERCİH EDİLEN</span>}
-                  <h3 className="text-xl font-bold text-slate-900">{plan.name}</h3>
-                  <div className="mt-4 flex items-baseline text-slate-900">
-                    <span className="text-4xl font-extrabold tracking-tight">{plan.price}</span>
-                    <span className="ml-1 text-xl font-semibold text-slate-500">{plan.period}</span>
-                  </div>
-                  <ul className="mt-6 space-y-4">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex">
-                        <Check className="flex-shrink-0 w-5 h-5 text-green-500" />
-                        <span className="ml-3 text-slate-500">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button onClick={handleLogin} className="w-full mt-8" variant={plan.popular ? 'primary' : 'outline'}>
-                    Seç ve Başla
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </section>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-600 font-medium">Yükleniyor...</p>
+          </div>
         </div>
       );
     }
 
-    // 2. Document Editor
+    // Auth Page
+    if (!user) {
+      return <Auth onLoginSuccess={handleLogin} />;
+    }
+
+    // 1. Document Editor
     if (user && currentView === 'editor' && selectedTemplate) {
       return (
         <div className="space-y-4">
@@ -135,7 +97,7 @@ const App = () => {
       );
     }
 
-    // 3. Template List (Documents)
+    // 2. Template List (Documents)
     if (user && currentView === 'templates') {
       return (
         <div>
@@ -158,7 +120,7 @@ const App = () => {
       );
     }
 
-    // 4. Dashboard (Home)
+    // 3. Dashboard (Home)
     if (user && currentView === 'dashboard') {
       return (
         <div>
@@ -248,22 +210,22 @@ const App = () => {
       );
     }
 
-    // 5. Profile Page
+    // 4. Profile Page
     if (user && currentView === 'profile') {
       return <Profile user={user} />;
     }
 
-    // 6. Settings Page
+    // 5. Settings Page
     if (user && currentView === 'settings') {
       return <Settings user={user} />;
     }
     
-    // 7. Admin Panel
+    // 6. Admin Panel
     if (user?.role === UserRole.ADMIN && currentView === 'admin') {
       return <AdminPanel user={user} />;
     }
 
-    // 8. Dashboard for Admin
+    // 7. Dashboard for Admin
     if (user?.role === UserRole.ADMIN && currentView === 'dashboard') {
       return <AdminPanel user={user} />;
     }

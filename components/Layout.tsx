@@ -12,6 +12,11 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ user, currentView, onNavigate, onLogout, children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
+  // Don't show layout on auth page
+  if (!user) {
+    return <>{children}</>;
+  }
+
   const menuItems = user 
     ? user.role === 'ADMIN'
       ? [
