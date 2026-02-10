@@ -6,6 +6,7 @@ import { AdminPanel } from './pages/AdminPanel';
 import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
 import { Settings } from './pages/Settings';
+import { MyDocuments } from './pages/MyDocuments'; // Add this import
 import { SubscriptionPage } from './pages/SubscriptionPage';
 import { Button } from './components/Button';
 import { MOCK_TEMPLATES, PLANS, APP_NAME, ADMIN_USER } from './constants';
@@ -22,8 +23,9 @@ const App = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
   const [t, setT] = useState(getTranslation('tr'));
+  const [savedDocuments, setSavedDocuments] = useState<GeneratedDocument[]>([]);
 
-  // Initialize application on mount (load users, theme, language)
+  // Initialize application on mount (load users, theme, language, documents)
   useEffect(() => {
     // Initialize admin user if no users exist
     const existingUsers = localStorage.getItem('allUsers');
@@ -35,6 +37,15 @@ const App = () => {
     const savedUser = localStorage.getItem('currentUser');
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;
+    const loadedDocs = localStorage.getItem('generatedDocuments');
+
+    if (loadedDocs) {
+      try {
+        setSavedDocuments(JSON.parse(loadedDocs));
+      } catch (e) {
+        console.error('Error loading documents', e);
+      }
+    }
 
     if (savedUser) {
       try {
@@ -186,8 +197,16 @@ const App = () => {
             preparedBy={user.name}
             onClose={() => setCurrentView('templates')}
             onDocumentGenerated={(doc: GeneratedDocument) => {
-              alert(`✓ ${selectedTemplate.title} ${t?.editor?.photoSuccess || 'dokümanı başarıyla oluşturuldu'}`);
-              setCurrentView('dashboard');
+              // Save document
+              const newDocs = [doc, ...savedDocuments];
+              setSavedDocuments(newDocs);
+              localStorage.setItem('generatedDocuments', JSON.stringify(newDocs));
+              
+              // Decrement usage quota if needed (assuming user object update happens elsewhere or here)
+              // Ideally update user remainingDownloads here too
+              
+              alert(`✓ ${selectedTemplate.title} ${t?.editor?.photoSuccess || 'dokümanı başarıyla oluşturuldu ve kaydedildi.'}`);
+              setCurrentView('my-documents');
             }}
             t={t}
           />
@@ -195,7 +214,24 @@ const App = () => {
       );
     }
 
-    // 2. Template List (Documents)
+    // 2. My Documents List
+    if (user && currentView === 'my-documents') {
+        return (
+            <MyDocuments 
+                documents={savedDocuments.filter(d => d.userId === user.id)}
+                onDeleteDocument={(id) => {
+                    if (window.confirm(t?.common?.confirmDelete || 'Bu dokümanı silmek istediğinize emin misiniz?')) {
+                        const newDocs = savedDocuments.filter(d => d.id !== id);
+                        setSavedDocuments(newDocs);
+                        localStorage.setItem('generatedDocuments', JSON.stringify(newDocs));
+                    }
+                }}
+                t={t}
+            />
+        );
+    }
+
+    // 3. Template List (Documents)
     if (user && currentView === 'templates') {
       return (
         <div>
@@ -248,17 +284,20 @@ const App = () => {
              <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
                 <h3 className="font-bold text-slate-800 mb-4">{t?.dashboard?.recentActivity || 'Son İşlemler'}</h3>
                 <ul className="space-y-3">
-                  <li className="flex justify-between items-center text-sm">
-                    <span className="text-slate-600">Acil Durum Planı</span>
-                    <span className="text-xs text-slate-400">2 saat önce</span>
-                  </li>
-                  <li className="flex justify-between items-center text-sm">
-                    <span className="text-slate-600">Risk Analizi</span>
-                    <span className="text-xs text-slate-400">Dün</span>
-                  </li>
-                  <li className="flex justify-between items-center text-sm">
-                    <span className="text-slate-600">Abonelik Yenileme</span>
-                    <span className="text-xs text-green-600 font-medium">✓ {t?.common?.success || 'Başarılı'}</span>
+                  {savedDocuments.filter(d => d.userId === user.id).slice(0, 3).map(doc => (
+                      <li key={doc.id} className="flex justify-between items-center text-sm">
+                        <span className="text-slate-600 truncate max-w-[150px]">{doc.templateId} Dokümanı</span>
+                        <span className="text-xs text-slate-400">{new Date(doc.createdAt).toLocaleDateString()}</span>
+                      </li>
+                  ))}
+                  {savedDocuments.filter(d => d.userId === user.id).length === 0 && (
+                      <li className="text-sm text-slate-400 italic text-center py-2">
+                          {t?.dashboard?.noActivity || 'Henüz işlem yok.'}
+                      </li>
+                  )}
+                  <li className="flex justify-between items-center text-sm border-t border-slate-100 pt-2 mt-2">
+                    <span className="text-slate-600">Abonelik Durumu</span>
+                    <span className="text-xs text-green-600 font-medium">✓ {t?.common?.active || 'Aktif'}</span>
                   </li>
                 </ul>
              </div>

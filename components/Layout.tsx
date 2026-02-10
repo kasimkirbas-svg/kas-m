@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Settings, User, LogOut, Menu, X, LayoutDashboard, Lock } from 'lucide-react';
+import { FileText, Settings, User, LogOut, Menu, X, LayoutDashboard, Lock, FolderOpen, PlusSquare } from 'lucide-react';
 
 interface LayoutProps {
   user: any;
@@ -29,7 +29,8 @@ export const Layout: React.FC<LayoutProps> = ({ user, currentView, onNavigate, o
         ]
       : [
           { label: t?.nav?.dashboard || 'Ana Sayfa', view: 'dashboard', icon: LayoutDashboard },
-          { label: t?.nav?.documents || 'Dokümanlar', view: 'templates', icon: FileText },
+          { label: t?.nav?.myDocuments || 'Dokümanlarım', view: 'my-documents', icon: FolderOpen },
+          { label: t?.nav?.newDocument || 'Yeni Oluştur', view: 'templates', icon: PlusSquare },
           { label: t?.nav?.account || 'Hesabım', view: 'profile', icon: User },
           { label: t?.nav?.settings || 'Ayarlar', view: 'settings', icon: Settings },
         ]
