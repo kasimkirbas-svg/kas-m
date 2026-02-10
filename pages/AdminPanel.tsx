@@ -116,17 +116,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [stats, setStats] = useState({
     activeUsers: 0,
-    totalDocs: 8503, // Mock data for now
+    totalDocs: 0, 
     revenue: 0,
-    activeTemplates: 35 // Mock
+    activeTemplates: 0 
   });
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  // Load users from localStorage
   useEffect(() => {
+    // Clean up demo users if requested or ensure stats start fresh
+    // Remove users with 'demo-' prefix
+    const existingUsers = localStorage.getItem('allUsers');
+    if (existingUsers) {
+        try {
+            const parsed = JSON.parse(existingUsers);
+            const realUsers = parsed.filter((u: any) => !u.id.startsWith('demo-'));
+            if (realUsers.length !== parsed.length) {
+                localStorage.setItem('allUsers', JSON.stringify(realUsers));
+                console.log("Cleaned up demo users");
+            }
+        } catch (e) {}
+    }
     loadUsers();
   }, []);
 
@@ -187,24 +199,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     alert(t?.common?.success || 'Kullanıcı güncellendi');
   };
 
-  // Mock data for other sections
-  const recentLogs = [
-    { action: 'Yeni üyelik: Demir Lojistik', time: '5 dk önce', type: 'success', icon: Users },
-    { action: 'Fatura kesildi: #INV-2024001', time: '12 dk önce', type: 'success', icon: FileText },
-    { action: 'Şablon güncellendi: Risk Analizi', time: '1 saat önce', type: 'info', icon: Shield },
-    { action: 'Ödeme başarısız: Kaya Mimarlık', time: '3 saat önce', type: 'warning', icon: TrendingUp },
-  ];
-
-  const templates = [
-    { id: 1, name: 'Acil Durum Planı', category: 'ISG', downloads: 450, status: 'Aktif' },
-    { id: 2, name: 'Denetim Raporu', category: 'Denetim', downloads: 332, status: 'Aktif' },
-    { id: 3, name: 'Risk Analizi', category: 'ISG', downloads: 289, status: 'Aktif' },
-  ];
-
-  const invoices = [
-    { number: 'INV-202601001', date: '01.02.2026', customer: 'Mehmet Demir', amount: '4999 TL', status: 'Ödendi' },
-    { number: 'INV-202601002', date: '02.02.2026', customer: 'Ayşe Kaya', amount: '499 TL', status: 'Beklemede' },
-  ];
+  const recentLogs: any[] = [];
+  const templates: any[] = [];
+  const invoices: any[] = [];
 
   return (
     <div className="space-y-8 relative">
@@ -242,9 +239,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             <div className="p-2 bg-blue-100 text-blue-600 rounded-lg">
               <Users size={20} />
             </div>
-            <span className="text-green-500 text-xs font-bold flex items-center">
-              <TrendingUp size={12} className="mr-1" /> Available
-            </span>
           </div>
           <h3 className="text-2xl font-bold text-slate-900">{stats.activeUsers}</h3>
           <p className="text-sm text-slate-600">{t?.admin?.activeSubscribers || 'Aktif Abone'}</p>
@@ -255,9 +249,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             <div className="p-2 bg-purple-100 text-purple-600 rounded-lg">
                <FileText size={20} />
             </div>
-            <span className="text-green-500 text-xs font-bold flex items-center">
-               +8%
-            </span>
           </div>
           <h3 className="text-2xl font-bold text-slate-900">{stats.totalDocs}</h3>
           <p className="text-sm text-slate-600">{t?.admin?.totalDocuments || 'Üretilen Doküman'}</p>
@@ -268,9 +259,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             <div className="p-2 bg-green-100 text-green-600 rounded-lg">
                <DollarSign size={20} />
             </div>
-            <span className="text-green-500 text-xs font-bold flex items-center">
-               +24%
-            </span>
           </div>
           <h3 className="text-2xl font-bold text-slate-900">₺{stats.revenue.toLocaleString()}</h3>
           <p className="text-sm text-slate-600">{t?.admin?.revenue || 'Tahmini Ciro'}</p>
@@ -296,7 +284,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
 
       {/* Navigation Tabs */}
       <div className="flex border-b border-slate-200 gap-8 overflow-x-auto pb-1">
-        {['overview', 'subscribers', 'templates', 'invoices', 'logs'].map(tab => (
+        {['overview', 'subscribers', 'templates', 'logs'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -309,7 +297,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             {tab === 'overview' && (t?.admin?.overview || 'Genel Bakış')}
             {tab === 'subscribers' && (t?.admin?.subscribers || 'Aboneler')}
             {tab === 'templates' && (t?.admin?.templates || 'Şablonlar')}
-            {tab === 'invoices' && (t?.admin?.invoices || 'Faturalar')}
             {tab === 'logs' && (t?.admin?.logs || 'Sistem Kayıtları')}
           </button>
         ))}
@@ -554,18 +541,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {templates.map((template, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50">
-                    <td className="px-6 py-4 font-medium text-slate-900">{template.name}</td>
-                    <td className="px-6 py-4 text-slate-600">{template.category}</td>
-                    <td className="px-6 py-4 text-slate-600">{template.downloads}</td>
-                    <td className="px-6 py-4">
-                      <span className="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                        {template.status}
-                      </span>
+                {templates.length > 0 ? (
+                  templates.map((template, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50">
+                      <td className="px-6 py-4 font-medium text-slate-900">{template.name}</td>
+                      <td className="px-6 py-4 text-slate-600">{template.category}</td>
+                      <td className="px-6 py-4 text-slate-600">{template.downloads}</td>
+                      <td className="px-6 py-4">
+                        <span className="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                          {template.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                      Aktif şablon bulunamadı.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
