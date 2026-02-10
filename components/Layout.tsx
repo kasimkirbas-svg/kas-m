@@ -6,10 +6,12 @@ interface LayoutProps {
   currentView: string;
   onNavigate: (view: string) => void;
   onLogout: () => void;
+  language?: 'tr' | 'en' | 'ar';
+  t?: any;
   children: React.ReactNode;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ user, currentView, onNavigate, onLogout, children }) => {
+export const Layout: React.FC<LayoutProps> = ({ user, currentView, onNavigate, onLogout, language = 'tr', t, children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   // Don't show layout on auth page
@@ -20,16 +22,16 @@ export const Layout: React.FC<LayoutProps> = ({ user, currentView, onNavigate, o
   const menuItems = user 
     ? user.role === 'ADMIN'
       ? [
-          { label: 'Ana Sayfa', view: 'dashboard', icon: LayoutDashboard },
+          { label: t?.nav?.dashboard || 'Ana Sayfa', view: 'dashboard', icon: LayoutDashboard },
           { label: 'Aboneler', view: 'users', icon: User },
           { label: 'Şablonlar', view: 'templates', icon: FileText },
-          { label: 'Ayarlar', view: 'settings', icon: Settings },
+          { label: t?.nav?.settings || 'Ayarlar', view: 'settings', icon: Settings },
         ]
       : [
-          { label: 'Ana Sayfa', view: 'dashboard', icon: LayoutDashboard },
-          { label: 'Dokümanlar', view: 'templates', icon: FileText },
-          { label: 'Hesabım', view: 'profile', icon: User },
-          { label: 'Ayarlar', view: 'settings', icon: Settings },
+          { label: t?.nav?.dashboard || 'Ana Sayfa', view: 'dashboard', icon: LayoutDashboard },
+          { label: t?.nav?.documents || 'Dokümanlar', view: 'templates', icon: FileText },
+          { label: t?.nav?.account || 'Hesabım', view: 'profile', icon: User },
+          { label: t?.nav?.settings || 'Ayarlar', view: 'settings', icon: Settings },
         ]
     : [];
 
@@ -86,7 +88,7 @@ export const Layout: React.FC<LayoutProps> = ({ user, currentView, onNavigate, o
                   className="px-4 py-2 text-sm bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium flex items-center gap-2 transition"
                 >
                   <LogOut size={16} />
-                  <span className="hidden sm:inline">Çıkış</span>
+                  <span className="hidden sm:inline">{t?.common?.logout || 'Çıkış'}</span>
                 </button>
               </>
             )}

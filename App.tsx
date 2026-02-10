@@ -285,7 +285,14 @@ const App = () => {
   };
 
   return (
-    <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
+    <Layout 
+      user={user} 
+      currentView={currentView} 
+      onNavigate={setCurrentView} 
+      onLogout={handleLogout}
+      language={language}
+      t={t}
+    >
       {renderContent()}
     </Layout>
   );
