@@ -21,7 +21,7 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
 
   const handleSave = () => {
     // Simulate save
-    alert('Profil bilgileriniz kaydedildi.');
+    alert(t?.profile?.savedSuccessfully || 'Profil bilgileriniz kaydedildi.');
     setIsEditing(false);
   };
 
@@ -52,13 +52,13 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
           <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
             <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
               <User size={20} />
-              Hesap Bilgileri
+              {t?.profile?.accountInformation || 'Hesap Bilgileri'}
             </h2>
 
             {isEditing ? (
               <form className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Ad Soyad</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">{t?.profile?.fullName || 'Ad Soyad'}</label>
                   <input
                     type="text"
                     name="name"
@@ -68,7 +68,7 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">E-posta</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">{t?.profile?.email || 'E-posta'}</label>
                   <input
                     type="email"
                     name="email"
@@ -78,7 +78,7 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Şirket Adı</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">{t?.profile?.companyName || 'Şirket Adı'}</label>
                   <input
                     type="text"
                     name="companyName"
@@ -94,7 +94,7 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
                     className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center justify-center gap-2 transition"
                   >
                     <Check size={18} />
-                    Kaydet
+                    {t?.profile?.saveProfile || 'Kaydet'}
                   </button>
                   <button
                     type="button"
@@ -102,7 +102,7 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
                     className="flex-1 px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium flex items-center justify-center gap-2 transition"
                   >
                     <X size={18} />
-                    İptal
+                    {t?.common?.cancel || 'İptal'}
                   </button>
                 </div>
               </form>
@@ -110,15 +110,15 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
               <div className="space-y-4">
                 <div
                   className="pb-4 border-b border-slate-100">
-                  <p className="text-sm text-slate-600 mb-1">Ad Soyad</p>
+                  <p className="text-sm text-slate-600 mb-1">{t?.profile?.fullName || 'Ad Soyad'}</p>
                   <p className="text-lg font-semibold text-slate-900">{user?.name}</p>
                 </div>
                 <div className="pb-4 border-b border-slate-100">
-                  <p className="text-sm text-slate-600 mb-1">E-posta</p>
+                  <p className="text-sm text-slate-600 mb-1">{t?.profile?.email || 'E-posta'}</p>
                   <p className="text-lg font-semibold text-slate-900">{user?.email}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600 mb-1">Şirket Adı</p>
+                  <p className="text-sm text-slate-600 mb-1">{t?.profile?.companyName || 'Şirket Adı'}</p>
                   <p className="text-lg font-semibold text-slate-900">{user?.companyName}</p>
                 </div>
               </div>
@@ -132,34 +132,34 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-6">
             <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
               <CreditCard size={20} className="text-purple-600" />
-              Abonelik
+              {t?.profile?.subscription || 'Abonelik'}
             </h3>
             <div className="space-y-3">
               <div>
-                <p className="text-xs text-slate-600 uppercase font-semibold">Paket</p>
+                <p className="text-xs text-slate-600 uppercase font-semibold">{t?.profile?.plan || 'Paket'}</p>
                 <p className="text-lg font-bold text-slate-900 mt-1">
-                  {user?.plan === 'YEARLY' ? 'Yıllık Pro' : 'Aylık Standart'}
+                  {user?.plan === 'YEARLY' ? (t?.profile?.yearlyPro || 'Yıllık Pro') : (t?.profile?.monthlyStandard || 'Aylık Standart')}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-slate-600 uppercase font-semibold">Durum</p>
+                <p className="text-xs text-slate-600 uppercase font-semibold">{t?.profile?.status || 'Durum'}</p>
                 <span className="inline-block mt-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                  ✓ Aktif
+                  {t?.profile?.active || '✓ Aktif'}
                 </span>
               </div>
               <button className="w-full mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition">
-                Yükselt
+                {t?.profile?.upgrade || 'Yükselt'}
               </button>
             </div>
           </div>
 
           {/* Usage Stats */}
           <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-            <h3 className="font-bold text-slate-900 mb-4">Kullanım</h3>
+            <h3 className="font-bold text-slate-900 mb-4">{t?.profile?.usageStatistics || 'Kullanım'}</h3>
             <div className="space-y-3">
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <p className="text-sm text-slate-600">İndirme Hakkı</p>
+                  <p className="text-sm text-slate-600">{t?.profile?.downloads || 'İndirme Hakkı'}</p>
                   <p className="font-semibold text-slate-900">
                     {user?.remainingDownloads === 'UNLIMITED' ? 'Sınırsız' : user?.remainingDownloads}
                   </p>
