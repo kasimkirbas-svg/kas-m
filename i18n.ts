@@ -2,6 +2,7 @@
 const tr = {
   common: {
     welcome: 'Hoşgeldiniz',
+    back: 'Geri Dön',
     logout: 'Çıkış',
     save: 'Kaydet',
     cancel: 'İptal',
@@ -14,7 +15,8 @@ const tr = {
     yes: 'Evet',
     no: 'Hayır',
     update: 'Güncelle',
-    close: 'Kapat'
+    close: 'Kapat',
+    download: 'İndir'
   },
   auth: {
     login: 'Giriş Yap',
@@ -209,6 +211,7 @@ const tr = {
 const en = {
   common: {
     welcome: 'Welcome',
+    back: 'Go Back',
     logout: 'Logout',
     save: 'Save',
     cancel: 'Cancel',
@@ -221,7 +224,8 @@ const en = {
     yes: 'Yes',
     no: 'No',
     update: 'Update',
-    close: 'Close'
+    close: 'Close',
+    download: 'Download'
   },
   auth: {
     login: 'Sign In',
@@ -387,6 +391,7 @@ const en = {
 const ar = {
   common: {
     welcome: 'أهلا وسهلا',
+    back: 'العودة',
     logout: 'تسجيل الخروج',
     save: 'حفظ',
     cancel: 'إلغاء',
@@ -399,7 +404,8 @@ const ar = {
     yes: 'نعم',
     no: 'لا',
     update: 'تحديث',
-    close: 'إغلاق'
+    close: 'إغلاق',
+    download: 'تحميل'
   },
   auth: {
     login: 'تسجيل الدخول',

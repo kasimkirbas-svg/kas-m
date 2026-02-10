@@ -121,7 +121,7 @@ const App = () => {
             className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4"
           >
             <ArrowLeft size={18} />
-            Şablonlara Dön
+            {t?.editor?.back || 'Şablonlara Dön'}
           </button>
           <DocumentEditor 
             template={selectedTemplate}
@@ -130,9 +130,10 @@ const App = () => {
             preparedBy={user.name}
             onClose={() => setCurrentView('templates')}
             onDocumentGenerated={(doc: GeneratedDocument) => {
-              alert(`✓ Doküman başarıyla oluşturuldu: ${selectedTemplate.title}`);
+              alert(`✓ ${selectedTemplate.title} ${t?.editor?.photoSuccess || 'dokümanı başarıyla oluşturuldu'}`);
               setCurrentView('dashboard');
             }}
+            t={t}
           />
         </div>
       );
@@ -167,29 +168,29 @@ const App = () => {
       return (
         <div>
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-800">Hoşgeldin, {user.name}! 👋</h1>
-            <p className="text-slate-500 text-lg mt-2">Bugün ne oluşturmak istersiniz?</p>
+            <h1 className="text-3xl font-bold text-slate-800">{t?.dashboard?.welcome || `Hoşgeldin, ${user.name}!`} 👋</h1>
+            <p className="text-slate-500 text-lg mt-2">{t?.dashboard?.greetings || 'Bugün ne oluşturmak istersiniz?'}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">
              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg shadow-blue-200">
-                <div className="text-sm opacity-90 font-medium">Kalan İndirme Hakkı</div>
+                <div className="text-sm opacity-90 font-medium">{t?.dashboard?.remainingDownloads || 'Kalan İndirme Hakkı'}</div>
                 <div className="text-4xl font-bold mt-2">{user.remainingDownloads === 'UNLIMITED' ? '∞' : user.remainingDownloads}</div>
                 <p className="text-sm opacity-75 mt-4">
-                  Paketiniz: <span className="font-semibold">{user.plan === SubscriptionPlan.YEARLY ? 'Yıllık Pro' : 'Aylık Standart'}</span>
+                  {t?.dashboard?.package || 'Paketiniz'}: <span className="font-semibold">{user.plan === SubscriptionPlan.YEARLY ? (t?.dashboard?.yearly || 'Yıllık Pro') : (t?.dashboard?.monthly || 'Aylık Standart')}</span>
                 </p>
              </div>
              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg shadow-green-200 flex flex-col justify-center">
-                <p className="opacity-90 font-medium mb-3">Yeni Doküman Oluşturmaya Başla</p>
+                <p className="opacity-90 font-medium mb-3">{t?.dashboard?.greetings || 'Yeni Doküman Oluşturmaya Başla'}</p>
                 <Button 
                   onClick={() => setCurrentView('templates')} 
                   className="bg-white text-green-600 hover:bg-gray-100 font-semibold"
                 >
-                  + Doküman Oluştur
+                  + {t?.dashboard?.createDocument || 'Doküman Oluştur'}
                 </Button>
              </div>
              <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                <h3 className="font-bold text-slate-800 mb-4">Son İşlemler</h3>
+                <h3 className="font-bold text-slate-800 mb-4">{t?.dashboard?.recentActivity || 'Son İşlemler'}</h3>
                 <ul className="space-y-3">
                   <li className="flex justify-between items-center text-sm">
                     <span className="text-slate-600">Acil Durum Planı</span>
@@ -209,12 +210,12 @@ const App = () => {
 
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-slate-800">Hızlı Erişim</h2>
+              <h2 className="text-2xl font-bold text-slate-800">{t?.dashboard?.quickAccess || 'Hızlı Erişim'}</h2>
               <button 
                 onClick={() => setCurrentView('templates')}
                 className="text-blue-600 hover:text-blue-700 font-medium text-sm"
               >
-                Tümünü Gör →
+                {t?.dashboard?.viewAll || 'Tümünü Gör'} →
               </button>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
