@@ -4,9 +4,10 @@ import { User, Mail, Building2, Calendar, CreditCard, Download, Edit2, Check, X 
 interface ProfileProps {
   user?: any;
   t?: any;
+  onNavigate?: (view: string) => void;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
+export const Profile: React.FC<ProfileProps> = ({ user, t, onNavigate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(user ? {
     name: user.name,
@@ -143,14 +144,21 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
               </div>
               <div>
                 <p className="text-xs text-slate-600 uppercase font-semibold">{t?.profile?.status || 'Durum'}</p>
-                <span className="inline-block mt-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                  {t?.profile?.active || '✓ Aktif'}
+                 <span className={`inline-block mt-1 px-3 py-1 rounded-full text-sm font-semibold ${
+                  user?.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                }`}>
+                  {user?.isActive ? (t?.profile?.active || '✓ Aktif') : 'Pasif'}
                 </span>
               </div>
-              <button className="w-full mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition">
-                {t?.profile?.upgrade || 'Yükselt'}
-              </button>
             </div>
+            {onNavigate && user?.role !== 'ADMIN' && (
+                <button 
+                  onClick={() => onNavigate('subscription')}
+                  className="w-full mt-6 py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition shadow-sm hover:shadow"
+                >
+                  {user?.plan === 'FREE' ? (t?.profile?.upgrade || 'Paketi Yükselt') : (t?.profile?.changePlan || 'Paketi Değiştir')}
+                </button>
+            )}
           </div>
 
           {/* Usage Stats */}

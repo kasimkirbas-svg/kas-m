@@ -116,6 +116,28 @@ const tr = {
     documentCount: 'Toplam Doküman',
     storageUsage: 'Depo Kullanımı'
   },
+  subscription: {
+     title: 'Abonelik Paketleri',
+     subtitle: 'İhtiyacınıza en uygun paketi seçin',
+     currentPlan: 'Mevcut Plan',
+     selectPlan: 'Seç',
+     monthly: 'Aylık',
+     yearly: 'Yıllık',
+     paymentDetails: 'Ödeme Bilgileri',
+     cardNumber: 'Kart Numarası',
+     cardHolder: 'Kart Sahibi',
+     expiryDate: 'Son Kullanma Tarihi',
+     cvv: 'CVV/CVC',
+     payNow: 'Ödeme Yap',
+     processing: 'İşleniyor...',
+     securePayment: '256-bit SSL Güvenli Ödeme',
+     successTitle: 'Ödeme Başarılı!',
+     successMessage: 'Aboneliğiniz başarıyla başlatıldı.',
+     errorTitle: 'Ödeme Başarısız',
+     errorMessage: 'Lütfen kart bilgilerinizi kontrol ediniz.',
+     cancel: 'Vazgeç',
+     features: 'Özellikler'
+  },
   documents: {
     title: 'Dokümanlar',
     allTemplates: 'Tüm Şablonlar',

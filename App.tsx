@@ -6,6 +6,7 @@ import { AdminPanel } from './pages/AdminPanel';
 import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
 import { Settings } from './pages/Settings';
+import { SubscriptionPage } from './pages/SubscriptionPage';
 import { Button } from './components/Button';
 import { MOCK_TEMPLATES, PLANS, APP_NAME, ADMIN_USER } from './constants';
 import { User, UserRole, SubscriptionPlan, DocumentTemplate, GeneratedDocument } from './types';
@@ -98,6 +99,49 @@ const App = () => {
     setCurrentView('auth');
     setSelectedTemplate(null);
     localStorage.removeItem('currentUser');
+  };
+
+  const handleUpgrade = (selectedPlan: SubscriptionPlan) => {
+    if (!user) return;
+
+    // Determined limits based on plan
+    let newLimit: number | 'UNLIMITED' = 5; // Default free
+    if (selectedPlan === SubscriptionPlan.MONTHLY) newLimit = 30;
+    if (selectedPlan === SubscriptionPlan.YEARLY) newLimit = 'UNLIMITED';
+
+    const updatedUser: User = {
+      ...user,
+      plan: selectedPlan,
+      remainingDownloads: newLimit,
+      subscriptionStartDate: new Date().toISOString(),
+      subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Mock 30 days
+      isActive: true
+    };
+
+    // Update State
+    setUser(updatedUser);
+    
+    // Update LocalStorage (CurrentUser)
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+    // Update LocalStorage (AllUsers)
+    const allUsersStr = localStorage.getItem('allUsers');
+    if (allUsersStr) {
+      const allUsers: User[] = JSON.parse(allUsersStr);
+      const newAllUsers = allUsers.map(u => u.id === user.id ? updatedUser : u);
+      localStorage.setItem('allUsers', JSON.stringify(newAllUsers));
+    }
+
+    // Update Legacy Users (if exists)
+    const legacyUsersStr = localStorage.getItem('users');
+    if (legacyUsersStr) {
+      const legacyUsers: User[] = JSON.parse(legacyUsersStr);
+      const newLegacyUsers = legacyUsers.map(u => u.id === user.id ? updatedUser : u);
+      localStorage.setItem('users', JSON.stringify(newLegacyUsers));
+    }
+
+    alert(t?.subscription?.successMessage || 'Aboneliğiniz başarıyla başlatıldı.');
+    setCurrentView('profile');
   };
 
   // Navigation Logic
@@ -267,7 +311,7 @@ const App = () => {
 
     // 4. Profile Page
     if (user && currentView === 'profile') {
-      return <Profile user={user} t={t} />
+      return <Profile user={user} t={t} onNavigate={setCurrentView} />
     }
 
     // 5. Settings Page
@@ -283,8 +327,20 @@ const App = () => {
         />
       );
     }
+
+    // 6. Subscription Page
+    if (user && currentView === 'subscription') {
+      return (
+         <SubscriptionPage 
+            user={user}
+            t={t}
+            onUpgrade={handleUpgrade}
+            onBack={() => setCurrentView('profile')}
+         />
+      );
+    }
     
-    // 6. Admin Panel (Handles all admin-related views) - CLEANUP: This block is now redundant due to top priority check, but keeping for safety if view names change.
+    // 7. Admin Panel (Handles all admin-related views) - CLEANUP: This block is now redundant due to top priority check, but keeping for safety if view names change.
     if (user?.role === UserRole.ADMIN && ['admin', 'subscribers', 'users'].includes(currentView)) {
       return <AdminPanel user={user} t={t} currentView={currentView} />
     }
