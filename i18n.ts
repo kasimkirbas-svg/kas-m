@@ -10,7 +10,11 @@ const tr = {
     loading: 'Yükleniyor...',
     success: 'Başarılı',
     error: 'Hata',
-    confirm: 'Onayla'
+    confirm: 'Onayla',
+    yes: 'Evet',
+    no: 'Hayır',
+    update: 'Güncelle',
+    close: 'Kapat'
   },
   auth: {
     login: 'Giriş Yap',
@@ -20,14 +24,25 @@ const tr = {
     name: 'Ad Soyad',
     company: 'Şirket Adı',
     confirmPassword: 'Şifre Onayla',
-    demoTest: 'Demo ile Dene'
+    demoTest: 'Demo ile Dene',
+    noAccount: 'Hesabınız yok mu?',
+    createAccount: 'Hesap oluşturun',
+    haveAccount: 'Zaten hesabınız var mı?',
+    signInInstead: 'Giriş yapın',
+    invalidEmail: 'Geçersiz e-posta adresi',
+    passwordTooShort: 'Şifre en az 6 karakter olmalıdır',
+    passwordMismatch: 'Şifreler eşleşmiyor',
+    signInSuccess: 'Başarıyla giriş yaptınız',
+    signUpSuccess: 'Hesap başarıyla oluşturuldu'
   },
   nav: {
     dashboard: 'Ana Sayfa',
     documents: 'Dokümanlar',
     account: 'Hesabım',
     settings: 'Ayarlar',
-    admin: 'Yönetici'
+    admin: 'Yönetici',
+    subscribers: 'Aboneler',
+    templates: 'Şablonlar'
   },
   settings: {
     title: 'Ayarlar',
@@ -38,13 +53,89 @@ const tr = {
     theme: 'Tema',
     light: 'Açık',
     dark: 'Koyu',
-    auto: 'Otomatik'
+    auto: 'Otomatik',
+    emailNotifications: 'E-posta Bildirimleri',
+    emailDesc: 'İşlemler ve güncellemeler için e-posta alın',
+    systemNotifications: 'Sistem Bildirimleri',
+    systemDesc: 'Panelde anlık bildirimler alın',
+    weeklyReport: 'Haftalık Rapor',
+    weeklyDesc: 'Her cuma haftalık özet raporu alın',
+    marketing: 'Pazarlama E-postaları',
+    marketingDesc: 'Yeni özellikler ve özel teklifler hakkında bilgi alın',
+    profilePublic: 'Profilimi Herkese Açık Yap',
+    profileDesc: 'Profiliniz sistem dizininde görünmesine izin verin',
+    showDirectory: 'Dizinde Göster',
+    directoryDesc: 'Başka kullanıcılar sizi bulabilsin',
+    changePassword: 'Şifre Değiştir',
+    currentPassword: 'Mevcut Şifre',
+    newPassword: 'Yeni Şifre',
+    confirmNewPassword: 'Şifre Onayla',
+    dangerZone: 'Tehlikeli Alan',
+    deleteAccount: 'Hesabı Sil',
+    deleteWarning: 'Aşağıdaki işlemler geri alınamaz. Lütfen dikkatli olun.',
+    saveChanges: 'Değişiklikleri Kaydet',
+    settingsSaved: 'Ayarlarınız başarıyla kaydedildi.',
+    allFieldsRequired: 'Tüm alanları doldurunuz.'
   },
   dashboard: {
     welcome: 'Hoşgeldin',
+    greetings: 'Bugün ne oluşturmak istersiniz?',
     remainingDownloads: 'Kalan İndirme Hakkı',
     createDocument: 'Doküman Oluştur',
-    recentActivity: 'Son İşlemler'
+    recentActivity: 'Son İşlemler',
+    quickAccess: 'Hızlı Erişim',
+    viewAll: 'Tümünü Gör',
+    package: 'Paketiniz',
+    yearly: 'Yıllık Pro',
+    monthly: 'Aylık Standart',
+    unlimited: '∞'
+  },
+  profile: {
+    title: 'Profil',
+    myProfile: 'Profilim',
+    editProfile: 'Profili Düzenle',
+    subscription: 'Abonelik Durumu',
+    usageStatistics: 'Kullanım İstatistikleri',
+    documentCount: 'Toplam Doküman',
+    storageUsage: 'Depo Kullanımı',
+    upgrade: 'Yükselt'
+  },
+  documents: {
+    title: 'Dokümanlar',
+    allTemplates: 'Tüm Şablonlar',
+    search: 'Ara',
+    filter: 'Filtrele',
+    category: 'Kategori',
+    premium: 'PREMIUM',
+    photoCapacity: 'Fotoğraf Kapasitesi',
+    selectTemplate: 'Şablon Seç',
+    noResults: 'Sonuç bulunamadı'
+  },
+  editor: {
+    title: 'Doküman Editörü',
+    back: 'Şablonlara Dön',
+    uploadPhotos: 'Fotoğraf Yükle',
+    firmName: 'Firma Adı',
+    preparedBy: 'Hazırlayan',
+    date: 'Tarih',
+    notes: 'Notlar',
+    addNotes: 'Ek notlar ekleyin',
+    prepareDownload: 'Hazırla ve İndir',
+    maxPhotos: 'Maksimum fotoğraf sayısına ulaştınız',
+    photoSuccess: 'Doküman başarıyla oluşturuldu'
+  },
+  admin: {
+    title: 'Admin Paneli',
+    overview: 'Genel Bakış',
+    subscribers: 'Aboneler',
+    templates: 'Şablonlar',
+    invoices: 'Faturalar',
+    logs: 'Günlükler',
+    activeSubscribers: 'Aktif Aboneler',
+    totalDocuments: 'Toplam Doküman',
+    revenue: 'Gelir',
+    totalTemplates: 'Toplam Şablonlar',
+    statistics: 'İstatistikler'
   }
 };
 
@@ -60,7 +151,11 @@ const en = {
     loading: 'Loading...',
     success: 'Success',
     error: 'Error',
-    confirm: 'Confirm'
+    confirm: 'Confirm',
+    yes: 'Yes',
+    no: 'No',
+    update: 'Update',
+    close: 'Close'
   },
   auth: {
     login: 'Sign In',
@@ -70,14 +165,25 @@ const en = {
     name: 'Full Name',
     company: 'Company Name',
     confirmPassword: 'Confirm Password',
-    demoTest: 'Try Demo'
+    demoTest: 'Try Demo',
+    noAccount: 'Don\'t have an account?',
+    createAccount: 'Create one',
+    haveAccount: 'Already have an account?',
+    signInInstead: 'Sign in instead',
+    invalidEmail: 'Invalid email address',
+    passwordTooShort: 'Password must be at least 6 characters',
+    passwordMismatch: 'Passwords do not match',
+    signInSuccess: 'Successfully signed in',
+    signUpSuccess: 'Account successfully created'
   },
   nav: {
     dashboard: 'Dashboard',
     documents: 'Documents',
     account: 'My Account',
     settings: 'Settings',
-    admin: 'Admin'
+    admin: 'Admin',
+    subscribers: 'Subscribers',
+    templates: 'Templates'
   },
   settings: {
     title: 'Settings',
@@ -88,13 +194,89 @@ const en = {
     theme: 'Theme',
     light: 'Light',
     dark: 'Dark',
-    auto: 'Auto'
+    auto: 'Auto',
+    emailNotifications: 'Email Notifications',
+    emailDesc: 'Get emails about transactions and updates',
+    systemNotifications: 'System Notifications',
+    systemDesc: 'Get real-time notifications on the dashboard',
+    weeklyReport: 'Weekly Report',
+    weeklyDesc: 'Get weekly summary reports every Friday',
+    marketing: 'Marketing Emails',
+    marketingDesc: 'Learn about new features and special offers',
+    profilePublic: 'Make My Profile Public',
+    profileDesc: 'Allow your profile to appear in the system directory',
+    showDirectory: 'Show in Directory',
+    directoryDesc: 'Let other users find you',
+    changePassword: 'Change Password',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmNewPassword: 'Confirm Password',
+    dangerZone: 'Danger Zone',
+    deleteAccount: 'Delete Account',
+    deleteWarning: 'The following actions cannot be undone. Please be careful.',
+    saveChanges: 'Save Changes',
+    settingsSaved: 'Your settings have been saved successfully.',
+    allFieldsRequired: 'Please fill in all fields.'
   },
   dashboard: {
     welcome: 'Welcome',
+    greetings: 'What would you like to create today?',
     remainingDownloads: 'Remaining Downloads',
     createDocument: 'Create Document',
-    recentActivity: 'Recent Activity'
+    recentActivity: 'Recent Activity',
+    quickAccess: 'Quick Access',
+    viewAll: 'View All →',
+    package: 'Your Package',
+    yearly: 'Yearly Pro',
+    monthly: 'Monthly Standard',
+    unlimited: '∞'
+  },
+  profile: {
+    title: 'Profile',
+    myProfile: 'My Profile',
+    editProfile: 'Edit Profile',
+    subscription: 'Subscription Status',
+    usageStatistics: 'Usage Statistics',
+    documentCount: 'Total Documents',
+    storageUsage: 'Storage Usage',
+    upgrade: 'Upgrade'
+  },
+  documents: {
+    title: 'Documents',
+    allTemplates: 'All Templates',
+    search: 'Search',
+    filter: 'Filter',
+    category: 'Category',
+    premium: 'PREMIUM',
+    photoCapacity: 'Photo Capacity',
+    selectTemplate: 'Select Template',
+    noResults: 'No results found'
+  },
+  editor: {
+    title: 'Document Editor',
+    back: 'Back to Templates',
+    uploadPhotos: 'Upload Photos',
+    firmName: 'Firm Name',
+    preparedBy: 'Prepared By',
+    date: 'Date',
+    notes: 'Notes',
+    addNotes: 'Add additional notes',
+    prepareDownload: 'Prepare and Download',
+    maxPhotos: 'Maximum photo capacity reached',
+    photoSuccess: 'Document successfully created'
+  },
+  admin: {
+    title: 'Admin Panel',
+    overview: 'Overview',
+    subscribers: 'Subscribers',
+    templates: 'Templates',
+    invoices: 'Invoices',
+    logs: 'Logs',
+    activeSubscribers: 'Active Subscribers',
+    totalDocuments: 'Total Documents',
+    revenue: 'Revenue',
+    totalTemplates: 'Total Templates',
+    statistics: 'Statistics'
   }
 };
 
@@ -110,7 +292,11 @@ const ar = {
     loading: 'جاري التحميل...',
     success: 'نجح',
     error: 'خطأ',
-    confirm: 'تأكيد'
+    confirm: 'تأكيد',
+    yes: 'نعم',
+    no: 'لا',
+    update: 'تحديث',
+    close: 'إغلاق'
   },
   auth: {
     login: 'تسجيل الدخول',
@@ -120,14 +306,25 @@ const ar = {
     name: 'الاسم الكامل',
     company: 'اسم الشركة',
     confirmPassword: 'تأكيد كلمة المرور',
-    demoTest: 'جرب العرض التوضيحي'
+    demoTest: 'جرب العرض التوضيحي',
+    noAccount: 'ليس لديك حساب؟',
+    createAccount: 'أنشئ واحدة',
+    haveAccount: 'هل لديك حساب بالفعل؟',
+    signInInstead: 'قم بالدخول بدلاً من ذلك',
+    invalidEmail: 'عنوان بريد إلكتروني غير صحيح',
+    passwordTooShort: 'يجب أن تكون كلمة المرور 6 أحرف على الأقل',
+    passwordMismatch: 'كلمات المرور غير متطابقة',
+    signInSuccess: 'تم تسجيل الدخول بنجاح',
+    signUpSuccess: 'تم إنشاء الحساب بنجاح'
   },
   nav: {
     dashboard: 'لوحة التحكم',
     documents: 'المستندات',
     account: 'حسابي',
     settings: 'الإعدادات',
-    admin: 'إدارة'
+    admin: 'إدارة',
+    subscribers: 'المشتركون',
+    templates: 'القوالب'
   },
   settings: {
     title: 'الإعدادات',
@@ -138,13 +335,89 @@ const ar = {
     theme: 'المظهر',
     light: 'فاتح',
     dark: 'داكن',
-    auto: 'تلقائي'
+    auto: 'تلقائي',
+    emailNotifications: 'إشعارات البريد الإلكتروني',
+    emailDesc: 'احصل على رسائل بريد إلكترونية حول المعاملات والتحديثات',
+    systemNotifications: 'إشعارات النظام',
+    systemDesc: 'احصل على إشعارات فورية على لوحة التحكم',
+    weeklyReport: 'التقرير الأسبوعي',
+    weeklyDesc: 'احصل على تقارير ملخصة أسبوعية كل يوم الجمعة',
+    marketing: 'رسائل البريد الإلكتروني التسويقية',
+    marketingDesc: 'تعرف على الميزات الجديدة والعروض الخاصة',
+    profilePublic: 'اجعل ملفي الشخصي عاماً',
+    profileDesc: 'السماح لملفك الشخصي بالظهور في دليل النظام',
+    showDirectory: 'عرض في الدليل',
+    directoryDesc: 'دع المستخدمين الآخرين يجدونك',
+    changePassword: 'تغيير كلمة المرور',
+    currentPassword: 'كلمة المرور الحالية',
+    newPassword: 'كلمة المرور الجديدة',
+    confirmNewPassword: 'تأكيد كلمة المرور',
+    dangerZone: 'منطقة خطرة',
+    deleteAccount: 'حذف الحساب',
+    deleteWarning: 'لا يمكن التراجع عن الإجراءات التالية. يرجى توخي الحذر.',
+    saveChanges: 'حفظ التغييرات',
+    settingsSaved: 'تم حفظ إعداداتك بنجاح.',
+    allFieldsRequired: 'يرجى ملء جميع الحقول.'
   },
   dashboard: {
     welcome: 'مرحبا',
+    greetings: 'ماذا تريد أن تنشئ اليوم؟',
     remainingDownloads: 'التنزيلات المتبقية',
     createDocument: 'إنشاء مستند',
-    recentActivity: 'النشاط الأخير'
+    recentActivity: 'النشاط الأخير',
+    quickAccess: 'الوصول السريع',
+    viewAll: 'عرض الجميع ←',
+    package: 'رزمتك',
+    yearly: 'سنوي برو',
+    monthly: 'شهري قياسي',
+    unlimited: '∞'
+  },
+  profile: {
+    title: 'الملف الشخصي',
+    myProfile: 'ملفي الشخصي',
+    editProfile: 'تحرير الملف الشخصي',
+    subscription: 'حالة الاشتراك',
+    usageStatistics: 'إحصائيات الاستخدام',
+    documentCount: 'إجمالي المستندات',
+    storageUsage: 'استخدام التخزين',
+    upgrade: 'ترقية'
+  },
+  documents: {
+    title: 'المستندات',
+    allTemplates: 'جميع القوالب',
+    search: 'بحث',
+    filter: 'تصفية',
+    category: 'الفئة',
+    premium: 'متميز',
+    photoCapacity: 'سعة الصور',
+    selectTemplate: 'حدد القالب',
+    noResults: 'لم يتم العثور على نتائج'
+  },
+  editor: {
+    title: 'محرر المستندات',
+    back: 'العودة إلى القوالب',
+    uploadPhotos: 'رفع الصور',
+    firmName: 'اسم الشركة',
+    preparedBy: 'جهز من قبل',
+    date: 'التاريخ',
+    notes: 'ملاحظات',
+    addNotes: 'إضافة ملاحظات إضافية',
+    prepareDownload: 'إعداد وتنزيل',
+    maxPhotos: 'تم الوصول إلى السعة القصوى للصور',
+    photoSuccess: 'تم إنشاء المستند بنجاح'
+  },
+  admin: {
+    title: 'لوحة الإدارة',
+    overview: 'نظرة عامة',
+    subscribers: 'المشتركون',
+    templates: 'القوالب',
+    invoices: 'الفواتير',
+    logs: 'السجلات',
+    activeSubscribers: 'المشتركين النشطين',
+    totalDocuments: 'إجمالي المستندات',
+    revenue: 'الإيرادات',
+    totalTemplates: 'إجمالي القوالب',
+    statistics: 'الإحصائيات'
   }
 };
 

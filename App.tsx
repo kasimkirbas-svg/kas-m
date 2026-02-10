@@ -109,7 +109,7 @@ const App = () => {
 
     // Auth Page
     if (!user) {
-      return <Auth onLoginSuccess={handleLogin} />;
+      return <Auth onLoginSuccess={handleLogin} t={t} language={language} />
     }
 
     // 1. Document Editor
@@ -200,7 +200,7 @@ const App = () => {
                   </li>
                   <li className="flex justify-between items-center text-sm">
                     <span className="text-slate-600">Abonelik Yenileme</span>
-                    <span className="text-xs text-green-600 font-medium">✓ Başarılı</span>
+                    <span className="text-xs text-green-600 font-medium">✓ {t?.common?.success || 'Başarılı'}</span>
                   </li>
                 </ul>
              </div>
@@ -253,7 +253,7 @@ const App = () => {
 
     // 4. Profile Page
     if (user && currentView === 'profile') {
-      return <Profile user={user} />;
+      return <Profile user={user} t={t} />
     }
 
     // 5. Settings Page
@@ -272,12 +272,12 @@ const App = () => {
     
     // 6. Admin Panel
     if (user?.role === UserRole.ADMIN && currentView === 'admin') {
-      return <AdminPanel user={user} />;
+      return <AdminPanel user={user} t={t} />
     }
 
     // 7. Dashboard for Admin
     if (user?.role === UserRole.ADMIN && currentView === 'dashboard') {
-      return <AdminPanel user={user} />;
+      return <AdminPanel user={user} t={t} />
     }
 
     // Default Fallback

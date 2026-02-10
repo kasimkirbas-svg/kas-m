@@ -3,9 +3,11 @@ import { Mail, Lock, User, Building2, Eye, EyeOff, AlertCircle, CheckCircle } fr
 
 interface AuthProps {
   onLoginSuccess: (userData: any) => void;
+  t?: any;
+  language?: string;
 }
 
-export const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
+export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -166,7 +168,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
             K
           </div>
           <h1 className="text-3xl font-bold text-slate-900">Kırbaş Doküman</h1>
-          <p className="text-slate-600 mt-2">Profesyonel Dokümanlarınız Dakikalar İçinde</p>
+          <p className="text-slate-600 mt-2">{t?.dashboard?.greetings || 'Profesyonel Dokümanlarınız Dakikalar İçinde'}</p>
         </div>
 
         {/* Form Card */}
@@ -185,7 +187,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Giriş Yap
+              {t?.auth?.login || 'Giriş Yap'}
             </button>
             <button
               onClick={() => {
@@ -199,7 +201,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Kayıt Ol
+              {t?.auth?.signup || 'Kaydol'}
             </button>
           </div>
 
@@ -341,7 +343,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
                   {isLogin ? 'Giriş yapılıyor...' : 'Kayıt oluşturuluyor...'}
                 </span>
               ) : (
-                isLogin ? 'Giriş Yap' : 'Kaydol'
+                isLogin ? t?.auth?.login || 'Giriş Yap' : t?.auth?.signup || 'Kaydol'
               )}
             </button>
 
@@ -362,7 +364,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
                   onClick={handleDemo}
                   className="w-full px-4 py-2.5 border-2 border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition"
                 >
-                  Demo ile Dene
+                  {t?.auth?.demoTest || 'Demo ile Dene'}
                 </button>
               </>
             )}
@@ -370,20 +372,20 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
 
           {/* Terms */}
           <p className="text-xs text-slate-500 text-center mt-6">
-            Devam ederek <a href="#" className="text-blue-600 hover:underline">şartlar ve koşulları</a> kabul etmiş olursunuz.
+            {t?.common?.welcome || 'Devam ederek'} <a href="#" className="text-blue-600 hover:underline">şartlar ve koşulları</a> kabul etmiş olursunuz.
             <br />
-            <a href="#" className="text-blue-600 hover:underline">Gizlilik Politikası</a>
+            <a href="#" className="text-blue-600 hover:underline">{t?.settings?.privacy || 'Gizlilik Politikası'}</a>
           </p>
         </div>
 
         {/* Footer */}
         <p className="text-center text-slate-600 text-sm mt-6">
-          {isLogin ? "Hesabınız yok mu? " : "Zaten hesabınız var mı? "}
+          {isLogin ? t?.auth?.noAccount || "Hesabınız yok mu? " : t?.auth?.haveAccount || "Zaten hesabınız var mı? "}
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-blue-600 font-semibold hover:underline"
           >
-            {isLogin ? 'Kaydol' : 'Giriş Yap'}
+            {isLogin ? t?.auth?.createAccount || 'Kaydol' : t?.auth?.signInInstead || 'Giriş Yap'}
           </button>
         </p>
       </div>

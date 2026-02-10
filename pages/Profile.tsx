@@ -3,9 +3,10 @@ import { User, Mail, Building2, Calendar, CreditCard, Download, Edit2, Check, X 
 
 interface ProfileProps {
   user?: any;
+  t?: any;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ user }) => {
+export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(user ? {
     name: user.name,
@@ -40,7 +41,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
           className="ml-auto px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium flex items-center gap-2 transition"
         >
           <Edit2 size={18} />
-          {isEditing ? 'İptal' : 'Düzenle'}
+          {isEditing ? t?.common?.cancel || 'İptal' : t?.common?.edit || 'Düzenle'}
         </button>
       </div>
 

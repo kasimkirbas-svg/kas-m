@@ -3,9 +3,10 @@ import { Users, FileText, DollarSign, Shield, TrendingUp, Search, MoreHorizontal
 
 interface AdminPanelProps {
   user?: any;
+  t?: any;
 }
 
-export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
+export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
   const [activeTab, setActiveTab] = useState('overview');
 
   const stats = [
@@ -76,12 +77,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Yönetici Paneli</h1>
-          <p className="text-slate-600 mt-1">Sistem genel durum özeti ve yönetimi</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t?.admin?.title || 'Yönetici Paneli'}</h1>
+          <p className="text-slate-600 mt-1">{t?.admin?.statistics || 'Sistem genel durum özeti ve yönetimi'}</p>
         </div>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2">
           <Download size={18} />
-          Rapor İndir
+          {t?.common?.download || 'Rapor İndir'}
         </button>
       </div>
 

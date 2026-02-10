@@ -6,12 +6,14 @@ interface DocumentsListProps {
   templates: DocumentTemplate[];
   onSelectTemplate: (template: DocumentTemplate) => void;
   userIsPremium?: boolean;
+  t?: any;
 }
 
 export const DocumentsList: React.FC<DocumentsListProps> = ({
   templates,
   onSelectTemplate,
-  userIsPremium = false
+  userIsPremium = false,
+  t
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -33,9 +35,9 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
     <div className="w-full bg-white rounded-lg shadow-lg overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-6 text-white">
-        <h2 className="text-2xl font-bold mb-2">Doküman Şablonları</h2>
+        <h2 className="text-2xl font-bold mb-2">{t?.documents?.allTemplates || 'Doküman Şablonları'}</h2>
         <p className="text-indigo-100">
-          Toplam {filteredTemplates.length} doküman şablonu ({templates.length} mevcut)
+          Toplam {filteredTemplates.length} doküman şablonu ({templates.length} {t?.common?.loading || 'mevcut'})
         </p>
       </div>
 
@@ -48,7 +50,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
             <Search className="absolute left-3 top-3 text-gray-400" size={20} />
             <input
               type="text"
-              placeholder="Doküman ara..."
+              placeholder={t?.documents?.search || 'Doküman ara...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -65,7 +67,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                   : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
               }`}
             >
-              Tümü
+              {t?.documents?.filter || 'Tümü'}
             </button>
             {categories.map(category => (
               <button

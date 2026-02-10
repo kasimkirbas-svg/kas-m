@@ -10,6 +10,7 @@ interface DocumentEditorProps {
   userId?: string;
   companyName?: string;
   preparedBy?: string;
+  t?: any;
 }
 
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({
@@ -18,7 +19,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   onDocumentGenerated,
   userId = '1',
   companyName = '',
-  preparedBy = ''
+  preparedBy = '',
+  t
 }) => {
   const [formData, setFormData] = useState<Record<string, any>>({
     companyName: companyName || '',
