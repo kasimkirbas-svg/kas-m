@@ -279,18 +279,13 @@ const App = () => {
       );
     }
     
-    // 6. Admin Panel
-    if (user?.role === UserRole.ADMIN && currentView === 'admin') {
-      return <AdminPanel user={user} t={t} />
-    }
-
-    // 7. Dashboard for Admin
-    if (user?.role === UserRole.ADMIN && currentView === 'dashboard') {
+    // 6. Admin Panel (Handles all admin-related views)
+    if (user?.role === UserRole.ADMIN && ['admin', 'dashboard', 'users', 'templates', 'settings'].includes(currentView)) {
       return <AdminPanel user={user} t={t} />
     }
 
     // Default Fallback
-    return <div className="p-8 text-center text-slate-500">Sayfa yükleniyor...</div>;
+    return <div className="p-8 text-center text-slate-500">Sayfa yükleniyor... ({currentView})</div>;
   };
 
   return (
