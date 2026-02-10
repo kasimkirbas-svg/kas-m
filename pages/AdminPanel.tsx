@@ -36,18 +36,32 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     // Start loading for specific user
     setEmailSending(prev => ({ ...prev, [targetUser.id]: true }));
 
-    // Simulate Network Delay (1.5s)
+    const subject = "Kırbaş Doküman Platformuna Hoş Geldiniz";
+    const body = `Sayın ${targetUser.name},
+
+Kırbaş Doküman platformuna üyeliğiniz başarıyla tamamlanmıştır.
+
+Hesap Bilgileri:
+----------------
+Firma: ${targetUser.companyName || '-'}
+E-posta: ${targetUser.email}
+Paket: ${targetUser.plan === 'YEARLY' ? 'Yıllık Pro' : targetUser.plan === 'MONTHLY' ? 'Aylık Plan' : 'Ücretsiz'}
+
+Sisteme giriş yaparak dokümanlarınızı oluşturmaya başlayabilirsiniz.
+
+İyi Çalışmalar,
+Kırbaş Doküman Yönetimi`;
+
+    // Mailto linkini oluştur ve aç
     setTimeout(() => {
-        // Success
+        window.location.href = `mailto:${targetUser.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
         setEmailSending(prev => ({ ...prev, [targetUser.id]: false }));
         setEmailNotification({
             type: 'success',
-            message: `Hoş geldin maili gönderildi: ${targetUser.email}`
+            message: `Mail taslağı oluşturuldu: ${targetUser.email}`
         });
-
-        // Add to recent logs (in local state only for this session/component as logs aren't fully persisted yet)
-        console.log(`Email sent to ${targetUser.email} at ${new Date().toLocaleTimeString()}`);
-    }, 1500);
+    }, 500);
   };
 
   const handleLoadDemoData = () => {
