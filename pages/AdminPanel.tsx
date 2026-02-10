@@ -293,9 +293,24 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button onClick={() => handleEditUser(u)} className="text-blue-600 hover:text-blue-900 font-medium text-xs">
-                          {t?.common?.edit || 'Düzenle'}
-                        </button>
+                        <div className="flex justify-end items-center gap-2">
+                            <button 
+                                onClick={() => handleSendWelcomeEmail(u)}
+                                disabled={emailSending[u.id]}
+                                className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition ${
+                                    emailSending[u.id] 
+                                    ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed' 
+                                    : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                                }`}
+                                title="Hoş Geldin Maili Gönder"
+                            >
+                               {emailSending[u.id] ? <Loader2 size={12} className="animate-spin"/> : <Send size={12} />}
+                               {emailSending[u.id] ? '...' : 'Mail'}
+                            </button>
+                            <button onClick={() => handleEditUser(u)} className="text-blue-600 hover:text-blue-900 font-medium text-xs">
+                              {t?.common?.edit || 'Düzenle'}
+                            </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
