@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, FileText, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle, Mail, Send, Loader2 } from 'lucide-react';
+import { Users, FileText, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle, Mail, Send, Loader2, Server, Globe, Cpu, Database, PlayCircle } from 'lucide-react';
 import { User, UserRole, SubscriptionPlan } from '../types';
 
 interface AdminPanelProps {
@@ -24,6 +24,39 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   // Email Notification State
   const [emailSending, setEmailSending] = useState<{ [key: string]: boolean }>({});
   const [emailNotification, setEmailNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  // Server Monitoring State
+  const [serverStatus, setServerStatus] = useState<any>(null);
+  const [serverLogs, setServerLogs] = useState<any[]>([]);
+  const [isServerOnline, setIsServerOnline] = useState(false);
+
+  // Poll server data
+  useEffect(() => {
+     const fetchServerData = async () => {
+        try {
+            const statusRes = await fetch('http://localhost:3001/api/status');
+            if (statusRes.ok) {
+                const statusData = await statusRes.json();
+                setServerStatus(statusData);
+                setIsServerOnline(true);
+            } else {
+                setIsServerOnline(false);
+            }
+            
+            const logsRes = await fetch('http://localhost:3001/api/logs');
+            if (logsRes.ok) {
+                 const logsData = await logsRes.json();
+                 setServerLogs(logsData);
+            }
+        } catch (err) {
+            setIsServerOnline(false);
+        }
+    };
+
+    fetchServerData();
+    const interval = setInterval(fetchServerData, 2500); // 2.5s poll
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (emailNotification) {
@@ -74,89 +107,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     } finally {
         setEmailSending(prev => ({ ...prev, [targetUser.id]: false }));
     }
-  };
-
-  const handleLoadDemoData = () => {
-    const demoUsers: User[] = [
-      {
-        id: 'demo-1',
-        name: 'Ahmet Yılmaz',
-        email: 'ahmet@insaat.com',
-        role: UserRole.SUBSCRIBER,
-        plan: SubscriptionPlan.MONTHLY,
-        remainingDownloads: 25,
-        companyName: 'Yılmaz İnşaat Ltd.',
-        isActive: true,
-        subscriptionStartDate: new Date().toISOString(),
-        password: '123'
-      },
-      {
-        id: 'demo-2',
-        name: 'Ayşe Demir',
-        email: 'ayse@mimarlik.com',
-        role: UserRole.SUBSCRIBER,
-        plan: SubscriptionPlan.YEARLY,
-        remainingDownloads: 'UNLIMITED',
-        companyName: 'Demir Mimarlık',
-        isActive: true,
-        subscriptionStartDate: new Date().toISOString(),
-        password: '123'
-      },
-      {
-         id: 'demo-3',
-         name: 'Mehmet Kara',
-         email: 'mehmet@lojistik.com',
-         role: UserRole.SUBSCRIBER,
-         plan: SubscriptionPlan.FREE,
-         remainingDownloads: 3,
-         companyName: 'Kara Lojistik',
-         isActive: false,
-         subscriptionStartDate: new Date().toISOString(),
-         password: '123'
-      },
-      {
-         id: 'demo-4',
-         name: 'Zeynep Çelik',
-         email: 'zeynep@teknoloji.com',
-         role: UserRole.SUBSCRIBER,
-         plan: SubscriptionPlan.MONTHLY,
-         remainingDownloads: 20,
-         companyName: 'Çelik Teknoloji A.Ş.',
-         isActive: true,
-         subscriptionStartDate: new Date().toISOString(),
-         password: '123'
-      }
-    ];
-    
-    // Filter duplicates
-    const currentEmails = allUsers.map(u => u.email);
-    const toAdd = demoUsers.filter(u => !currentEmails.includes(u.email));
-    
-    if (toAdd.length === 0) {
-        setEmailNotification({ type: 'error', message: 'Demo verileri zaten yüklü.' });
-        return;
-    }
-
-    const updatedUsers = [...allUsers, ...toAdd];
-    setAllUsers(updatedUsers);
-    localStorage.setItem('allUsers', JSON.stringify(updatedUsers));
-    
-    // Recalc statistics
-    const activeCount = updatedUsers.filter(u => u.isActive).length;
-    // Recalc revenue
-    const revenue = updatedUsers.reduce((acc, curr) => {
-        if (curr.plan === SubscriptionPlan.YEARLY) return acc + 4999;
-        if (curr.plan === SubscriptionPlan.MONTHLY) return acc + 499;
-        return acc;
-    }, 0);
-
-    setStats(prev => ({ 
-        ...prev, 
-        activeUsers: activeCount,
-        revenue: revenue
-    }));
-
-     setEmailNotification({ type: 'success', message: `${toAdd.length} demo kullanıcısı başarıyla eklendi.` });
   };
 
   // Sync tab when currentView changes externally
@@ -262,17 +212,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">{t?.admin?.title || 'Yönetici Paneli'}</h1>
-          <p className="text-slate-600 mt-1">{t?.admin?.statistics || 'Sistem genel durum özeti ve yönetimi'}</p>
+          <p className="text-slate-600 mt-1 flex items-center gap-2">
+            <span className={`inline-block w-2.5 h-2.5 rounded-full ${isServerOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
+            {isServerOnline ? 'Backend Sistemleri Aktif' : 'Backend Bağlantısı Yok'}
+          </p>
         </div>
         <div className="flex gap-2">
-            <button 
-                onClick={handleLoadDemoData}
-                className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium transition flex items-center gap-2"
-                title="Sistemi test etmek için örnek kullanıcılar ekler"
-            >
-                <Plus size={18} />
-                Demo Veri
-            </button>
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2" onClick={() => setActiveTab('subscribers')}>
                 <Users size={18} />
                 {t?.admin?.subscribers || 'Aboneleri Yönet'}
@@ -331,17 +276,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
           <p className="text-sm text-slate-600">{t?.admin?.revenue || 'Tahmini Ciro'}</p>
         </div>
 
+        {/* Server Status Mini Card */}
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
-               <Shield size={20} />
+            <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg">
+               <Server size={20} />
             </div>
-            <span className="text-gray-500 text-xs font-bold flex items-center">
-               Fixed
+            <span className={`text-xs font-bold flex items-center ${isServerOnline ? 'text-green-500' : 'text-red-500'}`}>
+               {isServerOnline ? 'ONLINE' : 'OFFLINE'}
             </span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-900">{stats.activeTemplates}</h3>
-          <p className="text-sm text-slate-600">{t?.admin?.totalTemplates || 'Aktif Şablonlar'}</p>
+          <h3 className="text-xl font-bold text-slate-900">{serverStatus ? `${serverStatus.uptime}s` : '--'}</h3>
+           <div className="flex justify-between items-end mt-1">
+               <p className="text-sm text-slate-600">Sistem Uptime</p>
+               <span className="text-xs text-slate-400">{serverStatus ? serverStatus.platform : ''}</span>
+           </div>
         </div>
       </div>
 
@@ -445,33 +394,67 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             </div>
           </div>
 
-          {/* Recent Activity */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          {/* Real System Status Widget */}
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col h-full">
             <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
               <Activity size={20} />
-              {t?.admin?.systemActivities || 'Sistem Hareketleri'}
+              Sistem Durumu (Canlı)
             </h3>
-            <div className="space-y-4">
-              {recentLogs.map((log, idx) => (
-                <div key={idx} className="flex gap-3 pb-4 border-b border-slate-100 last:border-0 last:pb-0">
-                  <div className={`p-2 rounded-lg flex-shrink-0 ${
-                    log.type === 'success' ? 'bg-green-100' :
-                    log.type === 'warning' ? 'bg-orange-100' :
-                    'bg-blue-100'
-                  }`}>
-                    <log.icon size={16} className={
-                      log.type === 'success' ? 'text-green-600' :
-                      log.type === 'warning' ? 'text-orange-600' :
-                      'text-blue-600'
-                    } />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-slate-900 font-medium">{log.action}</p>
-                    <p className="text-xs text-slate-500">{log.time}</p>
-                  </div>
+            
+            {isServerOnline && serverStatus ? (
+              <div className="space-y-6 flex-1">
+                 <div>
+                    <div className="flex justify-between text-sm mb-1">
+                        <span className="text-slate-600">Bellek Kullanımı</span>
+                        <span className="font-bold text-slate-800">{serverStatus.memoryUsage}</span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2">
+                        <div className="bg-purple-600 h-2 rounded-full" style={{ width: '30%' }}></div>
+                    </div>
+                    <p className="text-xs text-right text-slate-400 mt-1">Total: {serverStatus.totalMemory}</p>
+                 </div>
+
+                 <div className="grid grid-cols-2 gap-4">
+                     <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                         <div className="flex items-center gap-2 text-slate-500 mb-2">
+                             <Globe size={16} />
+                             <span className="text-xs font-medium">Platform</span>
+                         </div>
+                         <p className="text-sm font-bold text-slate-800 capitalize">{serverStatus.platform}</p>
+                     </div>
+                     <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                         <div className="flex items-center gap-2 text-slate-500 mb-2">
+                             <Cpu size={16} />
+                             <span className="text-xs font-medium">CPU Load</span>
+                         </div>
+                         <p className="text-sm font-bold text-slate-800">{serverStatus.cpuLoad ? serverStatus.cpuLoad[0].toFixed(2) : '0.00'}%</p>
+                     </div>
+                 </div>
+
+                 {/* Last Real Logs in Widget */}
+                 <div className="flex-1 mt-4">
+                     <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Son Loglar</h4>
+                     <div className="space-y-2">
+                        {serverLogs.slice(0, 3).map((log, idx) => (
+                            <div key={idx} className="text-xs flex gap-2">
+                                <span className={`w-1.5 h-1.5 rounded-full mt-1.5 ${
+                                    log.type === 'error' ? 'bg-red-500' : 
+                                    log.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+                                }`}></span>
+                                <span className="text-slate-600 truncate flex-1">{log.action}: {log.details || ''}</span>
+                            </div>
+                        ))}
+                        {serverLogs.length === 0 && <p className="text-xs text-slate-400 italic">Henüz log (kayıt) yok.</p>}
+                     </div>
+                 </div>
+              </div>
+            ) : (
+                <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
+                    <AlertCircle size={32} className="text-red-400 mb-2" />
+                    <p className="text-slate-900 font-medium">Sunucu Bağlantısı Yok</p>
+                    <p className="text-sm text-slate-500 mt-1">Backend servisinin çalıştığından emin olun.</p>
                 </div>
-              ))}
-            </div>
+            )}
           </div>
         </div>
       )}
@@ -589,8 +572,107 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
         </div>
       )}
 
-        {/* Other Tabs (Placeholder) */}
-      {(activeTab === 'invoices' || activeTab === 'logs') && (
+      {/* Logs / System Monitoring COMPLETE TAB */}
+      {activeTab === 'logs' && (
+         <div className="space-y-6">
+             {/* Big Status Cards */}
+             {isServerOnline ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div className="p-4 bg-blue-50 text-blue-600 rounded-full">
+                            <Database size={24} />
+                        </div>
+                        <div>
+                            <p className="text-sm text-slate-500">Memory</p>
+                            <h3 className="text-xl font-bold text-slate-900">{serverStatus?.memoryUsage}</h3>
+                            <p className="text-xs text-slate-400">of {serverStatus?.totalMemory}</p>
+                        </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div className="p-4 bg-green-50 text-green-600 rounded-full">
+                            <PlayCircle size={24} />
+                        </div>
+                        <div>
+                            <p className="text-sm text-slate-500">Uptime</p>
+                            <h3 className="text-xl font-bold text-slate-900">{serverStatus?.uptime}s</h3>
+                            <p className="text-xs text-slate-400">Running smoothly</p>
+                        </div>
+                    </div>
+                     <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div className="p-4 bg-purple-50 text-purple-600 rounded-full">
+                            <Cpu size={24} />
+                        </div>
+                        <div>
+                            <p className="text-sm text-slate-500">CPU Load</p>
+                            <h3 className="text-xl font-bold text-slate-900">{serverStatus?.cpuLoad ? serverStatus.cpuLoad[0].toFixed(2) : '0'}%</h3>
+                            <p className="text-xs text-slate-400">1 min avg</p>
+                        </div>
+                    </div>
+                </div>
+             ) : (
+                 <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center text-red-800">
+                     <AlertCircle size={48} className="mx-auto mb-4" />
+                     <h3 className="text-xl font-bold">Sunucu Offline</h3>
+                     <p>Verilere erişilemiyor. Lütfen backend servisini başlatın.</p>
+                 </div>
+             )}
+
+             {/* Logs Table */}
+             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                        <Server size={18} />
+                        Canlı Sunucu Kayıtları (Live Logs)
+                    </h3>
+                </div>
+                <div className="max-h-[500px] overflow-y-auto">
+                    <table className="w-full text-sm text-left font-mono">
+                        <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200 sticky top-0">
+                            <tr>
+                                <th className="px-6 py-2">Zaman</th>
+                                <th className="px-6 py-2">Tür</th>
+                                <th className="px-6 py-2">Olay</th>
+                                <th className="px-6 py-2">Detay</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {serverLogs.map((log, idx) => (
+                                <tr key={idx} className="hover:bg-slate-50">
+                                    <td className="px-6 py-2 text-slate-500 text-xs">
+                                        {new Date(log.time).toLocaleTimeString()}
+                                    </td>
+                                    <td className="px-6 py-2">
+                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                                            log.type === 'error' ? 'bg-red-100 text-red-700' :
+                                            log.type === 'success' ? 'bg-green-100 text-green-700' :
+                                            log.type === 'warning' ? 'bg-orange-100 text-orange-700' :
+                                            'bg-blue-100 text-blue-700'
+                                        }`}>
+                                            {log.type}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-2 font-medium text-slate-700">
+                                        {log.action}
+                                    </td>
+                                    <td className="px-6 py-2 text-slate-500 truncate max-w-xs" title={log.details}>
+                                        {log.details || '-'}
+                                    </td>
+                                </tr>
+                            ))}
+                            {serverLogs.length === 0 && (
+                                <tr>
+                                    <td colSpan={4} className="px-6 py-8 text-center text-slate-400">Log kaydı bulunamadı.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+             </div>
+         </div>
+      )}
+
+      {/* Placeholder for invoices only now */}
+      {activeTab === 'invoices' && (
          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center text-slate-500">
              <AlertCircle size={48} className="mx-auto mb-4 text-slate-300" />
              <h3 className="text-lg font-medium text-slate-900 mb-2">Henüz Veri Yok</h3>

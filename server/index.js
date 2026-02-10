@@ -1,14 +1,33 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
+const os = require('os');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// In-memory Logs (Real-world app would use DB)
+const systemLogs = [];
+const startTime = Date.now();
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Logger Middleware
+app.use((req, res, next) => {
+    const log = {
+        id: Date.now(),
+        type: 'info',
+        action: `${req.method} ${req.url}`,
+        time: new Date().toISOString(),
+        ip: req.ip
+    };
+    systemLogs.unshift(log); // Add to beginning
+    if (systemLogs.length > 100) systemLogs.pop(); // Keep last 100
+    next();
+});
 
 // Check mode
 let isMockMode = false;
@@ -16,6 +35,13 @@ const emailUser = process.env.EMAIL_USER;
 if (!emailUser || emailUser.includes('senin_mailin')) {
     console.log("⚠️  UYARI: Geçerli mail bilgisi bulunamadı. Mock (Simülasyon) modu aktif.");
     isMockMode = true;
+     systemLogs.push({
+        id: Date.now(),
+        type: 'warning',
+        action: 'System Startup',
+        details: 'Mail credentials missing, active Mock Mode',
+        time: new Date().toISOString()
+    });
 }
 
 // Transporter Configuration
@@ -34,15 +60,54 @@ if (!isMockMode) {
     transporter.verify(function (error, success) {
         if (error) {
             console.log('❌ Sunucu mail bağlantı hatası:', error.message);
-            console.log('⚠️  Bağlantı başarısız olduğu için SIMULASYON MODUNA geçiliyor.');
             isMockMode = true;
+             systemLogs.push({
+                id: Date.now(),
+                type: 'error',
+                action: 'SMTP Connection Failed',
+                details: error.message,
+                time: new Date().toISOString()
+            });
         } else {
             console.log('✅ Sunucu gerçek mail gönderimi için hazır');
+             systemLogs.push({
+                id: Date.now(),
+                type: 'success',
+                action: 'System Ready',
+                details: 'SMTP Connection Established',
+                time: new Date().toISOString()
+            });
         }
     });
 }
 
-// Routes
+// --- SYSTEM MONITORING ROUTES ---
+
+app.get('/api/status', (req, res) => {
+    const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+    const usedMem = process.memoryUsage().heapUsed / 1024 / 1024;
+    const totalMem = os.totalmem() / 1024 / 1024;
+    const freeMem = os.freemem() / 1024 / 1024;
+    
+    res.json({
+        online: true,
+        uptime: uptimeSeconds,
+        memoryUsage: `${Math.round(usedMem)} MB`,
+        totalMemory: `${Math.round(totalMem / 1024)} GB`,
+        freeMemory: `${Math.round(freeMem / 1024)} GB`,
+        platform: os.platform(),
+        cpuLoad: os.loadavg(),
+        activeConnections: 1 // Simple mock for now
+    });
+});
+
+app.get('/api/logs', (req, res) => {
+    res.json(systemLogs);
+});
+
+
+// --- EMAIL ROUTES ---
+
 app.post('/api/send-welcome-email', async (req, res) => {
   const { recipientEmail, recipientName, companyName, plan } = req.body;
 
@@ -82,13 +147,17 @@ app.post('/api/send-welcome-email', async (req, res) => {
 
   if (isMockMode) {
       console.log('---------- [MOCK EMAIL SENT] ----------');
-      console.log(`To: ${recipientEmail}`);
-      console.log(`Subject: ${mailOptions.subject}`);
-      console.log('---------------------------------------');
       
-      // Simulate network delay
+      // Log to system logs
+      systemLogs.unshift({
+        id: Date.now(),
+        type: 'info',
+        action: 'Email Sent (Mock)',
+        details: `To: ${recipientEmail}`,
+        time: new Date().toISOString()
+      });
+
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
       return res.json({ 
           success: true, 
           message: 'Mail simülasyon olarak gönderildi (Backend Loglarını kontrol edin)', 
@@ -99,11 +168,27 @@ app.post('/api/send-welcome-email', async (req, res) => {
   try {
     const info = await transporter.sendMail(mailOptions);
     console.log('Message sent: %s', info.messageId);
+    
+    systemLogs.unshift({
+        id: Date.now(),
+        type: 'success',
+        action: 'Email Sent',
+        details: `MessageID: ${info.messageId} | To: ${recipientEmail}`,
+        time: new Date().toISOString()
+    });
+
     res.json({ success: true, message: 'Mail başarıyla gönderildi', messageId: info.messageId, mode: 'LIVE' });
   } catch (error) {
     console.error('Mail gönderme hatası:', error);
-    // If live sending fails, don't crash frontend, return false but handle gracefully if needed OR simulate fallback
     
+    systemLogs.unshift({
+        id: Date.now(),
+        type: 'error',
+        action: 'Email Failed',
+        details: error.message,
+        time: new Date().toISOString()
+    });
+
     console.log('⚠️  Gerçek gönderim başarısız oldu, simülasyon yanıtı dönülüyor.');
     res.json({ 
         success: true, 
@@ -112,6 +197,7 @@ app.post('/api/send-welcome-email', async (req, res) => {
     });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Backend sunucusu http://localhost:${PORT} üzerinde çalışıyor`);
