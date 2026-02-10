@@ -21,6 +21,7 @@ export interface User {
   subscriptionStartDate?: string;
   subscriptionEndDate?: string;
   isActive?: boolean;
+  password?: string;
 }
 
 export interface Subscription {
