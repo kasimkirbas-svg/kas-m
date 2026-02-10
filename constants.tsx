@@ -350,3 +350,17 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     fields: []
   }
 ];
+
+// Admin User Credentials
+export const ADMIN_USER = {
+  id: 'admin-001',
+  name: 'Kürşat Kırbaş',
+  email: 'admin@kirbas.com',
+  password: 'Admin123456',
+  companyName: 'Kırbaş Doküman Yazılımları',
+  role: 'ADMIN',
+  plan: 'YEARLY',
+  remainingDownloads: 'UNLIMITED',
+  subscriptionStartDate: new Date().toISOString(),
+  isActive: true
+};

@@ -7,7 +7,7 @@ import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
 import { Settings } from './pages/Settings';
 import { Button } from './components/Button';
-import { MOCK_TEMPLATES, PLANS, APP_NAME } from './constants';
+import { MOCK_TEMPLATES, PLANS, APP_NAME, ADMIN_USER } from './constants';
 import { User, UserRole, SubscriptionPlan, DocumentTemplate, GeneratedDocument } from './types';
 import { Check, Lock, Shield, Star, Users, FileText, DollarSign, TrendingUp, Search, MoreHorizontal, ArrowLeft } from 'lucide-react';
 import { getTranslation } from './i18n';
@@ -22,8 +22,15 @@ const App = () => {
   const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
   const [t, setT] = useState(getTranslation('tr'));
 
-  // Load user and settings from localStorage on mount
+  // Initialize application on mount (load users, theme, language)
   useEffect(() => {
+    // Initialize admin user if no users exist
+    const existingUsers = localStorage.getItem('allUsers');
+    if (!existingUsers) {
+      const initialUsers: User[] = [ADMIN_USER];
+      localStorage.setItem('allUsers', JSON.stringify(initialUsers));
+    }
+
     const savedUser = localStorage.getItem('currentUser');
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;

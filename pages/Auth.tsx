@@ -7,6 +7,51 @@ interface AuthProps {
   language?: string;
 }
 
+// Email notification utility
+const sendEmailNotification = (type: 'signup-confirmation' | 'admin-alert' | 'user-alert', recipient: string, data: any) => {
+  const notification = {
+    id: 'email-' + Date.now(),
+    type,
+    recipient,
+    subject: getEmailSubject(type, data),
+    body: getEmailBody(type, data),
+    timestamp: new Date().toISOString(),
+    status: 'sent'
+  };
+
+  const existingNotifications = JSON.parse(localStorage.getItem('emailNotifications') || '[]');
+  existingNotifications.push(notification);
+  localStorage.setItem('emailNotifications', JSON.stringify(existingNotifications));
+
+  console.log(`📧 Email sent to ${recipient}:`, notification);
+};
+
+const getEmailSubject = (type: string, data: any) => {
+  switch (type) {
+    case 'signup-confirmation':
+      return 'Kırbaş Doküman - Hesabınız Başarıyla Oluşturuldu';
+    case 'admin-alert':
+      return `Yeni Kullanıcı Kaydı: ${data.name} (${data.email})`;
+    case 'user-alert':
+      return 'Yeni Kullanıcı Kırbaş Doküman\'a Katıldı';
+    default:
+      return 'Bildirim';
+  }
+};
+
+const getEmailBody = (type: string, data: any) => {
+  switch (type) {
+    case 'signup-confirmation':
+      return `Merhaba ${data.name},\n\nKırbaş Doküman platformuna hoş geldiniz! Hesabınız başarıyla oluşturulmuştur.\n\nE-posta: ${data.email}\nŞirket: ${data.companyName}\n\nUygulamaya giriş yaparak belgelerinizi oluşturmaya başlayabilirsiniz.\n\nİyi çalışmalar!\nKırbaş Doküman Ekibi`;
+    case 'admin-alert':
+      return `Yeni bir kullanıcı Kırbaş Doküman\'a kaydolmuştur.\n\nAdı: ${data.name}\nE-posta: ${data.email}\nŞirket: ${data.companyName}\nKayıt Tarihi: ${new Date().toLocaleString('tr-TR')}\n\nYönetim panelinden daha fazla bilgi alabilirsiniz.`;
+    case 'user-alert':
+      return `Merhaba,\n\n${data.name} (${data.companyName}) adlı yeni bir kullanıcı Kırbaş Doküman\'a katıldı!\n\nEkibiniz büyümeye devam ediyor.`;
+    default:
+      return '';
+  }
+};
+
 export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -62,9 +107,15 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
     // Simulate API call
     setTimeout(() => {
-      // localStorage'dan kaydedilmiş kullanıcıları kontrol et
-      const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
-      const user = savedUsers.find((u: any) => u.email === formData.email && u.password === formData.password);
+      // Check allUsers (new system) first, then users (legacy) for backwards compatibility
+      let allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+      let user = allUsers.find((u: any) => u.email === formData.email && u.password === formData.password);
+      
+      // Fallback to users for backwards compatibility
+      if (!user) {
+        const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        user = savedUsers.find((u: any) => u.email === formData.email && u.password === formData.password);
+      }
 
       if (user) {
         setSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
@@ -108,10 +159,10 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
     // Simulate API call
     setTimeout(() => {
-      const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      let allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
       
       // Aynı email ile zaten kayıtlı kullanıcı var mı?
-      if (savedUsers.some((u: any) => u.email === formData.email)) {
+      if (allUsers.some((u: any) => u.email === formData.email)) {
         setError('Bu e-posta adresi zaten kullanılıyor.');
         setIsLoading(false);
         return;
@@ -132,8 +183,21 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
         isActive: true
       };
 
-      savedUsers.push(newUser);
-      localStorage.setItem('users', JSON.stringify(savedUsers));
+      allUsers.push(newUser);
+      localStorage.setItem('allUsers', JSON.stringify(allUsers));
+
+      // Send email notifications
+      // 1. Confirmation email to new user
+      sendEmailNotification('signup-confirmation', newUser.email, newUser);
+
+      // 2. Alert email to admin
+      sendEmailNotification('admin-alert', 'admin@kirbas.com', newUser);
+
+      // 3. Optional: Notify existing premium users
+      const existingUsers = allUsers.filter((u: any) => u.id !== newUser.id && u.plan !== 'FREE');
+      existingUsers.forEach((user: any) => {
+        sendEmailNotification('user-alert', user.email, newUser);
+      });
 
       setSuccess('Hesap başarıyla oluşturuldu! Giriş yapıyorsunuz...');
       setTimeout(() => {
@@ -141,22 +205,6 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       }, 1500);
       setIsLoading(false);
     }, 1000);
-  };
-
-  const handleDemo = () => {
-    // Demo kullanıcısı oluştur
-    const demoUser = {
-      id: 'demo-' + Date.now(),
-      name: 'Ahmet Yılmaz',
-      email: 'demo@example.com',
-      companyName: 'Demo Şirketi A.Ş.',
-      role: 'SUBSCRIBER',
-      plan: 'YEARLY',
-      remainingDownloads: 'UNLIMITED',
-      subscriptionStartDate: new Date().toISOString(),
-      isActive: true
-    };
-    onLoginSuccess(demoUser);
   };
 
   return (
@@ -346,28 +394,6 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                 isLogin ? t?.auth?.login || 'Giriş Yap' : t?.auth?.signup || 'Kaydol'
               )}
             </button>
-
-            {/* Demo Button */}
-            {isLogin && (
-              <>
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-300"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-slate-600">ya da</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleDemo}
-                  className="w-full px-4 py-2.5 border-2 border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition"
-                >
-                  {t?.auth?.demoTest || 'Demo ile Dene'}
-                </button>
-              </>
-            )}
           </form>
 
           {/* Terms */}
