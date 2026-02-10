@@ -10,6 +10,7 @@ import { Button } from './components/Button';
 import { MOCK_TEMPLATES, PLANS, APP_NAME } from './constants';
 import { User, UserRole, SubscriptionPlan, DocumentTemplate, GeneratedDocument } from './types';
 import { Check, Lock, Shield, Star, Users, FileText, DollarSign, TrendingUp, Search, MoreHorizontal, ArrowLeft } from 'lucide-react';
+import { getTranslation } from './i18n';
 
 const App = () => {
   // State
@@ -17,10 +18,16 @@ const App = () => {
   const [currentView, setCurrentView] = useState('auth');
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
+  const [t, setT] = useState(getTranslation('tr'));
 
-  // Load user from localStorage on mount
+  // Load user and settings from localStorage on mount
   useEffect(() => {
     const savedUser = localStorage.getItem('currentUser');
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;
+
     if (savedUser) {
       try {
         setUser(JSON.parse(savedUser));
@@ -29,8 +36,42 @@ const App = () => {
         console.error('Error loading user:', error);
       }
     }
+
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+      setT(getTranslation(savedLanguage));
+    }
+
+    // Apply theme
+    applyTheme(savedTheme || 'light');
+
     setIsLoading(false);
   }, []);
+
+  const applyTheme = (themeType: 'light' | 'dark') => {
+    const html = document.documentElement;
+    if (themeType === 'dark') {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+  };
+
+  const handleThemeChange = (newTheme: 'light' | 'dark') => {
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    applyTheme(newTheme);
+  };
+
+  const handleLanguageChange = (newLanguage: 'tr' | 'en' | 'ar') => {
+    setLanguage(newLanguage);
+    setT(getTranslation(newLanguage));
+    localStorage.setItem('language', newLanguage);
+  };
 
   // Auth Handlers
   const handleLogin = (userData: User) => {
@@ -217,7 +258,16 @@ const App = () => {
 
     // 5. Settings Page
     if (user && currentView === 'settings') {
-      return <Settings user={user} />;
+      return (
+        <Settings 
+          user={user}
+          theme={theme}
+          language={language}
+          t={t}
+          onThemeChange={handleThemeChange}
+          onLanguageChange={handleLanguageChange}
+        />
+      );
     }
     
     // 6. Admin Panel

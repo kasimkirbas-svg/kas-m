@@ -3,10 +3,15 @@ import { Bell, Lock, Eye, Globe, Shield, Trash2, CheckCircle, AlertCircle, Save,
 
 interface SettingsProps {
   user?: any;
+  theme: 'light' | 'dark';
+  language: 'tr' | 'en' | 'ar';
+  t: any;
+  onThemeChange: (theme: 'light' | 'dark') => void;
+  onLanguageChange: (language: 'tr' | 'en' | 'ar') => void;
   onUpdateProfile?: (updates: any) => void;
 }
 
-export const Settings: React.FC<SettingsProps> = ({ user, onUpdateProfile }) => {
+export const Settings: React.FC<SettingsProps> = ({ user, theme, language, t, onThemeChange, onLanguageChange, onUpdateProfile }) => {
   const [notifications, setNotifications] = useState({
     email: true,
     system: true,
@@ -17,11 +22,6 @@ export const Settings: React.FC<SettingsProps> = ({ user, onUpdateProfile }) => 
   const [privacy, setPrivacy] = useState({
     profile_public: false,
     show_in_directory: false
-  });
-
-  const [settings, setSettings] = useState({
-    theme: 'light',
-    language: 'tr'
   });
 
   const [passwordForm, setPasswordForm] = useState({
@@ -40,11 +40,9 @@ export const Settings: React.FC<SettingsProps> = ({ user, onUpdateProfile }) => 
   useEffect(() => {
     const savedNotifications = localStorage.getItem('notifications');
     const savedPrivacy = localStorage.getItem('privacy');
-    const savedSettings = localStorage.getItem('settings');
 
     if (savedNotifications) setNotifications(JSON.parse(savedNotifications));
     if (savedPrivacy) setPrivacy(JSON.parse(savedPrivacy));
-    if (savedSettings) setSettings(JSON.parse(savedSettings));
   }, []);
 
   const handleNotificationChange = (key: string) => {
@@ -65,15 +63,6 @@ export const Settings: React.FC<SettingsProps> = ({ user, onUpdateProfile }) => 
     setHasChanges(true);
   };
 
-  const handleSettingChange = (key: string, value: string) => {
-    const updated = {
-      ...settings,
-      [key]: value
-    };
-    setSettings(updated);
-    setHasChanges(true);
-  };
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPasswordForm(prev => ({
@@ -86,7 +75,6 @@ export const Settings: React.FC<SettingsProps> = ({ user, onUpdateProfile }) => 
     setIsLoading(true);
     localStorage.setItem('notifications', JSON.stringify(notifications));
     localStorage.setItem('privacy', JSON.stringify(privacy));
-    localStorage.setItem('settings', JSON.stringify(settings));
 
     setTimeout(() => {
       setSuccessMessage('Ayarlarınız başarıyla kaydedildi.');
@@ -327,21 +315,21 @@ export const Settings: React.FC<SettingsProps> = ({ user, onUpdateProfile }) => 
           <div>
             <label className="block text-sm font-medium text-slate-900 mb-3">Tema</label>
             <div className="flex gap-3">
-              {['light', 'dark', 'auto'].map(theme => (
-                <label key={theme} className="flex items-center gap-2 cursor-pointer p-3 border border-slate-300 rounded-lg hover:bg-slate-50 transition" style={{
-                  borderColor: settings.theme === theme ? '#2563eb' : '#cbd5e1',
-                  backgroundColor: settings.theme === theme ? '#eff6ff' : 'transparent'
+              {['light', 'dark'].map((themeOption) => (
+                <label key={themeOption} className="flex items-center gap-2 cursor-pointer p-3 border border-slate-300 rounded-lg hover:bg-slate-50 transition" style={{
+                  borderColor: theme === themeOption ? '#2563eb' : '#cbd5e1',
+                  backgroundColor: theme === themeOption ? '#eff6ff' : 'transparent'
                 }}>
                   <input
                     type="radio"
                     name="theme"
-                    value={theme}
-                    checked={settings.theme === theme}
-                    onChange={(e) => handleSettingChange('theme', e.target.value)}
+                    value={themeOption}
+                    checked={theme === themeOption}
+                    onChange={(e) => onThemeChange(e.target.value as 'light' | 'dark')}
                     className="w-4 h-4"
                   />
                   <span className="text-slate-700 font-medium capitalize">
-                    {theme === 'auto' ? 'Otomatik' : theme === 'light' ? 'Açık' : 'Koyu'}
+                    {themeOption === 'light' ? 'Açık' : 'Koyu'}
                   </span>
                 </label>
               ))}
@@ -351,14 +339,13 @@ export const Settings: React.FC<SettingsProps> = ({ user, onUpdateProfile }) => 
           <div>
             <label className="block text-sm font-medium text-slate-900 mb-3">Dil</label>
             <select
-              value={settings.language}
-              onChange={(e) => handleSettingChange('language', e.target.value)}
+              value={language}
+              onChange={(e) => onLanguageChange(e.target.value as 'tr' | 'en' | 'ar')}
               className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             >
               <option value="tr">Türkçe</option>
               <option value="en">English</option>
-              <option value="de">Deutsch</option>
-              <option value="fr">Français</option>
+              <option value="ar">العربية</option>
             </select>
           </div>
         </div>
@@ -393,7 +380,6 @@ export const Settings: React.FC<SettingsProps> = ({ user, onUpdateProfile }) => 
               setHasChanges(false);
               setNotifications(JSON.parse(localStorage.getItem('notifications') || JSON.stringify(notifications)));
               setPrivacy(JSON.parse(localStorage.getItem('privacy') || JSON.stringify(privacy)));
-              setSettings(JSON.parse(localStorage.getItem('settings') || JSON.stringify(settings)));
             }}
             className="px-6 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium transition flex items-center gap-2"
             disabled={isLoading}
