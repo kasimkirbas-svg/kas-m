@@ -147,7 +147,7 @@ const App = () => {
             className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-6"
           >
             <ArrowLeft size={18} />
-            Ana Sayfaya Dön
+            {t?.common?.back || 'Ana Sayfaya Dön'}
           </button>
           <DocumentsList 
             templates={MOCK_TEMPLATES}
@@ -156,6 +156,7 @@ const App = () => {
               setSelectedTemplate(template);
               setCurrentView('editor');
             }}
+            t={t}
           />
         </div>
       );
