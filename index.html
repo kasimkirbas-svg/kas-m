@@ -12,6 +12,10 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+      * {
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      }
+      
       body {
         font-family: 'Inter', sans-serif;
       }
@@ -21,43 +25,68 @@
         color-scheme: dark;
       }
       
-      :root.dark body {
-        background-color: rgb(15, 23, 42);
-        color: rgb(241, 245, 249);
+      :root.dark {
+        --color-bg: rgb(15, 23, 42);
+        --color-bg-secondary: rgb(30, 41, 59);
+        --color-bg-tertiary: rgb(51, 65, 85);
+        --color-text-primary: rgb(241, 245, 249);
+        --color-text-secondary: rgb(203, 213, 225);
+        --color-text-tertiary: rgb(148, 163, 184);
       }
       
+      :root.dark body {
+        background-color: var(--color-bg);
+        color: var(--color-text-primary);
+      }
+      
+      /* Backgrounds */
       :root.dark .bg-white {
-        background-color: rgb(30, 41, 59);
+        background-color: var(--color-bg-secondary);
       }
       
       :root.dark .bg-slate-50 {
-        background-color: rgb(15, 23, 42);
+        background-color: var(--color-bg);
       }
       
+      :root.dark .bg-slate-100 {
+        background-color: var(--color-bg-secondary);
+      }
+      
+      :root.dark .bg-slate-200 {
+        background-color: var(--color-bg-tertiary);
+      }
+      
+      /* Text Colors */
       :root.dark .text-slate-900 {
-        color: rgb(241, 245, 249);
+        color: var(--color-text-primary);
+      }
+      
+      :root.dark .text-slate-800 {
+        color: var(--color-text-primary);
       }
       
       :root.dark .text-slate-700 {
-        color: rgb(203, 213, 225);
+        color: var(--color-text-secondary);
       }
       
       :root.dark .text-slate-600 {
-        color: rgb(148, 163, 184);
+        color: var(--color-text-tertiary);
       }
       
       :root.dark .text-slate-500 {
         color: rgb(100, 116, 139);
       }
       
+      /* Borders */
       :root.dark .border-slate-200 {
-        border-color: rgb(51, 65, 85);
+        border-color: var(--color-bg-tertiary);
       }
       
       :root.dark .border-slate-300 {
         border-color: rgb(71, 85, 105);
       }
       
+      /* Blue Colors */
       :root.dark .bg-blue-50 {
         background-color: rgb(30, 58, 138);
       }
@@ -66,10 +95,19 @@
         background-color: rgb(30, 58, 138);
       }
       
+      :root.dark .bg-blue-600 {
+        background-color: rgb(37, 99, 235);
+      }
+      
       :root.dark .text-blue-600 {
         color: rgb(96, 165, 250);
       }
       
+      :root.dark .text-blue-700 {
+        color: rgb(63, 131, 248);
+      }
+      
+      /* Red Colors */
       :root.dark .bg-red-50 {
         background-color: rgb(127, 29, 29);
       }
@@ -78,10 +116,19 @@
         background-color: rgb(127, 29, 29);
       }
       
+      :root.dark .bg-red-600 {
+        background-color: rgb(220, 38, 38);
+      }
+      
       :root.dark .text-red-600 {
         color: rgb(248, 113, 113);
       }
       
+      :root.dark .hover\:bg-red-200:hover {
+        background-color: rgb(153, 27, 27);
+      }
+      
+      /* Green Colors */
       :root.dark .bg-green-50 {
         background-color: rgb(20, 83, 56);
       }
@@ -90,16 +137,110 @@
         background-color: rgb(20, 83, 56);
       }
       
+      :root.dark .bg-green-600 {
+        background-color: rgb(22, 163, 74);
+      }
+      
       :root.dark .text-green-600 {
         color: rgb(74, 222, 128);
       }
       
+      /* Purple Colors */
       :root.dark .bg-purple-100 {
         background-color: rgb(88, 28, 135);
       }
       
       :root.dark .text-purple-600 {
         color: rgb(196, 181, 253);
+      }
+      
+      /* Gradients */
+      :root.dark .from-blue-500 {
+        --tw-gradient-from: rgb(59, 130, 246);
+      }
+      
+      :root.dark .to-blue-600 {
+        --tw-gradient-to: rgb(37, 99, 235);
+      }
+      
+      :root.dark .from-blue-600 {
+        --tw-gradient-from: rgb(37, 99, 235);
+      }
+      
+      :root.dark .to-indigo-600 {
+        --tw-gradient-to: rgb(79, 70, 229);
+      }
+      
+      /* Form Elements */
+      :root.dark input,
+      :root.dark textarea,
+      :root.dark select {
+        background-color: var(--color-bg-tertiary);
+        color: var(--color-text-primary);
+        border-color: rgb(71, 85, 105);
+      }
+      
+      :root.dark input::placeholder,
+      :root.dark textarea::placeholder {
+        color: rgb(100, 116, 139);
+      }
+      
+      :root.dark input:focus,
+      :root.dark textarea:focus,
+      :root.dark select:focus {
+        background-color: var(--color-bg-secondary);
+        border-color: rgb(96, 165, 250);
+      }
+      
+      /* Shadows */
+      :root.dark .shadow-sm {
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+      }
+      
+      :root.dark .shadow {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+      }
+      
+      :root.dark .shadow-lg {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.7), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
+      }
+      
+      :root.dark .shadow-blue-200 {
+        box-shadow: none;
+      }
+      
+      :root.dark .shadow-green-200 {
+        box-shadow: none;
+      }
+      
+      /* Hover States */
+      :root.dark .hover\:bg-slate-100:hover {
+        background-color: var(--color-bg-secondary);
+      }
+      
+      :root.dark .hover\:bg-slate-50:hover {
+        background-color: var(--color-bg-tertiary);
+      }
+      
+      :root.dark .hover\:bg-blue-700:hover {
+        background-color: rgb(29, 78, 216);
+      }
+      
+      :root.dark .hover\:bg-green-600:hover {
+        background-color: rgb(16, 185, 129);
+      }
+      
+      :root.dark .hover\:border-blue-400 {
+        border-color: rgb(96, 165, 250);
+      }
+      
+      /* Opacity */
+      :root.dark .opacity-90 {
+        opacity: 0.9;
+      }
+      
+      :root.dark .opacity-75 {
+        opacity: 0.75;
       }
             
       /* Custom scrollbar for dashboard */
