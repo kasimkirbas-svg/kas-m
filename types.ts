@@ -18,6 +18,23 @@ export interface User {
   plan: SubscriptionPlan;
   remainingDownloads: number | 'UNLIMITED';
   companyName?: string;
+  subscriptionStartDate?: string;
+  subscriptionEndDate?: string;
+  isActive?: boolean;
+}
+
+export interface Subscription {
+  id: string;
+  userId: string;
+  planType: SubscriptionPlan;
+  startDate: string;
+  endDate: string;
+  autoRenew: boolean;
+  status: 'ACTIVE' | 'CANCELLED' | 'EXPIRED';
+  price: number;
+  currency: string;
+  downloadLimit: number | 'UNLIMITED';
+  downloadsThisMonth: number;
 }
 
 export interface DocumentTemplate {
@@ -26,23 +43,66 @@ export interface DocumentTemplate {
   category: string;
   description: string;
   isPremium: boolean;
+  monthlyLimit?: number; // null veya UNLIMITED ise sınırsız
   fields: DocumentField[];
+  photoCapacity?: number; // 10-15 örneği için
 }
 
 export interface DocumentField {
   key: string;
   label: string;
-  type: 'text' | 'date' | 'textarea' | 'list';
+  type: 'text' | 'date' | 'textarea' | 'list' | 'number' | 'email';
   placeholder?: string;
+  required?: boolean;
+}
+
+export interface DocumentPhoto {
+  id: string;
+  base64: string;
+  uploadedAt: string;
 }
 
 export interface GeneratedDocument {
   id: string;
+  userId: string;
   templateId: string;
   data: Record<string, any>;
-  photos: string[]; // Base64 strings
+  photos: DocumentPhoto[];
   createdAt: string;
-  status: 'DRAFT' | 'COMPLETED';
+  generatedAt?: string;
+  status: 'DRAFT' | 'COMPLETED' | 'DOWNLOADED';
+  companyName: string;
+  preparedBy: string;
+  additionalNotes?: string;
+}
+
+export interface Invoice {
+  id: string;
+  userId: string;
+  invoiceNumber: string;
+  date: string;
+  amount: number;
+  planType: SubscriptionPlan;
+  status: 'PAID' | 'PENDING' | 'CANCELLED';
+  period: string; // "Ocak 2026" gibi
+  downloadLink?: string;
+}
+
+export interface SystemLog {
+  id: string;
+  timestamp: string;
+  userId: string;
+  action: string;
+  details: Record<string, any>;
+  ipAddress?: string;
+  userAgent?: string;
+}
+
+export interface DocumentCategory {
+  id: string;
+  name: string;
+  description: string;
+  templateCount: number;
 }
 
 export interface NavItem {
