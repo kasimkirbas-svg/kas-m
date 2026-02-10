@@ -141,7 +141,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         </div>
         <p className="text-blue-100">{template.description}</p>
         <p className="text-blue-100 text-sm mt-2">
-          Fotoğraf Kapasitesi: {photos.length}/{maxPhotos}
+          {t?.documents?.photoCapacity || 'Fotoğraf Kapasitesi'}: {photos.length}/{maxPhotos}
         </p>
       </div>
 
@@ -149,13 +149,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       <div className="p-8 space-y-8">
         {/* Form Fields */}
         <div className="bg-gray-50 p-6 rounded-lg space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Belge Bilgileri Gir</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t?.editor?.title || 'Belge Bilgileri Gir'}</h3>
 
           {/* Standard Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Firma Adı *
+                {t?.editor?.firmName || 'Firma Adı'} *
               </label>
               <input
                 type="text"
@@ -170,7 +170,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Hazırlayan Kişi *
+                {t?.editor?.preparedBy || 'Hazırlayan Kişi'} *
               </label>
               <input
                 type="text"
@@ -185,7 +185,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tarih *
+                {t?.editor?.date || 'Tarih'} *
               </label>
               <input
                 type="date"
@@ -200,7 +200,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           {/* Template Specific Fields */}
           {template.fields.length > 0 && (
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <h4 className="font-medium text-gray-900 mb-3">Şablon Alanları</h4>
+              <h4 className="font-medium text-gray-900 mb-3">{t?.documents?.allTemplates || 'Şablon Alanları'}</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {template.fields.map(field => (
                   <div key={field.key}>
@@ -236,7 +236,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         <div className="bg-gray-50 p-6 rounded-lg">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Upload size={20} />
-            Fotoğraf Ekle ({photos.length}/{maxPhotos})
+            {t?.editor?.uploadPhotos || 'Fotoğraf Ekle'} ({photos.length}/{maxPhotos})
           </h3>
 
           <div className="mb-4">

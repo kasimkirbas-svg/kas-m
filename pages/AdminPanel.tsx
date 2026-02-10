@@ -11,7 +11,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
 
   const stats = [
     {
-      label: 'Aktif Abone',
+      label: t?.admin?.activeSubscribers || 'Aktif Abone',
       value: '1,240',
       change: '+12%',
       icon: Users,
@@ -19,7 +19,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
       bg: 'bg-blue-100'
     },
     {
-      label: 'Üretilen Doküman',
+      label: t?.admin?.totalDocuments || 'Üretilen Doküman',
       value: '8,503',
       change: '+8%',
       icon: FileText,
@@ -27,7 +27,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
       bg: 'bg-purple-100'
     },
     {
-      label: 'Aylık Ciro',
+      label: t?.admin?.revenue || 'Aylık Ciro',
       value: '₺142.5K',
       change: '+24%',
       icon: DollarSign,
@@ -35,7 +35,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
       bg: 'bg-green-100'
     },
     {
-      label: 'Aktif Şablonlar',
+      label: t?.admin?.totalTemplates || 'Aktif Şablonlar',
       value: '35',
       change: 'Sabit',
       icon: Shield,
@@ -231,11 +231,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
                 <tr>
-                  <th className="px-6 py-3">Aboneler</th>
-                  <th className="px-6 py-3">Plan</th>
-                  <th className="px-6 py-3">Durum</th>
-                  <th className="px-6 py-3">Katılım Tarihi</th>
-                  <th className="px-6 py-3">İşlem</th>
+                  <th className="px-6 py-3">{t?.admin?.subscribers || 'Aboneler'}</th>
+                  <th className="px-6 py-3">{t?.dashboard?.package || 'Plan'}</th>
+                  <th className="px-6 py-3">{t?.common?.confirm || 'Durum'}</th>
+                  <th className="px-6 py-3">{t?.editor?.date || 'Katılım Tarihi'}</th>
+                  <th className="px-6 py-3">{t?.common?.edit || 'İşlem'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">

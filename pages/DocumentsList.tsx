@@ -89,7 +89,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
         {filteredTemplates.length === 0 ? (
           <div className="text-center py-12">
             <FileText className="mx-auto text-gray-400 mb-4" size={48} />
-            <p className="text-gray-600 text-lg">Aradığınız doküman bulunamadı.</p>
+            <p className="text-gray-600 text-lg">{t?.documents?.noResults || 'Aradığınız doküman bulunamadı.'}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -136,7 +136,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                     {template.photoCapacity && (
                       <div className="flex items-center gap-2">
                         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                        Fotoğraf Kapasitesi: {template.photoCapacity}
+                        {t?.documents?.photoCapacity || 'Fotoğraf Kapasitesi'}: {template.photoCapacity}
                       </div>
                     )}
                     {template.monthlyLimit !== undefined && (
@@ -160,7 +160,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                 {/* Card Footer */}
                 <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 group-hover:bg-indigo-50 transition">
                   <button className="w-full text-indigo-600 font-semibold text-sm hover:text-indigo-700 py-1">
-                    Doküman Oluştur →
+                    {t?.dashboard?.createDocument || 'Dokuman Ölustur'} →
                   </button>
                 </div>
               </div>

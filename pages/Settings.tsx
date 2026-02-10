@@ -158,23 +158,23 @@ export const Settings: React.FC<SettingsProps> = ({ user, theme, language, t, on
           {[
             {
               key: 'email',
-              label: 'E-posta Bildirimleri',
-              description: 'İşlemler ve güncellemeler için e-posta alın'
+              label: t?.settings?.emailNotifications || 'E-posta Bildirimleri',
+              description: t?.settings?.emailDesc || 'İşlemler ve güncellemeler için e-posta alın'
             },
             {
               key: 'system',
-              label: 'Sistem Bildirimleri',
-              description: 'Panelde anlık bildirimler alın'
+              label: t?.settings?.systemNotifications || 'Sistem Bildirimleri',
+              description: t?.settings?.systemDesc || 'Panelde anlık bildirimler alın'
             },
             {
               key: 'weekly_report',
-              label: 'Haftalık Rapor',
-              description: 'Her cuma haftalık özet raporu alın'
+              label: t?.settings?.weeklyReport || 'Haftalık Rapor',
+              description: t?.settings?.weeklyDesc || 'Her cuma haftalık özet raporu alın'
             },
             {
               key: 'marketing',
-              label: 'Pazarlama E-postaları',
-              description: 'Yeni özellikler ve özel teklifler hakkında bilgi alın'
+              label: t?.settings?.marketing || 'Pazarlama E-postaları',
+              description: t?.settings?.marketingDesc || 'Yeni özellikler ve özel teklifler hakkında bilgi alın'
             }
           ].map(item => (
             <label key={item.key} className="flex items-start p-4 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer transition">
@@ -197,20 +197,20 @@ export const Settings: React.FC<SettingsProps> = ({ user, theme, language, t, on
       <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
         <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
           <Shield size={24} />
-          Gizlilik & Güvenlik
+          {t?.settings?.privacy || 'Gizlilik & Güvenlik'}
         </h2>
 
         <div className="space-y-4 mb-6">
           {[
             {
               key: 'profile_public',
-              label: 'Profilimi Herkese Açık Yap',
-              description: 'Profiliniz sistem dizininde görünmesine izin verin'
+              label: t?.settings?.profilePublic || 'Profilimi Herkese Açık Yap',
+              description: t?.settings?.profileDesc || 'Profiliniz sistem dizininde görünmesine izin verin'
             },
             {
               key: 'show_in_directory',
-              label: 'Dizinde Göster',
-              description: 'Başka kullanıcılar sizi bulabilsin'
+              label: t?.settings?.showDirectory || 'Dizinde Göster',
+              description: t?.settings?.directoryDesc || 'Başka kullanıcılar sizi bulabilsin'
             }
           ].map(item => (
             <label key={item.key} className="flex items-start p-4 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer transition">
