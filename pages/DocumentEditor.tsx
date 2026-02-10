@@ -51,7 +51,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
     Array.from(files).forEach(file => {
       if (photos.length >= maxPhotos) {
-        alert(`Maksimum ${maxPhotos} fotoğraf ekleyebilirsiniz!`);
+        alert(t?.editor?.maxPhotoError?.replace('{count}', maxPhotos) || `Maksimum ${maxPhotos} fotoğraf ekleyebilirsiniz!`);
         return;
       }
 
@@ -102,11 +102,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         ${template.title}
         ======================================
         
-        Firma: ${formData.companyName}
-        Hazırlayan: ${formData.preparedBy}
-        Tarih: ${formData.date}
-        Fotoğraf Sayısı: ${photos.length}
-        Ek Notlar: ${additionalNotes || 'Yok'}
+        ${t?.editor?.pdfCompany || 'Firma'}: ${formData.companyName}
+        ${t?.editor?.pdfPreparedBy || 'Hazırlayan'}: ${formData.preparedBy}
+        ${t?.editor?.pdfDate || 'Tarih'}: ${formData.date}
+        ${t?.editor?.pdfPhotos || 'Fotoğraf Sayısı'}: ${photos.length}
+        ${t?.editor?.pdfNotes || 'Ek Notlar'}: ${additionalNotes || (t?.editor?.pdfNone || 'Yok')}
         
         ======================================
         Bu belge ${new Date().toLocaleDateString('tr-TR')} tarihinde oluşturulmuştur.
@@ -120,7 +120,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       element.click();
       document.body.removeChild(element);
 
-      alert('Doküman başarıyla oluşturuldu ve indirilmeye hazırdır!');
+      alert(t?.editor?.photoSuccess || 'Doküman başarıyla oluşturuldu ve indirilmeye hazırdır!');
     }, 1000);
   };
 
@@ -149,7 +149,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       <div className="p-8 space-y-8">
         {/* Form Fields */}
         <div className="bg-gray-50 p-6 rounded-lg space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t?.editor?.title || 'Belge Bilgileri Gir'}</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t?.editor?.documentInfo || 'Belge Bilgileri Gir'}</h3>
 
           {/* Standard Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -200,7 +200,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           {/* Template Specific Fields */}
           {template.fields.length > 0 && (
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <h4 className="font-medium text-gray-900 mb-3">{t?.documents?.allTemplates || 'Şablon Alanları'}</h4>
+              <h4 className="font-medium text-gray-900 mb-3">{t?.editor?.templateFields || 'Şablon Alanları'}</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {template.fields.map(field => (
                   <div key={field.key}>
@@ -243,8 +243,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
               <div className="text-center">
                 <Upload className="mx-auto mb-2 text-gray-400" size={32} />
-                <p className="text-gray-600 font-medium">Fotoğraf seçin</p>
-                <p className="text-gray-500 text-sm">PNG, JPG, GIF (Max 10 MB)</p>
+                <p className="text-gray-600 font-medium">{t?.editor?.selectPhotos || 'Fotoğraf seçin'}</p>
+                <p className="text-gray-500 text-sm">{t?.editor?.photoInfo || 'PNG, JPG, GIF (Max 10 MB)'}</p>
               </div>
               <input
                 type="file"
@@ -287,12 +287,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         <div className="bg-gray-50 p-6 rounded-lg">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Plus size={20} />
-            Ek Maddeler
+            {t?.editor?.additionalItems || 'Ek Maddeler'}
           </h3>
           <textarea
             value={additionalNotes}
             onChange={(e) => setAdditionalNotes(e.target.value)}
-            placeholder="Dokümanın içerisine eklemek istediğiniz ek bilgi veya maddeleri yazınız..."
+            placeholder={t?.editor?.additionalItemsPlaceholder || 'Dokümanın içerisine eklemek istediğiniz ek bilgi veya maddeleri yazınız...'}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32"
           />
         </div>
@@ -309,7 +309,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                 onClick={() => setPhotoPreview(null)}
                 className="mt-4 w-full bg-gray-300 text-gray-900 px-4 py-2 rounded hover:bg-gray-400"
               >
-                Kapat
+                {t?.editor?.close || 'Kapat'}
               </button>
             </div>
           </div>
@@ -322,7 +322,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
               onClick={onClose}
               className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
             >
-              İptal
+              {t?.common?.cancel || 'İptal'}
             </button>
           )}
           <button
@@ -337,12 +337,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             {isGenerating ? (
               <>
                 <span className="animate-spin">⏳</span>
-                Hazırlanıyor...
+                {t?.editor?.preparing || 'Hazırlanıyor...'}
               </>
             ) : (
               <>
                 <Download size={18} />
-                Hazırla ve İndir
+                {t?.editor?.prepareDownload || 'Hazırla ve İndir'}
               </>
             )}
           </button>

@@ -120,11 +120,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
                 : 'text-slate-600 border-transparent hover:text-slate-900'
             }`}
           >
-            {tab === 'overview' && 'Genel Bakış'}
-            {tab === 'subscribers' && 'Aboneler'}
-            {tab === 'templates' && 'Şablonlar'}
-            {tab === 'invoices' && 'Faturalar'}
-            {tab === 'logs' && 'Sistem Kayıtları'}
+            {tab === 'overview' && (t?.admin?.overview || 'Genel Bakış')}
+            {tab === 'subscribers' && (t?.admin?.subscribers || 'Aboneler')}
+            {tab === 'templates' && (t?.admin?.templates || 'Şablonlar')}
+            {tab === 'invoices' && (t?.admin?.invoices || 'Faturalar')}
+            {tab === 'logs' && (t?.admin?.logs || 'Sistem Kayıtları')}
           </button>
         ))}
       </div>
@@ -135,12 +135,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
           {/* Users Table */}
           <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h3 className="font-bold text-slate-900">Son Üyelikler</h3>
+              <h3 className="font-bold text-slate-900">{t?.admin?.recentMembers || 'Son Üyelikler'}</h3>
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
                 <input
                   type="text"
-                  placeholder="Ara..."
+                  placeholder={t?.admin?.search || 'Ara...'}
                   className="pl-9 pr-4 py-1.5 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -149,10 +149,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
               <table className="w-full text-sm text-left">
                 <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-3">Kullanıcı</th>
-                    <th className="px-6 py-3">Paket</th>
-                    <th className="px-6 py-3">Durum</th>
-                    <th className="px-6 py-3">İşlem</th>
+                    <th className="px-6 py-3">{t?.admin?.user || 'Kullanıcı'}</th>
+                    <th className="px-6 py-3">{t?.admin?.plan || 'Paket'}</th>
+                    <th className="px-6 py-3">{t?.admin?.status || 'Durum'}</th>
+                    <th className="px-6 py-3">{t?.admin?.action || 'İşlem'}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -188,7 +188,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
             <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
               <Activity size={20} />
-              Sistem Hareketleri
+              {t?.admin?.systemActivities || 'Sistem Hareketleri'}
             </h3>
             <div className="space-y-4">
               {recentLogs.map((log, idx) => (
@@ -212,7 +212,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
               ))}
             </div>
             <button className="w-full mt-6 text-sm text-blue-600 hover:text-blue-700 font-medium transition">
-              Tüm Kayıtları Gör →
+              {t?.admin?.viewAllLogs || 'Tüm Kayıtları Gör →'}
             </button>
           </div>
         </div>
@@ -221,10 +221,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
       {activeTab === 'subscribers' && (
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-            <h3 className="font-bold text-slate-900">Tüm Aboneler</h3>
+            <h3 className="font-bold text-slate-900">{t?.admin?.allSubscribers || 'Tüm Aboneler'}</h3>
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2">
               <Plus size={18} />
-              Yeni Abone
+              {t?.admin?.newSubscriber || 'Yeni Abone'}
             </button>
           </div>
           <div className="overflow-x-auto">
@@ -277,21 +277,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
       {activeTab === 'templates' && (
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-            <h3 className="font-bold text-slate-900">Doküman Şablonları</h3>
+            <h3 className="font-bold text-slate-900">{t?.admin?.documentTemplates || 'Doküman Şablonları'}</h3>
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2">
               <Plus size={18} />
-              Yeni Şablon
+              {t?.admin?.newTemplate || 'Yeni Şablon'}
             </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
                 <tr>
-                  <th className="px-6 py-3">Şablon Adı</th>
-                  <th className="px-6 py-3">Kategori</th>
-                  <th className="px-6 py-3">İndirmeler</th>
-                  <th className="px-6 py-3">Durum</th>
-                  <th className="px-6 py-3">İşlem</th>
+                  <th className="px-6 py-3">{t?.admin?.templateName || 'Şablon Adı'}</th>
+                  <th className="px-6 py-3">{t?.admin?.category || 'Kategori'}</th>
+                  <th className="px-6 py-3">{t?.admin?.downloads || 'İndirmeler'}</th>
+                  <th className="px-6 py-3">{t?.admin?.status || 'Durum'}</th>
+                  <th className="px-6 py-3">{t?.admin?.action || 'İşlem'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -326,18 +326,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
       {activeTab === 'invoices' && (
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 bg-slate-50">
-            <h3 className="font-bold text-slate-900">Faturalar</h3>
+            <h3 className="font-bold text-slate-900">{t?.admin?.invoices || 'Faturalar'}</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
                 <tr>
-                  <th className="px-6 py-3">Fatura No</th>
-                  <th className="px-6 py-3">Tarih</th>
-                  <th className="px-6 py-3">Müşteri</th>
-                  <th className="px-6 py-3">Tutar</th>
-                  <th className="px-6 py-3">Durum</th>
-                  <th className="px-6 py-3">İşlem</th>
+                  <th className="px-6 py-3">{t?.admin?.invoiceNo || 'Fatura No'}</th>
+                  <th className="px-6 py-3">{t?.admin?.date || 'Tarih'}</th>
+                  <th className="px-6 py-3">{t?.admin?.customer || 'Müşteri'}</th>
+                  <th className="px-6 py-3">{t?.admin?.amount || 'Tutar'}</th>
+                  <th className="px-6 py-3">{t?.admin?.status || 'Durum'}</th>
+                  <th className="px-6 py-3">{t?.admin?.action || 'İşlem'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -358,7 +358,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
                     </td>
                     <td className="px-6 py-4">
                       <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
-                        İndir
+                        {t?.admin?.download || 'İndir'}
                       </button>
                     </td>
                   </tr>
@@ -372,7 +372,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t }) => {
       {activeTab === 'logs' && (
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 bg-slate-50">
-            <h3 className="font-bold text-slate-900">Sistem Kayıtları</h3>
+            <h3 className="font-bold text-slate-900">{t?.admin?.systemLogs || 'Sistem Kayıtları'}</h3>
           </div>
           <div className="divide-y divide-slate-100">
             {recentLogs.concat(recentLogs).map((log, idx) => (

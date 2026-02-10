@@ -161,7 +161,7 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
                 <div className="flex justify-between items-center mb-1">
                   <p className="text-sm text-slate-600">{t?.profile?.downloads || 'İndirme Hakkı'}</p>
                   <p className="font-semibold text-slate-900">
-                    {user?.remainingDownloads === 'UNLIMITED' ? 'Sınırsız' : user?.remainingDownloads}
+                    {user?.remainingDownloads === 'UNLIMITED' ? (t?.profile?.unlimited || 'Sınırsız') : user?.remainingDownloads}
                   </p>
                 </div>
                 {user?.remainingDownloads !== 'UNLIMITED' && (
@@ -180,10 +180,10 @@ export const Profile: React.FC<ProfileProps> = ({ user, t }) => {
           <div className="space-y-2">
             <button className="w-full px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 font-medium transition flex items-center justify-center gap-2">
               <Download size={18} />
-              Faturalar
+              {t?.profile?.invoices || 'Faturalar'}
             </button>
             <button className="w-full px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 font-medium transition">
-              Şifre Değiştir
+              {t?.profile?.changePassword || 'Şifre Değiştir'}
             </button>
           </div>
         </div>

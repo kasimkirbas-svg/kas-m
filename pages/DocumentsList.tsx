@@ -37,7 +37,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
       <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-6 text-white">
         <h2 className="text-2xl font-bold mb-2">{t?.documents?.allTemplates || 'Doküman Şablonları'}</h2>
         <p className="text-indigo-100">
-          Toplam {filteredTemplates.length} doküman şablonu ({templates.length} {t?.common?.loading || 'mevcut'})
+          {t?.documents?.total || 'Toplam'} {filteredTemplates.length} {t?.documents?.allTemplates || 'doküman şablonu'} ({templates.length} {t?.documents?.available || 'mevcut'})
         </p>
       </div>
 
@@ -67,7 +67,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                   : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
               }`}
             >
-              {t?.documents?.filter || 'Tümü'}
+              {t?.documents?.all || 'Tümü'}
             </button>
             {categories.map(category => (
               <button
@@ -143,15 +143,15 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                       <div className="flex items-center gap-2">
                         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
                         {template.monthlyLimit === undefined || template.monthlyLimit === null 
-                          ? 'Sınırsız Kullanım'
-                          : `Aylık Limit: ${template.monthlyLimit}`
+                          ? (t?.documents?.unlimitedUsage || 'Sınırsız Kullanım')
+                          : `${t?.documents?.monthlyLimit || 'Aylık Limit'}: ${template.monthlyLimit}`
                         }
                       </div>
                     )}
                     {template.fields.length > 0 && (
                       <div className="flex items-center gap-2">
                         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                        {template.fields.length} Özel Alan
+                        {template.fields.length} {t?.documents?.customFields || 'Özel Alan'}
                       </div>
                     )}
                   </div>
@@ -160,7 +160,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                 {/* Card Footer */}
                 <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 group-hover:bg-indigo-50 transition">
                   <button className="w-full text-indigo-600 font-semibold text-sm hover:text-indigo-700 py-1">
-                    {t?.dashboard?.createDocument || 'Dokuman Ölustur'} →
+                    {t?.documents?.createDocument || 'Doküman Oluştur'} →
                   </button>
                 </div>
               </div>
