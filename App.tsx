@@ -119,6 +119,11 @@ const App = () => {
       return <Auth onLoginSuccess={handleLogin} t={t} language={language} />
     }
 
+    // ADMIN ROUTING (Prioritize Admin Views)
+    if (user?.role === UserRole.ADMIN && ['admin', 'dashboard', 'users', 'templates'].includes(currentView)) {
+      return <AdminPanel user={user} t={t} currentView={currentView} />
+    }
+
     // 1. Document Editor
     if (user && currentView === 'editor' && selectedTemplate) {
       return (
@@ -279,9 +284,9 @@ const App = () => {
       );
     }
     
-    // 6. Admin Panel (Handles all admin-related views)
-    if (user?.role === UserRole.ADMIN && ['admin', 'dashboard', 'users', 'templates', 'settings'].includes(currentView)) {
-      return <AdminPanel user={user} t={t} />
+    // 6. Admin Panel (Handles all admin-related views) - CLEANUP: This block is now redundant due to top priority check, but keeping for safety if view names change.
+    if (user?.role === UserRole.ADMIN && ['admin', 'subscribers', 'users'].includes(currentView)) {
+      return <AdminPanel user={user} t={t} currentView={currentView} />
     }
 
     // Default Fallback
