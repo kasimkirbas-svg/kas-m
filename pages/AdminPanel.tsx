@@ -297,19 +297,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     setEditingUser({...user});
     setIsModalOpen(true);
   };
-const token = localStorage.getItem('authToken');
+
+  const handleSaveUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    try {
+        const token = localStorage.getItem('authToken');
         await fetch(`http://localhost:3001/api/users/${editingUser.id}`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
-           
-    if (!editingUser) return;
-
-    try {
-        await fetch(`http://localhost:3001/api/users/${editingUser.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            },
             body: JSON.stringify(editingUser)
         });
         
