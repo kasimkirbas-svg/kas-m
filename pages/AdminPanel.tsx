@@ -9,6 +9,17 @@ interface AdminPanelProps {
   currentView?: string;
 }
 
+const getApiUrl = () => {
+    // Basic IP detection/config for local network testing
+    // For local network testing (e.g. phone), change 'localhost' to your machine IP
+    if (typeof window !== 'undefined') {
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            return `http://${window.location.hostname}:3001`;
+        }
+    }
+    return 'http://localhost:3001';
+};
+
 export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) => {
   // Map global currentView to internal tab
   const getInitialTab = () => {
@@ -39,7 +50,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   useEffect(() => {
      const fetchServerData = async () => {
         try {
-            const statusRes = await fetch('http://localhost:3001/api/status');
+            const statusRes = await fetch(`${getApiUrl()}/api/status`);
             if (statusRes.ok) {
                 const statusData = await statusRes.json();
                 setServerStatus(statusData);
@@ -48,7 +59,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                 setIsServerOnline(false);
             }
             
-            const logsRes = await fetch('http://localhost:3001/api/logs');
+            const logsRes = await fetch(`${getApiUrl()}/api/logs`);
             if (logsRes.ok) {
                  const logsData = await logsRes.json();
                  setServerLogs(logsData);
@@ -75,7 +86,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     setEmailSending(prev => ({ ...prev, [targetUser.id]: true }));
 
     try {
-        const response = await fetch('http://localhost:3001/api/send-welcome-email', {
+        const response = await fetch(`${getApiUrl()}/api/send-welcome-email`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -235,7 +246,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     try {
       // Fetch users from API
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:3001/api/users', {
+      const response = await fetch(`${getApiUrl()}/api/users`, {
           headers: {
               'Authorization': `Bearer ${token}`
           }
@@ -278,7 +289,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     if (window.confirm(t?.common?.confirmDelete || 'Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
       try {
         const token = localStorage.getItem('authToken');
-        await fetch(`http://localhost:3001/api/users/${userId}`, { 
+        await fetch(`${getApiUrl()}/api/users/${userId}`, { 
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -304,7 +315,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
 
     try {
         const token = localStorage.getItem('authToken');
-        await fetch(`http://localhost:3001/api/users/${editingUser.id}`, {
+        await fetch(`${getApiUrl()}/api/users/${editingUser.id}`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',

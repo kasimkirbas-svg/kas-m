@@ -52,6 +52,16 @@ const getEmailBody = (type: string, data: any) => {
   }
 };
 
+const getApiUrl = () => {
+    // Mobil veya aynı ağdaki cihazlar için yerel IP adresi
+    // Buradaki localhost'u kendi yerel IP'niz ile değiştirin
+    // Örnek: 'http://192.168.1.11:3001'
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        return `http://${window.location.hostname}:3001`;
+    }
+    return 'http://localhost:3001';
+};
+
 export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -107,7 +117,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
     try {
       // API call to backend
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      const response = await fetch(`${getApiUrl()}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +168,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     if (formData.password.length < 6) {
       setError('Şifre en az 6 karakter olmalıdır.');
       return;
-    }
+    }`${getApiUrl()}/api/auth/register`
 
     if (formData.password !== formData.confirmPassword) {
       setError('Şifreler eşleşmiyor.');
