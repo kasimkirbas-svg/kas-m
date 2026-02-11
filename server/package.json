@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "share": "lt --port 3001 --subdomain kirbas-doc-platform"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -15,6 +16,7 @@
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
+    "localtunnel": "^2.0.2",
     "nodemailer": "^6.9.7"
   }
 }

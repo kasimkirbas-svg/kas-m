@@ -52,15 +52,7 @@ const getEmailBody = (type: string, data: any) => {
   }
 };
 
-const getApiUrl = () => {
-    // Mobil veya aynı ağdaki cihazlar için yerel IP adresi
-    // Buradaki localhost'u kendi yerel IP'niz ile değiştirin
-    // Örnek: 'http://192.168.1.11:3001'
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        return `http://${window.location.hostname}:3001`;
-    }
-    return 'http://localhost:3001';
-};
+import { fetchApi } from '../src/utils/api';
 
 export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -117,7 +109,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
     try {
       // API call to backend
-      const response = await fetch(`${getApiUrl()}/api/auth/login`, {
+      const response = await fetchApi('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -178,7 +170,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/register', {
+      const response = await fetchApi('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
