@@ -160,7 +160,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     if (formData.password.length < 6) {
       setError('Şifre en az 6 karakter olmalıdır.');
       return;
-    }`${getApiUrl()}/api/auth/register`
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError('Şifreler eşleşmiyor.');
