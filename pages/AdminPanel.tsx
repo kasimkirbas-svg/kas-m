@@ -14,8 +14,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   const getInitialTab = () => {
     switch(currentView) {
       case 'users': return 'subscribers';
+      case 'admin-templates': return 'templates'; // Explicit admin templates
       case 'templates': return 'templates';
-      case 'packages': return 'packages'; // Added mapping
+      case 'admin-packages': return 'packages'; // Explicit admin packages
+      case 'packages': return 'packages';
+      case 'admin': return 'overview';
       case 'dashboard': return 'overview';
       default: return 'overview';
     }

@@ -22,9 +22,10 @@ export const Layout: React.FC<LayoutProps> = ({ user, currentView, onNavigate, o
   const menuItems = user 
     ? user.role === 'ADMIN'
       ? [
-          { label: t?.nav?.dashboard || 'Ana Sayfa', view: 'dashboard', icon: LayoutDashboard },
+          { label: t?.nav?.dashboard || 'Yönetim Paneli', view: 'admin', icon: LayoutDashboard },
           { label: 'Aboneler', view: 'users', icon: User },
-          { label: 'Şablonlar', view: 'templates', icon: FileText },
+          { label: 'Şablon Yönetimi', view: 'admin-templates', icon: FileText },
+          { label: 'Paketler & Fiyat', view: 'admin-packages', icon: PlusSquare },
           { label: t?.nav?.settings || 'Ayarlar', view: 'settings', icon: Settings },
         ]
       : [

@@ -379,8 +379,8 @@ const App = () => {
       );
     }
     
-    // 7. Admin Panel (Handles all admin-related views) - CLEANUP: This block is now redundant due to top priority check, but keeping for safety if view names change.
-    if (user?.role === UserRole.ADMIN && ['admin', 'subscribers', 'users'].includes(currentView)) {
+    // 7. Admin Panel (Handles all admin-related views)
+    if (user?.role === UserRole.ADMIN && ['admin', 'subscribers', 'users', 'admin-templates', 'admin-packages'].includes(currentView)) {
       return <AdminPanel user={user} t={t} currentView={currentView} />
     }
 
