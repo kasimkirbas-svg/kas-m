@@ -105,28 +105,35 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      // Check allUsers (new system) first, then users (legacy) for backwards compatibility
-      let allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
-      let user = allUsers.find((u: any) => u.email === formData.email && u.password === formData.password);
-      
-      // Fallback to users for backwards compatibility
-      if (!user) {
-        const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
-        user = savedUsers.find((u: any) => u.email === formData.email && u.password === formData.password);
-      }
+    try {
+      // API call to backend
+      const response = await fetch('http://localhost:3001/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        }),
+      });
 
-      if (user) {
+      const data = await response.json();
+
+      if (data.success) {
         setSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
         setTimeout(() => {
-          onLoginSuccess(user);
+          onLoginSuccess(data.user);
         }, 1000);
       } else {
-        setError('E-posta veya şifre hatalı.');
+        setError(data.message || 'Giriş başarısız.');
       }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -157,58 +164,43 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      let allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
-      
-      // Aynı email ile zaten kayıtlı kullanıcı var mı?
-      if (allUsers.some((u: any) => u.email === formData.email)) {
-        setError('Bu e-posta adresi zaten kullanılıyor.');
-        setIsLoading(false);
-        return;
-      }
-
-      // Yeni kullanıcı oluştur
-      const newUser = {
-        id: 'user-' + Date.now(),
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        companyName: formData.companyName,
-        role: 'SUBSCRIBER',
-        plan: 'FREE',
-        remainingDownloads: 3, // Ücretsiz deneme
-        subscriptionStartDate: new Date().toISOString(),
-        subscriptionEndDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-        isActive: true
-      };
-
-      allUsers.push(newUser);
-      localStorage.setItem('allUsers', JSON.stringify(allUsers));
-
-      // Send email notifications
-      // 1. Confirmation email to new user
-      sendEmailNotification('signup-confirmation', newUser.email, newUser);
-
-      // 2. Alert email to admin
-      sendEmailNotification('admin-alert', 'admin@kirbas.com', newUser);
-
-      // 3. Optional: Notify existing premium users
-      const existingUsers = allUsers.filter((u: any) => u.id !== newUser.id && u.plan !== 'FREE');
-      existingUsers.forEach((user: any) => {
-        sendEmailNotification('user-alert', user.email, newUser);
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          companyName: formData.companyName
+        }),
       });
 
-      setSuccess('Hesap başarıyla oluşturuldu! Giriş yapıyorsunuz...');
-      setTimeout(() => {
-        onLoginSuccess(newUser);
-      }, 1500);
+      const data = await response.json();
+
+      if (data.success) {
+        // Send email notifications (Client side visual only)
+        sendEmailNotification('signup-confirmation', data.user.email, data.user);
+        
+        setSuccess('Hesap başarıyla oluşturuldu! Giriş yapılıyor...');
+        setTimeout(() => {
+          onLoginSuccess(data.user);
+        }, 1500);
+      } else {
+        setError(data.message || 'Kayıt başarısız.');
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
+      setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10 overflow-y-auto">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -286,7 +278,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                       value={formData.name}
                       onChange={handleInputChange}
                       placeholder="Adınız ve soyadınız"
-                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
                       disabled={isLoading}
                     />
                   </div>
@@ -305,7 +297,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                       value={formData.companyName}
                       onChange={handleInputChange}
                       placeholder="Şirketinizin adı"
-                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
                       disabled={isLoading}
                     />
                   </div>
@@ -326,7 +318,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="ornek@email.com"
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
                   disabled={isLoading}
                 />
               </div>
@@ -345,7 +337,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="••••••"
-                  className="w-full pl-10 pr-12 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="w-full pl-10 pr-12 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
                   disabled={isLoading}
                 />
                 <button
@@ -372,7 +364,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     placeholder="••••••"
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
                     disabled={isLoading}
                   />
                 </div>

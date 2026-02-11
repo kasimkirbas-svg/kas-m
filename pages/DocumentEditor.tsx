@@ -163,7 +163,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                 value={formData.companyName}
                 onChange={handleInputChange}
                 placeholder="Firma adı giriniz"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base sm:text-sm"
                 required
               />
             </div>
@@ -178,7 +178,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                 value={formData.preparedBy}
                 onChange={handleInputChange}
                 placeholder="Adı Soyadı"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base sm:text-sm"
                 required
               />
             </div>
@@ -192,7 +192,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                 name="date"
                 value={formData.date}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base sm:text-sm"
               />
             </div>
           </div>
@@ -213,7 +213,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         value={formData[field.key] || ''}
                         onChange={handleInputChange}
                         placeholder={field.placeholder}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24 text-base sm:text-sm"
                       />
                     ) : (
                       <input
@@ -222,7 +222,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         value={formData[field.key] || ''}
                         onChange={handleInputChange}
                         placeholder={field.placeholder}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base sm:text-sm"
                       />
                     )}
                   </div>
@@ -293,7 +293,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             value={additionalNotes}
             onChange={(e) => setAdditionalNotes(e.target.value)}
             placeholder={t?.editor?.additionalItemsPlaceholder || 'Dokümanın içerisine eklemek istediğiniz ek bilgi veya maddeleri yazınız...'}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 text-base sm:text-sm"
           />
         </div>
 

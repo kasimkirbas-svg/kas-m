@@ -231,42 +231,53 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     setIsPlanModalOpen(false);
   };
 
-  const loadUsers = () => {
+  const loadUsers = async () => {
     try {
-      const storedUsers = localStorage.getItem('allUsers');
-      if (storedUsers) {
-        const users: User[] = JSON.parse(storedUsers);
-        setAllUsers(users);
-        
-        // Calculate stats
-        const activeCount = users.filter(u => u.isActive).length;
-        // Simple revenue approximation (mock calculation)
-        const revenue = users.reduce((acc, curr) => {
-          if (curr.plan === SubscriptionPlan.YEARLY) return acc + 4999;
-          if (curr.plan === SubscriptionPlan.MONTHLY) return acc + 499;
-          return acc;
-        }, 0);
-
-        setStats(prev => ({
-          ...prev,
-          activeUsers: activeCount,
-          revenue: revenue
-        }));
+      // Fetch users from API
+      const response = await fetch('http://localhost:3001/api/users');
+      let users: User[] = [];
+      
+      if (response.ok) {
+        users = await response.json();
+      } else {
+        // Fallback to local storage if API fails (or for legacy)
+        const storedUsers = localStorage.getItem('allUsers');
+        if (storedUsers) {
+           users = JSON.parse(storedUsers);
+        }
       }
+
+      setAllUsers(users);
+        
+      // Calculate stats
+      const activeCount = users.filter(u => u.isActive).length;
+      // Simple revenue approximation (mock calculation)
+      const revenue = users.reduce((acc, curr) => {
+        if (curr.plan === SubscriptionPlan.YEARLY) return acc + 4999;
+        if (curr.plan === SubscriptionPlan.MONTHLY) return acc + 499;
+        return acc;
+      }, 0);
+
+      setStats(prev => ({
+        ...prev,
+        activeUsers: activeCount,
+        revenue: revenue
+      }));
+      
     } catch (error) {
       console.error("Failed to load users", error);
     }
   };
 
-  const handleDeleteUser = (userId: string) => {
+  const handleDeleteUser = async (userId: string) => {
     if (window.confirm(t?.common?.confirmDelete || 'Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
-      const updatedUsers = allUsers.filter(u => u.id !== userId);
-      setAllUsers(updatedUsers);
-      localStorage.setItem('allUsers', JSON.stringify(updatedUsers));
-      
-      // Also update 'users' key for legacy compatibility if needed
-      if (localStorage.getItem('users')) {
-         localStorage.setItem('users', JSON.stringify(updatedUsers));
+      try {
+        await fetch(`http://localhost:3001/api/users/${userId}`, { method: 'DELETE' });
+        
+        // Refresh list
+        loadUsers();
+      } catch(e) {
+        alert('Silme işlemi başarısız');
       }
     }
   };
@@ -276,16 +287,24 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     setIsModalOpen(true);
   };
 
-  const handleSaveUser = (e: React.FormEvent) => {
+  const handleSaveUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingUser) return;
 
-    const updatedUsers = allUsers.map(u => u.id === editingUser.id ? editingUser : u);
-    setAllUsers(updatedUsers);
-    localStorage.setItem('allUsers', JSON.stringify(updatedUsers));
-    setIsModalOpen(false);
-    setEditingUser(null);
-    alert(t?.common?.success || 'Kullanıcı güncellendi');
+    try {
+        await fetch(`http://localhost:3001/api/users/${editingUser.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(editingUser)
+        });
+        
+        loadUsers(); // Refresh
+        setIsModalOpen(false);
+        setEditingUser(null);
+        alert(t?.common?.success || 'Kullanıcı güncellendi');
+    } catch(e) {
+        alert('Güncelleme başarısız');
+    }
   };
 
   const [recentLogs, setRecentLogs] = useState<any[]>([]);

@@ -2,10 +2,45 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const os = require('os');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// --- SIMPLE FILE-BASED DATABASE ---
+const DB_FILE = path.join(__dirname, 'db.json');
+
+// Initialize DB if not exists
+if (!fs.existsSync(DB_FILE)) {
+    const initialData = {
+        users: [],
+        documents: []
+    };
+    fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+}
+
+// Helper to read/write DB
+const readDB = () => {
+    try {
+        const data = fs.readFileSync(DB_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch (err) {
+        console.error("DB Read Error:", err);
+        return { users: [], documents: [] };
+    }
+};
+
+const writeDB = (data) => {
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+        return true;
+    } catch (err) {
+        console.error("DB Write Error:", err);
+        return false;
+    }
+};
 
 // In-memory Logs (Real-world app would use DB)
 const systemLogs = [];
@@ -80,6 +115,135 @@ if (!isMockMode) {
         }
     });
 }
+
+// --- AUTHENTICATION & USER ROUTES ---
+
+// Register
+app.post('/api/auth/register', (req, res) => {
+    const { name, email, password, companyName } = req.body;
+    
+    if (!name || !email || !password || !companyName) {
+        return res.status(400).json({ success: false, message: 'Tüm alanlar zorunludur.' });
+    }
+
+    const db = readDB();
+    
+    // Check if user exists
+    if (db.users.some(u => u.email === email)) {
+        return res.status(400).json({ success: false, message: 'Bu e-posta adresi zaten kullanımda.' });
+    }
+
+    const newUser = {
+        id: 'user-' + Date.now(),
+        name,
+        email,
+        password, // In production, hash this!
+        companyName,
+        role: 'SUBSCRIBER',
+        plan: 'FREE',
+        remainingDownloads: 3,
+        subscriptionStartDate: new Date().toISOString(),
+        subscriptionEndDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        isActive: true,
+        createdAt: new Date().toISOString()
+    };
+
+    db.users.push(newUser);
+    writeDB(db);
+
+    // Add log
+    systemLogs.unshift({
+        id: Date.now(),
+        type: 'success',
+        action: 'User Registered',
+        details: `${name} (${email}) joined`,
+        time: new Date().toISOString()
+    });
+
+    res.json({ success: true, user: newUser });
+});
+
+// Login
+app.post('/api/auth/login', (req, res) => {
+    const { email, password } = req.body;
+    
+    const db = readDB();
+    const user = db.users.find(u => u.email === email && u.password === password);
+
+    if (user) {
+        systemLogs.unshift({
+            id: Date.now(),
+            type: 'info',
+            action: 'User Login',
+            details: `${user.name} logged in`,
+            time: new Date().toISOString()
+        });
+        res.json({ success: true, user });
+    } else {
+        res.status(401).json({ success: false, message: 'E-posta veya şifre hatalı.' });
+    }
+});
+
+// Upgrade User (Mock Payment)
+app.post('/api/users/upgrade', (req, res) => {
+    const { userId, plan } = req.body;
+    const db = readDB();
+    
+    const userIndex = db.users.findIndex(u => u.id === userId);
+    if (userIndex === -1) {
+        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    }
+
+    // Update user
+    db.users[userIndex].plan = plan;
+    db.users[userIndex].remainingDownloads = 9999;
+    db.users[userIndex].role = 'SUBSCRIBER'; // Ensure they are subscriber
+    
+    writeDB(db);
+    
+    res.json({ success: true, user: db.users[userIndex] });
+});
+
+// Admin: Get All Users
+app.get('/api/users', (req, res) => {
+    // In a real app, verify admin token here
+    const db = readDB();
+    res.json(db.users);
+});
+
+// Admin: Update User
+app.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+    const db = readDB();
+    
+    const index = db.users.findIndex(u => u.id === id);
+    if (index === -1) {
+        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    }
+
+    db.users[index] = { ...db.users[index], ...updates };
+    writeDB(db);
+    
+    res.json({ success: true, user: db.users[index] });
+});
+
+// Admin: Delete User
+app.delete('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const db = readDB();
+    
+    const filteredUsers = db.users.filter(u => u.id !== id);
+    if (filteredUsers.length === db.users.length) {
+        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    }
+
+    db.users = filteredUsers;
+    writeDB(db);
+    
+    res.json({ success: true });
+});
+
 
 // --- SYSTEM MONITORING ROUTES ---
 
