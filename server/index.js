@@ -292,24 +292,7 @@ app.put('/api/users/:id', authenticateToken, (req, res) => {
 });
 
 // Admin: Delete User (Protected)
-app.put('/api/users/:id', (req, res) => {
-    const { id } = req.params;
-    const updates = req.body;
-    const db = readDB();
-    
-    const index = db.users.findIndex(u => u.id === id);
-    if (index === -1) {
-        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
-    }
-
-    db.users[index] = { ...db.users[index], ...updates };
-    writeDB(db);
-    
-    res.json({ success: true, user: db.users[index] });
-});
-
-// Admin: Delete User
-app.delete('/api/users/:id', (req, res) => {
+app.delete('/api/users/:id', authenticateToken, (req, res) => {
     const { id } = req.params;
     const db = readDB();
     

@@ -234,7 +234,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   const loadUsers = async () => {
     try {
       // Fetch users from API
-      const response = await fetch('http://localhost:3001/api/users');
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('http://localhost:3001/api/users', {
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      });
       let users: User[] = [];
       
       if (response.ok) {
@@ -272,7 +277,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   const handleDeleteUser = async (userId: string) => {
     if (window.confirm(t?.common?.confirmDelete || 'Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
       try {
-        await fetch(`http://localhost:3001/api/users/${userId}`, { method: 'DELETE' });
+        const token = localStorage.getItem('authToken');
+        await fetch(`http://localhost:3001/api/users/${userId}`, { 
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+        });
         
         // Refresh list
         loadUsers();
@@ -286,9 +297,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     setEditingUser({...user});
     setIsModalOpen(true);
   };
-
-  const handleSaveUser = async (e: React.FormEvent) => {
-    e.preventDefault();
+const token = localStorage.getItem('authToken');
+        await fetch(`http://localhost:3001/api/users/${editingUser.id}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+           
     if (!editingUser) return;
 
     try {
