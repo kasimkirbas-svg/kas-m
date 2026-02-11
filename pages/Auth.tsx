@@ -121,6 +121,9 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       const data = await response.json();
 
       if (data.success) {
+        // Save Token
+        localStorage.setItem('authToken', data.token);
+
         setSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
         setTimeout(() => {
           onLoginSuccess(data.user);
@@ -184,6 +187,9 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
         // Send email notifications (Client side visual only)
         sendEmailNotification('signup-confirmation', data.user.email, data.user);
         
+        // Save Token
+        localStorage.setItem('authToken', data.token);
+
         setSuccess('Hesap başarıyla oluşturuldu! Giriş yapılıyor...');
         setTimeout(() => {
           onLoginSuccess(data.user);

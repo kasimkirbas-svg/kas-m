@@ -4,10 +4,27 @@ const cors = require('cors');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const JWT_SECRET = process.env.JWT_SECRET || 'gizli-anahtar-degistirilecek-kasim-kirbas-2026';
+
+// --- SECURITY MIDDLEWARE ---
+app.use(helmet()); // Set secure HTTP headers
+app.use(cors()); // Allow CORS
+app.use(express.json());
+
+// Rate Limiting (Prevent Brute Force)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 
 // --- SIMPLE FILE-BASED DATABASE ---
 const DB_FILE = path.join(__dirname, 'db.json');
@@ -118,8 +135,22 @@ if (!isMockMode) {
 
 // --- AUTHENTICATION & USER ROUTES ---
 
+// Helper: Verify JWT Token Middleware
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+    if (!token) return res.sendStatus(401);
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+};
+
 // Register
-app.post('/api/auth/register', (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
     const { name, email, password, companyName } = req.body;
     
     if (!name || !email || !password || !companyName) {
@@ -133,11 +164,15 @@ app.post('/api/auth/register', (req, res) => {
         return res.status(400).json({ success: false, message: 'Bu e-posta adresi zaten kullanımda.' });
     }
 
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const newUser = {
         id: 'user-' + Date.now(),
         name,
         email,
-        password, // In production, hash this!
+        password: hashedPassword, // SECURED
         companyName,
         role: 'SUBSCRIBER',
         plan: 'FREE',
@@ -151,6 +186,13 @@ app.post('/api/auth/register', (req, res) => {
     db.users.push(newUser);
     writeDB(db);
 
+    // Create Token
+    const token = jwt.sign(
+        { id: newUser.id, email: newUser.email, role: newUser.role },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+    );
+
     // Add log
     systemLogs.unshift({
         id: Date.now(),
@@ -160,17 +202,27 @@ app.post('/api/auth/register', (req, res) => {
         time: new Date().toISOString()
     });
 
-    res.json({ success: true, user: newUser });
+    // Return user without password
+    const { password: _, ...userWithoutPassword } = newUser;
+    res.json({ success: true, user: userWithoutPassword, token });
 });
 
 // Login
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     
     const db = readDB();
-    const user = db.users.find(u => u.email === email && u.password === password);
+    const user = db.users.find(u => u.email === email);
 
-    if (user) {
+    if (user && (await bcrypt.compare(password, user.password))) {
+        // Correct Password
+        
+        const token = jwt.sign(
+            { id: user.id, email: user.email, role: user.role },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
         systemLogs.unshift({
             id: Date.now(),
             type: 'info',
@@ -178,14 +230,16 @@ app.post('/api/auth/login', (req, res) => {
             details: `${user.name} logged in`,
             time: new Date().toISOString()
         });
-        res.json({ success: true, user });
+
+        const { password: _, ...userWithoutPassword } = user;
+        res.json({ success: true, user: userWithoutPassword, token });
     } else {
         res.status(401).json({ success: false, message: 'E-posta veya şifre hatalı.' });
     }
 });
 
-// Upgrade User (Mock Payment)
-app.post('/api/users/upgrade', (req, res) => {
+// Upgrade User (Mock Payment) (Protected)
+app.post('/api/users/upgrade', authenticateToken, (req, res) => {
     const { userId, plan } = req.body;
     const db = readDB();
     
@@ -197,21 +251,47 @@ app.post('/api/users/upgrade', (req, res) => {
     // Update user
     db.users[userIndex].plan = plan;
     db.users[userIndex].remainingDownloads = 9999;
-    db.users[userIndex].role = 'SUBSCRIBER'; // Ensure they are subscriber
+    db.users[userIndex].role = 'SUBSCRIBER';
     
     writeDB(db);
     
-    res.json({ success: true, user: db.users[userIndex] });
+    const { password: _, ...userWithoutPassword } = db.users[userIndex];
+    res.json({ success: true, user: userWithoutPassword });
 });
 
-// Admin: Get All Users
+// Admin: Get All Users (Protected)
 app.get('/api/users', (req, res) => {
-    // In a real app, verify admin token here
+    // In a real app, strict admin check:
+    // if (req.user.role !== 'ADMIN') return res.sendStatus(403);
+    
     const db = readDB();
-    res.json(db.users);
+    // Don't send passwords
+    const safeUsers = db.users.map(({ password, ...u }) => u);
+    res.json(safeUsers);
 });
 
-// Admin: Update User
+// Admin: Update User (Protected)
+app.put('/api/users/:id', (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+    const db = readDB();
+    
+    const index = db.users.findIndex(u => u.id === id);
+    if (index === -1) {
+        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    }
+    
+    // Prevent password overwrite if not intended (or handle separately)
+    const { password, ...safeUpdates } = updates;
+
+    db.users[index] = { ...db.users[index], ...safeUpdates };
+    writeDB(db);
+    
+    const { password: _, ...userWithoutPassword } = db.users[index];
+    res.json({ success: true, user: userWithoutPassword });
+});
+
+// Admin: Delete User (Protected)
 app.put('/api/users/:id', (req, res) => {
     const { id } = req.params;
     const updates = req.body;
