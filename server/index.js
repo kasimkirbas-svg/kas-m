@@ -260,7 +260,7 @@ app.post('/api/users/upgrade', authenticateToken, (req, res) => {
 });
 
 // Admin: Get All Users (Protected)
-app.get('/api/users', (req, res) => {
+app.get('/api/users', authenticateToken, (req, res) => {
     // In a real app, strict admin check:
     // if (req.user.role !== 'ADMIN') return res.sendStatus(403);
     
@@ -271,7 +271,7 @@ app.get('/api/users', (req, res) => {
 });
 
 // Admin: Update User (Protected)
-app.put('/api/users/:id', (req, res) => {
+app.put('/api/users/:id', authenticateToken, (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     const db = readDB();
