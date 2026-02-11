@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Users, FileText, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle, Mail, Send, Loader2, Server, Globe, Cpu, Database, PlayCircle } from 'lucide-react';
-import { User, UserRole, SubscriptionPlan } from '../types';
+import { Users, FileText, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle, Mail, Send, Loader2, Server, Globe, Cpu, Database, PlayCircle, CreditCard, Save, List } from 'lucide-react';
+import { User, UserRole, SubscriptionPlan, DocumentTemplate } from '../types';
+import { PLANS as DEFAULT_PLANS, MOCK_TEMPLATES as DEFAULT_TEMPLATES } from '../constants';
 
 interface AdminPanelProps {
   user?: any;
@@ -14,6 +15,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     switch(currentView) {
       case 'users': return 'subscribers';
       case 'templates': return 'templates';
+      case 'packages': return 'packages'; // Added mapping
       case 'dashboard': return 'overview';
       default: return 'overview';
     }
@@ -125,7 +127,32 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
+  const loadData = () => {
+    // Templates
+    const storedTemplates = localStorage.getItem('documentTemplates');
+    if (storedTemplates) {
+      setTemplates(JSON.parse(storedTemplates));
+    } else {
+      // Default initialization
+      setTemplates(DEFAULT_TEMPLATES);
+      localStorage.setItem('documentTemplates', JSON.stringify(DEFAULT_TEMPLATES));
+    }
+
+    // Plans
+    const storedPlans = localStorage.getItem('subscriptionPlans');
+    if (storedPlans) {
+      setSubscriptionPlans(JSON.parse(storedPlans));
+    } else {
+      // Default initialization
+      setSubscriptionPlans(DEFAULT_PLANS);
+      localStorage.setItem('subscriptionPlans', JSON.stringify(DEFAULT_PLANS));
+    }
+
+    // Logs & Stats logic is separate
+  };
+
   useEffect(() => {
+    loadData();
     // Clean up demo users if requested or ensure stats start fresh
     // Remove users with 'demo-' prefix
     const existingUsers = localStorage.getItem('allUsers');
@@ -141,6 +168,65 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     }
     loadUsers();
   }, []);
+
+  // --- TEMPLATE HANDLERS ---
+  const handleEditTemplate = (tpl: DocumentTemplate) => {
+    setEditingTemplate(tpl);
+    setIsTemplateModalOpen(true);
+  };
+
+  const handleCreateTemplate = () => {
+    setEditingTemplate({
+      id: Date.now().toString(),
+      title: '',
+      category: 'ISG',
+      description: '',
+      isPremium: false,
+      fields: []
+    });
+    setIsTemplateModalOpen(true);
+  };
+
+  const handleDeleteTemplate = (id: string) => {
+     if(window.confirm('Bu şablonu silmek istediğinize emin misiniz?')) {
+        const updated = templates.filter(t => t.id !== id);
+        setTemplates(updated);
+        localStorage.setItem('documentTemplates', JSON.stringify(updated));
+     }
+  };
+
+  const handleSaveTemplate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTemplate.id) return;
+
+    let updated;
+    const exists = templates.find(t => t.id === editingTemplate.id);
+    if (exists) {
+        updated = templates.map(t => t.id === editingTemplate.id ? { ...t, ...editingTemplate } as DocumentTemplate : t);
+    } else {
+        updated = [...templates, editingTemplate as DocumentTemplate];
+    }
+    
+    setTemplates(updated);
+    localStorage.setItem('documentTemplates', JSON.stringify(updated));
+    setIsTemplateModalOpen(false);
+  };
+
+  // --- PLAN HANDLERS ---
+  const handleEditPlan = (plan: any) => {
+    setEditingPlan({ ...plan });
+    setIsPlanModalOpen(true);
+  };
+
+  const handleSavePlan = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPlan) return;
+    
+    const updated = subscriptionPlans.map(p => p.id === editingPlan.id ? editingPlan : p);
+    setSubscriptionPlans(updated);
+    localStorage.setItem('subscriptionPlans', JSON.stringify(updated));
+    setIsPlanModalOpen(false);
+  };
 
   const loadUsers = () => {
     try {
@@ -199,9 +285,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     alert(t?.common?.success || 'Kullanıcı güncellendi');
   };
 
-  const recentLogs: any[] = [];
-  const templates: any[] = [];
-  const invoices: any[] = [];
+  const [recentLogs, setRecentLogs] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<any[]>([]);
+  const [invoices, setInvoices] = useState<any[]>([]);
+
+  // Modal State for Templates & Plans
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState<Partial<DocumentTemplate>>({});
+  
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
+  const [editingPlan, setEditingPlan] = useState<any>(null);
 
   return (
     <div className="space-y-8 relative">
@@ -284,7 +378,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
 
       {/* Navigation Tabs */}
       <div className="flex border-b border-slate-200 gap-8 overflow-x-auto pb-1">
-        {['overview', 'subscribers', 'templates', 'logs'].map(tab => (
+        {['overview', 'subscribers', 'templates', 'packages', 'logs'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -297,6 +391,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             {tab === 'overview' && (t?.admin?.overview || 'Genel Bakış')}
             {tab === 'subscribers' && (t?.admin?.subscribers || 'Aboneler')}
             {tab === 'templates' && (t?.admin?.templates || 'Şablonlar')}
+            {tab === 'packages' && ('Paketler & Fiyat')}
             {tab === 'logs' && (t?.admin?.logs || 'Sistem Kayıtları')}
           </button>
         ))}
@@ -524,11 +619,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
         </div>
       )}
 
-      {/* Templates Tab (Mock for now, but lists nice data) */}
+      {/* Templates Tab */}
       {activeTab === 'templates' && (
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
             <h3 className="font-bold text-slate-900">{t?.admin?.documentTemplates || 'Doküman Şablonları'}</h3>
+            <button 
+                onClick={handleCreateTemplate}
+                className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 flex items-center gap-1">
+                <Plus size={16} /> Yeni Şablon
+            </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
@@ -536,21 +636,31 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                 <tr>
                   <th className="px-6 py-3">{t?.admin?.templateName || 'Şablon Adı'}</th>
                   <th className="px-6 py-3">{t?.admin?.category || 'Kategori'}</th>
-                  <th className="px-6 py-3">{t?.admin?.downloads || 'İndirmeler'}</th>
-                  <th className="px-6 py-3">{t?.admin?.status || 'Durum'}</th>
+                  <th className="px-6 py-3">Tür</th>
+                  <th className="px-6 py-3 text-right">İşlem</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {templates.length > 0 ? (
                   templates.map((template, idx) => (
                     <tr key={idx} className="hover:bg-slate-50">
-                      <td className="px-6 py-4 font-medium text-slate-900">{template.name}</td>
+                      <td className="px-6 py-4 font-medium text-slate-900">
+                        {template.title}
+                        {template.isPremium && <span className="ml-2 inline-block px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] rounded border border-amber-200">PRO</span>}
+                      </td>
                       <td className="px-6 py-4 text-slate-600">{template.category}</td>
-                      <td className="px-6 py-4 text-slate-600">{template.downloads}</td>
-                      <td className="px-6 py-4">
-                        <span className="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                          {template.status}
-                        </span>
+                      <td className="px-6 py-4 text-slate-600">
+                        {template.isPremium ? 'Premium' : 'Standart'}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                         <div className="flex justify-end gap-2">
+                             <button onClick={() => handleEditTemplate(template)} className="p-1.5 hover:bg-slate-100 rounded text-blue-600">
+                                 <Edit2 size={16} />
+                             </button>
+                             <button onClick={() => handleDeleteTemplate(template.id)} className="p-1.5 hover:bg-slate-100 rounded text-red-600">
+                                 <Trash2 size={16} />
+                             </button>
+                         </div>
                       </td>
                     </tr>
                   ))
@@ -564,6 +674,43 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {/* Packages Tab */}
+      {activeTab === 'packages' && (
+        <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {subscriptionPlans.map((plan) => (
+                    <div key={plan.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative hover:shadow-md transition">
+                        <div className="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 className="font-bold text-lg text-slate-900">{plan.name}</h3>
+                                <p className="text-2xl font-bold text-blue-600 mt-2">{plan.price} <span className="text-sm text-slate-500 font-normal">{plan.period}</span></p>
+                            </div>
+                            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                                <CreditCard size={20} />
+                            </div>
+                        </div>
+                        
+                        <div className="space-y-3 mb-6">
+                            {plan.features.map((feature: string, idx: number) => (
+                                <div key={idx} className="flex items-center gap-2 text-sm text-slate-600">
+                                    <Check size={14} className="text-green-500" />
+                                    {feature}
+                                </div>
+                            ))}
+                        </div>
+
+                        <button 
+                            onClick={() => handleEditPlan(plan)}
+                            className="w-full py-2 border border-slate-200 rounded-lg text-slate-600 font-medium hover:bg-slate-50 hover:text-slate-900 transition flex items-center justify-center gap-2"
+                        >
+                            <Edit2 size={16} /> Paket Düzenle
+                        </button>
+                    </div>
+                ))}
+            </div>
         </div>
       )}
 
@@ -769,6 +916,84 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
               </div>
             </form>
           </div>
+        </div>
+      )}
+      
+      {/* TEMPLATE EDIT/CREATE MODAL */}
+      {isTemplateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+                <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+                    <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
+                        <FileText size={18} className="text-blue-600" />
+                        {editingTemplate.id ? 'Şablon Düzenle' : 'Yeni Şablon'}
+                    </h3>
+                    <button onClick={() => setIsTemplateModalOpen(false)} className="text-slate-400 hover:text-slate-600 transition"><X size={20} /></button>
+                </div>
+                <form onSubmit={handleSaveTemplate} className="p-6 space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Şablon Adı</label>
+                        <input type="text" required value={editingTemplate.title || ''} onChange={e => setEditingTemplate({...editingTemplate, title: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Örn: İş Sözleşmesi" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Kategori</label>
+                        <select value={editingTemplate.category || 'contract'} onChange={e => setEditingTemplate({...editingTemplate, category: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white">
+                            <option value="contract">Sözleşme</option>
+                            <option value="petition">Dilekçe</option>
+                            <option value="official">Resmi Evrak</option>
+                            <option value="other">Diğer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Açıklama</label>
+                        <textarea value={editingTemplate.description || ''} onChange={e => setEditingTemplate({...editingTemplate, description: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" rows={3} placeholder="Şablon hakkında kısa bilgi..." />
+                    </div>
+                    <div className="flex items-center gap-2 pt-2">
+                        <input type="checkbox" id="isPremium" checked={editingTemplate.isPremium || false} onChange={e => setEditingTemplate({...editingTemplate, isPremium: e.target.checked})} className="w-4 h-4 text-amber-600 border-slate-300 rounded focus:ring-amber-500" />
+                        <label htmlFor="isPremium" className="text-sm font-medium text-slate-700">Premium (Ücretli) Şablon</label>
+                    </div>
+                    <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-4">
+                        <button type="button" onClick={() => setIsTemplateModalOpen(false)} className="px-4 py-2 text-slate-700 hover:bg-slate-100 font-medium rounded-lg transition">İptal</button>
+                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+      )}
+
+      {/* PLAN EDIT MODAL */}
+      {isPlanModalOpen && editingPlan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+                <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
+                    <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
+                        <CreditCard size={18} className="text-blue-600" />
+                        Paket Düzenle: {editingPlan.name}
+                    </h3>
+                    <button onClick={() => setIsPlanModalOpen(false)} className="text-slate-400 hover:text-slate-600 transition"><X size={20} /></button>
+                </div>
+                <form onSubmit={handleSavePlan} className="p-6 space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Fiyat Gösterimi</label>
+                        <input type="text" value={editingPlan.price || ''} onChange={e => setEditingPlan({...editingPlan, price: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Örn: 499 ₺" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Özellikler (Her satıra bir özellik)</label>
+                        <textarea 
+                            value={editingPlan.features ? editingPlan.features.join('\n') : ''} 
+                            onChange={e => setEditingPlan({...editingPlan, features: e.target.value.split('\n')})} 
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm" 
+                            rows={6}
+                            placeholder="Sınırsız Şablon&#10;7/24 Destek"
+                        />
+                         <p className="text-xs text-slate-500 mt-1">Her yeni özelliği yeni bir satıra yazın.</p>
+                    </div>
+                    <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-4">
+                        <button type="button" onClick={() => setIsPlanModalOpen(false)} className="px-4 py-2 text-slate-700 hover:bg-slate-100 font-medium rounded-lg transition">İptal</button>
+                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow">Kaydet</button>
+                    </div>
+                </form>
+            </div>
         </div>
       )}
     </div>
