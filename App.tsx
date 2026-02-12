@@ -25,15 +25,30 @@ const App = () => {
   const [t, setT] = useState(getTranslation('tr'));
   const [savedDocuments, setSavedDocuments] = useState<GeneratedDocument[]>([]);
   const [editingDocument, setEditingDocument] = useState<GeneratedDocument | undefined>(undefined);
+  // NEW: State for Read-Only Preview Mode
+  const [previewDocument, setPreviewDocument] = useState<GeneratedDocument | undefined>(undefined);
 
   const handleEditDocument = (doc: GeneratedDocument) => {
     const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
     if (template) {
       setSelectedTemplate(template);
       setEditingDocument(doc);
+      setPreviewDocument(undefined); // Ensure preview is off
       setCurrentView('editor');
     } else {
       alert('Bu dokümana ait şablon bulunamadı.');
+    }
+  };
+
+  const handlePreviewDocument = (doc: GeneratedDocument) => {
+    const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
+    if (template) {
+       setSelectedTemplate(template);
+       setPreviewDocument(doc); // Turn on preview mode
+       setEditingDocument(doc); // Still need data to populate fields
+       setCurrentView('editor');
+    } else {
+       alert('Bu dokümana ait şablon bulunamadı.');
     }
   };
 
@@ -220,6 +235,7 @@ const App = () => {
           <DocumentEditor 
             template={selectedTemplate}
             initialData={editingDocument}
+            isReadOnly={!!previewDocument} // Pass read-only flag if we are previewing
             userId={user.id}
             userEmail={user.email}
             companyName={user.companyName}
@@ -227,6 +243,7 @@ const App = () => {
             onClose={() => {
               setCurrentView('templates');
               setEditingDocument(undefined);
+              setPreviewDocument(undefined); // Reset preview
             }}
             onDocumentGenerated={(doc: GeneratedDocument) => {
               // Save document
@@ -255,7 +272,7 @@ const App = () => {
         return (
             <MyDocuments 
                 onEditDocument={handleEditDocument}
-                onPreviewDocument={handleEditDocument} // Re-using edit handler for preview since it opens the editor
+                onPreviewDocument={handlePreviewDocument} 
                 documents={savedDocuments.filter(d => d.userId === user.id)}
                 onDeleteDocument={(id) => {
                     if (window.confirm(t?.common?.confirmDelete || 'Bu dokümanı silmek istediğinize emin misiniz?')) {

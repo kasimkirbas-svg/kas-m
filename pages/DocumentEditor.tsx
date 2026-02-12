@@ -3,6 +3,7 @@ import { DocumentTemplate, GeneratedDocument, DocumentPhoto } from '../types';
 import { Upload, Trash2, Plus, Download, CheckCircle, Mail, AlertTriangle, ZoomIn, ArrowLeft } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { fetchApi } from '../src/utils/api'; // Import fetchApi for consistent endpoint handling
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -13,6 +14,7 @@ interface DocumentEditorProps {
   companyName?: string;
   preparedBy?: string;
   initialData?: GeneratedDocument; // For editing existing docs
+  isReadOnly?: boolean; // New prop to disable editing
   t?: any;
 }
 
@@ -25,6 +27,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   companyName = '',
   preparedBy = '',
   initialData,
+  isReadOnly = false, // Add Read-Only prop
   t
 }) => {
   // Initialize state with props or initialData
@@ -134,9 +137,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       // Send Email
       if (sendEmail && userEmail) {
         try {
-          const response = await fetch('/api/send-document', {
+          // Use fetchApi helper instead of direct fetch to handle base URL automatically
+          const response = await fetchApi('/api/send-document', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               email: userEmail,
               pdfBase64: pdfBase64,
@@ -202,7 +205,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
        */}
 
       {/* ---------------- SECTION 1 (Left): INPUT FORM (Expanded) ---------------- */}
-       <div className="lg:flex-[4] bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[350px] border-r border-slate-200 order-1">
+       {/* Hiding input form if in ReadOnly mode to maximize preview */}
+       {!isReadOnly && (
+       <div className="lg:flex-[6] bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[350px] border-r border-slate-200 order-1">
         {/* Header */}
         <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center shrink-0">
           <div>
@@ -224,15 +229,15 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Genel Bilgiler</label>
              <div>
                <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.firmName || 'Firma Adı'} *</span>
-               <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" placeholder="Firma..." />
+               <input disabled={isReadOnly} type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" placeholder="Firma..." />
              </div>
              <div>
                 <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.preparedBy || 'Hazırlayan'} *</span>
-               <input type="text" name="preparedBy" value={formData.preparedBy} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" placeholder="İsim Soyisim..." />
+               <input disabled={isReadOnly} type="text" name="preparedBy" value={formData.preparedBy} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" placeholder="İsim Soyisim..." />
              </div>
              <div>
                 <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.date || 'Tarih'} *</span>
-               <input type="date" name="date" value={formData.date} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" />
+               <input disabled={isReadOnly} type="date" name="date" value={formData.date} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" />
              </div>
           </div>
           <hr className="border-slate-100" />
@@ -245,9 +250,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                   <div key={field.key}>
                     <span className="text-xs text-slate-500 mb-1 block">{field.label}</span>
                     {field.type === 'textarea' ? (
-                      <textarea name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm" placeholder={field.placeholder} />
+                      <textarea disabled={isReadOnly} name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm" placeholder={field.placeholder} />
                     ) : (
-                      <input type={field.type} name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm" placeholder={field.placeholder} />
+                      <input disabled={isReadOnly} type={field.type} name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm" placeholder={field.placeholder} />
                     )}
                   </div>
                 ))}
@@ -258,7 +263,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           {/* Notes */}
           <div className="space-y-3">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Notlar</label>
-              <textarea value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm" placeholder="Notlar..." />
+              <textarea disabled={isReadOnly} value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm" placeholder="Notlar..." />
           </div>
           <hr className="border-slate-100" />
 
@@ -274,12 +279,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                  {photos.map((photo) => (
                    <div key={photo.id} className="relative aspect-square rounded overflow-hidden group bg-white border border-slate-200 shadow-sm">
                      <img src={photo.base64} className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition" onClick={() => setPhotoPreview(photo.base64)} />
+                     {!isReadOnly && (
                      <button onClick={() => handleRemovePhoto(photo.id)} className="absolute top-0 right-0 bg-red-500/80 hover:bg-red-600 text-white p-1 rounded-bl-lg transition" title="Sil">
                        <Trash2 size={10} />
                      </button>
+                     )}
                    </div>
                  ))}
-                 {photos.length < maxPhotos && (
+                 {!isReadOnly && photos.length < maxPhotos && (
                    <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 hover:border-blue-400 rounded aspect-square cursor-pointer hover:bg-blue-50 transition group">
                       <Plus className="text-slate-300 group-hover:text-blue-500" size={20} />
                       <input type="file" multiple accept="image/*" onChange={handlePhotoUpload} className="hidden" />
@@ -292,7 +299,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         {/* Footer Actions */}
         <div className="p-4 border-t border-slate-200 bg-white shrink-0">
            <div className="flex items-center gap-2 mb-4 bg-blue-50 p-2 rounded border border-blue-100">
-              <input type="checkbox" id="sendEmail" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
+              <input disabled={isReadOnly} type="checkbox" id="sendEmail" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
               <label htmlFor="sendEmail" className="text-xs font-bold text-blue-800 cursor-pointer select-none flex-1">
                  Mail Gönder ({userEmail})
               </label>
@@ -304,10 +311,18 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             </button>
         </div>
       </div>
+      )}
 
       {/* ---------------- SECTION 2 (Right): PREVIEW (Shrunk) ---------------- */}
-      <div className="lg:flex-[5] bg-slate-800/80 p-4 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar order-2">
+      <div className={`bg-slate-800/80 p-4 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar order-2 ${isReadOnly ? 'lg:flex-[10] w-full' : 'lg:flex-[4]'}`}>
           {/* Legend/Info Badge */}
+          {/* If ReadOnly mode, add a "Close Preview" button absolutely positioned */}
+          {isReadOnly && onClose && (
+            <button onClick={onClose} className="fixed top-24 right-8 z-[50] bg-white text-slate-800 px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-2 hover:bg-slate-100 transition">
+              ✕ Kapat
+            </button>
+          )}
+
           <div className="sticky top-0 z-10 mb-4 bg-black/70 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-mono border border-white/10 shadow-xl flex gap-3">
              <span className="flex items-center gap-1">📄 {t?.editor?.previewMode || 'A4 Canlı Önizleme'}</span>
              <span className="opacity-50">|</span>
@@ -315,7 +330,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
              {photoChunks.length > 0 && <span className="text-yellow-400">({photoChunks.length} Ek Sayfa)</span>}
           </div>
 
-          <div ref={printContainerRef} className="flex flex-col gap-8 pb-10 origin-top transform xl:scale-75 lg:scale-50 md:scale-50 sm:scale-50 transition-transform">
+          <div ref={printContainerRef} className={`flex flex-col gap-8 pb-10 origin-top transition-transform ${isReadOnly ? 'scale-100' : 'xl:scale-75 lg:scale-50 md:scale-50 sm:scale-50'}`}>
             
             {/* --- PAGE 1: TEXT CONTENT --- */}
             <div className="print-page bg-white shadow-2xl relative" style={{ width: '210mm', height: '297mm', padding: '15mm', boxSizing: 'border-box', color: '#1e293b', background: 'white' }}>
