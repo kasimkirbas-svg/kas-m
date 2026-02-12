@@ -226,7 +226,13 @@ const tr = {
     edit: 'Düzenle',
     delete: 'Sil',
     backendActive: 'Backend Sistemleri Aktif',
-    backendOffline: 'Backend Bağlantısı Yok'
+    backendOffline: 'Backend Bağlantısı Yok',
+    packagesAndPrice: 'Paketler & Fiyat',
+    systemUptime: 'Sistem Çalışma Süresi',
+    type: 'Tür',
+    standard: 'Standart',
+    premium: 'Premium',
+    newTemplateButton: 'Yeni Şablon'
   }
 };
 
@@ -432,7 +438,13 @@ const en = {
     active: 'Active',
     delayed: 'Delayed',
     new: 'New',
-    paid: 'Paid',
+    paid: 'Paid',,
+    packagesAndPrice: 'Packages & Pricing',
+    systemUptime: 'System Uptime',
+    type: 'Type',
+    standard: 'Standard',
+    premium: 'Premium',
+    newTemplateButton: 'New Template'
     pending: 'Pending',
     trial: 'Trial',
     edit: 'Edit',
@@ -644,7 +656,13 @@ const ar = {
     active: 'نشط',
     delayed: 'متأخر',
     new: 'جديد',
-    paid: 'مدفوع',
+    paid: 'مدفوع',,
+    packagesAndPrice: 'الحزم والأسعار',
+    systemUptime: 'وقت تشغيل النظام',
+    type: 'النوع',
+    standard: 'قياسي',
+    premium: 'متميز',
+    newTemplateButton: 'قالب جديد'
     pending: 'قيد الانتظار',
     trial: 'تجربة',
     edit: 'تعديل',

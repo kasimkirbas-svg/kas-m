@@ -394,7 +394,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
           </div>
           <h3 className="text-xl font-bold text-slate-900">{serverStatus ? `${serverStatus.uptime}s` : '--'}</h3>
            <div className="flex justify-between items-end mt-1">
-               <p className="text-sm text-slate-600">Sistem Uptime</p>
+               <p className="text-sm text-slate-600">{t?.admin?.systemUptime || 'Sistem Uptime'}</p>
                <span className="text-xs text-slate-400">{serverStatus ? serverStatus.platform : ''}</span>
            </div>
         </div>
@@ -415,7 +415,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             {tab === 'overview' && (t?.admin?.overview || 'Genel Bakış')}
             {tab === 'subscribers' && (t?.admin?.subscribers || 'Aboneler')}
             {tab === 'templates' && (t?.admin?.templates || 'Şablonlar')}
-            {tab === 'packages' && ('Paketler & Fiyat')}
+            {tab === 'packages' && (t?.admin?.packagesAndPrice || 'Paketler & Fiyat')}
             {tab === 'logs' && (t?.admin?.logs || 'Sistem Kayıtları')}
           </button>
         ))}
@@ -651,7 +651,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             <button 
                 onClick={handleCreateTemplate}
                 className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 flex items-center gap-1">
-                <Plus size={16} /> Yeni Şablon
+                <Plus size={16} /> {t?.admin?.newTemplateButton || 'Yeni Şablon'}
             </button>
           </div>
           <div className="overflow-x-auto">
@@ -660,8 +660,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                 <tr>
                   <th className="px-6 py-3">{t?.admin?.templateName || 'Şablon Adı'}</th>
                   <th className="px-6 py-3">{t?.admin?.category || 'Kategori'}</th>
-                  <th className="px-6 py-3">Tür</th>
-                  <th className="px-6 py-3 text-right">İşlem</th>
+                  <th className="px-6 py-3">{t?.admin?.type || 'Tür'}</th>
+                  <th className="px-6 py-3 text-right">{t?.admin?.action || 'İşlem'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -674,7 +674,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                       </td>
                       <td className="px-6 py-4 text-slate-600">{template.category}</td>
                       <td className="px-6 py-4 text-slate-600">
-                        {template.isPremium ? 'Premium' : 'Standart'}
+                        {template.isPremium ? (t?.admin?.premium || 'Premium') : (t?.admin?.standard || 'Standart')}
                       </td>
                       <td className="px-6 py-4 text-right">
                          <div className="flex justify-end gap-2">
