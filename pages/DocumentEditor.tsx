@@ -194,19 +194,15 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-100px)]">
       
        {/* 
-          LAYOUT REVERSION based on request:
-          "şablon oluşturma ekranında boyut olarak tam tersine çevireceksin yer olarak eski haline gelsin"
-          Interpretation:
-          - Places: Input Left, Preview Right (Old standard state).
-          - Sizes: Input (Small), Preview (Large). (Previously Preview was huge on left, so now Preview huge on RIGHT).
+          LAYOUT ADJUSTMENT:
+          User requested: "önizlemenin boyutunu küçült editör panelini büyüt yani boyları tam tersi abartı olmıcak şekilde"
           
-          Result:
-          Left Panel: Input Form (Narrow ~350px/Flex-1)
-          Right Panel: Live Preview (Wide/Flex-2 or 3)
+          Previous: Input (Flex 1) / Preview (Flex 3)
+          New: Input (Flex 4) / Preview (Flex 5) -> A more balanced approach where input is significantly larger than before
        */}
 
-      {/* ---------------- SECTION 1 (Left on DOM/Desktop): INPUT FORM (Small) ---------------- */}
-       <div className="lg:flex-1 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[320px] max-w-md border-r border-slate-200 order-1">
+      {/* ---------------- SECTION 1 (Left): INPUT FORM (Expanded) ---------------- */}
+       <div className="lg:flex-[4] bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[350px] border-r border-slate-200 order-1">
         {/* Header */}
         <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center shrink-0">
           <div>
@@ -313,17 +309,17 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       <div className="lg:flex-[3] bg-slate-800/80 p-6 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar order-2">
           {/* Legend/Info Badge */}
           <div className="sticky top-0 z-10 mb-6 bg-black/70 text-white backdrop-blur-md px-4 py-2 rounded-full text-xs font-mono border border-white/10 shadow-xl flex gap-3">
+             <span className="flex items-ce): PREVIEW (Shrunk) ---------------- */}
+      <div className="lg:flex-[5] bg-slate-800/80 p-4 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar order-2">
+          {/* Legend/Info Badge */}
+          <div className="sticky top-0 z-10 mb-4 bg-black/70 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-mono border border-white/10 shadow-xl flex gap-3">
              <span className="flex items-center gap-1">📄 {t?.editor?.previewMode || 'A4 Canlı Önizleme'}</span>
              <span className="opacity-50">|</span>
              <span className="flex items-center gap-1">📸 {photos.length} Fotoğraf</span>
              {photoChunks.length > 0 && <span className="text-yellow-400">({photoChunks.length} Ek Sayfa)</span>}
           </div>
 
-          <div ref={printContainerRef} className="flex flex-col gap-8 pb-10 origin-top transform xl:scale-95 lg:scale-75 md:scale-50 sm:scale-50 transition-transform">
-            
-            {/* --- PAGE 1: TEXT CONTENT --- */}
-            <div className="print-page bg-white shadow-2xl relative" style={{ width: '210mm', height: '297mm', padding: '15mm', boxSizing: 'border-box', color: '#1e293b', background: 'white' }}>
-                {/* Header */}
+          <div ref={printContainerRef} className="flex flex-col gap-8 pb-10 origin-top transform xl:scale-75 lg:scale-50
                 <div className="border-b-4 border-slate-900 pb-6 mb-8 flex justify-between items-start">
                    <div className="max-w-[70%]">
                       <h1 className="text-4xl font-extrabold uppercase tracking-tight text-slate-900 leading-none mb-3">{template.title}</h1>

@@ -255,6 +255,7 @@ const App = () => {
         return (
             <MyDocuments 
                 onEditDocument={handleEditDocument}
+                onPreviewDocument={handleEditDocument} // Re-using edit handler for preview since it opens the editor
                 documents={savedDocuments.filter(d => d.userId === user.id)}
                 onDeleteDocument={(id) => {
                     if (window.confirm(t?.common?.confirmDelete || 'Bu dokümanı silmek istediğinize emin misiniz?')) {
