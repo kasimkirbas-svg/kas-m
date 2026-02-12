@@ -204,7 +204,22 @@ const App = () => {
     }
 
     // 1. Document Editor
-    if (userinitialData={editingDocument}
+    if (user && currentView === 'editor' && selectedTemplate) {
+      return (
+        <div className="space-y-4">
+          <button 
+            onClick={() => {
+              setCurrentView('templates');
+              setEditingDocument(undefined);
+            }}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4"
+          >
+            <ArrowLeft size={18} />
+            {t?.editor?.back || 'Şablonlara Dön'}
+          </button>
+          <DocumentEditor 
+            template={selectedTemplate}
+            initialData={editingDocument}
             userId={user.id}
             userEmail={user.email}
             companyName={user.companyName}
@@ -225,18 +240,6 @@ const App = () => {
               setSavedDocuments(newDocs);
               localStorage.setItem('generatedDocuments', JSON.stringify(newDocs));
               setEditingDocument(undefined);
-            userEmail={user.email}
-            companyName={user.companyName}
-            preparedBy={user.name}
-            onClose={() => setCurrentView('templates')}
-            onDocumentGenerated={(doc: GeneratedDocument) => {
-              // Save document
-              const newDocs = [doc, ...savedDocuments];
-              setSavedDocuments(newDocs);
-              localStorage.setItem('generatedDocuments', JSON.stringify(newDocs));
-              
-              // Decrement usage quota if needed (assuming user object update happens elsewhere or here)
-              // Ideally update user remainingDownloads here too
               
               alert(`✓ ${selectedTemplate.title} ${t?.editor?.photoSuccess || 'dokümanı başarıyla oluşturuldu ve kaydedildi.'}`);
               setCurrentView('my-documents');
