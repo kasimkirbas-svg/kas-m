@@ -121,6 +121,7 @@ const App = () => {
     setCurrentView('auth');
     setSelectedTemplate(null);
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('authToken'); // Clear auth token
   };
 
   const handleUpgrade = (selectedPlan: SubscriptionPlan) => {

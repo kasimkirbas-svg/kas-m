@@ -158,19 +158,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
 
   useEffect(() => {
     loadData();
-    // Clean up demo users if requested or ensure stats start fresh
-    // Remove users with 'demo-' prefix
-    const existingUsers = localStorage.getItem('allUsers');
-    if (existingUsers) {
-        try {
-            const parsed = JSON.parse(existingUsers);
-            const realUsers = parsed.filter((u: any) => !u.id.startsWith('demo-'));
-            if (realUsers.length !== parsed.length) {
-                localStorage.setItem('allUsers', JSON.stringify(realUsers));
-                console.log("Cleaned up demo users");
-            }
-        } catch (e) {}
-    }
     loadUsers();
   }, []);
 
@@ -237,40 +224,38 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     try {
       // Fetch users from API
       const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.warn("No auth token found, cannot fetch users");
+        return;
+      }
+      
       const response = await fetchApi('/api/users', {
           headers: {
               'Authorization': `Bearer ${token}`
           }
       });
-      let users: User[] = [];
       
       if (response.ok) {
-        users = await response.json();
-      } else {
-        // Fallback to local storage if API fails (or for legacy)
-        const storedUsers = localStorage.getItem('allUsers');
-        if (storedUsers) {
-           users = JSON.parse(storedUsers);
-        }
-      }
-
-      setAllUsers(users);
+        const users = await response.json();
+        setAllUsers(users);
         
-      // Calculate stats
-      const activeCount = users.filter(u => u.isActive).length;
-      // Simple revenue approximation (mock calculation)
-      const revenue = users.reduce((acc, curr) => {
-        if (curr.plan === SubscriptionPlan.YEARLY) return acc + 4999;
-        if (curr.plan === SubscriptionPlan.MONTHLY) return acc + 499;
-        return acc;
-      }, 0);
+        // Calculate stats
+        const activeCount = users.filter((u: any) => u.isActive).length;
+        const revenue = users.reduce((acc: number, curr: any) => {
+          if (curr.plan === 'YEARLY') return acc + 4999;
+          if (curr.plan === 'MONTHLY') return acc + 499;
+          return acc;
+        }, 0);
 
-      setStats(prev => ({
-        ...prev,
-        activeUsers: activeCount,
-        revenue: revenue
-      }));
-      
+        setStats(prev => ({
+          ...prev,
+          activeUsers: activeCount,
+          revenue: revenue
+        }));
+      } else {
+         console.error("Failed to fetch users:", response.status);
+         // Do not fall back to local storage to avoid sync issues
+      }
     } catch (error) {
       console.error("Failed to load users", error);
     }
