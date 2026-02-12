@@ -1,4 +1,18 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "admin-001",
+      "name": "Kürşat Kırbaş",
+      "email": "admin@kirbas.com",
+      "password": "$2b$10$ljXUew9biqlScAAD9ZQL0uyJdd1vYmKZwu1uv3xmOkJq1gOiqz/CO",
+      "companyName": "Kırbaş Doküman Yazılımları",
+      "role": "ADMIN",
+      "plan": "YEARLY",
+      "remainingDownloads": "UNLIMITED",
+      "subscriptionStartDate": "2026-02-12T00:05:55.882Z",
+      "isActive": true,
+      "createdAt": "2026-02-12T00:05:55.882Z"
+    }
+  ],
   "documents": []
 }

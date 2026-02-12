@@ -59,6 +59,39 @@ const writeDB = (data) => {
     }
 };
 
+// --- SEED ADMIN USER ---
+const seedAdmin = async () => {
+    const db = readDB();
+    const adminEmail = 'admin@kirbas.com';
+    
+    if (!db.users.some(u => u.email === adminEmail)) {
+        console.log("⚙️  Varsayılan Admin kullanıcısı oluşturuluyor...");
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash('Admin123456', salt);
+        
+        const adminUser = {
+            id: 'admin-001',
+            name: 'Kürşat Kırbaş',
+            email: adminEmail,
+            password: hashedPassword,
+            companyName: 'Kırbaş Doküman Yazılımları',
+            role: 'ADMIN',
+            plan: 'YEARLY',
+            remainingDownloads: 'UNLIMITED',
+            subscriptionStartDate: new Date().toISOString(),
+            isActive: true,
+            createdAt: new Date().toISOString()
+        };
+        
+        db.users.push(adminUser);
+        writeDB(db);
+        console.log("✅ Admin kullanıcısı oluşturuldu: admin@kirbas.com / Admin123456");
+    }
+};
+
+// Initialize Admin
+seedAdmin();
+
 // In-memory Logs (Real-world app would use DB)
 const systemLogs = [];
 const startTime = Date.now();
