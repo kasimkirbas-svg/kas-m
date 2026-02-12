@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DocumentTemplate, GeneratedDocument, DocumentPhoto } from '../types';
-import { Upload, Trash2, Plus, Download, FileText, CheckCircle, Mail, AlertTriangle } from 'lucide-react';
+import { Upload, Trash2, Plus, Download, FileText, CheckCircle, Mail } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -38,13 +38,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   const [sendEmail, setSendEmail] = useState(false);
   const [generationSuccess, setGenerationSuccess] = useState(false);
   
-  // Ref to the container holding all pages
-  const printContainerRef = useRef<HTMLDivElement>(null);
+  const documentRef = useRef<HTMLDivElement>(null);
 
   const maxPhotos = template.photoCapacity || 15;
 
-  // --- Handlers ---
-
+  // Form input handler
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -53,6 +51,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }));
   };
 
+  // Photo upload handler
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -76,64 +75,64 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     });
   };
 
+  // Remove photo
   const handleRemovePhoto = (id: string) => {
     setPhotos(prev => prev.filter(p => p.id !== id));
   };
 
-  // --- Multi-Page PDF Generation Logic ---
+  // Generate Real PDF
   const handleGenerateDocument = async () => {
-    if (!printContainerRef.current) return;
+    if (!documentRef.current) return;
     
     setIsGenerating(true);
     setGenerationSuccess(false);
 
     try {
-      // Find all page elements
-      const pageElements = printContainerRef.current.querySelectorAll('.print-page');
-      
-      if (pageElements.length === 0) {
-        throw new Error("No pages found to generate");
-      }
+      // 1. Generate Canvas from HTML
+      const canvas = await html2canvas(documentRef.current, {
+        scale: 2, // High resolution
+        useCORS: true,
+        logging: false
+      });
 
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      
+      // 2. Create PDF
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
 
-      // Process each page individually
-      for (let i = 0; i < pageElements.length; i++) {
-        const pageEl = pageElements[i] as HTMLElement;
-        
-        // Capture the page with high quality
-        const canvas = await html2canvas(pageEl, {
-          scale: 2, // 2x scale for crisp text
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#ffffff'
-        });
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      let heightLeft = imgHeight;
+      let position = 0;
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        const imgWidth = 210; // A4 Width mm
-        const imgHeight = 297; // A4 Height mm
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
 
-        // Add page to PDF (skip first addPage call since PDF init creates one)
-        if (i > 0) {
-          pdf.addPage();
-        }
-        
-        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+      // Handle multi-page content
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
 
       const pdfBase64 = pdf.output('datauristring');
-      const fileName = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
+      const fileName = `${template.title.replace(/\s+/g, '_')}_${formData.date}.pdf`;
 
-      // Send Email
+      // 3. Send Email if requested
       if (sendEmail && userEmail) {
         try {
           const response = await fetch('/api/send-document', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
               email: userEmail,
               pdfBase64: pdfBase64,
@@ -150,10 +149,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         }
       }
 
-      // Download
+      // 4. Download PDF
       pdf.save(fileName);
       
-      // Save Record
+      // 5. Save Record
       const documentRecord: GeneratedDocument = {
         id: 'doc-' + Date.now(),
         userId,
@@ -179,18 +178,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   };
 
-  // --- render helpers ---
-  // Chunk photos into groups of 6 for separate A4 pages
-  const photoChunks = [];
-  for (let i = 0; i < photos.length; i += 6) {
-    photoChunks.push(photos.slice(i, i + 6));
-  }
-
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-100px)]">
       
-      {/* ---------------- LEFT: FORM INPUTS (Scrollable) ---------------- */}
-      <div className="flex-1 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[350px]">
+      {/* --- LEFT: FORM INPUTS --- */}
+      <div className="flex-1 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 text-white flex justify-between items-center shrink-0">
           <div>
@@ -207,12 +199,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         {/* Scrollable Form Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           
-          {/* Info */}
+          {/* Section: Basic Info */}
           <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
              <h3 className="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center gap-2">
                <FileText size={16} /> {t?.editor?.documentInfo || 'Belge Bilgileri'}
              </h3>
-             <div className="grid grid-cols-1 gap-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-500 mb-1">{t?.editor?.firmName || 'Firma Adı'} *</label>
                   <input
@@ -248,7 +240,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
              </div>
           </div>
 
-          {/* Fields */}
+          {/* Section: Template Fields */}
           {template.fields.length > 0 && (
              <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
               <h3 className="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center gap-2">
@@ -282,7 +274,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             </div>
           )}
 
-          {/* Notes */}
+          {/* Section: Notes */}
           <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
               <h3 className="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center gap-2">
                 <Plus size={16} /> {t?.editor?.notes || 'Ek Notlar'}
@@ -295,7 +287,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
               />
           </div>
 
-          {/* Photo Management in Form */}
+          {/* Section: Photos */}
           <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
               <h3 className="text-sm font-bold text-slate-700 uppercase mb-3 flex justify-between items-center">
                 <span className="flex items-center gap-2"><Upload size={16} /> {t?.editor?.uploadPhotos || 'Fotoğraflar'}</span>
@@ -304,7 +296,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                 </span>
               </h3>
               
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                  {photos.map((photo) => (
                    <div key={photo.id} className="relative aspect-square rounded overflow-hidden group bg-white border border-slate-200 shadow-sm">
                      <img 
@@ -363,12 +355,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
               {isGenerating ? (
                 <>
                   <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                  {t?.editor?.preparing || 'Hazırlanıyor...'}
+                  {t?.editor?.preparing || 'Oluşturuluyor...'}
                 </>
               ) : generationSuccess ? (
                 <>
                   <CheckCircle size={20} />
-                  {t?.editor?.photoSuccess || 'Oluşturuldu & İndirildi'}
+                  {t?.editor?.photoSuccess || 'Başarıyla Oluşturuldu'}
                 </>
               ) : (
                 <>
@@ -380,77 +372,66 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         </div>
       </div>
 
-      {/* ---------------- RIGHT: LIVE A4 PREVIEW ---------------- */}
-      <div className="flex-2 bg-slate-800/80 p-6 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative w-full lg:w-auto overflow-y-auto">
-          {/* Legend/Info Badge */}
-          <div className="sticky top-0 z-10 mb-6 bg-black/70 text-white backdrop-blur-md px-4 py-2 rounded-full text-xs font-mono border border-white/10 shadow-xl flex gap-3">
-             <span className="flex items-center gap-1">📄 {t?.editor?.previewMode || 'A4 Önizleme Modu'}</span>
-             <span className="opacity-50">|</span>
-             <span className="flex items-center gap-1">📸 {photos.length} Fotoğraf</span>
-             {photoChunks.length > 0 && <span className="text-yellow-400">({photoChunks.length} Ek Sayfa)</span>}
+      {/* --- RIGHT: PREVIEW (Visual Feedback & Print Source) --- */}
+      {/* Hidden usually on mobile, shown on desktop for feedback */}
+      <div className="hidden lg:flex flex-col bg-slate-800/50 p-6 rounded-lg shadow-inner overflow-hidden flex-1 items-center justify-center relative">
+          <div className="absolute top-4 left-6 text-white bg-black/50 px-3 py-1 rounded-full text-xs font-mono uppercase">
+             Canlı Önizleme (A4)
           </div>
 
-          {/* The Wrapper for all Pages - used by function to grab contexts */}
-          <div ref={printContainerRef} className="flex flex-col gap-8 pb-10 origin-top transform sm:scale-75 md:scale-90 xl:scale-100 transition-transform">
-            
-            {/* --- PAGE 1: TEXT CONTENT --- */}
-            <div 
-              className="print-page bg-white shadow-2xl relative"
-              style={{ 
-                width: '210mm', 
-                height: '297mm', 
-                padding: '15mm',
-                boxSizing: 'border-box',
-                color: '#1e293b',
-                background: 'white' // Ensure white bg for PDF
-              }}
-            >
-                {/* Header */}
-                <div className="border-b-4 border-slate-900 pb-6 mb-8 flex justify-between items-start">
+          <div className="overflow-y-auto max-h-full w-full flex justify-center custom-scrollbar">
+             {/* The actual div to be screenshotted */}
+             <div 
+                ref={documentRef} 
+                className="bg-white shadow-2xl origin-top transform scale-75 md:scale-90 xl:scale-100 transition-transform duration-300"
+                style={{ 
+                  width: '210mm', 
+                  minHeight: '297mm', 
+                  padding: '15mm',
+                  boxSizing: 'border-box',
+                  color: '#1e293b' // slate-800
+                }}
+             >
+                {/* PDF Header */}
+                <div className="border-b-4 border-slate-800 pb-6 mb-8 flex justify-between items-start">
                    <div className="max-w-[70%]">
-                      <h1 className="text-4xl font-extrabold uppercase tracking-tight text-slate-900 leading-none mb-3">{template.title}</h1>
-                      <p className="text-slate-500 text-sm font-medium leading-tight">{template.description}</p>
+                      <h1 className="text-3xl font-bold uppercase tracking-wide text-slate-900 leading-none mb-2">{template.title}</h1>
+                      <p className="text-slate-500 text-sm leading-tight">{template.description}</p>
                    </div>
                    <div className="text-right">
-                      <div className="bg-slate-100 px-4 py-3 rounded border border-slate-200 text-center min-w-[120px]">
-                        <span className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">Tarih</span>
-                        <span className="block font-mono text-lg font-bold text-slate-900">{new Date(formData.date).toLocaleDateString('tr-TR')}</span>
+                      <div className="bg-slate-100 px-3 py-2 rounded mb-2 inline-block">
+                        <span className="block text-[10px] text-slate-400 uppercase font-bold text-left">Tarih</span>
+                        <span className="block font-mono font-bold text-slate-800">{new Date(formData.date).toLocaleDateString('tr-TR')}</span>
                       </div>
                    </div>
                 </div>
 
-                {/* Sub-Header Grid */}
-                <div className="grid grid-cols-2 gap-8 mb-10">
-                   <div className="bg-blue-50/50 p-4 border-l-4 border-blue-600 rounded-r-lg">
-                      <span className="block text-[10px] text-blue-400 uppercase font-bold mb-1 tracking-wider">{t?.editor?.firmName}</span>
-                      <p className="font-serif text-2xl font-bold text-slate-900 truncate">
+                {/* Info Grid */}
+                <div className="grid grid-cols-2 gap-8 mb-8">
+                   <div className="border-l-4 border-blue-500 pl-4 py-1">
+                      <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">{t?.editor?.firmName || 'Firma Adı'}</span>
+                      <p className="font-serif text-xl font-bold text-slate-900 border-b border-dotted border-slate-300 pb-1">
                         {formData.companyName || '_________________'}
                       </p>
                    </div>
-                   <div className="bg-indigo-50/50 p-4 border-l-4 border-indigo-600 rounded-r-lg">
-                      <span className="block text-[10px] text-indigo-400 uppercase font-bold mb-1 tracking-wider">{t?.editor?.preparedBy}</span>
-                      <p className="font-serif text-2xl font-bold text-slate-900 truncate">
+                   <div className="border-l-4 border-indigo-500 pl-4 py-1">
+                      <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">{t?.editor?.preparedBy || 'Hazırlayan'}</span>
+                      <p className="font-serif text-xl font-bold text-slate-900 border-b border-dotted border-slate-300 pb-1">
                         {formData.preparedBy || '_________________'}
                       </p>
                    </div>
                 </div>
 
-                {/* Main Content Table - Fixed Layout for A4 Stability */}
+                {/* Content Table Style for Fields */}
                 <div className="mb-8">
-                   <table className="w-full border-collapse text-left">
-                      <thead>
-                        <tr className="border-b-2 border-slate-800">
-                          <th className="py-2 text-xs font-bold text-slate-500 uppercase tracking-wider w-1/3">Alan</th>
-                          <th className="py-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Değer</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {template.fields.map((field) => (
-                          <tr key={field.key} className="group">
-                             <td className="py-3 pr-4 text-sm font-bold text-slate-700 align-top group-hover:bg-slate-50/50 transition-colors">
+                   <table className="w-full border-collapse">
+                      <tbody>
+                        {template.fields.map((field, idx) => (
+                          <tr key={field.key} className={idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+                             <td className="p-3 border-y border-slate-100 w-1/3 text-sm font-bold text-slate-600 align-top">
                                {field.label}
                              </td>
-                             <td className="py-3 text-sm text-slate-600 font-medium whitespace-pre-wrap align-top group-hover:bg-slate-50/50 transition-colors">
+                             <td className="p-3 border-y border-slate-100 w-2/3 text-sm text-slate-800 whitespace-pre-wrap">
                                {formData[field.key] || '-'}
                              </td>
                           </tr>
@@ -459,93 +440,60 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                    </table>
                 </div>
 
-                {/* Notes Section - Grows until bottom of page */}
+                {/* Notes */}
                 {additionalNotes && (
-                  <div className="mt-8 p-5 bg-yellow-50/60 border border-yellow-100 rounded-lg text-sm text-slate-700 relative">
-                    <span className="absolute -top-3 left-4 bg-yellow-100 text-yellow-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded">
-                      {t?.editor?.notes || 'EK NOTLAR'}
-                    </span>
-                    <p className="whitespace-pre-wrap leading-relaxed min-h-[60px]">{additionalNotes}</p>
+                  <div className="mb-8 p-4 bg-yellow-50 border border-yellow-100 rounded text-sm text-slate-800">
+                    <span className="block text-[10px] text-yellow-600 uppercase font-bold mb-2">{t?.editor?.notes || 'NOTLAR'}</span>
+                    <p className="whitespace-pre-wrap leading-relaxed">{additionalNotes}</p>
                   </div>
                 )}
+
+                {/* Photo Grid (2x2 or 3x3) */}
+                {photos.length > 0 && (
+                   <div className="mt-8 page-break-inside-avoid">
+                      <h3 className="text-lg font-bold border-b-2 border-slate-200 pb-2 mb-4 text-slate-700 flex items-center gap-2">
+                         <span className="bg-slate-800 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">P</span> 
+                         {t?.editor?.uploadPhotos || 'Fotoğraf Raporu'}
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4">
+                         {photos.map((photo, idx) => (
+                            <div key={photo.id} className="border border-slate-200 p-2 rounded bg-white shadow-sm break-inside-avoid">
+                               <div className="aspect-[4/3] bg-slate-100 mb-2 overflow-hidden rounded">
+                                  <img src={photo.base64} className="w-full h-full object-contain" />
+                               </div>
+                               <p className="text-center text-[10px] text-slate-400 font-mono uppercase">Img #{idx + 1} - {new Date(photo.uploadedAt).toLocaleTimeString()}</p>
+                            </div>
+                         ))}
+                      </div>
+                   </div>
+                )}
                 
-                {/* Page 1 Footer */}
-                <div className="absolute bottom-10 left-10 right-10 pt-4 border-t border-slate-200 flex justify-between items-end text-[9px] text-slate-400 font-mono uppercase tracking-widest">
+                {/* Footer */}
+                <div className="mt-16 pt-6 border-t border-slate-300 flex justify-between items-end text-[10px] text-slate-400 font-mono">
                    <div>
-                      <p>© {new Date().getFullYear()} Kırbaş Doküman Platformu</p>
-                      <p>Doğrulanmış Rapor</p>
+                      <p>Kırbaş Doküman Platformu</p>
+                      <p>{new Date().toLocaleString('tr-TR')}</p>
                    </div>
                    <div className="text-right">
-                      <p>Page 1 / {1 + photoChunks.length}</p>
-                      <p>{userId}</p>
+                      <p>ID: {userId.slice(0,5).toUpperCase()}-{Date.now().toString(36).toUpperCase()}</p>
+                      <p>Page 1/1</p>
                    </div>
                 </div>
-            </div>
 
-            {/* --- EXTRA PAGES: PHOTOS (Dynamically Created) --- */}
-            {photoChunks.map((chunk, pageIndex) => (
-               <div 
-                key={`photo-page-${pageIndex}`}
-                className="print-page bg-white shadow-2xl relative flex flex-col"
-                style={{ 
-                  width: '210mm', 
-                  height: '297mm', 
-                  padding: '15mm',
-                  boxSizing: 'border-box',
-                  background: 'white'
-                }}
-              >
-                  {/* Photo Page Header */}
-                  <div className="border-b-2 border-slate-200 pb-2 mb-6 flex justify-between items-end">
-                     <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                        <span className="bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm">{pageIndex + 2}</span>
-                        <span>Fotoğraf Raporu</span>
-                     </h3>
-                     <span className="text-xs text-slate-400 font-mono">Bölüm {pageIndex + 1}</span>
-                  </div>
-
-                  {/* 2x3 Grid for Photos (Max 6 per page) */}
-                  <div className="grid grid-cols-2 gap-x-6 gap-y-8 flex-1 content-start">
-                     {chunk.map((photo, pIdx) => (
-                       <div key={photo.id} className="flex flex-col gap-2">
-                          <div className="w-full aspect-[4/3] bg-slate-100 rounded-lg border border-slate-200 overflow-hidden shadow-sm relative">
-                             <img src={photo.base64} className="w-full h-full object-contain" alt="Report visual" />
-                          </div>
-                          <div className="flex justify-between items-center px-1">
-                             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">IMG_REF_{photo.id.slice(-4)}</span>
-                             <span className="text-[9px] text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">
-                                {new Date(photo.uploadedAt).toLocaleTimeString()}
-                             </span>
-                          </div>
-                       </div>
-                     ))}
-                  </div>
-
-                  {/* Photo Page Footer */}
-                  <div className="absolute bottom-10 left-10 right-10 pt-4 border-t border-slate-200 flex justify-between items-end text-[9px] text-slate-400 font-mono uppercase tracking-widest">
-                   <div>
-                      <p>{template.title} - Görsel Ekleri</p>
-                   </div>
-                   <div className="text-right">
-                      <p>Page {pageIndex + 2} / {1 + photoChunks.length}</p>
-                   </div>
-                </div>
-              </div>
-            ))}
-
+             </div>
           </div>
       </div>
 
-       {/* Full Screen Photo Preview Modal */}
+       {/* Photo Preview Modal */}
        {photoPreview && (
           <div
-            className="fixed inset-0 bg-black/95 flex items-center justify-center z-[60] p-4 lg:p-12 cursor-zoom-out backdrop-blur-sm"
+            className="fixed inset-0 bg-black/90 flex items-center justify-center z-[60] p-8"
             onClick={() => setPhotoPreview(null)}
           >
-             <img src={photoPreview} alt="Full Preview" className="max-w-full max-h-full rounded-lg shadow-2xl border border-white/10" />
-             <div className="absolute top-6 right-6 text-white text-sm bg-white/10 px-3 py-1 rounded-full pointer-events-none">
-                Kapatmak için tıklayın
-             </div>
+             <img src={photoPreview} alt="Full Preview" className="max-w-full max-h-full rounded shadow-2xl" />
+             <button className="absolute top-4 right-4 text-white hover:text-red-400">
+               <Trash2 size={32} />
+             </button>
           </div>
         )}
 
