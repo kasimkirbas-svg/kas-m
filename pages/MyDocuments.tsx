@@ -27,15 +27,15 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
     <div className="space-y-6">
        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">{t?.myDocuments?.title || 'Dokümanlarım'}</h1>
-          <p className="text-slate-500">{t?.myDocuments?.subtitle || 'Oluşturduğunuz tüm dokümanlar burada listelenir.'}</p>
+          <h1 className="text-2xl font-bold text-slate-800">{t?.myDocuments?.title}</h1>
+          <p className="text-slate-500">{t?.myDocuments?.subtitle}</p>
         </div>
         
         <div className="relative w-full md:w-64">
           <Search className="absolute left-3 top-3 text-slate-400" size={18} />
           <input
             type="text"
-            placeholder={t?.common?.search || 'Ara...'}
+            placeholder={t?.common?.search}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -49,10 +49,10 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
             <table className="w-full text-sm text-left">
               <thead className="bg-slate-50 text-slate-600 font-medium border-b border-slate-200">
                 <tr>
-                  <th className="px-6 py-4">{t?.myDocuments?.documentName || 'Doküman Adı'}</th>
-                  <th className="px-6 py-4">{t?.myDocuments?.createdDate || 'Oluşturma Tarihi'}</th>
-                  <th className="px-6 py-4">{t?.myDocuments?.company || 'Şirket / Kişi'}</th>
-                  <th className="px-6 py-4 text-right">{t?.common?.actions || 'İşlemler'}</th>
+                  <th className="px-6 py-4">{t?.myDocuments?.documentName}</th>
+                  <th className="px-6 py-4">{t?.myDocuments?.createdDate}</th>
+                  <th className="px-6 py-4">{t?.myDocuments?.company}</th>
+                  <th className="px-6 py-4 text-right">{t?.common?.actions}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -64,7 +64,7 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                           <FileText size={20} />
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900">{doc.templateId} Dokümanı</p>
+                          <p className="font-medium text-slate-900">{doc.templateId} {t?.myDocuments?.documentSuffix}</p>
                           <p className="text-xs text-slate-500">ID: {doc.id.slice(0, 8)}</p>
                         </div>
                       </div>
@@ -84,21 +84,21 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                          <button 
                           onClick={() => onPreviewDocument && onPreviewDocument(doc)}
                           className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                          title="Önizle"
+                          title={t?.common?.preview || "Preview"}
                         >
                           <Eye size={18} />
                         </button>
                         <button 
                           className="p-2 text-slate-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition"
-                          title="İndir"
-                          onClick={() => alert('İndirme işlemi simüle edildi.')}
+                          title={t?.common?.download}
+                          onClick={() => alert(t?.myDocuments?.downloadSimulated)}
                         >
                           <Download size={18} />
                         </button>
                         <button 
                           onClick={() => onDeleteDocument(doc.id)}
                           className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
-                          title="Sil"
+                          title={t?.common?.delete}
                         >
                           <Trash2 size={18} />
                         </button>
@@ -114,9 +114,9 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
             <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4">
               <FileText size={32} />
             </div>
-            <h3 className="text-lg font-medium text-slate-900 mb-2">{t?.myDocuments?.noDocsTitle || 'Henüz doküman oluşturmadınız'}</h3>
+            <h3 className="text-lg font-medium text-slate-900 mb-2">{t?.myDocuments?.noDocsTitle}</h3>
             <p className="text-slate-500 max-w-sm mx-auto mb-6">
-              {t?.myDocuments?.noDocsDesc || 'Şablonlardan birini seçerek hemen profesyonel bir doküman oluşturmaya başlayın.'}
+              {t?.myDocuments?.noDocsDesc}
             </p>
           </div>
         )}

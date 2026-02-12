@@ -15,7 +15,10 @@ const tr = {
     yes: 'Evet',
     no: 'Hayır',
     update: 'Güncelle',    updateFailed: 'Güncelleme Başarısız',    close: 'Kapat',
-    download: 'İndir'
+    download: 'İndir',
+    search: 'Ara',
+    actions: 'İşlemler',
+    preview: 'Önizle'
   },
   auth: {
     login: 'Giriş Yap',
@@ -233,6 +236,17 @@ const tr = {
     standard: 'Standart',
     premium: 'Premium',
     newTemplateButton: 'Yeni Şablon'
+  },
+  myDocuments: {
+    title: 'Dokümanlarım',
+    subtitle: 'Oluşturduğunuz tüm dokümanlar burada listelenir.',
+    documentName: 'Doküman Adı',
+    createdDate: 'Oluşturma Tarihi',
+    company: 'Şirket / Kişi',
+    noDocsTitle: 'Henüz doküman oluşturmadınız',
+    noDocsDesc: 'Şablonlardan birini seçerek hemen profesyonel bir doküman oluşturmaya başlayın.',
+    documentSuffix: 'Dokümanı',
+    downloadSimulated: 'İndirme işlemi simüle edildi.'
   }
 };
 
@@ -255,7 +269,10 @@ const en = {
     update: 'Update',
     updateFailed: 'Update Failed',
     close: 'Close',
-    download: 'Download'
+    download: 'Download',
+    search: 'Search',
+    actions: 'Actions',
+    preview: 'Preview'
   },
   auth: {
     login: 'Sign In',
@@ -438,19 +455,30 @@ const en = {
     active: 'Active',
     delayed: 'Delayed',
     new: 'New',
-    paid: 'Paid',,
+    paid: 'Paid',
     packagesAndPrice: 'Packages & Pricing',
     systemUptime: 'System Uptime',
     type: 'Type',
     standard: 'Standard',
     premium: 'Premium',
-    newTemplateButton: 'New Template'
+    newTemplateButton: 'New Template',
     pending: 'Pending',
     trial: 'Trial',
     edit: 'Edit',
     delete: 'Delete',
     backendActive: 'Backend Systems Active',
     backendOffline: 'No Backend Connection'
+  },
+  myDocuments: {
+    title: 'My Documents',
+    subtitle: 'All documents you have created are listed here.',
+    documentName: 'Document Name',
+    createdDate: 'Created Date',
+    company: 'Company / Person',
+    noDocsTitle: 'You have not created any documents yet',
+    noDocsDesc: 'Start creating a professional document by selecting one of the templates.',
+    documentSuffix: 'Document',
+    downloadSimulated: 'Download simulated.'
   }
 };
 
@@ -473,7 +501,10 @@ const ar = {
     update: 'تحديث',
     updateFailed: 'فشل التحديث',
     close: 'إغلاق',
-    download: 'تحميل'
+    download: 'تحميل',
+    search: 'بحث',
+    actions: 'الإجراءات',
+    preview: 'معاينة'
   },
   auth: {
     login: 'تسجيل الدخول',
@@ -656,19 +687,30 @@ const ar = {
     active: 'نشط',
     delayed: 'متأخر',
     new: 'جديد',
-    paid: 'مدفوع',,
+    paid: 'مدفوع',
     packagesAndPrice: 'الحزم والأسعار',
     systemUptime: 'وقت تشغيل النظام',
     type: 'النوع',
     standard: 'قياسي',
     premium: 'متميز',
-    newTemplateButton: 'قالب جديد'
+    newTemplateButton: 'قالب جديد',
     pending: 'قيد الانتظار',
     trial: 'تجربة',
     edit: 'تعديل',
     delete: 'حذف',
     backendActive: 'أنظمة الخلفية نشطة',
     backendOffline: 'لا يوجد اتصال بالخلفية'
+  },
+  myDocuments: {
+    title: 'مستنداتي',
+    subtitle: 'يتم سرد جميع المستندات التي قمت بإنشائها هنا.',
+    documentName: 'اسم المستند',
+    createdDate: 'تاريخ الإنشاء',
+    company: 'الشركة / الشخص',
+    noDocsTitle: 'لم تقم بإنشاء أي مستندات بعد',
+    noDocsDesc: 'ابدأ في إنشاء مستند احترافي باختيار أحد القوالب.',
+    documentSuffix: 'مستند',
+    downloadSimulated: 'تم محاكاة التنزيل.'
   }
 };
 
