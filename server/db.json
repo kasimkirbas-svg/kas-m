@@ -12,6 +12,20 @@
       "subscriptionStartDate": "2026-02-12T00:05:55.882Z",
       "isActive": true,
       "createdAt": "2026-02-12T00:05:55.882Z"
+    },
+    {
+      "id": "user-1770854846594",
+      "name": "Sevindi",
+      "email": "serkansevindi2828@gmail.com",
+      "password": "$2b$10$7YHxkNXncbLEAL/DQ5cOwuJDcHLry6jX1vI3JCtVfjXwxpXmaZzLO",
+      "companyName": "685",
+      "role": "SUBSCRIBER",
+      "plan": "FREE",
+      "remainingDownloads": 3,
+      "subscriptionStartDate": "2026-02-12T00:07:26.594Z",
+      "subscriptionEndDate": "2026-02-26T00:07:26.594Z",
+      "isActive": true,
+      "createdAt": "2026-02-12T00:07:26.594Z"
     }
   ],
   "documents": []

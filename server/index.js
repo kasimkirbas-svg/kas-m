@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', 1); // Trust first proxy (required for rate-limit behind localtunnel/vercel)
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'gizli-anahtar-degistirilecek-kasim-kirbas-2026';
 
