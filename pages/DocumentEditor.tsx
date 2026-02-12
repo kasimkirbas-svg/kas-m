@@ -305,11 +305,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         </div>
       </div>
 
-      {/* ---------------- SECTION 2 (Right on DOM/Desktop): PREVIEW (Large) ---------------- */}
-      <div className="lg:flex-[3] bg-slate-800/80 p-6 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar order-2">
-          {/* Legend/Info Badge */}
-          <div className="sticky top-0 z-10 mb-6 bg-black/70 text-white backdrop-blur-md px-4 py-2 rounded-full text-xs font-mono border border-white/10 shadow-xl flex gap-3">
-             <span className="flex items-ce): PREVIEW (Shrunk) ---------------- */}
+      {/* ---------------- SECTION 2 (Right): PREVIEW (Shrunk) ---------------- */}
       <div className="lg:flex-[5] bg-slate-800/80 p-4 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar order-2">
           {/* Legend/Info Badge */}
           <div className="sticky top-0 z-10 mb-4 bg-black/70 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-mono border border-white/10 shadow-xl flex gap-3">
@@ -319,7 +315,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
              {photoChunks.length > 0 && <span className="text-yellow-400">({photoChunks.length} Ek Sayfa)</span>}
           </div>
 
-          <div ref={printContainerRef} className="flex flex-col gap-8 pb-10 origin-top transform xl:scale-75 lg:scale-50
+          <div ref={printContainerRef} className="flex flex-col gap-8 pb-10 origin-top transform xl:scale-75 lg:scale-50 md:scale-50 sm:scale-50 transition-transform">
+            
+            {/* --- PAGE 1: TEXT CONTENT --- */}
+            <div className="print-page bg-white shadow-2xl relative" style={{ width: '210mm', height: '297mm', padding: '15mm', boxSizing: 'border-box', color: '#1e293b', background: 'white' }}>
                 <div className="border-b-4 border-slate-900 pb-6 mb-8 flex justify-between items-start">
                    <div className="max-w-[70%]">
                       <h1 className="text-4xl font-extrabold uppercase tracking-tight text-slate-900 leading-none mb-3">{template.title}</h1>
