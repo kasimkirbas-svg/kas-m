@@ -205,6 +205,7 @@ const App = () => {
           <DocumentEditor 
             template={selectedTemplate}
             userId={user.id}
+            userEmail={user.email}
             companyName={user.companyName}
             preparedBy={user.name}
             onClose={() => setCurrentView('templates')}

@@ -533,6 +533,65 @@ app.post('/api/send-welcome-email', async (req, res) => {
 });
 
 
+// --- SEND DOCUMENT (PDF) ---
+app.post('/api/send-document', async (req, res) => {
+    const { email, pdfBase64, documentName } = req.body;
+
+    if (!email || !pdfBase64) {
+        return res.status(400).json({ success: false, message: 'Email ve PDF verisi zorunludur' });
+    }
+
+    // Mock mode
+    if (Object.keys(process.env).length === 0 || !process.env.EMAIL_USER) {
+         console.log('---------- [MOCK DOCUMENT SENT] ----------');
+         console.log(`To: ${email}`);
+         console.log(`Doc: ${documentName}`);
+         return res.json({ success: true, message: 'Doküman simülasyon olarak gönderildi (Mock Mode)' });
+    }
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+
+    try {
+        const mailOptions = {
+            from: `"Kırbaş Doküman" <${process.env.EMAIL_USER || 'info@kirbas.com'}>`,
+            to: email,
+            subject: `Dokümanınız Hazır: ${documentName || 'Yeni Doküman'}`,
+            text: `Merhaba,\n\nOluşturduğunuz "${documentName}" isimli doküman ektedir.\n\nİyi günler,\nKırbaş Doküman`,
+            attachments: [
+                {
+                    filename: `${documentName || 'Dokuman'}.pdf`,
+                    content: pdfBase64.split('base64,')[1],
+                    encoding: 'base64'
+                }
+            ]
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Document sent: %s', info.messageId);
+        
+        systemLogs.unshift({
+            id: Date.now(),
+            type: 'success',
+            action: 'Document Sent',
+            details: `To: ${email} | Doc: ${documentName}`,
+            time: new Date().toISOString()
+        });
+
+        res.json({ success: true, message: 'Doküman başarıyla gönderildi' });
+
+    } catch (error) {
+        console.error('Doküman gönderme hatası:', error);
+        res.status(500).json({ success: false, message: 'Doküman gönderilemedi', error: error.message });
+    }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Backend sunucusu http://localhost:${PORT} üzerinde çalışıyor`);
 });
