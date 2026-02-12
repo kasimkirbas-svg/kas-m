@@ -26,6 +26,20 @@
       "subscriptionEndDate": "2026-02-26T00:10:43.374Z",
       "isActive": true,
       "createdAt": "2026-02-12T00:10:43.374Z"
+    },
+    {
+      "id": "user-1770857019119",
+      "name": "Altundaş",
+      "email": "yunus2861altundas@gmail.com",
+      "password": "$2b$10$J6WImpJOJuJ6W7FX0fKT0.FUwa5CX/fK4Umjwjs6ic2PuYTtP.uJC",
+      "companyName": "ALTe Logistic",
+      "role": "SUBSCRIBER",
+      "plan": "FREE",
+      "remainingDownloads": 3,
+      "subscriptionStartDate": "2026-02-12T00:43:39.119Z",
+      "subscriptionEndDate": "2026-02-26T00:43:39.119Z",
+      "isActive": true,
+      "createdAt": "2026-02-12T00:43:39.119Z"
     }
   ],
   "documents": []
