@@ -344,7 +344,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
           <h1 className="text-3xl font-bold text-slate-900">{t?.admin?.title || 'Yönetici Paneli'}</h1>
           <p className="text-slate-600 mt-1 flex items-center gap-2">
             <span className={`inline-block w-2.5 h-2.5 rounded-full ${isServerOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
-            {isServerOnline ? 'Backend Sistemleri Aktif' : 'Backend Bağlantısı Yok'}
+            {isServerOnline ? (t?.admin?.backendActive || 'Backend Sistemleri Aktif') : (t?.admin?.backendOffline || 'Backend Bağlantısı Yok')}
           </p>
         </div>
         <div className="flex gap-2">

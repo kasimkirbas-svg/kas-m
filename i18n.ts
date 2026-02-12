@@ -14,8 +14,7 @@ const tr = {
     confirm: 'Onayla',
     yes: 'Evet',
     no: 'Hayır',
-    update: 'Güncelle',
-    close: 'Kapat',
+    update: 'Güncelle',    updateFailed: 'Güncelleme Başarısız',    close: 'Kapat',
     download: 'İndir'
   },
   auth: {
@@ -225,7 +224,9 @@ const tr = {
     pending: 'Beklemede',
     trial: 'Deneme',
     edit: 'Düzenle',
-    delete: 'Sil'
+    delete: 'Sil',
+    backendActive: 'Backend Sistemleri Aktif',
+    backendOffline: 'Backend Bağlantısı Yok'
   }
 };
 
@@ -246,6 +247,7 @@ const en = {
     yes: 'Yes',
     no: 'No',
     update: 'Update',
+    updateFailed: 'Update Failed',
     close: 'Close',
     download: 'Download'
   },
@@ -405,7 +407,35 @@ const en = {
     totalDocuments: 'Total Documents',
     revenue: 'Revenue',
     totalTemplates: 'Total Templates',
-    statistics: 'Statistics'
+    statistics: 'Statistics',
+    recentMembers: 'Recent Members',
+    search: 'Search...',
+    user: 'User',
+    plan: 'Plan',
+    status: 'Status',
+    action: 'Action',
+    systemActivities: 'System Activities',
+    viewAllLogs: 'View All Logs →',
+    allSubscribers: 'All Subscribers',
+    newSubscriber: 'New Subscriber',
+    documentTemplates: 'Document Templates',
+    newTemplate: 'New Template',
+    templateName: 'Template Name',
+    category: 'Category',
+    downloads: 'Downloads',
+    invoiceNo: 'Invoice No',
+    date: 'Date',
+    customer: 'Customer',
+    amount: 'Amount',
+    systemLogs: 'System Logs',
+    download: 'Download',
+    active: 'Active',
+    delayed: 'Delayed',
+    new: 'New',
+    paid: 'Paid',
+    pending: 'Pendin,
+    backendActive: 'Backend Systems Active',
+    backendOffline: 'No Backend Connection'
   }
 };
 
@@ -423,6 +453,10 @@ const ar = {
     success: 'نجح',
     error: 'خطأ',
     confirm: 'تأكيد',
+    yes: 'نعم',
+    no: 'لا',
+    update: 'تحديث',
+    updateFailed: 'فشل ال'تأكيد',
     yes: 'نعم',
     no: 'لا',
     update: 'تحديث',
@@ -585,7 +619,38 @@ const ar = {
     totalDocuments: 'إجمالي المستندات',
     revenue: 'الإيرادات',
     totalTemplates: 'إجمالي القوالب',
-    statistics: 'الإحصائيات'
+    statistics: 'الإحصائيات',
+    recentMembers: 'أعضاء جدد',
+    search: 'بحث...',
+    user: 'المستخدم',
+    plan: 'الخطة',
+    status: 'الحالة',
+    action: 'إجراء',
+    systemActivities: 'نشاطات النظام',
+    viewAllLogs: 'عرض كل السجلات →',
+    allSubscribers: 'جميع المشتركين',
+    newSubscriber: 'مشترك جديد',
+    documentTemplates: 'قوالب المستندات',
+    newTemplate: 'قالب جديد',
+    templateName: 'اسم القالب',
+    category: 'الفئة',
+    downloads: 'التنزيلات',
+    invoiceNo: 'رقم الفاتورة',
+    date: 'التاريخ',
+    customer: 'العميل',
+    amount: 'المبلغ',
+    systemLogs: 'سجلات النظام',
+    download: 'تحميل',
+    active: 'نشط',
+    delayed: 'متأخر',
+    new: 'جديد',
+    paid: 'مدفوع',
+    pending: 'قيد,
+    backendActive: 'أنظمة الخلفية نشطة',
+    backendOffline: 'لا يوجد اتصال بالخلفية' الانتظار',
+    trial: 'تجربة',
+    edit: 'تعديل',
+    delete: 'حذف'
   }
 };
 

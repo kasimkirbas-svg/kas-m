@@ -26,6 +26,20 @@
       "subscriptionEndDate": "2026-02-26T00:07:26.594Z",
       "isActive": true,
       "createdAt": "2026-02-12T00:07:26.594Z"
+    },
+    {
+      "id": "user-1770855043374",
+      "name": "Kasim",
+      "email": "kasimmkirbass@gmail.com",
+      "password": "$2b$10$8wCKjyVZEuFJYgbEfDKq3Ot5ZEfVLy9dSragHjmc56j/Ps6pTreWG",
+      "companyName": "Ksm",
+      "role": "SUBSCRIBER",
+      "plan": "FREE",
+      "remainingDownloads": 3,
+      "subscriptionStartDate": "2026-02-12T00:10:43.374Z",
+      "subscriptionEndDate": "2026-02-26T00:10:43.374Z",
+      "isActive": true,
+      "createdAt": "2026-02-12T00:10:43.374Z"
     }
   ],
   "documents": []

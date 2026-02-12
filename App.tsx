@@ -63,6 +63,10 @@ const App = () => {
     if (savedLanguage) {
       setLanguage(savedLanguage);
       setT(getTranslation(savedLanguage));
+      // Update info for RTL
+      const dir = savedLanguage === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.dir = dir;
+      document.documentElement.lang = savedLanguage;
     }
 
     // Apply theme
@@ -70,6 +74,13 @@ const App = () => {
 
     setIsLoading(false);
   }, []);
+
+  // Update direction when language changes
+  useEffect(() => {
+    const dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = dir;
+    document.documentElement.lang = language;
+  }, [language]);
 
   const applyTheme = (themeType: 'light' | 'dark') => {
     const html = document.documentElement;
