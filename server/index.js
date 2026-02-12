@@ -186,6 +186,79 @@ app.post('/api/auth/register', async (req, res) => {
     db.users.push(newUser);
     writeDB(db);
 
+    // --- SEND WELCOME EMAIL ---
+    if (transporter && !isMockMode) {
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Kırbaş Doküman Platformuna Hoş Geldiniz! 🎉',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+                    <div style="text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 20px; margin-bottom: 20px;">
+                        <h2 style="color: #2563eb; margin: 0;">Kırbaş Doküman</h2>
+                        <p style="color: #64748b; margin: 5px 0 0 0;">Profesyonel Belge Yönetim Sistemi</p>
+                    </div>
+                    
+                    <div style="padding: 0 10px;">
+                        <p style="font-size: 16px; color: #1e293b;">Merhaba <strong>${name}</strong>,</p>
+                        
+                        <p style="color: #475569; line-height: 1.6;">
+                            Kırbaş Doküman Platformuna hoş geldiniz! Üyeliğiniz başarıyla oluşturulmuştur.
+                            Artık kurumsal belgelerinizi hızlı ve güvenli bir şekilde oluşturmaya başlayabilirsiniz.
+                        </p>
+
+                        <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                            <h3 style="color: #334155; margin-top: 0; margin-bottom: 15px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Üyelik Bilgileriniz</h3>
+                            <ul style="list-style: none; padding: 0; margin: 0; color: #475569;">
+                                <li style="margin-bottom: 10px;">🏢 <strong>Belirtilen Firma:</strong> ${companyName}</li>
+                                <li style="margin-bottom: 10px;">📧 <strong>E-posta Adresi:</strong> ${email}</li>
+                                <li style="margin-bottom: 0;">🌟 <strong>Paket:</strong> Ücretsiz Deneme</li>
+                            </ul>
+                        </div>
+
+                        <p style="color: #475569; line-height: 1.6;">
+                            Hemen giriş yaparak binlerce hazır şablonu kullanmaya başlayın.
+                        </p>
+
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="https://kirbas-doc-platform.loca.lt" style="background-color: #2563eb; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Platforma Git</a>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid #e2e8f0; margin-top: 30px; padding-top: 20px; text-align: center; color: #94a3b8; font-size: 12px;">
+                        <p>© ${new Date().getFullYear()} Kırbaş Doküman Platformu. Bu e-posta otomatik olarak gönderilmiştir.</p>
+                    </div>
+                </div>
+            `
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('❌ Welcome email failed:', error);
+                
+                // Add error log
+                systemLogs.unshift({
+                    id: Date.now(),
+                    type: 'error',
+                    action: 'Email Failed',
+                    details: `Welcome email to ${email} failed: ${error.message}`,
+                    time: new Date().toISOString()
+                });
+            } else {
+                console.log('✅ Welcome email sent:', info.response);
+                
+                // Add success log
+                systemLogs.unshift({
+                    id: Date.now(),
+                    type: 'success',
+                    action: 'Email Sent',
+                    details: `Welcome email sent to ${email}`,
+                    time: new Date().toISOString()
+                });
+            }
+        });
+    }
+
     // Create Token
     const token = jwt.sign(
         { id: newUser.id, email: newUser.email, role: newUser.role },
