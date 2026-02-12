@@ -433,7 +433,10 @@ const en = {
     delayed: 'Delayed',
     new: 'New',
     paid: 'Paid',
-    pending: 'Pendin,
+    pending: 'Pending',
+    trial: 'Trial',
+    edit: 'Edit',
+    delete: 'Delete',
     backendActive: 'Backend Systems Active',
     backendOffline: 'No Backend Connection'
   }
@@ -456,10 +459,7 @@ const ar = {
     yes: 'نعم',
     no: 'لا',
     update: 'تحديث',
-    updateFailed: 'فشل ال'تأكيد',
-    yes: 'نعم',
-    no: 'لا',
-    update: 'تحديث',
+    updateFailed: 'فشل التحديث',
     close: 'إغلاق',
     download: 'تحميل'
   },
@@ -645,12 +645,12 @@ const ar = {
     delayed: 'متأخر',
     new: 'جديد',
     paid: 'مدفوع',
-    pending: 'قيد,
-    backendActive: 'أنظمة الخلفية نشطة',
-    backendOffline: 'لا يوجد اتصال بالخلفية' الانتظار',
+    pending: 'قيد الانتظار',
     trial: 'تجربة',
     edit: 'تعديل',
-    delete: 'حذف'
+    delete: 'حذف',
+    backendActive: 'أنظمة الخلفية نشطة',
+    backendOffline: 'لا يوجد اتصال بالخلفية'
   }
 };
 
