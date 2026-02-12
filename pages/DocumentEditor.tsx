@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { DocumentTemplate, GeneratedDocument, DocumentPhoto } from '../types';
-import { Upload, Trash2, Plus, Download, FileText, CheckCircle, Mail, AlertTriangle, ZoomIn, Info } from 'lucide-react';
+import { Upload, Trash2, Plus, Download, CheckCircle, Mail, AlertTriangle, ZoomIn, ArrowLeft } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -12,6 +12,7 @@ interface DocumentEditorProps {
   userEmail?: string;
   companyName?: string;
   preparedBy?: string;
+  initialData?: GeneratedDocument; // For editing existing docs
   t?: any;
 }
 
@@ -23,22 +24,26 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   userEmail = '',
   companyName = '',
   preparedBy = '',
+  initialData,
   t
 }) => {
+  // Initialize state with props or initialData
   const [formData, setFormData] = useState<Record<string, any>>({
-    companyName: companyName || '',
-    preparedBy: preparedBy || '',
-    date: new Date().toISOString().split('T')[0],
+    companyName: initialData?.companyName || companyName || '',
+    preparedBy: initialData?.preparedBy || preparedBy || '',
+    date: initialData?.data?.date || new Date().toISOString().split('T')[0],
+    ...initialData?.data
   });
 
-  const [photos, setPhotos] = useState<DocumentPhoto[]>([]);
-  const [additionalNotes, setAdditionalNotes] = useState('');
+  const [photos, setPhotos] = useState<DocumentPhoto[]>(initialData?.photos || []);
+  const [additionalNotes, setAdditionalNotes] = useState(initialData?.additionalNotes || '');
+  
   const [isGenerating, setIsGenerating] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [sendEmail, setSendEmail] = useState(false);
   const [generationSuccess, setGenerationSuccess] = useState(false);
   
-  // Ref to the container holding all pages
+  // Ref to the preview container holding all pages
   const printContainerRef = useRef<HTMLDivElement>(null);
 
   const maxPhotos = template.photoCapacity || 15;
@@ -69,7 +74,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         setPhotos(prev => [...prev, {
           id: Date.now() + Math.random().toString(),
           base64,
-          uploadedAt: new Date().toISOString() // Fixed date for demo stability
+          uploadedAt: new Date().toISOString()
         }]);
       };
       reader.readAsDataURL(file);
@@ -80,7 +85,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setPhotos(prev => prev.filter(p => p.id !== id));
   };
 
-  // --- Multi-Page PDF Generation Logic ---
+  // --- PDF Generation ---
   const handleGenerateDocument = async () => {
     if (!printContainerRef.current) return;
     
@@ -88,7 +93,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setGenerationSuccess(false);
 
     try {
-      // Find all page elements
+      // Find all page elements (the A4 divs)
       const pageElements = printContainerRef.current.querySelectorAll('.print-page');
       
       if (pageElements.length === 0) {
@@ -105,8 +110,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       for (let i = 0; i < pageElements.length; i++) {
         const pageEl = pageElements[i] as HTMLElement;
         
-        // Capture the page with high quality
-        // Note: scaling is important for sharpness, but too high can crash browser
+        // Render to canvas
         const canvas = await html2canvas(pageEl, {
           scale: 2, 
           useCORS: true,
@@ -118,10 +122,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         const imgWidth = 210; // A4 Width mm
         const imgHeight = 297; // A4 Height mm
 
-        // Add page to PDF (skip first addPage call since PDF init creates one)
-        if (i > 0) {
-          pdf.addPage();
-        }
+        // Add page (skip first for init)
+        if (i > 0) pdf.addPage();
         
         pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
       }
@@ -132,8 +134,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       // Send Email
       if (sendEmail && userEmail) {
         try {
-          // Remove prefix for backend if needed, but usually nodemailer handles data uri or buffer
-          // We will send the full base64 string
           const response = await fetch('/api/send-document', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -147,11 +147,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           const result = await response.json();
           if (!response.ok) {
             console.error('Email sending failed', result);
-            alert(`E-posta gönderilemedi: ${result.message || 'Sunucu hatası'}`);
+            alert(`E-posta gönderilemedi: ${result.message || 'Sunucu hatası'}. Lütfen sunucu ayarlarını kontrol edin.`);
           }
         } catch (error) {
           console.error('Email network error:', error);
-          alert('E-posta sunucusuna erişilemedi.');
+          alert('E-posta sunucusuna erişilemedi. İnternet bağlantınızı veya sunucu durumunu kontrol edin.');
         }
       }
 
@@ -160,12 +160,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       
       // Save Record
       const documentRecord: GeneratedDocument = {
-        id: 'doc-' + Date.now(),
+        id: initialData?.id || 'doc-' + Date.now(),
         userId,
         templateId: template.id,
         data: formData,
         photos: photos,
-        createdAt: new Date().toISOString(),
+        createdAt: initialData?.createdAt || new Date().toISOString(),
         generatedAt: new Date().toISOString(),
         status: 'COMPLETED',
         companyName: formData.companyName,
@@ -184,8 +184,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   };
 
-  // --- render helpers ---
-  // Chunk photos into groups of 6 for separate A4 pages
+  // --- Chunk photos ---
   const photoChunks = [];
   for (let i = 0; i < photos.length; i += 6) {
     photoChunks.push(photos.slice(i, i + 6));
@@ -194,24 +193,124 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-100px)]">
       
-       {/* ---------------- 1. RIGHT: LIVE A4 PREVIEW (Now on Left visually or dominating space?) 
-           The user asked: "önizleme ekranıyla bilgi girme kısmı ekrandaki gözüken kısmı büyüklüğü tam tersi olsun"
-           Previous: Left(Input) = Flex-1, Right(Preview) = Flex-1 (roughly)
-           New Plan: 
-             Left side (Preview): Flex-[2] (Larger)
-             Right side (Input): Flex-[1] (Smaller)
-           OR visually swapped.
-           I will put PREVIEW on the LEFT (DOM order) and make it bigger. 
-           Wait, usually input is left, preview right. 
-           If user says "size tam tersi", I'll keep positions but change sizes.
-           Old Layout: Input (Flex 1), Preview (Flex 1 - effectively).
-           New Layout: Input (Flex 1 - Small), Preview (Flex 2 - Large).
-           Actually let's visually swap them if requested "ekrandaki gözüken kısmı büyüklüğü tam tersi olsun".
-           I will structure the flex container to have Preview taking roughly 65-70% and Input 30-35%.
-        ---------------- */}
+       {/* 
+          LAYOUT REVERSION based on request:
+          "şablon oluşturma ekranında boyut olarak tam tersine çevireceksin yer olarak eski haline gelsin"
+          Interpretation:
+          - Places: Input Left, Preview Right (Old standard state).
+          - Sizes: Input (Small), Preview (Large). (Previously Preview was huge on left, so now Preview huge on RIGHT).
+          
+          Result:
+          Left Panel: Input Form (Narrow ~350px/Flex-1)
+          Right Panel: Live Preview (Wide/Flex-2 or 3)
+       */}
 
-      {/* ---------------- SECTION 1 (Left on Desktop): PREVIEW (Dominant) ---------------- */}
-       <div className="lg:flex-[2] order-2 lg:order-1 bg-slate-800/80 p-6 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar">
+      {/* ---------------- SECTION 1 (Left on DOM/Desktop): INPUT FORM (Small) ---------------- */}
+       <div className="lg:flex-1 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[320px] max-w-md border-r border-slate-200 order-1">
+        {/* Header */}
+        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center shrink-0">
+          <div>
+            <h2 className="text-lg font-bold text-slate-800">Editör Paneli</h2>
+            <p className="text-slate-500 text-xs">Bilgileri doldurun</p>
+          </div>
+          {onClose && (
+            <button onClick={onClose} className="hover:bg-red-50 text-slate-400 hover:text-red-500 p-2 rounded-full transition" title="Kapat">
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Scrollable Form Content */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-5 custom-scrollbar">
+          
+          {/* Info */}
+          <div className="space-y-3">
+             <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Genel Bilgiler</label>
+             <div>
+               <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.firmName || 'Firma Adı'} *</span>
+               <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" placeholder="Firma..." />
+             </div>
+             <div>
+                <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.preparedBy || 'Hazırlayan'} *</span>
+               <input type="text" name="preparedBy" value={formData.preparedBy} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" placeholder="İsim Soyisim..." />
+             </div>
+             <div>
+                <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.date || 'Tarih'} *</span>
+               <input type="date" name="date" value={formData.date} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" />
+             </div>
+          </div>
+          <hr className="border-slate-100" />
+
+          {/* Fields */}
+          {template.fields.length > 0 && (
+             <div className="space-y-3">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Alanlar</label>
+              {template.fields.map(field => (
+                  <div key={field.key}>
+                    <span className="text-xs text-slate-500 mb-1 block">{field.label}</span>
+                    {field.type === 'textarea' ? (
+                      <textarea name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm" placeholder={field.placeholder} />
+                    ) : (
+                      <input type={field.type} name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm" placeholder={field.placeholder} />
+                    )}
+                  </div>
+                ))}
+            </div>
+          )}
+          <hr className="border-slate-100" />
+
+          {/* Notes */}
+          <div className="space-y-3">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Notlar</label>
+              <textarea value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm" placeholder="Notlar..." />
+          </div>
+          <hr className="border-slate-100" />
+
+          {/* Photos */}
+          <div className="space-y-3">
+              <div className="flex justify-between items-end">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Fotoğraflar</label>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full ${photos.length >= maxPhotos ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                  {photos.length}/{maxPhotos}
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                 {photos.map((photo) => (
+                   <div key={photo.id} className="relative aspect-square rounded overflow-hidden group bg-white border border-slate-200 shadow-sm">
+                     <img src={photo.base64} className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition" onClick={() => setPhotoPreview(photo.base64)} />
+                     <button onClick={() => handleRemovePhoto(photo.id)} className="absolute top-0 right-0 bg-red-500/80 hover:bg-red-600 text-white p-1 rounded-bl-lg transition" title="Sil">
+                       <Trash2 size={10} />
+                     </button>
+                   </div>
+                 ))}
+                 {photos.length < maxPhotos && (
+                   <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 hover:border-blue-400 rounded aspect-square cursor-pointer hover:bg-blue-50 transition group">
+                      <Plus className="text-slate-300 group-hover:text-blue-500" size={20} />
+                      <input type="file" multiple accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                   </label>
+                 )}
+              </div>
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="p-4 border-t border-slate-200 bg-white shrink-0">
+           <div className="flex items-center gap-2 mb-4 bg-blue-50 p-2 rounded border border-blue-100">
+              <input type="checkbox" id="sendEmail" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
+              <label htmlFor="sendEmail" className="text-xs font-bold text-blue-800 cursor-pointer select-none flex-1">
+                 Mail Gönder ({userEmail})
+              </label>
+              {sendEmail && !userEmail && <AlertTriangle size={14} className="text-orange-500" title="Mail adresi eksik" />}
+           </div>
+           
+           <button onClick={handleGenerateDocument} disabled={isGenerating || !formData.companyName} className={`w-full py-3 rounded-lg text-white font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 transition shadow-lg ${isGenerating ? 'bg-slate-400 cursor-not-allowed' : generationSuccess ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}>
+              {isGenerating ? <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Hazırlanıyor...</> : generationSuccess ? <><CheckCircle size={18} /> Tamamlandı</> : <><Download size={18} /> Oluştur ve İndir</>}
+            </button>
+        </div>
+      </div>
+
+      {/* ---------------- SECTION 2 (Right on DOM/Desktop): PREVIEW (Large) ---------------- */}
+      <div className="lg:flex-[3] bg-slate-800/80 p-6 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar order-2">
           {/* Legend/Info Badge */}
           <div className="sticky top-0 z-10 mb-6 bg-black/70 text-white backdrop-blur-md px-4 py-2 rounded-full text-xs font-mono border border-white/10 shadow-xl flex gap-3">
              <span className="flex items-center gap-1">📄 {t?.editor?.previewMode || 'A4 Canlı Önizleme'}</span>
@@ -220,21 +319,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
              {photoChunks.length > 0 && <span className="text-yellow-400">({photoChunks.length} Ek Sayfa)</span>}
           </div>
 
-          {/* The Wrapper for all Pages */}
-          <div ref={printContainerRef} className="flex flex-col gap-8 pb-10 origin-top transform xl:scale-100 lg:scale-90 md:scale-75 sm:scale-50 transition-transform">
+          <div ref={printContainerRef} className="flex flex-col gap-8 pb-10 origin-top transform xl:scale-95 lg:scale-75 md:scale-50 sm:scale-50 transition-transform">
             
             {/* --- PAGE 1: TEXT CONTENT --- */}
-            <div 
-              className="print-page bg-white shadow-2xl relative"
-              style={{ 
-                width: '210mm', 
-                height: '297mm', 
-                padding: '15mm',
-                boxSizing: 'border-box',
-                color: '#1e293b',
-                background: 'white' 
-              }}
-            >
+            <div className="print-page bg-white shadow-2xl relative" style={{ width: '210mm', height: '297mm', padding: '15mm', boxSizing: 'border-box', color: '#1e293b', background: 'white' }}>
                 {/* Header */}
                 <div className="border-b-4 border-slate-900 pb-6 mb-8 flex justify-between items-start">
                    <div className="max-w-[70%]">
@@ -253,15 +341,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                 <div className="grid grid-cols-2 gap-8 mb-10">
                    <div className="bg-blue-50/50 p-4 border-l-4 border-blue-600 rounded-r-lg">
                       <span className="block text-[10px] text-blue-400 uppercase font-bold mb-1 tracking-wider">{t?.editor?.firmName}</span>
-                      <p className="font-serif text-2xl font-bold text-slate-900 truncate">
-                        {formData.companyName || '_________________'}
-                      </p>
+                      <p className="font-serif text-2xl font-bold text-slate-900 truncate">{formData.companyName || '_________________'}</p>
                    </div>
                    <div className="bg-indigo-50/50 p-4 border-l-4 border-indigo-600 rounded-r-lg">
                       <span className="block text-[10px] text-indigo-400 uppercase font-bold mb-1 tracking-wider">{t?.editor?.preparedBy}</span>
-                      <p className="font-serif text-2xl font-bold text-slate-900 truncate">
-                        {formData.preparedBy || '_________________'}
-                      </p>
+                      <p className="font-serif text-2xl font-bold text-slate-900 truncate">{formData.preparedBy || '_________________'}</p>
                    </div>
                 </div>
 
@@ -277,12 +361,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                       <tbody className="divide-y divide-slate-100">
                         {template.fields.map((field) => (
                           <tr key={field.key} className="group">
-                             <td className="py-3 pr-4 text-sm font-bold text-slate-700 align-top group-hover:bg-slate-50/50 transition-colors">
-                               {field.label}
-                             </td>
-                             <td className="py-3 text-sm text-slate-600 font-medium whitespace-pre-wrap align-top group-hover:bg-slate-50/50 transition-colors">
-                               {formData[field.key] || '-'}
-                             </td>
+                             <td className="py-3 pr-4 text-sm font-bold text-slate-700 align-top group-hover:bg-slate-50/50 transition-colors">{field.label}</td>
+                             <td className="py-3 text-sm text-slate-600 font-medium whitespace-pre-wrap align-top group-hover:bg-slate-50/50 transition-colors">{formData[field.key] || '-'}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -292,9 +372,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                 {/* Notes Section - Grows until bottom of page */}
                 {additionalNotes && (
                   <div className="mt-8 p-5 bg-yellow-50/60 border border-yellow-100 rounded-lg text-sm text-slate-700 relative">
-                    <span className="absolute -top-3 left-4 bg-yellow-100 text-yellow-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded">
-                      {t?.editor?.notes || 'EK NOTLAR'}
-                    </span>
+                    <span className="absolute -top-3 left-4 bg-yellow-100 text-yellow-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded">{t?.editor?.notes || 'EK NOTLAR'}</span>
                     <p className="whitespace-pre-wrap leading-relaxed min-h-[60px]">{additionalNotes}</p>
                   </div>
                 )}
@@ -305,26 +383,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                       <p>© {new Date().getFullYear()} Kırbaş Doküman Platformu</p>
                       <p>Doğrulanmış Rapor</p>
                    </div>
-                   <div className="text-right">
-                      <p>Page 1 / {1 + photoChunks.length}</p>
-                      <p>{userId}</p>
-                   </div>
+                   <div className="text-right"><p>Page 1 / {1 + photoChunks.length}</p><p>{userId}</p></div>
                 </div>
             </div>
 
             {/* --- EXTRA PAGES: PHOTOS (Dynamically Created) --- */}
             {photoChunks.map((chunk, pageIndex) => (
-               <div 
-                key={`photo-page-${pageIndex}`}
-                className="print-page bg-white shadow-2xl relative flex flex-col"
-                style={{ 
-                  width: '210mm', 
-                  height: '297mm', 
-                  padding: '15mm',
-                  boxSizing: 'border-box',
-                  background: 'white'
-                }}
-              >
+               <div key={`photo-page-${pageIndex}`} className="print-page bg-white shadow-2xl relative flex flex-col" style={{ width: '210mm', height: '297mm', padding: '15mm', boxSizing: 'border-box', background: 'white' }}>
                   {/* Photo Page Header */}
                   <div className="border-b-2 border-slate-200 pb-2 mb-6 flex justify-between items-end">
                      <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -334,31 +399,17 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                      <span className="text-xs text-slate-400 font-mono">Bölüm {pageIndex + 1}</span>
                   </div>
 
-                  {/* 2x3 Grid for Photos - Optimized with Object-Contain & Background Blur */}
+                  {/* 2x3 Grid for Photos */}
                   <div className="grid grid-cols-2 gap-x-6 gap-y-8 flex-1 content-start">
                      {chunk.map((photo, pIdx) => (
                        <div key={photo.id} className="flex flex-col gap-2">
-                          {/* Photo Container - Fixed Ratio 4:3 but flexible content */}
                           <div className="w-full aspect-[4/3] bg-slate-100 rounded-lg border border-slate-200 overflow-hidden shadow-sm relative group">
-                             
-                             {/* Blured Background for Filling */}
-                             <div 
-                                className="absolute inset-0 bg-cover bg-center blur-2xl opacity-30"
-                                style={{ backgroundImage: `url(${photo.base64})` }}
-                             ></div>
-                             
-                             {/* Main Image - Contain to show full image without cropping */}
-                             <img 
-                                src={photo.base64} 
-                                className="absolute inset-0 w-full h-full object-contain z-10" 
-                                alt="Report visual" 
-                             />
+                             <div className="absolute inset-0 bg-cover bg-center blur-2xl opacity-30" style={{ backgroundImage: `url(${photo.base64})` }}></div>
+                             <img src={photo.base64} className="absolute inset-0 w-full h-full object-contain z-10" alt="Report visual" />
                           </div>
                           <div className="flex justify-between items-center px-1">
                              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">IMG_REF_{photo.id.slice(-4)}</span>
-                             <span className="text-[9px] text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">
-                                {new Date(photo.uploadedAt).toLocaleTimeString()}
-                             </span>
+                             <span className="text-[9px] text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">{new Date(photo.uploadedAt).toLocaleTimeString()}</span>
                           </div>
                        </div>
                      ))}
@@ -366,221 +417,21 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
                   {/* Photo Page Footer */}
                   <div className="absolute bottom-10 left-10 right-10 pt-4 border-t border-slate-200 flex justify-between items-end text-[9px] text-slate-400 font-mono uppercase tracking-widest">
-                   <div>
-                      <p>{template.title} - Görsel Ekleri</p>
-                   </div>
-                   <div className="text-right">
-                      <p>Page {pageIndex + 2} / {1 + photoChunks.length}</p>
-                   </div>
+                   <div><p>{template.title} - Görsel Ekleri</p></div>
+                   <div className="text-right"><p>Page {pageIndex + 2} / {1 + photoChunks.length}</p></div>
                 </div>
               </div>
             ))}
-
           </div>
       </div>
-
-      {/* ---------------- SECTION 2 (Right on Desktop): INPUT FORM (Narrower) ---------------- */}
-      <div className="lg:flex-1 order-1 lg:order-2 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[320px] max-w-md border-l border-slate-200">
-        {/* Header */}
-        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center shrink-0">
-          <div>
-            <h2 className="text-lg font-bold text-slate-800">Editör Paneli</h2>
-            <p className="text-slate-500 text-xs text-xs">Bilgileri doldurun</p>
-          </div>
-          {onClose && (
-            <button onClick={onClose} className="hover:bg-red-50 text-slate-400 hover:text-red-500 p-2 rounded-full transition">
-              ✕
-            </button>
-          )}
-        </div>
-
-        {/* Scrollable Form Content */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5 custom-scrollbar">
-          
-          {/* Info */}
-          <div className="space-y-3">
-             <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Genel Bilgiler</label>
-             
-             <div>
-               <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.firmName || 'Firma Adı'} *</span>
-               <input
-                 type="text"
-                 name="companyName"
-                 value={formData.companyName}
-                 onChange={handleInputChange}
-                 className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm"
-                 placeholder="Firma..."
-               />
-             </div>
-             <div>
-                <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.preparedBy || 'Hazırlayan'} *</span>
-               <input
-                 type="text"
-                 name="preparedBy"
-                 value={formData.preparedBy}
-                 onChange={handleInputChange}
-                 className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm"
-                 placeholder="İsim Soyisim..."
-               />
-             </div>
-             <div>
-                <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.date || 'Tarih'} *</span>
-               <input
-                 type="date"
-                 name="date"
-                 value={formData.date}
-                 onChange={handleInputChange}
-                 className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm"
-               />
-             </div>
-          </div>
-          
-          <hr className="border-slate-100" />
-
-          {/* Fields */}
-          {template.fields.length > 0 && (
-             <div className="space-y-3">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Alanlar</label>
-              {template.fields.map(field => (
-                  <div key={field.key}>
-                    <span className="text-xs text-slate-500 mb-1 block">{field.label}</span>
-                    {field.type === 'textarea' ? (
-                      <textarea
-                        name={field.key}
-                        value={formData[field.key] || ''}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm"
-                        placeholder={field.placeholder}
-                      />
-                    ) : (
-                      <input
-                        type={field.type}
-                        name={field.key}
-                        value={formData[field.key] || ''}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm"
-                        placeholder={field.placeholder}
-                      />
-                    )}
-                  </div>
-                ))}
-            </div>
-          )}
-
-          <hr className="border-slate-100" />
-
-          {/* Notes */}
-          <div className="space-y-3">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Notlar</label>
-              <textarea
-                value={additionalNotes}
-                onChange={(e) => setAdditionalNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm"
-                placeholder="Notlar..."
-              />
-          </div>
-
-          <hr className="border-slate-100" />
-
-          {/* Photo Management in Form */}
-          <div className="space-y-3">
-              <div className="flex justify-between items-end">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Fotoğraflar</label>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full ${photos.length >= maxPhotos ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                  {photos.length}/{maxPhotos}
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-4 gap-2">
-                 {photos.map((photo) => (
-                   <div key={photo.id} className="relative aspect-square rounded overflow-hidden group bg-white border border-slate-200 shadow-sm">
-                     <img 
-                      src={photo.base64} 
-                      className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition"
-                      onClick={() => setPhotoPreview(photo.base64)}
-                     />
-                     <button 
-                      onClick={() => handleRemovePhoto(photo.id)}
-                      className="absolute top-0 right-0 bg-red-500/80 hover:bg-red-600 text-white p-1 rounded-bl-lg transition"
-                      title="Sil"
-                     >
-                       <Trash2 size={10} />
-                     </button>
-                   </div>
-                 ))}
-                 
-                 {photos.length < maxPhotos && (
-                   <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 hover:border-blue-400 rounded aspect-square cursor-pointer hover:bg-blue-50 transition group">
-                      <Plus className="text-slate-300 group-hover:text-blue-500" size={20} />
-                      <input type="file" multiple accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-                   </label>
-                 )}
-              </div>
-          </div>
-        </div>
-
-        {/* Footer Actions */}
-        <div className="p-4 border-t border-slate-200 bg-white shrink-0">
-           <div className="flex items-center gap-2 mb-4 bg-blue-50 p-2 rounded border border-blue-100">
-              <input 
-                type="checkbox" 
-                id="sendEmail"
-                checked={sendEmail}
-                onChange={(e) => setSendEmail(e.target.checked)}
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-              />
-              <label htmlFor="sendEmail" className="text-xs font-bold text-blue-800 cursor-pointer select-none flex-1">
-                 Mail Gönder ({userEmail})
-              </label>
-              {sendEmail && !userEmail && (
-                 <AlertTriangle size={14} className="text-orange-500" title="Mail adresi eksik" />
-              )}
-           </div>
-           
-           <button
-              onClick={handleGenerateDocument}
-              disabled={isGenerating || !formData.companyName}
-              className={`w-full py-3 rounded-lg text-white font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 transition shadow-lg ${
-                isGenerating 
-                  ? 'bg-slate-400 cursor-not-allowed' 
-                  : generationSuccess 
-                    ? 'bg-green-600 hover:bg-green-700' 
-                    : 'bg-indigo-600 hover:bg-indigo-700'
-              }`}
-            >
-              {isGenerating ? (
-                <>
-                  <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                  Hazırlanıyor...
-                </>
-              ) : generationSuccess ? (
-                <>
-                  <CheckCircle size={18} />
-                  Tamamlandı
-                </>
-              ) : (
-                <>
-                  <Download size={18} />
-                  Oluştur ve İndir
-                </>
-              )}
-            </button>
-        </div>
-      </div>
-
+      
        {/* Full Screen Photo Preview Modal */}
        {photoPreview && (
-          <div
-            className="fixed inset-0 bg-black/95 flex items-center justify-center z-[60] p-4 lg:p-12 cursor-zoom-out backdrop-blur-sm"
-            onClick={() => setPhotoPreview(null)}
-          >
+          <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-[60] p-4 lg:p-12 cursor-zoom-out backdrop-blur-sm" onClick={() => setPhotoPreview(null)}>
              <img src={photoPreview} alt="Full Preview" className="max-w-full max-h-full rounded-lg shadow-2xl border border-white/10" />
-             <div className="absolute top-6 right-6 text-white text-sm bg-white/10 px-3 py-1 rounded-full pointer-events-none">
-                Kapatmak için tıklayın
-             </div>
+             <div className="absolute top-6 right-6 text-white text-sm bg-white/10 px-3 py-1 rounded-full pointer-events-none">Kapatmak için tıklayın</div>
           </div>
         )}
-
     </div>
   );
 };

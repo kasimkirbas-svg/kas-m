@@ -24,18 +24,6 @@ const App = () => {
   const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
   const [t, setT] = useState(getTranslation('tr'));
   const [savedDocuments, setSavedDocuments] = useState<GeneratedDocument[]>([]);
-  const [editingDocument, setEditingDocument] = useState<GeneratedDocument | undefined>(undefined);
-
-  const handleEditDocument = (doc: GeneratedDocument) => {
-    const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
-    if (template) {
-      setSelectedTemplate(template);
-      setEditingDocument(doc);
-      setCurrentView('editor');
-    } else {
-      alert('Bu dokümana ait şablon bulunamadı.');
-    }
-  };
 
   // Initialize application on mount (load users, theme, language, documents)
   useEffect(() => {
@@ -204,27 +192,19 @@ const App = () => {
     }
 
     // 1. Document Editor
-    if (userinitialData={editingDocument}
+    if (user && currentView === 'editor' && selectedTemplate) {
+      return (
+        <div className="space-y-4">
+          <button 
+            onClick={() => setCurrentView('templates')}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4"
+          >
+            <ArrowLeft size={18} />
+            {t?.editor?.back || 'Şablonlara Dön'}
+          </button>
+          <DocumentEditor 
+            template={selectedTemplate}
             userId={user.id}
-            userEmail={user.email}
-            companyName={user.companyName}
-            preparedBy={user.name}
-            onClose={() => {
-              setCurrentView('templates');
-              setEditingDocument(undefined);
-            }}
-            onDocumentGenerated={(doc: GeneratedDocument) => {
-              // Save document
-              let newDocs;
-              if (editingDocument) {
-                 newDocs = savedDocuments.map(d => d.id === editingDocument.id ? doc : d);
-              } else {
-                 newDocs = [doc, ...savedDocuments];
-              }
-              
-              setSavedDocuments(newDocs);
-              localStorage.setItem('generatedDocuments', JSON.stringify(newDocs));
-              setEditingDocument(undefined);
             userEmail={user.email}
             companyName={user.companyName}
             preparedBy={user.name}
@@ -251,7 +231,6 @@ const App = () => {
     if (user && currentView === 'my-documents') {
         return (
             <MyDocuments 
-                onEditDocument={handleEditDocument}
                 documents={savedDocuments.filter(d => d.userId === user.id)}
                 onDeleteDocument={(id) => {
                     if (window.confirm(t?.common?.confirmDelete || 'Bu dokümanı silmek istediğinize emin misiniz?')) {

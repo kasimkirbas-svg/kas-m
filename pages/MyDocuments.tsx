@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { GeneratedDocument } from '../types';
-import { FileText, Calendar, Download, Trash2, Search, Eye } from 'lucide-react';
+import { FileText, Calendar, Download, Trash2, Search, Eye, Edit } from 'lucide-react';
 
 interface MyDocumentsProps {
   documents: GeneratedDocument[];
   onDeleteDocument: (id: string) => void;
   onPreviewDocument?: (doc: GeneratedDocument) => void;
+  onEditDocument?: (doc: GeneratedDocument) => void;
   t?: any;
 }
 
@@ -13,6 +14,7 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
   documents, 
   onDeleteDocument,
   onPreviewDocument,
+  onEditDocument,
   t 
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,17 +86,19 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                          <button 
                           onClick={() => onPreviewDocument && onPreviewDocument(doc)}
                           className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                          title={t?.common?.preview || "Preview"}
+                          title={t?.common?.preview || "Önizle"}
                         >
                           <Eye size={18} />
                         </button>
+                        
                         <button 
-                          className="p-2 text-slate-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition"
-                          title={t?.common?.download}
-                          onClick={() => alert(t?.myDocuments?.downloadSimulated)}
+                          onClick={() => onEditDocument && onEditDocument(doc)}
+                          className="p-2 text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition"
+                          title={t?.common?.edit || "Düzenle"}
                         >
-                          <Download size={18} />
+                          <Edit size={18} />
                         </button>
+
                         <button 
                           onClick={() => onDeleteDocument(doc.id)}
                           className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
@@ -110,14 +114,8 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
             </table>
           </div>
         ) : (
-          <div className="text-center py-16 px-4">
-            <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText size={32} />
-            </div>
-            <h3 className="text-lg font-medium text-slate-900 mb-2">{t?.myDocuments?.noDocsTitle}</h3>
-            <p className="text-slate-500 max-w-sm mx-auto mb-6">
-              {t?.myDocuments?.noDocsDesc}
-            </p>
+          <div className="p-8 text-center text-slate-500">
+            {t?.myDocuments?.noDocuments}
           </div>
         )}
       </div>
