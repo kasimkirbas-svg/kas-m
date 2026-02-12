@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DocumentTemplate } from '../types';
-import { Search, Filter, FileText, Lock } from 'lucide-react';
+import { Search, FileText, CheckCircle, Smartphone, Layout, ArrowRight } from 'lucide-react';
 
 interface DocumentsListProps {
   templates: DocumentTemplate[];
@@ -26,148 +26,142 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
     const matchesSearch = template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           template.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = !selectedCategory || template.category === selectedCategory;
-    const isPremiumAllowed = !template.isPremium || userIsPremium;
     
-    return matchesSearch && matchesCategory && isPremiumAllowed;
+    // Show all templates but mark lock state if premium
+    return matchesSearch && matchesCategory;
   });
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-lg overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-6 text-white">
-        <h2 className="text-2xl font-bold mb-2">{t?.documents?.allTemplates || 'Doküman Şablonları'}</h2>
-        <p className="text-indigo-100">
-          {t?.documents?.total || 'Toplam'} {filteredTemplates.length} {t?.documents?.allTemplates || 'doküman şablonu'} ({templates.length} {t?.documents?.available || 'mevcut'})
-        </p>
-      </div>
-
-      {/* Content */}
-      <div className="p-8">
-        {/* Search and Filter Section */}
-        <div className="mb-8 space-y-4">
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+    <div className="w-full flex flex-col gap-6">
+      {/* Hero Header */}
+      <div className="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+        <div className="relative z-10 max-w-2xl">
+          <h2 className="text-3xl font-bold mb-3">{t?.documents?.allTemplates || 'Yeni Bir Doküman Oluştur'}</h2>
+          <p className="text-blue-100 text-lg mb-6">
+            Profesyonel şablonlardan birini seçerek raporlarınızı saniyeler içinde hazırlayın, PDF olarak indirin ve paylaşın.
+          </p>
+          
+          {/* Search Bar Inside Hero */}
+          <div className="relative max-w-lg">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
-              placeholder={t?.documents?.search || 'Doküman ara...'}
+              placeholder={t?.documents?.search || 'Şablon adı veya açıklama ara...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full pl-12 pr-4 py-3 rounded-xl text-slate-900 focus:ring-4 focus:ring-blue-500/30 focus:outline-none shadow-lg"
             />
           </div>
-
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
-                selectedCategory === null
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-              }`}
-            >
-              {t?.documents?.all || 'Tümü'}
-            </button>
-            {categories.map(category => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  selectedCategory === category
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
         </div>
+        
+        {/* Background Decor */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+        <div className="absolute bottom-0 right-20 w-32 h-32 bg-indigo-500/20 rounded-full blur-xl"></div>
+      </div>
 
-        {/* Templates Grid */}
-        {filteredTemplates.length === 0 ? (
-          <div className="text-center py-12">
-            <FileText className="mx-auto text-gray-400 mb-4" size={48} />
-            <p className="text-gray-600 text-lg">{t?.documents?.noResults || 'Aradığınız doküman bulunamadı.'}</p>
+      {/* Category Filter Pills */}
+      <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+        <button
+          onClick={() => setSelectedCategory(null)}
+          className={`px-5 py-2 rounded-full font-medium transition whitespace-nowrap text-sm border ${
+            selectedCategory === null
+              ? 'bg-slate-800 text-white border-slate-800'
+              : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+          }`}
+        >
+          {t?.documents?.all || 'Tüm Şablonlar'}
+        </button>
+        {categories.map(category => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`px-5 py-2 rounded-full font-medium transition whitespace-nowrap text-sm border ${
+              selectedCategory === category
+                ? 'bg-slate-800 text-white border-slate-800'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      {/* Templates Grid */}
+      {filteredTemplates.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+          <div className="bg-slate-100 p-4 rounded-full mb-4">
+             <FileText className="text-slate-400" size={32} />
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTemplates.map(template => (
+          <p className="text-slate-600 text-lg font-medium">{t?.documents?.noResults || 'Aradığınız kriterlere uygun şablon bulunamadı.'}</p>
+          <button 
+             onClick={() => {setSearchQuery(''); setSelectedCategory(null);}}
+             className="mt-4 text-blue-600 hover:text-blue-700 font-medium"
+          >
+             Filtreleri Temizle
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredTemplates.map(template => {
+            const isLocked = template.isPremium && !userIsPremium;
+            
+            return (
               <div
                 key={template.id}
-                className="border border-gray-200 rounded-lg hover:shadow-lg transition cursor-pointer overflow-hidden group"
-                onClick={() => onSelectTemplate(template)}
+                className={`bg-white rounded-xl border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col h-full relative ${isLocked ? 'grayscale opacity-75 hover:grayscale-0 hover:opacity-100' : ''}`}
+                onClick={() => !isLocked && onSelectTemplate(template)}
               >
-                {/* Card Header */}
-                <div className={`p-4 ${
-                  template.isPremium
-                    ? 'bg-gradient-to-r from-purple-100 to-pink-100'
-                    : 'bg-gradient-to-r from-blue-50 to-indigo-50'
-                }`}>
-                  <div className="flex items-start justify-between mb-2">
-                    <FileText 
-                      className={template.isPremium ? 'text-purple-600' : 'text-blue-600'}
-                      size={24}
-                    />
-                    {template.isPremium && (
-                      <div className="flex items-center gap-1 bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">
-                        <Lock size={12} />
-                        PREMIUM
-                      </div>
-                    )}
+                {/* Banner Image / Color */}
+                <div className={`h-32 w-full relative overflow-hidden ${isLocked ? 'bg-slate-100' : 'bg-gradient-to-br from-slate-50 to-slate-100'}`}>
+                   {/* Create a dynamic pattern or icon based on ID */}
+                   <div className="absolute inset-0 flex items-center justify-center text-slate-200 group-hover:scale-110 transition-transform duration-500">
+                      <Layout size={64} opacity={0.2} />
+                   </div>
+                   
+                   {/* Premium Badge */}
+                   {template.isPremium && (
+                     <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                       PREMIUM
+                     </div>
+                   )}
+                </div>
+
+                {/* Content */}
+                <div className="p-5 flex-1 flex flex-col">
+                  <div className="flex items-start justify-between mb-3">
+                     <span className="text-[10px] uppercase font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded tracking-wider">
+                       {template.category}
+                     </span>
+                     <span className="text-slate-400 text-xs flex items-center gap-1">
+                       <Smartphone size={12} /> Mobil Uyumlu
+                     </span>
                   </div>
-                  <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition">
+                  
+                  <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition-colors">
                     {template.title}
                   </h3>
-                  <p className="text-sm text-gray-600 text-indigo-600 font-medium mt-1">
-                    {template.category}
-                  </p>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-4">
-                  <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                  
+                  <p className="text-slate-500 text-sm leading-relaxed mb-4 flex-1 line-clamp-3">
                     {template.description}
                   </p>
-
-                  {/* Features */}
-                  <div className="space-y-2 text-xs text-gray-600">
-                    {template.photoCapacity && (
-                      <div className="flex items-center gap-2">
-                        <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                        {t?.documents?.photoCapacity || 'Fotoğraf Kapasitesi'}: {template.photoCapacity}
-                      </div>
-                    )}
-                    {template.monthlyLimit !== undefined && (
-                      <div className="flex items-center gap-2">
-                        <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                        {template.monthlyLimit === undefined || template.monthlyLimit === null 
-                          ? (t?.documents?.unlimitedUsage || 'Sınırsız Kullanım')
-                          : `${t?.documents?.monthlyLimit || 'Aylık Limit'}: ${template.monthlyLimit}`
-                        }
-                      </div>
-                    )}
-                    {template.fields.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                        {template.fields.length} {t?.documents?.customFields || 'Özel Alan'}
-                      </div>
-                    )}
+                  
+                  {/* Footer Stats/Action */}
+                  <div className="pt-4 border-t border-slate-100 flex justify-between items-center mt-auto">
+                     <div className="flex items-center gap-1 text-slate-400 text-xs">
+                        <Layout size={14} />
+                        <span>{template.fields.length} Alan</span>
+                     </div>
+                     
+                     <div className="flex items-center gap-1 text-blue-600 font-bold text-sm opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                        {isLocked ? 'Yükselt' : 'Oluştur'} <ArrowRight size={16} />
+                     </div>
                   </div>
                 </div>
-
-                {/* Card Footer */}
-                <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 group-hover:bg-indigo-50 transition">
-                  <button className="w-full text-indigo-600 font-semibold text-sm hover:text-indigo-700 py-1">
-                    {t?.documents?.createDocument || 'Doküman Oluştur'} →
-                  </button>
-                </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
