@@ -123,7 +123,16 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
       console.log('Response status:', response.status);
       
-      const data = await response.json();
+      // Try to parse JSON, but handle non-JSON responses (like Vercel error pages)
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('JSON Parse error:', jsonError);
+        // If we can't parse JSON, use status text
+        throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+      }
+      
       console.log('Response data:', data);
 
       if (response.ok && data.success) {
@@ -139,9 +148,9 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       // Connection Error Handling
       let errorMessage = 'Giriş başarısız.';
       if (response.status === 500) {
-          errorMessage = 'Sunucu hatası (500). Lütfen daha sonra tekrar deneyin.';
+          errorMessage = data?.message || 'Sunucu hatası (500). Beklenmeyen bir durum oluştu.';
       } else if (response.status === 404) {
-          errorMessage = 'Sunucu bulunamadı (404). Lütfen daha sonra tekrar deneyin.';
+          errorMessage = 'Sunucu bulunamadı (404). API adresi yanlış olabilir.';
       } else if (data && data.message) {
           errorMessage = data.message;
       }
@@ -149,10 +158,14 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       setError(errorMessage);
 
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Login error:', err);
-      // Only show connection error if it's truly a network error (no response)
-      setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+      // Check if it's a specific error message we threw above
+      if (err.message && err.message.startsWith('Server returned')) {
+         setError(`Sunucu Hatası: ${err.message}`);
+      } else {
+         setError('Sunucu bağlantı hatası. Lütfen internet bağlantınızı kontrol edin veya daha sonra tekrar deneyin.');
+      }
     } finally {
       setIsLoading(false);
     }

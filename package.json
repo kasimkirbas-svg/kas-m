@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:full": "concurrently \"npm run dev\" \"cd server && node index.js\"",
-    "server": "cd server && node index.js",
+    "dev:full": "concurrently \"npm run dev\" \"cd server && node index.cjs\"",
+    "server": "cd server && node index.cjs",
     "build": "vite build",
     "preview": "vite preview"
   },
