@@ -100,6 +100,7 @@ const writeFileDB = (data) => {
 // Unified DB Access (Postgres > MongoDB > File-System)
 const dbAdapter = {
     getUsers: async () => {
+        let pgError = null;
         if (pgPool) {
             try {
                 // Ensure table exists
@@ -115,12 +116,55 @@ const dbAdapter = {
                 return res.rows.map(row => ({...row.data, id: row.id, email: row.email}));
             } catch (err) {
                 console.error('PG GetUsers Error:', err);
-                // Fallback to memory/file if PG fails
-                // But we should really return something to avoid UI crashes
+                pgError = err;
+                // Don't throw, fall through to next method
             }
         }
         
-        if (MONGO_URI) {
+        // Fallback or explicit Mongo
+        if (MONGO_URI && !pgError) { // Only try mongo if PG wasn't the intended target that failed
+            try {
+                await connectDB();
+                const users = await User.find({}).lean();
+                return users.map(u => ({...u, id: u.id || u._id.toString()}));
+            } catch (e) { console.error('Mongo Error:', e); }
+        }
+        
+        // Ultimate Fallback: File System
+        console.warn('⚠️ Falling back to FileSystem DB');
+        return readFileDB().users || [];
+    },
+    
+    addUser: async (user) => {
+        if (pgPool) {
+            try {
+                 await pgPool.query(`
+                    CREATE TABLE IF NOT EXISTS users (
+                        id TEXT PRIMARY KEY,
+                        email TEXT UNIQUE,
+                        data JSONB,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                `);
+                await pgPool.query('INSERT INTO users(id, email, data) VALUES($1, $2, $3)', 
+                   [user.id, user.email, user]);
+                return user;
+            } catch (err) {
+                 console.error('PG AddUser Error:', err);
+                 // If PG fails, try to save to local file as backup so user doesn't lose data immediately
+                 const data = readFileDB();
+                 data.users.push(user);
+                 writeFileDB(data);
+                 return user;
+            }
+        }
+        
+        // ... rest of the code for Mongo/File
+        const data = readFileDB();
+        data.users.push(user);
+        writeFileDB(data);
+        return user;
+    },
             try {
                 await connectDB();
                 const users = await User.find({}).lean();
