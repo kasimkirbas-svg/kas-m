@@ -123,14 +123,10 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
       console.log('Response status:', response.status);
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       const data = await response.json();
       console.log('Response data:', data);
 
-      if (data.success) {
+      if (response.ok && data.success) {
         // Save Token
         localStorage.setItem('authToken', data.token);
 
@@ -139,8 +135,16 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
           onLoginSuccess(data.user);
         }, 1000);
       } else {
+        // Handle application errors (400, 401, etc.) gracefully
         setError(data.message || 'Giriş başarısız.');
       }
+    } catch (err) {
+      console.error('Login error:', err);
+      // Only show connection error if it's truly a network error (no response)
+      setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+    } finally {
+      setIsLoading(false);
+    }
     } catch (err) {
       console.error('Login error:', err);
       setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');

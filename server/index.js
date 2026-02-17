@@ -620,6 +620,7 @@ app.post('/api/send-document', async (req, res) => {
 });
 
 
-app.listen(PORT, () => {
-  console.log(`Backend sunucusu http://localhost:${PORT} üzerinde çalışıyor`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Backend sunucusu http://0.0.0.0:${PORT} üzerinde çalışıyor`);
+  console.log(`Erişim için: http://localhost:${PORT}`);
 });
