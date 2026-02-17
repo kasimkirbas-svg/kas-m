@@ -543,6 +543,8 @@ if (!isMockMode) {
     transporter.verify(function (error, success) {
         if (error) {
             console.log('❌ Sunucu mail bağlantı hatası:', error.message);
+            // Don't disable mock mode immediately, try to send anyway later or just log error
+            // Actually, if verification fails, let's fallback to Mock Mode to avoid crashing
             isMockMode = true;
              systemLogs.push({
                 id: Date.now(),
@@ -562,6 +564,9 @@ if (!isMockMode) {
             });
         }
     });
+} else {
+    // Ensure mock transporter object exists if needed, or handle null check
+    // Here we will just rely on isMockMode flag
 }
 
 // --- AUTHENTICATION & USER ROUTES ---
@@ -1312,21 +1317,16 @@ app.post('/api/send-document', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Email ve PDF verisi zorunludur' });
     }
 
-    // Mock mode
-    if (Object.keys(process.env).length === 0 || !process.env.EMAIL_USER) {
+    // Mock mode check using global flag
+    if (isMockMode || !transporter) {
          console.log('---------- [MOCK DOCUMENT SENT] ----------');
          console.log(`To: ${email}`);
          console.log(`Doc: ${documentName}`);
          return res.json({ success: true, message: 'Doküman simülasyon olarak gönderildi (Mock Mode)' });
     }
 
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
+    // Use global transporter instead of creating new one
+
 
     try {
         const mailOptions = {
