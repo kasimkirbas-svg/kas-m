@@ -145,12 +145,6 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     } finally {
       setIsLoading(false);
     }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
