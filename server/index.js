@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || require('crypto').randomBytes(64).toString('hex'); 
 
 // --- SECURITY MIDDLEWARE ---
-app.use(helmet()); // Set secure HTTP headers
+// app.use(helmet()); // Temporarily disabled for troubleshooting
 app.use(cors({
   origin: '*', // Allow all origins for easier local network access
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -28,8 +28,10 @@ app.use(express.json());
 
 // Rate Limiting (Prevent Brute Force)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000, 
+  max: 1000, // Relaxed limit for testing
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use(limiter);
 
@@ -118,10 +120,6 @@ seedAdmin();
 // In-memory Logs (Real-world app would use DB)
 const systemLogs = [];
 const startTime = Date.now();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
 
 // Logger Middleware
 app.use((req, res, next) => {

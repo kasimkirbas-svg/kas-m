@@ -7,9 +7,9 @@ export const getApiUrl = () => {
     if (typeof window !== 'undefined') {
         const hostname = window.location.hostname;
         
-        // If we are on Vercel or any remote domain, we MUST use the public backend URL
-        if (hostname.includes('loca.lt') || hostname.includes('vercel.app') || (hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.startsWith('192.168.'))) {
-             return TUNNEL_URL;
+        // If we are on Vercel, use relative path to leverage Vercel rewrites (serverless functions)
+        if (hostname.includes('vercel.app')) {
+             return ''; 
         }
 
         // If on localhost development (or local network), try to use relative path to leverage Vite proxy
@@ -21,7 +21,7 @@ export const getApiUrl = () => {
         }
     }
     
-    // Default fallback
+    // Default fallback (e.g. if accessed via IP or other domain)
     return 'http://localhost:3001';
 };
 
