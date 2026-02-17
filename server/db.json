@@ -42,5 +42,100 @@
       "createdAt": "2026-02-12T00:43:39.119Z"
     }
   ],
-  "documents": []
+  "documents": [],
+  "templates": [
+    {
+      "id": "1",
+      "title": "Acil Durum Hizmet Planı",
+      "category": "ISG",
+      "description": "İş yerleri için zorunlu acil durum eylem ve hizmet planı şablonu.",
+      "isPremium": false,
+      "monthlyLimit": 30,
+      "photoCapacity": 15,
+      "fields": [
+        {
+          "key": "companyName",
+          "label": "Firma Adı",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "preparedBy",
+          "label": "Hazırlayan",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "date",
+          "label": "Tarih",
+          "type": "date",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Hizmet Şablonu Oluştur",
+      "category": "Genel",
+      "description": "Standart hizmet teklif ve kapsam belirleme formu.",
+      "isPremium": false,
+      "monthlyLimit": 30,
+      "photoCapacity": 12,
+      "fields": []
+    },
+    {
+      "id": "3",
+      "title": "Eğitim Katılım Sertifikası",
+      "category": "İK",
+      "description": "Personel eğitimleri sonrası verilecek başarı sertifikası.",
+      "isPremium": true,
+      "photoCapacity": 10,
+      "fields": []
+    },
+    {
+      "id": "4",
+      "title": "Denetim Raporu",
+      "category": "Denetim",
+      "description": "Saha denetimleri için detaylı raporlama formatı.",
+      "isPremium": true,
+      "photoCapacity": 15,
+      "fields": []
+    },
+    {
+      "id": "5",
+      "title": "Risk Analizi Formu",
+      "category": "ISG",
+      "description": "5x5 Risk matrisi değerlendirme formu.",
+      "isPremium": true,
+      "photoCapacity": 10,
+      "fields": []
+    },
+    {
+      "id": "6",
+      "title": "Personel Görev Tanımı",
+      "category": "İK",
+      "description": "Çalışan görev ve sorumluluk bildirim formu.",
+      "isPremium": false,
+      "monthlyLimit": 30,
+      "fields": []
+    },
+    {
+      "id": "7",
+      "title": "Makine Bakım Kartı",
+      "category": "Teknik",
+      "description": "Periyodik bakım takip çizelgesi.",
+      "isPremium": true,
+      "photoCapacity": 12,
+      "fields": []
+    },
+    {
+      "id": "8",
+      "title": "Kaza Tespit Tutanağı",
+      "category": "ISG",
+      "description": "İş kazası bildirim ve tespit formu.",
+      "isPremium": true,
+      "photoCapacity": 20,
+      "fields": []
+    }
+  ]
 }

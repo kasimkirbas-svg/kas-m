@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Mail, Building2, Calendar, CreditCard, Download, Edit2, Check, X, Lock, FileText, AlertCircle } from 'lucide-react';
 import { Invoice, SubscriptionPlan } from '../types';
+import { fetchApi } from '../src/utils/api';
 
 interface ProfileProps {
   user?: any;
@@ -8,17 +9,18 @@ interface ProfileProps {
   onNavigate?: (view: string) => void;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ user, t, onNavigate }) => {
+export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNavigate }) => {
+  const [user, setUser] = useState(initialUser);
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [showInvoices, setShowInvoices] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   
-  const [formData, setFormData] = useState(user ? {
-    name: user.name,
-    email: user.email,
-    companyName: user.companyName
-  } : {});
+  const [formData, setFormData] = useState({
+    name: initialUser?.name || '',
+    email: initialUser?.email || '',
+    companyName: initialUser?.companyName || ''
+  });
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -40,6 +42,18 @@ export const Profile: React.FC<ProfileProps> = ({ user, t, onNavigate }) => {
     }
   ]);
 
+  // Sync state with props if they change
+  useEffect(() => {
+    if (initialUser) {
+        setUser(initialUser);
+        setFormData({
+            name: initialUser.name || '',
+            email: initialUser.email || '',
+            companyName: initialUser.companyName || ''
+        });
+    }
+  }, [initialUser]);
+
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => setNotification(null), 3000);
@@ -57,62 +71,70 @@ export const Profile: React.FC<ProfileProps> = ({ user, t, onNavigate }) => {
     setPasswordData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     try {
-      // Get all users
-      const allUsersStr = localStorage.getItem('allUsers');
-      let allUsers = allUsersStr ? JSON.parse(allUsersStr) : [];
-      
-      // Update current user in array
-      const updatedUsers = allUsers.map((u: any) => 
-        u.id === user.id ? { ...u, ...formData } : u
-      );
-      
-      // Update localStorage
-      localStorage.setItem('allUsers', JSON.stringify(updatedUsers));
-      localStorage.setItem('currentUser', JSON.stringify({ ...user, ...formData }));
-      
-      // Trigger update in parent if possible, or just notify
-      setNotification({ type: 'success', message: t?.profile?.savedSuccessfully || 'Profil bilgileri güncellendi.' });
-      setIsEditing(false);
-      
-      // Force reload to reflect changes (simple way) or rely on parent re-render if props update
-      window.location.reload(); 
+      const response = await fetchApi('/api/auth/update-profile', {
+          method: 'PUT',
+          body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+          setNotification({ type: 'success', message: t?.profile?.savedSuccessfully || 'Profil bilgileri güncellendi.' });
+          setIsEditing(false);
+          
+          // Update local state
+          setUser(prev => ({ ...prev, ...formData }));
+          
+          // Update local storage for persistence across reloads (optional but good for this hybrid app)
+          const storedUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+          localStorage.setItem('currentUser', JSON.stringify({ ...storedUser, ...formData }));
+          
+          // Force reload to refresh main app context if needed, or better, use a context provider
+          // For now, minimal impact update:
+          // window.location.reload(); 
+      } else {
+          setNotification({ type: 'error', message: data.message || 'Güncelleme başarısız.' });
+      }
     } catch (error) {
-      setNotification({ type: 'error', message: 'Bir hata oluştu.' });
+      console.error(error);
+      setNotification({ type: 'error', message: 'Sunucu hatası oluştu.' });
     }
   };
 
-  const handleSavePassword = () => {
+  const handleSavePassword = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       setNotification({ type: 'error', message: 'Yeni şifreler eşleşmiyor.' });
       return;
     }
 
-    if (user.password && passwordData.currentPassword !== user.password) {
-      setNotification({ type: 'error', message: 'Mevcut şifre yanlış.' });
-      return;
+    if (passwordData.newPassword.length < 6) {
+        setNotification({ type: 'error', message: 'Şifre en az 6 karakter olmalıdır.' });
+        return;
     }
 
     try {
-        const allUsersStr = localStorage.getItem('allUsers');
-        let allUsers = allUsersStr ? JSON.parse(allUsersStr) : [];
-        
-        const updatedUsers = allUsers.map((u: any) => 
-          u.id === user.id ? { ...u, password: passwordData.newPassword } : u
-        );
-        
-        localStorage.setItem('allUsers', JSON.stringify(updatedUsers));
-        
-        // Update current user in localStorage too to keep session valid
-        const currentUserData = JSON.parse(localStorage.getItem('currentUser') || '{}');
-        localStorage.setItem('currentUser', JSON.stringify({ ...currentUserData, password: passwordData.newPassword }));
+        const response = await fetchApi('/api/auth/change-password', {
+            method: 'POST',
+            body: JSON.stringify({
+                currentPassword: passwordData.currentPassword,
+                newPassword: passwordData.newPassword
+            })
+        });
 
-        setNotification({ type: 'success', message: 'Şifre başarıyla değiştirildi.' });
-        setShowPasswordChange(false);
-        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        const data = await response.json();
+
+        if (data.success) {
+            setNotification({ type: 'success', message: 'Şifre başarıyla değiştirildi.' });
+            setShowPasswordChange(false);
+            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        } else {
+            setNotification({ type: 'error', message: data.message || 'Şifre değiştirilemedi.' });
+        }
     } catch (err) {
-        setNotification({ type: 'error', message: 'Şifre değiştirilemedi.' });
+        console.error(err);
+        setNotification({ type: 'error', message: 'Sunucu bağlantı hatası.' });
     }
   };
 

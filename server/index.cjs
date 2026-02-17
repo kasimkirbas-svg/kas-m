@@ -769,6 +769,92 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
+// Get Current User (Refresh Profile)
+app.get('/api/auth/me', authenticateToken, async (req, res) => {
+    try {
+        const user = await dbAdapter.findUserById(req.user.id);
+        if (!user) return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+        
+        const { password: _, ...userWithoutPassword } = user;
+        res.json({ success: true, user: userWithoutPassword });
+    } catch (error) {
+        console.error('Get Me Error:', error);
+        res.status(500).json({ success: false, message: 'Kullanıcı bilgileri alınamadı.' });
+    }
+});
+
+// Update Profile (Self)
+app.put('/api/auth/update-profile', authenticateToken, async (req, res) => {
+    const { name, email, companyName } = req.body;
+    
+    if (!name || !email) {
+        return res.status(400).json({ success: false, message: 'İsim ve E-posta zorunludur.' });
+    }
+
+    try {
+        // Email uniqueness check (if changed)
+        if (email !== req.user.email) {
+            const existing = await dbAdapter.findUserByEmail(email);
+            if (existing && existing.id !== req.user.id) {
+                return res.status(400).json({ success: false, message: 'Bu e-posta adresi kullanımda.' });
+            }
+        }
+
+        await dbAdapter.updateUser(req.user.id, { name, email, companyName });
+        
+        const updatedUser = await dbAdapter.findUserById(req.user.id);
+        const { password: _, ...userWithoutPassword } = updatedUser;
+        
+        res.json({ success: true, user: userWithoutPassword, message: 'Profil güncellendi.' });
+    } catch (error) {
+        console.error('Update Profile Error:', error);
+        res.status(500).json({ success: false, message: 'Profil güncellenemedi.' });
+    }
+});
+
+// Change Password (Self)
+app.post('/api/auth/change-password', authenticateToken, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ success: false, message: 'Mevcut ve yeni şifre gereklidir.' });
+    }
+    
+    if (newPassword.length < 6) {
+        return res.status(400).json({ success: false, message: 'Yeni şifre en az 6 karakter olmalıdır.' });
+    }
+
+    try {
+        const user = await dbAdapter.findUserById(req.user.id);
+        if (!user) return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+
+        // Verify Old Password
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ success: false, message: 'Mevcut şifre hatalı.' });
+        }
+
+        // Hash New Password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        await dbAdapter.updateUser(req.user.id, { password: hashedPassword });
+
+        systemLogs.unshift({
+            id: Date.now(),
+            type: 'warning',
+            action: 'Password Change',
+            details: `User ${user.email} changed password`,
+            time: new Date().toISOString()
+        });
+
+        res.json({ success: true, message: 'Şifreniz başarıyla değiştirildi.' });
+    } catch (error) {
+        console.error('Change Password Error:', error);
+        res.status(500).json({ success: false, message: 'Şifre değiştirme işlemi başarısız.' });
+    }
+});
+
 // Upgrade User (Mock Payment) (Protected)
 app.post('/api/users/upgrade', authenticateToken, async (req, res) => {
     const { userId, plan } = req.body;
