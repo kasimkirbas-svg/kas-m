@@ -102,11 +102,13 @@ const dbAdapter = {
         }
         
         if (MONGO_URI) {
-            await connectDB();
-            const users = await User.find({}).lean();
-            return users.map(u => ({...u, id: u.id || u._id.toString()}));
+            try {
+                await connectDB();
+                const users = await User.find({}).lean();
+                return users.map(u => ({...u, id: u.id || u._id.toString()}));
+            } catch (e) { console.error('Mongo Error:', e); }
         }
-        return readFileDB().users;
+        return readFileDB().users || [];
     },
     
     addUser: async (user) => {
