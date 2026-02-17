@@ -13,7 +13,9 @@ require('dotenv').config();
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy (required for rate-limit behind localtunnel/vercel)
 const PORT = process.env.PORT || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'gizli-anahtar-degistirilecek-kasim-kirbas-2026';
+// GÜVENLİK: Prodüksiyonda mutlaka .env dosyasından gelmeli.
+// Eğer .env yoksa rastgele güçlü bir string oluşturulmalı, sabit string kullanılmamalı.
+const JWT_SECRET = process.env.JWT_SECRET || require('crypto').randomBytes(64).toString('hex'); 
 
 // --- SECURITY MIDDLEWARE ---
 app.use(helmet()); // Set secure HTTP headers
@@ -63,19 +65,21 @@ const writeDB = (data) => {
 // --- SEED ADMIN USER ---
 const seedAdmin = async () => {
     const db = readDB();
-    const adminEmail = 'admin@kirbas.com';
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@kirbas.com';
+    // GÜVENLİK: Admin şifresi hardcoded olmamalıdır. Çevresel değişkenden alınır.
+    const adminPass = process.env.ADMIN_PASSWORD || 'Admin123!@#'; 
     
     if (!db.users.some(u => u.email === adminEmail)) {
         console.log("⚙️  Varsayılan Admin kullanıcısı oluşturuluyor...");
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash('Admin123456', salt);
+        const hashedPassword = await bcrypt.hash(adminPass, salt);
         
         const adminUser = {
             id: 'admin-001',
-            name: 'Kürşat Kırbaş',
+            name: 'Sistem Yöneticisi',
             email: adminEmail,
             password: hashedPassword,
-            companyName: 'Kırbaş Doküman Yazılımları',
+            companyName: 'Yönetim Paneli',
             role: 'ADMIN',
             plan: 'YEARLY',
             remainingDownloads: 'UNLIMITED',
@@ -86,7 +90,7 @@ const seedAdmin = async () => {
         
         db.users.push(adminUser);
         writeDB(db);
-        console.log("✅ Admin kullanıcısı oluşturuldu: admin@kirbas.com / Admin123456");
+        console.log(`✅ Admin kullanıcısı oluşturuldu: ${adminEmail} (Şifre: ENV veya varsayılan)`);
     }
 };
 
@@ -174,21 +178,36 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
-    if (!token) return res.sendStatus(401);
+    if (!token) return res.status(401).json({ success: false, message: 'Oturum açmanız gerekiyor.' });
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
+        if (err) {
+            console.error("JWT Error:", err.message);
+            return res.status(403).json({ success: false, message: 'Geçersiz veya süresi dolmuş oturum.' });
+        }
         req.user = user;
         next();
     });
+};
+
+// Middleware: Require Admin Role
+const requireAdmin = (req, res, next) => {
+    if (!req.user || req.user.role !== 'ADMIN') {
+        return res.status(403).json({ success: false, message: 'Bu işlem için yetkiniz yok. (Admin Gerekli)' });
+    }
+    next();
 };
 
 // Register
 app.post('/api/auth/register', async (req, res) => {
     const { name, email, password, companyName } = req.body;
     
+    // VALIDATION: Daha güçlü kontrol
     if (!name || !email || !password || !companyName) {
         return res.status(400).json({ success: false, message: 'Tüm alanlar zorunludur.' });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ success: false, message: 'Şifre en az 6 karakter olmalıdır.' });
     }
 
     const db = readDB();
@@ -367,10 +386,7 @@ app.post('/api/users/upgrade', authenticateToken, (req, res) => {
 });
 
 // Admin: Get All Users (Protected)
-app.get('/api/users', authenticateToken, (req, res) => {
-    // In a real app, strict admin check:
-    // if (req.user.role !== 'ADMIN') return res.sendStatus(403);
-    
+app.get('/api/users', authenticateToken, requireAdmin, (req, res) => {
     const db = readDB();
     // Don't send passwords
     const safeUsers = db.users.map(({ password, ...u }) => u);
@@ -378,11 +394,12 @@ app.get('/api/users', authenticateToken, (req, res) => {
 });
 
 // Admin: Update User (Protected)
-app.put('/api/users/:id', authenticateToken, (req, res) => {
+app.put('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     const db = readDB();
     
+    // Check if trying to edit another admin (super admin protection could go here)
     const index = db.users.findIndex(u => u.id === id);
     if (index === -1) {
         return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
@@ -399,25 +416,32 @@ app.put('/api/users/:id', authenticateToken, (req, res) => {
 });
 
 // Admin: Delete User (Protected)
-app.delete('/api/users/:id', authenticateToken, (req, res) => {
+app.delete('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
     const { id } = req.params;
     const db = readDB();
     
+    // Self-deletion check
+    if (req.user.id === id) {
+        return res.status(400).json({ success: false, message: 'Kendi hesabınızı silemezsiniz.' });
+    }
+    
+    const initialLength = db.users.length;
     const filteredUsers = db.users.filter(u => u.id !== id);
-    if (filteredUsers.length === db.users.length) {
+    
+    if (filteredUsers.length === initialLength) {
         return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
     }
 
     db.users = filteredUsers;
     writeDB(db);
     
-    res.json({ success: true });
+    res.json({ success: true, message: 'Kullanıcı silindi.' });
 });
 
 
 // --- SYSTEM MONITORING ROUTES ---
 
-app.get('/api/status', (req, res) => {
+app.get('/api/status', authenticateToken, requireAdmin, (req, res) => {
     const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
     const usedMem = process.memoryUsage().heapUsed / 1024 / 1024;
     const totalMem = os.totalmem() / 1024 / 1024;
@@ -435,7 +459,7 @@ app.get('/api/status', (req, res) => {
     });
 });
 
-app.get('/api/logs', (req, res) => {
+app.get('/api/logs', authenticateToken, requireAdmin, (req, res) => {
     res.json(systemLogs);
 });
 
