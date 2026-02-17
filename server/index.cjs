@@ -274,9 +274,91 @@ const DB_FILE = process.env.VERCEL
     ? path.join('/tmp', 'db.json') 
     : path.join(__dirname, 'db.json');
 
+// --- MOCK TEMPLATES (Initialize DB) ---
+const INITIAL_TEMPLATES = [
+  {
+    id: '1',
+    title: 'Acil Durum Hizmet Planı',
+    category: 'ISG',
+    description: 'İş yerleri için zorunlu acil durum eylem ve hizmet planı şablonu.',
+    isPremium: false,
+    monthlyLimit: 30,
+    photoCapacity: 15,
+    fields: [
+      { key: 'companyName', label: 'Firma Adı', type: 'text', required: true },
+      { key: 'preparedBy', label: 'Hazırlayan', type: 'text', required: true },
+      { key: 'date', label: 'Tarih', type: 'date', required: true }
+    ]
+  },
+  {
+    id: '2',
+    title: 'Hizmet Şablonu Oluştur',
+    category: 'Genel',
+    description: 'Standart hizmet teklif ve kapsam belirleme formu.',
+    isPremium: false,
+    monthlyLimit: 30,
+    photoCapacity: 12,
+    fields: []
+  },
+  {
+    id: '3',
+    title: 'Eğitim Katılım Sertifikası',
+    category: 'İK',
+    description: 'Personel eğitimleri sonrası verilecek başarı sertifikası.',
+    isPremium: true,
+    photoCapacity: 10,
+    fields: []
+  },
+  {
+    id: '4',
+    title: 'Denetim Raporu',
+    category: 'Denetim',
+    description: 'Saha denetimleri için detaylı raporlama formatı.',
+    isPremium: true,
+    photoCapacity: 15,
+    fields: []
+  },
+  {
+    id: '5',
+    title: 'Risk Analizi Formu',
+    category: 'ISG',
+    description: '5x5 Risk matrisi değerlendirme formu.',
+    isPremium: true,
+    photoCapacity: 10,
+    fields: []
+  },
+  {
+    id: '6',
+    title: 'Personel Görev Tanımı',
+    category: 'İK',
+    description: 'Çalışan görev ve sorumluluk bildirim formu.',
+    isPremium: false,
+    monthlyLimit: 30,
+    fields: []
+  },
+  {
+    id: '7',
+    title: 'Makine Bakım Kartı',
+    category: 'Teknik',
+    description: 'Periyodik bakım takip çizelgesi.',
+    isPremium: true,
+    photoCapacity: 12,
+    fields: []
+  },
+  {
+    id: '8',
+    title: 'Kaza Tespit Tutanağı',
+    category: 'ISG',
+    description: 'İş kazası bildirim ve tespit formu.',
+    isPremium: true,
+    photoCapacity: 20,
+    fields: []
+  }
+];
+
 // Initialize DB if not exists (or copy from source on Vercel startup)
 if (!fs.existsSync(DB_FILE)) {
-    let initialData = { users: [], documents: [] };
+    let initialData = { users: [], documents: [], templates: INITIAL_TEMPLATES };
     
     // If we're on Vercel and have a source DB, copy it to /tmp
     if (process.env.VERCEL && fs.existsSync(SOURCE_DB_FILE)) {
@@ -289,11 +371,25 @@ if (!fs.existsSync(DB_FILE)) {
         }
     }
     
+    // Ensure templates exist if source DB lacked them
+    if (!initialData.templates) {
+        initialData.templates = INITIAL_TEMPLATES;
+    }
+    
     try {
         fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
     } catch (e) {
         console.error('Failed to initialize DB:', e);
     }
+} else {
+    // If DB exists but templates are missing (migration), add them
+    try {
+        const currentData = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+        if (!currentData.templates) {
+            currentData.templates = INITIAL_TEMPLATES;
+            fs.writeFileSync(DB_FILE, JSON.stringify(currentData, null, 2));
+        }
+    } catch(e) {}
 }
 
 // Helper to read/write DB
@@ -308,13 +404,15 @@ const readDB = () => {
                     return JSON.parse(params);
                  } catch(e) {}
              }
-            return { users: [], documents: [] };
+            return { users: [], documents: [], templates: INITIAL_TEMPLATES };
         }
         const data = fs.readFileSync(DB_FILE, 'utf8');
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        if (!parsed.templates) parsed.templates = INITIAL_TEMPLATES;
+        return parsed;
     } catch (err) {
         console.error("DB Read Error:", err);
-        return { users: [], documents: [] };
+        return { users: [], documents: [], templates: INITIAL_TEMPLATES };
     }
 };
 
