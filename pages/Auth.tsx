@@ -109,6 +109,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
 
     try {
       // API call to backend
+      console.log('Attempting login with:', '/api/auth/login');
       const response = await fetchApi('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -120,7 +121,14 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
         }),
       });
 
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (data.success) {
         // Save Token
