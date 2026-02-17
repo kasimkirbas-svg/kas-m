@@ -30,11 +30,19 @@ export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
     const baseUrl = getApiUrl();
     const url = endpoint.startsWith('/') ? `${baseUrl}${endpoint}` : `${baseUrl}/${endpoint}`;
 
-    const headers = {
+    // Get token if exists
+    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+
+    const headers: any = {
         'Content-Type': 'application/json',
         'Bypass-Tunnel-Reminder': 'true', // Required for LocalTunnel
         ...options.headers,
     };
+
+    // Auto-attach token if available and not already set
+    if (token && !headers['Authorization']) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
 
     return fetch(url, { ...options, headers });
 };
