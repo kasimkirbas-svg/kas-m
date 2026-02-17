@@ -2,13 +2,13 @@
 export const getApiUrl = () => {
     // 1. Force a specific public URL if configured (e.g. for production tunnel)
     // Uncomment and change this to your persistent tunnel URL if you have one
-    const TUNNEL_URL = 'https://kirbas-doc-platform.loca.lt'; 
+    const TUNNEL_URL = 'https://kirbas-server.loca.lt'; 
     
     if (typeof window !== 'undefined') {
         const hostname = window.location.hostname;
         
         // If we are on Vercel or any remote domain, we MUST use the public backend URL
-        if (hostname.includes('vercel.app') || (hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.startsWith('192.168.'))) {
+        if (hostname.includes('loca.lt') || hostname.includes('vercel.app') || (hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.startsWith('192.168.'))) {
              return TUNNEL_URL;
         }
 
