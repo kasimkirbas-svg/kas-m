@@ -8,16 +8,174 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const mongoose = require('mongoose');
+const { Pool } = require('pg');
+const PDFDocument = require('pdfkit');
 require('dotenv').config();
 
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy (required for rate-limit behind localtunnel/vercel)
 const PORT = process.env.PORT || 3001;
-// GÜVENLİK: Prodüksiyonda mutlaka .env dosyasından gelmeli.
-// Eğer .env yoksa rastgele güçlü bir string oluşturulmalı, sabit string kullanılmamalı.
-const JWT_SECRET = process.env.JWT_SECRET || require('crypto').randomBytes(64).toString('hex'); 
+
+// --- POSTGRESQL CONNECTION (Primary) ---
+// If DATABASE_URL is present, we use PostgreSQL as preferred in requirements
+const PG_CONNECTION_STRING = process.env.DATABASE_URL;
+
+let pgPool = null;
+if (PG_CONNECTION_STRING) {
+    pgPool = new Pool({
+        connectionString: PG_CONNECTION_STRING,
+        ssl: { rejectUnauthorized: false } 
+    });
+    console.log('✅ PostgreSQL Configured');
+}
+
+// --- MONGODB CONNECTION (Legacy/Backup) ---
+const MONGO_URI = process.env.MONGO_URI;
+
+// Connect to MongoDB
+const connectDB = async () => {
+    if (!MONGO_URI) return null;
+    if (mongoose.connection.readyState >= 1) return mongoose.connection;
+    
+    try {
+        await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+        console.log("✅ MongoDB Connected");
+        return mongoose.connection;
+    } catch (err) {
+        console.error("MongoDB Connection Error:", err);
+        return null;
+    }
+};
+
+// Define Schemas
+const userSchema = new mongoose.Schema({
+    id: String,
+    name: String,
+    email: { type: String, unique: true },
+    password: String,
+    companyName: String,
+    role: String,
+    plan: String,
+    remainingDownloads: mongoose.Schema.Types.Mixed,
+    subscriptionStartDate: String,
+    subscriptionEndDate: String,
+    isActive: Boolean,
+    createdAt: String
+}, { strict: false });
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
+// File DB Helper
+const readFileDB = () => {
+    try {
+        if (!fs.existsSync(DB_FILE)) return { users: [], documents: [] };
+        return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    } catch (err) { return { users: [], documents: [] }; }
+};
+
+const writeFileDB = (data) => {
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+        return true;
+    } catch (e) { return false; }
+};
+
+// Unified DB Access (Postgres > MongoDB > File-System)
+const db = {
+    getUsers: async () => {
+        if (pgPool) {
+            try {
+                // Ensure table exists
+                await pgPool.query(`
+                    CREATE TABLE IF NOT EXISTS users (
+                        id TEXT PRIMARY KEY,
+                        email TEXT UNIQUE,
+                        data JSONB
+                    );
+                `);
+                const res = await pgPool.query('SELECT * FROM users');
+                return res.rows.map(row => ({...row.data, id: row.id, email: row.email}));
+            } catch (err) {
+                console.error('PG Error:', err);
+            }
+        }
+        
+        if (MONGO_URI) {
+            await connectDB();
+            const users = await User.find({}).lean();
+            return users.map(u => ({...u, id: u.id || u._id.toString()}));
+        }
+        return readFileDB().users;
+    },
+    
+    addUser: async (user) => {
+        if (pgPool) {
+            try {
+                await pgPool.query('INSERT INTO users(id, email, data) VALUES($1, $2, $3)', 
+                   [user.id, user.email, user]);
+                return user;
+            } catch (err) {
+                 console.error('PG Error:', err);
+            }
+        }
+
+        if (MONGO_URI) {
+            await connectDB();
+            const newUser = new User(user);
+            await newUser.save();
+            return newUser;
+        }
+        const data = readFileDB();
+        data.users.push(user);
+        writeFileDB(data);
+        return user;
+    },
+    
+    updateUser: async (id, updates) => {
+        if (pgPool) {
+             try {
+                // First get existing
+                const existing = await pgPool.query('SELECT data FROM users WHERE id = $1', [id]);
+                if (existing.rows.length > 0) {
+                    const newData = { ...existing.rows[0].data, ...updates };
+                    await pgPool.query('UPDATE users SET data = $1 WHERE id = $2', [newData, id]);
+                }
+                return;
+             } catch (err) { console.error('PG Error:', err); }
+        }
+
+        if (MONGO_URI) {
+            await connectDB();
+            await User.findOneAndUpdate({ id: id }, updates);
+            return;
+        }
+        const data = readFileDB();
+        const index = data.users.findIndex(u => u.id === id);
+        if (index !== -1) {
+            data.users[index] = { ...data.users[index], ...updates };
+            writeFileDB(data);
+        }
+    },
+    
+    findUserByEmail: async (email) => {
+        if (pgPool) {
+             try {
+                const res = await pgPool.query('SELECT data FROM users WHERE email = $1', [email]);
+                return res.rows.length ? res.rows[0].data : undefined;
+             } catch (err) { console.error('PG Error:', err); }
+        }
+
+        if (MONGO_URI) {
+            await connectDB();
+            return await User.findOne({ email }).lean();
+        }
+        return readFileDB().users.find(u => u.email === email);
+    }
+};
 
 // --- SECURITY MIDDLEWARE ---
+
 // app.use(helmet()); // Temporarily disabled for troubleshooting
 app.use(cors({
   origin: '*', // Allow all origins for easier local network access
