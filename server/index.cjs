@@ -972,6 +972,8 @@ app.post('/api/auth/forgot-password', async (req, res) => {
             transporter.sendMail(mailOptions, (err) => {
                  if (err) console.error('Reset email failed:', err);
             });
+        } else {
+             console.warn(`[MOCK MODE] Password reset email not sent. Code: ${code}`);
         }
 
         res.json({ success: true, message: 'Şifre sıfırlama kodu e-posta adresinize gönderildi.' });
