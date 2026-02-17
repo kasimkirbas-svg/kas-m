@@ -135,8 +135,19 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
           onLoginSuccess(data.user);
         }, 1000);
       } else {
-        // Handle application errors (400, 401, etc.) gracefully
-        setError(data.message || 'Giriş başarısız.');
+      
+      // Connection Error Handling
+      let errorMessage = 'Giriş başarısız.';
+      if (response.status === 500) {
+          errorMessage = 'Sunucu hatası (500). Lütfen daha sonra tekrar deneyin.';
+      } else if (response.status === 404) {
+          errorMessage = 'Sunucu bulunamadı (404). Lütfen daha sonra tekrar deneyin.';
+      } else if (data && data.message) {
+          errorMessage = data.message;
+      }
+      
+      setError(errorMessage);
+
       }
     } catch (err) {
       console.error('Login error:', err);
