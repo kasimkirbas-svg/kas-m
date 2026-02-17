@@ -838,6 +838,74 @@ app.delete('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
     res.json({ success: true, message: 'Kullanıcı silindi.' });
 });
 
+// --- TEMPLATE MANAGEMENT (Admin & Public) ---
+
+// Get All Templates (Public)
+app.get('/api/templates', (req, res) => {
+    try {
+        const db = readDB();
+        res.json(db.templates || []);
+    } catch (e) {
+        res.status(500).json({ success: false, message: 'Şablonlar alınamadı.' });
+    }
+});
+
+// Create Template (Admin)
+app.post('/api/templates', authenticateToken, requireAdmin, (req, res) => {
+    try {
+        const db = readDB();
+        const newTemplate = { ...req.body, id: Date.now().toString() };
+        db.templates = db.templates || [];
+        db.templates.push(newTemplate);
+        writeDB(db);
+        res.json(newTemplate);
+    } catch (e) {
+        res.status(500).json({ success: false, message: 'Şablon oluşturulamadı.' });
+    }
+});
+
+// Update Template (Admin)
+app.put('/api/templates/:id', authenticateToken, requireAdmin, (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+        const db = readDB();
+        
+        const index = db.templates ? db.templates.findIndex(t => t.id === id) : -1;
+        if (index === -1) {
+             return res.status(404).json({ success: false, message: 'Şablon bulunamadı.' });
+        }
+        
+        db.templates[index] = { ...db.templates[index], ...updates };
+        writeDB(db);
+        res.json(db.templates[index]);
+    } catch (e) {
+        res.status(500).json({ success: false, message: 'Güncelleme başarısız.' });
+    }
+});
+
+// Delete Template (Admin)
+app.delete('/api/templates/:id', authenticateToken, requireAdmin, (req, res) => {
+    try {
+        const { id } = req.params;
+        const db = readDB();
+        
+        const initialLength = db.templates ? db.templates.length : 0;
+        const filtered = db.templates ? db.templates.filter(t => t.id !== id) : [];
+        
+        if (filtered.length === initialLength) {
+            return res.status(404).json({ success: false, message: 'Şablon bulunamadı.' });
+        }
+
+        db.templates = filtered;
+        writeDB(db);
+        res.json({ success: true, message: 'Şablon silindi.' });
+    } catch (e) {
+        res.status(500).json({ success: false, message: 'Silme işlemi başarısız.' });
+    }
+});
+
+
 
 // --- SYSTEM MONITORING ROUTES ---
 

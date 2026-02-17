@@ -132,18 +132,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  const loadData = () => {
+  const loadData = async () => {
     // Templates
-    const storedTemplates = localStorage.getItem('documentTemplates');
-    if (storedTemplates) {
-      setTemplates(JSON.parse(storedTemplates));
-    } else {
-      // Default initialization
-      setTemplates(DEFAULT_TEMPLATES);
-      localStorage.setItem('documentTemplates', JSON.stringify(DEFAULT_TEMPLATES));
+    try {
+        const res = await fetchApi('/api/templates');
+        if (res.ok) {
+            const data = await res.json();
+            setTemplates(data || DEFAULT_TEMPLATES);
+        } else {
+            console.error('Failed to fetch templates');
+            setTemplates(DEFAULT_TEMPLATES);
+        }
+    } catch (e) {
+        console.error(e);
+        setTemplates(DEFAULT_TEMPLATES);
     }
 
-    // Plans
+    // Plans (Still LocalStorage for now)
     const storedPlans = localStorage.getItem('subscriptionPlans');
     if (storedPlans) {
       setSubscriptionPlans(JSON.parse(storedPlans));
@@ -152,8 +157,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
       setSubscriptionPlans(DEFAULT_PLANS);
       localStorage.setItem('subscriptionPlans', JSON.stringify(DEFAULT_PLANS));
     }
-
-    // Logs & Stats logic is separate
   };
 
   useEffect(() => {
@@ -179,29 +182,55 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     setIsTemplateModalOpen(true);
   };
 
-  const handleDeleteTemplate = (id: string) => {
-     if(window.confirm('Bu şablonu silmek istediğinize emin misiniz?')) {
-        const updated = templates.filter(t => t.id !== id);
-        setTemplates(updated);
-        localStorage.setItem('documentTemplates', JSON.stringify(updated));
+  const handleDeleteTemplate = async (id: string) => {
+     if(window.confirm(t?.admin?.confirmDelete || 'Bu şablonu silmek istediğinize emin misiniz?')) {
+        try {
+            const res = await fetchApi(`/api/templates/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                setTemplates(prev => prev.filter(t => t.id !== id));
+            } else {
+                alert('Silme işlemi başarısız.');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Silme işlemi başarısız.');
+        }
      }
   };
 
-  const handleSaveTemplate = (e: React.FormEvent) => {
+  const handleSaveTemplate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingTemplate.id) return;
 
-    let updated;
-    const exists = templates.find(t => t.id === editingTemplate.id);
-    if (exists) {
-        updated = templates.map(t => t.id === editingTemplate.id ? { ...t, ...editingTemplate } as DocumentTemplate : t);
-    } else {
-        updated = [...templates, editingTemplate as DocumentTemplate];
+    try {
+        const exists = templates.find(t => t.id === editingTemplate.id);
+        if (exists) {
+            // Update
+            const res = await fetchApi(`/api/templates/${editingTemplate.id}`, {
+                method: 'PUT',
+                body: JSON.stringify(editingTemplate)
+            });
+            if (res.ok) {
+                const updated = await res.json();
+                setTemplates(prev => prev.map(t => t.id === updated.id ? updated : t));
+                setIsTemplateModalOpen(false);
+            }
+        } else {
+            // Create
+            const res = await fetchApi('/api/templates', {
+                method: 'POST',
+                body: JSON.stringify(editingTemplate)
+            });
+             if (res.ok) {
+                const newTpl = await res.json();
+                setTemplates(prev => [...prev, newTpl]);
+                setIsTemplateModalOpen(false);
+            }
+        }
+    } catch (e) {
+        console.error('Template save error:', e);
+        alert('Kaydetme başarısız: ' + e);
     }
-    
-    setTemplates(updated);
-    localStorage.setItem('documentTemplates', JSON.stringify(updated));
-    setIsTemplateModalOpen(false);
   };
 
   // --- PLAN HANDLERS ---

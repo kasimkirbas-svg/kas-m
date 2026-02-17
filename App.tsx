@@ -9,8 +9,9 @@ import { Settings } from './pages/Settings';
 import { MyDocuments } from './pages/MyDocuments'; // Add this import
 import { SubscriptionPage } from './pages/SubscriptionPage';
 import { Button } from './components/Button';
-import { MOCK_TEMPLATES, PLANS, APP_NAME, ADMIN_USER } from './constants';
+import { APP_NAME, PLANS, MOCK_TEMPLATES } from './constants';
 import { User, UserRole, SubscriptionPlan, DocumentTemplate, GeneratedDocument } from './types';
+import { fetchApi } from './src/utils/api';
 import { Check, Lock, Shield, Star, Users, FileText, DollarSign, TrendingUp, Search, MoreHorizontal, ArrowLeft } from 'lucide-react';
 import { getTranslation } from './i18n';
 
@@ -19,6 +20,7 @@ const App = () => {
   const [user, setUser] = useState<User | null>(null);
   const [currentView, setCurrentView] = useState('auth');
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
+  const [templates, setTemplates] = useState<DocumentTemplate[]>(MOCK_TEMPLATES);
   const [isLoading, setIsLoading] = useState(true);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
@@ -86,6 +88,22 @@ const App = () => {
     if (savedTheme) {
       setTheme(savedTheme);
     }
+    
+    // Fetch Templates from Backend
+    const loadTemplates = async () => {
+        try {
+            const res = await fetchApi('/api/templates');
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    setTemplates(data);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load templates', e);
+        }
+    };
+    loadTemplates();
 
     if (savedLanguage) {
       setLanguage(savedLanguage);
@@ -298,7 +316,7 @@ const App = () => {
             {t?.common?.back || 'Ana Sayfaya Dön'}
           </button>
           <DocumentsList 
-            templates={MOCK_TEMPLATES}
+            templates={templates}
             userIsPremium={user.plan === SubscriptionPlan.YEARLY}
             onSelectTemplate={(template) => {
               setSelectedTemplate(template);
