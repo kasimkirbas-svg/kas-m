@@ -542,7 +542,8 @@ if (!isMockMode) {
     // Verify connection
     transporter.verify(function (error, success) {
         if (error) {
-            console.log('❌ Sunucu mail bağlantı hatası:', error.message);
+            console.log('❌ [MAIL SETUP] Sunucu mail bağlantı hatası:', error.message);
+            console.warn('⚠️ [MAIL SETUP] Falling back to Mock Mode due to verification failure.');
             // Don't disable mock mode immediately, try to send anyway later or just log error
             // Actually, if verification fails, let's fallback to Mock Mode to avoid crashing
             isMockMode = true;
@@ -554,7 +555,9 @@ if (!isMockMode) {
                 time: new Date().toISOString()
             });
         } else {
-            console.log('✅ Sunucu gerçek mail gönderimi için hazır');
+            console.log('✅ [MAIL SETUP] Sunucu gerçek mail gönderimi için hazır');
+            // Ensure Mock Mode is OFF if verify succeeds !
+            isMockMode = false; 
              systemLogs.push({
                 id: Date.now(),
                 type: 'success',
@@ -930,6 +933,7 @@ app.get('/api/auth/invoices', authenticateToken, async (req, res) => {
 
 // Forgot Password - Send Code
 app.post('/api/auth/forgot-password', async (req, res) => {
+    console.log(`[FORGOT-PASSWORD] Request received for: ${req.body.email}`);
     const { email } = req.body;
     
     if (!email) return res.status(400).json({ success: false, message: 'E-posta gereklidir.' });
@@ -937,6 +941,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     try {
         const user = await dbAdapter.findUserByEmail(email);
         if (!user) {
+            console.log(`[FORGOT-PASSWORD] User not found for email: ${email}`);
             // Security: Don't reveal user existence, just say code sent if account exists
             return res.json({ success: true, message: 'Eğer kayıtlı bir hesabınız varsa, şifre sıfırlama kodu gönderildi.' });
         }
@@ -950,10 +955,11 @@ app.post('/api/auth/forgot-password', async (req, res) => {
             expiresAt: Date.now() + 5 * 60 * 1000
         });
 
-        // Send Email
-        console.log(`[PASSWORD RESET] Code for ${email}: ${code}`);
+        console.log(`[PASSWORD RESET] Generated code for ${email}: ${code}`);
         
-        if (transporter) {
+        // Check if we can send email
+        if (transporter && !isMockMode) {
+            console.log(`[FORGOT-PASSWORD] Attempting to send email to ${email}...`);
              const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: email,
@@ -969,16 +975,29 @@ app.post('/api/auth/forgot-password', async (req, res) => {
                 `
             };
             
-            transporter.sendMail(mailOptions, (err) => {
-                 if (err) console.error('Reset email failed:', err);
-            });
+            // Promisify sendMail to await it and catch errors properly
+            try {
+                const info = await transporter.sendMail(mailOptions);
+                console.log(`[FORGOT-PASSWORD] Email sent successfully: ${info.messageId}`);
+                console.log(`[FORGOT-PASSWORD] Server response: ${info.response}`);
+            } catch (mailError) {
+                console.error(`[FORGOT-PASSWORD] Email failed:`, mailError);
+                
+                systemLogs.push({
+                    id: Date.now(),
+                    type: 'error',
+                    action: 'Email Send Failed',
+                    details: `To: ${email}, Error: ${mailError.message}`,
+                    time: new Date().toISOString()
+                });
+            }
         } else {
-             console.warn(`[MOCK MODE] Password reset email not sent. Code: ${code}`);
+             console.warn(`[MOCK MODE] Password reset email not sent. Code: ${code}. Transporter: ${!!transporter}, isMockMode: ${isMockMode}`);
         }
 
         res.json({ success: true, message: 'Şifre sıfırlama kodu e-posta adresinize gönderildi.' });
     } catch (error) {
-         console.error('Forgot Password Error:', error);
+         console.error('[FORGOT-PASSWORD] Fatal Error:', error);
          res.status(500).json({ success: false, message: 'İşlem başarısız.' });
     }
 });
