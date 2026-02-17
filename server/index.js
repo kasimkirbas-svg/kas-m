@@ -39,33 +39,12 @@ const DB_FILE = process.env.VERCEL
     ? path.join('/tmp', 'db.json') 
     : path.join(__dirname, 'db.json');
 
-// Initialize DB if not exists (or copy from source on Vercel cold start)
-if (!fs.existsSync(DB_FILE)) {
-    const initialData = {
-        users: [],
-        documents: []
-    };
-    // If on Vercel, try to copy initial data from source file if exists
-    if (process.env.VERCEL) {
-        const sourceFile = path.join(__dirname, 'db.json');
-        if (fs.existsSync(sourceFile)) {
-             try {
-                fs.copyFileSync(sourceFile, DB_FILE);
-             } catch (e) {
-                console.log('Error copying initial DB:', e);
-                fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
-             }
-        } else {
-             fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
-        }
-    } else {
-        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
-    }
-}
-
 // Helper to read/write DB
 const readDB = () => {
     try {
+        if (!fs.existsSync(DB_FILE)) {
+            return { users: [], documents: [] };
+        }
         const data = fs.readFileSync(DB_FILE, 'utf8');
         return JSON.parse(data);
     } catch (err) {
@@ -84,35 +63,52 @@ const writeDB = (data) => {
     }
 };
 
+// Initialize DB if not exists
+if (!fs.existsSync(DB_FILE)) {
+    const initialData = {
+        users: [],
+        documents: []
+    };
+    writeDB(initialData);
+}
+
 // --- SEED ADMIN USER ---
 const seedAdmin = async () => {
-    const db = readDB();
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@kirbas.com';
-    // GÜVENLİK: Admin şifresi hardcoded olmamalıdır. Çevresel değişkenden alınır.
-    const adminPass = process.env.ADMIN_PASSWORD || 'Admin123!@#'; 
-    
-    if (!db.users.some(u => u.email === adminEmail)) {
-        console.log("⚙️  Varsayılan Admin kullanıcısı oluşturuluyor...");
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(adminPass, salt);
+    try {
+        const db = readDB();
+        const adminEmail = process.env.ADMIN_EMAIL || 'admin@kirbas.com';
+        // GÜVENLİK: Admin şifresi hardcoded olmamalıdır. Çevresel değişkenden alınır.
+        const adminPass = process.env.ADMIN_PASSWORD || 'Admin123!@#'; 
         
-        const adminUser = {
-            id: 'admin-001',
-            name: 'Sistem Yöneticisi',
-            email: adminEmail,
-            password: hashedPassword,
-            companyName: 'Yönetim Paneli',
-            role: 'ADMIN',
-            plan: 'YEARLY',
-            remainingDownloads: 'UNLIMITED',
-            subscriptionStartDate: new Date().toISOString(),
-            isActive: true,
-            createdAt: new Date().toISOString()
-        };
-        
-        db.users.push(adminUser);
-        writeDB(db);
-        console.log(`✅ Admin kullanıcısı oluşturuldu: ${adminEmail} (Şifre: ENV veya varsayılan)`);
+        if (!db.users || !Array.isArray(db.users)) {
+            db.users = [];
+        }
+
+        if (!db.users.some(u => u.email === adminEmail)) {
+            console.log("⚙️  Varsayılan Admin kullanıcısı oluşturuluyor...");
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(adminPass, salt);
+            
+            const adminUser = {
+                id: 'admin-001',
+                name: 'Sistem Yöneticisi',
+                email: adminEmail,
+                password: hashedPassword,
+                companyName: 'Yönetim Paneli',
+                role: 'ADMIN',
+                plan: 'YEARLY',
+                remainingDownloads: 'UNLIMITED',
+                subscriptionStartDate: new Date().toISOString(),
+                isActive: true,
+                createdAt: new Date().toISOString()
+            };
+            
+            db.users.push(adminUser);
+            writeDB(db);
+            console.log(`✅ Admin kullanıcısı oluşturuldu: ${adminEmail}`);
+        }
+    } catch (error) {
+        console.error("Seed Admin Error:", error);
     }
 };
 
