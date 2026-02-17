@@ -19,7 +19,11 @@ const JWT_SECRET = process.env.JWT_SECRET || require('crypto').randomBytes(64).t
 
 // --- SECURITY MIDDLEWARE ---
 app.use(helmet()); // Set secure HTTP headers
-app.use(cors()); // Allow CORS
+app.use(cors({
+  origin: '*', // Allow all origins for easier local network access
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Bypass-Tunnel-Reminder']
+})); 
 app.use(express.json());
 
 // Rate Limiting (Prevent Brute Force)
