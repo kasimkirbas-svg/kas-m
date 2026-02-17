@@ -82,7 +82,7 @@ const writeFileDB = (data) => {
 };
 
 // Unified DB Access (Postgres > MongoDB > File-System)
-const db = {
+const dbAdapter = {
     getUsers: async () => {
         if (pgPool) {
             try {
@@ -171,6 +171,21 @@ const db = {
             return await User.findOne({ email }).lean();
         }
         return readFileDB().users.find(u => u.email === email);
+    },
+
+    findUserById: async (id) => {
+        if (pgPool) {
+             try {
+                const res = await pgPool.query('SELECT data FROM users WHERE id = $1', [id]);
+                return res.rows.length ? res.rows[0].data : undefined;
+             } catch (err) { console.error('PG Error:', err); }
+        }
+
+        if (MONGO_URI) {
+            await connectDB();
+            return await User.findOne({ id }).lean(); // or _id
+        }
+        return readFileDB().users.find(u => u.id === id);
     }
 };
 
@@ -397,6 +412,38 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Middleware: Require Admin Role
+
+// --- HEALTH CHECK ---
+app.get('/api/health', async (req, res) => {
+    let dbStatus = 'disconnected';
+    let dbType = 'none';
+
+    if (pgPool) {
+        try {
+            await pgPool.query('SELECT 1');
+            dbStatus = 'connected';
+            dbType = 'postgres';
+        } catch (e) {
+            dbStatus = 'error: ' + e.message;
+            dbType = 'postgres';
+        }
+    } else if (MONGO_URI) {
+        dbType = 'mongodb';
+        dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+    } else {
+        dbType = 'filesystem';
+        dbStatus = 'active (temporary)';
+    }
+
+    res.json({ 
+        status: 'ok', 
+        dbType, 
+        dbStatus, 
+        env: process.env.NODE_ENV,
+        region: process.env.VERCEL_REGION
+    });
+});
+
 const requireAdmin = (req, res, next) => {
     if (!req.user || req.user.role !== 'ADMIN') {
         return res.status(403).json({ success: false, message: 'Bu işlem için yetkiniz yok. (Admin Gerekli)' });
@@ -416,187 +463,175 @@ app.post('/api/auth/register', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Şifre en az 6 karakter olmalıdır.' });
     }
 
-    const db = readDB();
-    
-    // Check if user exists
-    if (db.users.some(u => u.email === email)) {
-        return res.status(400).json({ success: false, message: 'Bu e-posta adresi zaten kullanımda.' });
-    }
+    try {
+        // Check if user exists
+        const existingUser = await dbAdapter.findUserByEmail(email);
+        if (existingUser) {
+            return res.status(400).json({ success: false, message: 'Bu e-posta adresi zaten kullanımda.' });
+        }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = {
-        id: 'user-' + Date.now(),
-        name,
-        email,
-        password: hashedPassword, // SECURED
-        companyName,
-        role: 'SUBSCRIBER',
-        plan: 'FREE',
-        remainingDownloads: 3,
-        subscriptionStartDate: new Date().toISOString(),
-        subscriptionEndDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-        isActive: true,
-        createdAt: new Date().toISOString()
-    };
-
-    db.users.push(newUser);
-    writeDB(db);
-
-    // --- SEND WELCOME EMAIL ---
-    if (transporter && !isMockMode) {
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Kırbaş Doküman Platformuna Hoş Geldiniz! 🎉',
-            html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
-                    <div style="text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 20px; margin-bottom: 20px;">
-                        <h2 style="color: #2563eb; margin: 0;">Kırbaş Doküman</h2>
-                        <p style="color: #64748b; margin: 5px 0 0 0;">Profesyonel Belge Yönetim Sistemi</p>
-                    </div>
-                    
-                    <div style="padding: 0 10px;">
-                        <p style="font-size: 16px; color: #1e293b;">Merhaba <strong>${name}</strong>,</p>
-                        
-                        <p style="color: #475569; line-height: 1.6;">
-                            Kırbaş Doküman Platformuna hoş geldiniz! Üyeliğiniz başarıyla oluşturulmuştur.
-                            Artık kurumsal belgelerinizi hızlı ve güvenli bir şekilde oluşturmaya başlayabilirsiniz.
-                        </p>
-
-                        <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; margin: 25px 0;">
-                            <h3 style="color: #334155; margin-top: 0; margin-bottom: 15px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Üyelik Bilgileriniz</h3>
-                            <ul style="list-style: none; padding: 0; margin: 0; color: #475569;">
-                                <li style="margin-bottom: 10px;">🏢 <strong>Belirtilen Firma:</strong> ${companyName}</li>
-                                <li style="margin-bottom: 10px;">📧 <strong>E-posta Adresi:</strong> ${email}</li>
-                                <li style="margin-bottom: 0;">🌟 <strong>Paket:</strong> Ücretsiz Deneme</li>
-                            </ul>
-                        </div>
-
-                        <p style="color: #475569; line-height: 1.6;">
-                            Hemen giriş yaparak binlerce hazır şablonu kullanmaya başlayın.
-                        </p>
-
-                        <div style="text-align: center; margin: 30px 0;">
-                            <a href="https://kirbas-doc-platform.loca.lt" style="background-color: #2563eb; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Platforma Git</a>
-                        </div>
-                    </div>
-
-                    <div style="border-top: 1px solid #e2e8f0; margin-top: 30px; padding-top: 20px; text-align: center; color: #94a3b8; font-size: 12px;">
-                        <p>© ${new Date().getFullYear()} Kırbaş Doküman Platformu. Bu e-posta otomatik olarak gönderilmiştir.</p>
-                    </div>
-                </div>
-            `
+        const newUser = {
+            id: 'user-' + Date.now(),
+            name,
+            email,
+            password: hashedPassword, // SECURED
+            companyName,
+            role: 'SUBSCRIBER',
+            plan: 'FREE',
+            remainingDownloads: 3,
+            subscriptionStartDate: new Date().toISOString(),
+            subscriptionEndDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+            isActive: true,
+            createdAt: new Date().toISOString()
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('❌ Welcome email failed:', error);
-                
-                // Add error log
-                systemLogs.unshift({
-                    id: Date.now(),
-                    type: 'error',
-                    action: 'Email Failed',
-                    details: `Welcome email to ${email} failed: ${error.message}`,
-                    time: new Date().toISOString()
-                });
-            } else {
-                console.log('✅ Welcome email sent:', info.response);
-                
-                // Add success log
-                systemLogs.unshift({
-                    id: Date.now(),
-                    type: 'success',
-                    action: 'Email Sent',
-                    details: `Welcome email sent to ${email}`,
-                    time: new Date().toISOString()
-                });
-            }
-        });
+        await dbAdapter.addUser(newUser);
+
+        // --- SEND WELCOME EMAIL ---
+        if (transporter && !isMockMode) {
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Kırbaş Doküman Platformuna Hoş Geldiniz! 🎉',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+                        <div style="text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 20px; margin-bottom: 20px;">
+                            <h2 style="color: #2563eb; margin: 0;">Kırbaş Doküman</h2>
+                            <p style="color: #64748b; margin: 5px 0 0 0;">Profesyonel Belge Yönetim Sistemi</p>
+                        </div>
+                        
+                        <div style="padding: 0 10px;">
+                            <p style="font-size: 16px; color: #1e293b;">Merhaba <strong>${name}</strong>,</p>
+                            
+                            <p style="color: #475569; line-height: 1.6;">
+                                Kırbaş Doküman Platformuna hoş geldiniz! Üyeliğiniz başarıyla oluşturulmuştur.
+                                Artık kurumsal belgelerinizi hızlı ve güvenli bir şekilde oluşturmaya başlayabilirsiniz.
+                            </p>
+
+                            <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                                <h3 style="color: #334155; margin-top: 0; margin-bottom: 15px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Üyelik Bilgileriniz</h3>
+                                <ul style="list-style: none; padding: 0; margin: 0; color: #475569;">
+                                    <li style="margin-bottom: 10px;">🏢 <strong>Belirtilen Firma:</strong> ${companyName}</li>
+                                    <li style="margin-bottom: 10px;">📧 <strong>E-posta Adresi:</strong> ${email}</li>
+                                    <li style="margin-bottom: 0;">🌟 <strong>Paket:</strong> Ücretsiz Deneme</li>
+                                </ul>
+                            </div>
+
+                            <p style="color: #475569; line-height: 1.6;">
+                                Hemen giriş yaparak binlerce hazır şablonu kullanmaya başlayın.
+                            </p>
+
+                            <div style="text-align: center; margin: 30px 0;">
+                                <a href="https://kirbas-doc-platform.loca.lt" style="background-color: #2563eb; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Platforma Git</a>
+                            </div>
+                        </div>
+
+                        <div style="border-top: 1px solid #e2e8f0; margin-top: 30px; padding-top: 20px; text-align: center; color: #94a3b8; font-size: 12px;">
+                            <p>© ${new Date().getFullYear()} Kırbaş Doküman Platformu. Bu e-posta otomatik olarak gönderilmiştir.</p>
+                        </div>
+                    </div>
+                `
+            };
+
+            // Using callback approach for transporter
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) console.error('❌ Welcome email failed:', error);
+                else console.log('✅ Welcome email sent:', info.response);
+            });
+        }
+
+        // Create Token
+        const token = jwt.sign(
+            { id: newUser.id, email: newUser.email, role: newUser.role },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        // Return user without password
+        const { password: _, ...userWithoutPassword } = newUser;
+        res.json({ success: true, user: userWithoutPassword, token });
+
+    } catch (error) {
+        console.error('Registration Error:', error);
+        res.status(500).json({ success: false, message: 'Kayıt işlemi sırasında bir hata oluştu.' });
     }
-
-    // Create Token
-    const token = jwt.sign(
-        { id: newUser.id, email: newUser.email, role: newUser.role },
-        JWT_SECRET,
-        { expiresIn: '24h' }
-    );
-
-    // Add log
-    systemLogs.unshift({
-        id: Date.now(),
-        type: 'success',
-        action: 'User Registered',
-        details: `${name} (${email}) joined`,
-        time: new Date().toISOString()
-    });
-
-    // Return user without password
-    const { password: _, ...userWithoutPassword } = newUser;
-    res.json({ success: true, user: userWithoutPassword, token });
 });
 
 // Login
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     
-    const db = readDB();
-    const user = db.users.find(u => u.email === email);
+    try {
+        const user = await dbAdapter.findUserByEmail(email);
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-        // Correct Password
-        
-        const token = jwt.sign(
-            { id: user.id, email: user.email, role: user.role },
-            JWT_SECRET,
-            { expiresIn: '24h' }
-        );
+        if (user && (await bcrypt.compare(password, user.password))) {
+            // Correct Password
+            
+            const token = jwt.sign(
+                { id: user.id, email: user.email, role: user.role },
+                JWT_SECRET,
+                { expiresIn: '24h' }
+            );
 
-        systemLogs.unshift({
-            id: Date.now(),
-            type: 'info',
-            action: 'User Login',
-            details: `${user.name} logged in`,
-            time: new Date().toISOString()
-        });
+            // Add log
+            systemLogs.unshift({
+                id: Date.now(),
+                type: 'info',
+                action: 'User Login',
+                details: `${user.name} logged in`,
+                time: new Date().toISOString()
+            });
 
-        const { password: _, ...userWithoutPassword } = user;
-        res.json({ success: true, user: userWithoutPassword, token });
-    } else {
-        res.status(401).json({ success: false, message: 'E-posta veya şifre hatalı.' });
+            const { password: _, ...userWithoutPassword } = user;
+            res.json({ success: true, user: userWithoutPassword, token });
+        } else {
+            res.status(401).json({ success: false, message: 'E-posta veya şifre hatalı.' });
+        }
+    } catch (error) {
+        console.error('Login Error:', error);
+        res.status(500).json({ success: false, message: 'Giriş yapılırken hata oluştu.' });
     }
 });
 
 // Upgrade User (Mock Payment) (Protected)
-app.post('/api/users/upgrade', authenticateToken, (req, res) => {
+app.post('/api/users/upgrade', authenticateToken, async (req, res) => {
     const { userId, plan } = req.body;
-    const db = readDB();
     
-    const userIndex = db.users.findIndex(u => u.id === userId);
-    if (userIndex === -1) {
-        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
-    }
+    try {
+        await dbAdapter.updateUser(userId, { 
+            plan, 
+            remainingDownloads: 9999, 
+            role: 'SUBSCRIBER' 
+        });
+        
+        const updatedUser = await dbAdapter.findUserById(userId);
+        if (!updatedUser) {
+             return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+        }
 
-    // Update user
-    db.users[userIndex].plan = plan;
-    db.users[userIndex].remainingDownloads = 9999;
-    db.users[userIndex].role = 'SUBSCRIBER';
-    
-    writeDB(db);
-    
-    const { password: _, ...userWithoutPassword } = db.users[userIndex];
-    res.json({ success: true, user: userWithoutPassword });
+        const { password: _, ...userWithoutPassword } = updatedUser;
+        res.json({ success: true, user: userWithoutPassword });
+    } catch (e) {
+        console.error('Upgrade Error:', e);
+        res.status(500).json({ success: false, message: 'İşlem başarısız.' });
+    }
 });
 
 // Admin: Get All Users (Protected)
-app.get('/api/users', authenticateToken, requireAdmin, (req, res) => {
-    const db = readDB();
-    // Don't send passwords
-    const safeUsers = db.users.map(({ password, ...u }) => u);
-    res.json(safeUsers);
+app.get('/api/users', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const users = await dbAdapter.getUsers();
+        // Don't send passwords
+        const safeUsers = users.map(({ password, ...u }) => u);
+        res.json(safeUsers);
+    } catch (e) {
+        console.error('Fetch Users Error:', e);
+        res.status(500).json({ success: false, message: 'Kullanıcılar alınamadı.' });
+    }
 });
 
 // Admin: Update User (Protected)
