@@ -138,45 +138,6 @@ const dbAdapter = {
     addUser: async (user) => {
         if (pgPool) {
             try {
-                 await pgPool.query(`
-                    CREATE TABLE IF NOT EXISTS users (
-                        id TEXT PRIMARY KEY,
-                        email TEXT UNIQUE,
-                        data JSONB,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                    );
-                `);
-                await pgPool.query('INSERT INTO users(id, email, data) VALUES($1, $2, $3)', 
-                   [user.id, user.email, user]);
-                return user;
-            } catch (err) {
-                 console.error('PG AddUser Error:', err);
-                 // If PG fails, try to save to local file as backup so user doesn't lose data immediately
-                 const data = readFileDB();
-                 data.users.push(user);
-                 writeFileDB(data);
-                 return user;
-            }
-        }
-        
-        // ... rest of the code for Mongo/File
-        const data = readFileDB();
-        data.users.push(user);
-        writeFileDB(data);
-        return user;
-    },
-            try {
-                await connectDB();
-                const users = await User.find({}).lean();
-                return users.map(u => ({...u, id: u.id || u._id.toString()}));
-            } catch (e) { console.error('Mongo Error:', e); }
-        }
-        return readFileDB().users || [];
-    },
-    
-    addUser: async (user) => {
-        if (pgPool) {
-            try {
                 // Ensure table exists on first write too
                 await pgPool.query(`
                     CREATE TABLE IF NOT EXISTS users (
@@ -192,19 +153,23 @@ const dbAdapter = {
                 return user;
             } catch (err) {
                  console.error('PG AddUser Error:', err);
-                 // Don't crash here either, maybe return null to indicate failure?
-                 // But for now, just log. The frontend will likely see a 500 later if not careful.
-                 // Let's re-throw so route handler catches it.
-                 throw err;
+                 // Fallback to file system if PG fails
+                 const data = readFileDB();
+                 data.users.push(user);
+                 writeFileDB(data);
+                 return user;
             }
         }
 
         if (MONGO_URI) {
-            await connectDB();
-            const newUser = new User(user);
-            await newUser.save();
-            return newUser;
+            try {
+                await connectDB();
+                const newUser = new User(user);
+                await newUser.save();
+                return newUser;
+            } catch (e) { console.error('Mongo AddUser Error:', e);}
         }
+        
         const data = readFileDB();
         data.users.push(user);
         writeFileDB(data);
@@ -225,10 +190,13 @@ const dbAdapter = {
         }
 
         if (MONGO_URI) {
-            await connectDB();
-            await User.findOneAndUpdate({ id: id }, updates);
-            return;
+            try {
+                await connectDB();
+                await User.findOneAndUpdate({ id: id }, updates);
+                return;
+            } catch (e) { console.error('Mongo UpdateUser Error:', e);}
         }
+        
         const data = readFileDB();
         const index = data.users.findIndex(u => u.id === id);
         if (index !== -1) {
@@ -246,8 +214,12 @@ const dbAdapter = {
         }
 
         if (MONGO_URI) {
-            await connectDB();
-            return await User.findOne({ email }).lean();
+            try {
+                await connectDB();
+                return await User.findOne({ email }).lean();
+            } catch (e) {
+                 console.error('Mongo FindUser Error:', e);
+            }
         }
         return readFileDB().users.find(u => u.email === email);
     },
@@ -261,8 +233,12 @@ const dbAdapter = {
         }
 
         if (MONGO_URI) {
-            await connectDB();
-            return await User.findOne({ id }).lean(); // or _id
+            try {
+                await connectDB();
+                return await User.findOne({ id }).lean(); // or _id
+            } catch (e) {
+                console.error('Mongo FindUserById Error:', e);
+            }
         }
         return readFileDB().users.find(u => u.id === id);
     }
