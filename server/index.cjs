@@ -29,8 +29,19 @@ let pgPool = null;
 if (PG_CONNECTION_STRING) {
     try {
         console.log('🔌 Connecting to PostgreSQL...');
+        
+        // Remove sslmode=require from connection string to avoid conflict with manual ssl config
+        // This ensures rejectUnauthorized: false is respected if we pass it in the config object
+        let connectionString = PG_CONNECTION_STRING;
+        // Fix: Clean up sslmode=require properly from query params
+        if (connectionString.includes('sslmode=require')) {
+             connectionString = connectionString.replace('sslmode=require', '');
+             // Clean up potential double && or trailing ? or &
+             connectionString = connectionString.replace('?&', '?').replace('&&', '&').replace(/\?$/, '').replace(/&$/, '');
+        }
+
         pgPool = new Pool({
-            connectionString: PG_CONNECTION_STRING,
+            connectionString: connectionString,
             ssl: {
                 rejectUnauthorized: false
             },

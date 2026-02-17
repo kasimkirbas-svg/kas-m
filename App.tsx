@@ -9,7 +9,7 @@ import { Settings } from './pages/Settings';
 import { MyDocuments } from './pages/MyDocuments'; // Add this import
 import { SubscriptionPage } from './pages/SubscriptionPage';
 import { Button } from './components/Button';
-import { APP_NAME, PLANS, MOCK_TEMPLATES } from './constants';
+import { APP_NAME, PLANS, MOCK_TEMPLATES, ADMIN_USER } from './constants';
 import { User, UserRole, SubscriptionPlan, DocumentTemplate, GeneratedDocument } from './types';
 import { fetchApi } from './src/utils/api';
 import { Check, Lock, Shield, Star, Users, FileText, DollarSign, TrendingUp, Search, MoreHorizontal, ArrowLeft } from 'lucide-react';
