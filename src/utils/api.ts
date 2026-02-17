@@ -4,8 +4,6 @@ export const getApiUrl = () => {
     // Uncomment and change this to your persistent tunnel URL if you have one
     const TUNNEL_URL = 'https://kirbas-doc-platform.loca.lt'; 
     
-    // Check if we are checking the server status, we might want to try multiple
-    // But for simplicity, if we are on localhost, use localhost
     if (typeof window !== 'undefined') {
         const hostname = window.location.hostname;
         
@@ -14,9 +12,17 @@ export const getApiUrl = () => {
              return TUNNEL_URL;
         }
 
-        // Keep local IP logic for local network testing
-        if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-            return `http://${hostname}:3001`;
+        // If on localhost development, try to use relative path to leverage Vite proxy
+        // This avoids CORS issues and port conflicts
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+             // Returning empty string makes requests relative (e.g. /api/users)
+             // which go through Vite dev server proxy to backend
+             return ''; 
+        }
+
+        // Keep local IP logic for local network testing (e.g. accessing from phone)
+        if (hostname.startsWith('192.168.')) {
+            return `http://${hostname}:3001`; // Direct access to backend
         }
     }
     
