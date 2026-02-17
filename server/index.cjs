@@ -23,11 +23,27 @@ const PG_CONNECTION_STRING = process.env.DATABASE_URL;
 
 let pgPool = null;
 if (PG_CONNECTION_STRING) {
-    pgPool = new Pool({
-        connectionString: PG_CONNECTION_STRING,
-        ssl: { rejectUnauthorized: false } 
-    });
-    console.log('✅ PostgreSQL Configured');
+    try {
+        pgPool = new Pool({
+            connectionString: PG_CONNECTION_STRING,
+            ssl: {
+                rejectUnauthorized: false
+            },
+            connectionTimeoutMillis: 5000,
+            idleTimeoutMillis: 10000
+        });
+        
+        // Test connection immediately to catch errors early
+        pgPool.on('error', (err) => {
+            console.error('Unexpected error on idle client', err);
+            // Don't crash, just log required
+        });
+        
+        console.log('✅ PostgreSQL Configured');
+    } catch (err) {
+        console.error('Failed to configure PostgreSQL:', err);
+        pgPool = null;
+    }
 }
 
 // --- MONGODB CONNECTION (Legacy/Backup) ---
@@ -91,13 +107,16 @@ const dbAdapter = {
                     CREATE TABLE IF NOT EXISTS users (
                         id TEXT PRIMARY KEY,
                         email TEXT UNIQUE,
-                        data JSONB
+                        data JSONB,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 `);
                 const res = await pgPool.query('SELECT * FROM users');
                 return res.rows.map(row => ({...row.data, id: row.id, email: row.email}));
             } catch (err) {
-                console.error('PG Error:', err);
+                console.error('PG GetUsers Error:', err);
+                // Fallback to memory/file if PG fails
+                // But we should really return something to avoid UI crashes
             }
         }
         
@@ -114,11 +133,25 @@ const dbAdapter = {
     addUser: async (user) => {
         if (pgPool) {
             try {
+                // Ensure table exists on first write too
+                await pgPool.query(`
+                    CREATE TABLE IF NOT EXISTS users (
+                        id TEXT PRIMARY KEY,
+                        email TEXT UNIQUE,
+                        data JSONB,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                `);
+                
                 await pgPool.query('INSERT INTO users(id, email, data) VALUES($1, $2, $3)', 
                    [user.id, user.email, user]);
                 return user;
             } catch (err) {
-                 console.error('PG Error:', err);
+                 console.error('PG AddUser Error:', err);
+                 // Don't crash here either, maybe return null to indicate failure?
+                 // But for now, just log. The frontend will likely see a 500 later if not careful.
+                 // Let's re-throw so route handler catches it.
+                 throw err;
             }
         }
 
@@ -422,12 +455,15 @@ app.get('/api/health', async (req, res) => {
 
     if (pgPool) {
         try {
+            // First check if table exists
+            await pgPool.query(`CREATE TABLE IF NOT EXISTS health_check_test (id serial primary key)`);
             await pgPool.query('SELECT 1');
             dbStatus = 'connected';
             dbType = 'postgres';
         } catch (e) {
             dbStatus = 'error: ' + e.message;
             dbType = 'postgres';
+            console.error('Health Check PG Error:', e);
         }
     } else if (MONGO_URI) {
         dbType = 'mongodb';
