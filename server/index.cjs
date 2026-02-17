@@ -822,6 +822,79 @@ app.post('/api/send-document', async (req, res) => {
 });
 
 
+// --- GENERATE DOCUMENT (PDF) ---
+// Generates a PDF on the backend using data provided
+app.post('/api/generate-pdf', async (req, res) => {
+    const { templateId, data, title } = req.body;
+    
+    // Log generation request
+     systemLogs.unshift({
+            id: Date.now(),
+            type: 'info',
+            action: 'PDF Generation',
+            details: `Template: ${templateId} | Title: ${title}`,
+            time: new Date().toISOString()
+     });
+
+    try {
+        const doc = new PDFDocument();
+        
+        // Collect data chunks
+        let buffers = [];
+        doc.on('data', buffers.push.bind(buffers));
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            const base64 = pdfData.toString('base64');
+            res.json({ success: true, pdfBase64: `data:application/pdf;base64,${base64}` });
+        });
+
+        // --- PDF CONTENT GENERATION ---
+        
+        // Header
+        doc.fontSize(25).fillColor('#2563eb').text(title || 'Doküman Başlığı', { align: 'center' });
+        doc.moveDown();
+        doc.fontSize(12).fillColor('black').text(`Oluşturulma Tarihi: ${new Date().toLocaleDateString('tr-TR')}`, { align: 'right' });
+        doc.moveDown();
+        
+        // Separator
+        doc.moveTo(50, doc.y).lineTo(550, doc.y).strokeColor('#e2e8f0').stroke();
+        doc.moveDown(2);
+
+        // Dynamic Content
+        if (data && typeof data === 'object') {
+            Object.entries(data).forEach(([key, value]) => {
+                // Key formatting (camelCase to Title Case)
+                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                
+                doc.font('Helvetica-Bold').fontSize(12).text(`${label}:`, { continued: true });
+                doc.font('Helvetica').fontSize(12).text(`  ${value}`);
+                doc.moveDown(0.5);
+            });
+        } else {
+             doc.text('İçerik bulunamadı.');
+        }
+        
+        // Footer
+        const bottom = doc.page.height - 50;
+        doc.fontSize(10).fillColor('#94a3b8').text('Kırbaş Doküman Platformu © 2026', 50, bottom, { align: 'center', width: 500 });
+        
+        // Finalize
+        doc.end();
+
+    } catch (error) {
+        console.error('PDF Generation Error:', error);
+         systemLogs.unshift({
+            id: Date.now(),
+            type: 'error',
+            action: 'PDF Gen Failed',
+            details: error.message,
+            time: new Date().toISOString()
+        });
+        res.status(500).json({ success: false, message: 'PDF oluşturulamadı', error: error.message });
+    }
+});
+
+
 // Vercel Serverless Function Support
 if (require.main === module) {
     app.listen(PORT, '0.0.0.0', () => {
