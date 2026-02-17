@@ -34,15 +34,33 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // --- SIMPLE FILE-BASED DATABASE ---
-const DB_FILE = path.join(__dirname, 'db.json');
+// On Vercel, only /tmp is writable.
+const DB_FILE = process.env.VERCEL 
+    ? path.join('/tmp', 'db.json') 
+    : path.join(__dirname, 'db.json');
 
-// Initialize DB if not exists
+// Initialize DB if not exists (or copy from source on Vercel cold start)
 if (!fs.existsSync(DB_FILE)) {
     const initialData = {
         users: [],
         documents: []
     };
-    fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+    // If on Vercel, try to copy initial data from source file if exists
+    if (process.env.VERCEL) {
+        const sourceFile = path.join(__dirname, 'db.json');
+        if (fs.existsSync(sourceFile)) {
+             try {
+                fs.copyFileSync(sourceFile, DB_FILE);
+             } catch (e) {
+                console.log('Error copying initial DB:', e);
+                fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+             }
+        } else {
+             fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+        }
+    } else {
+        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+    }
 }
 
 // Helper to read/write DB
@@ -620,7 +638,12 @@ app.post('/api/send-document', async (req, res) => {
 });
 
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Backend sunucusu http://0.0.0.0:${PORT} üzerinde çalışıyor`);
-  console.log(`Erişim için: http://localhost:${PORT}`);
-});
+// Vercel Serverless Function Support
+if (require.main === module) {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Backend sunucusu http://0.0.0.0:${PORT} üzerinde çalışıyor`);
+        console.log(`Erişim için: http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
