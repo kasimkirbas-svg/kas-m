@@ -37,14 +37,46 @@ app.use(limiter);
 
 // --- SIMPLE FILE-BASED DATABASE ---
 // On Vercel, only /tmp is writable.
+// We'll use /tmp/db.json as the working DB, but initialize it from the source db.json if available.
+const SOURCE_DB_FILE = path.join(__dirname, 'db.json');
 const DB_FILE = process.env.VERCEL 
     ? path.join('/tmp', 'db.json') 
     : path.join(__dirname, 'db.json');
+
+// Initialize DB if not exists (or copy from source on Vercel startup)
+if (!fs.existsSync(DB_FILE)) {
+    let initialData = { users: [], documents: [] };
+    
+    // If we're on Vercel and have a source DB, copy it to /tmp
+    if (process.env.VERCEL && fs.existsSync(SOURCE_DB_FILE)) {
+        try {
+            const sourceData = fs.readFileSync(SOURCE_DB_FILE, 'utf8');
+            initialData = JSON.parse(sourceData);
+            console.log('📂 Source DB copier to /tmp/db.json');
+        } catch (e) {
+            console.error('Failed to copy source DB:', e);
+        }
+    }
+    
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+    } catch (e) {
+        console.error('Failed to initialize DB:', e);
+    }
+}
 
 // Helper to read/write DB
 const readDB = () => {
     try {
         if (!fs.existsSync(DB_FILE)) {
+             // Re-try initialization logic if somehow deleted
+             if (process.env.VERCEL && fs.existsSync(SOURCE_DB_FILE)) {
+                 try {
+                    const params = fs.readFileSync(SOURCE_DB_FILE, 'utf8');
+                    fs.writeFileSync(DB_FILE, params);
+                    return JSON.parse(params);
+                 } catch(e) {}
+             }
             return { users: [], documents: [] };
         }
         const data = fs.readFileSync(DB_FILE, 'utf8');
