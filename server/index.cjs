@@ -515,10 +515,25 @@ app.use((req, res, next) => {
 // Check mode
 let isMockMode = false;
 const emailUser = process.env.EMAIL_USER;
+
+// Log the masked email to debug (don't log the password)
+if (emailUser) {
+    const maskedEmail = emailUser.replace(/(.{2})(.*)(?=@)/,
+        (gp1, gp2, gp3) => {
+            for (let i = 0; i < gp3.length; i++) {
+                gp2 += "*";
+            } return gp2;
+        });
+    console.log(`📧 Email User Loaded: ${maskedEmail}`);
+    console.log(`🔑 Email Password Loaded: ${process.env.EMAIL_PASS ? 'Yes (Hidden)' : 'No'}`);
+} else {
+    console.log("❌ Email User Environment Variable is MISSING or EMPTY");
+}
+
 if (!emailUser || emailUser.includes('senin_mailin')) {
     console.log("⚠️  UYARI: Geçerli mail bilgisi bulunamadı. Mock (Simülasyon) modu aktif.");
     isMockMode = true;
-     systemLogs.push({
+    systemLogs.push({
         id: Date.now(),
         type: 'warning',
         action: 'System Startup',
@@ -531,42 +546,50 @@ if (!emailUser || emailUser.includes('senin_mailin')) {
 let transporter;
 
 if (!isMockMode) {
-    transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
+    console.log("🔄 Attempting to configure Nodemailer...");
+    try {
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
+        
+        console.log("⏳ Verifying SMTP connection...");
 
-    // Verify connection
-    transporter.verify(function (error, success) {
-        if (error) {
-            console.log('❌ [MAIL SETUP] Sunucu mail bağlantı hatası:', error.message);
-            console.warn('⚠️ [MAIL SETUP] Falling back to Mock Mode due to verification failure.');
-            // Don't disable mock mode immediately, try to send anyway later or just log error
-            // Actually, if verification fails, let's fallback to Mock Mode to avoid crashing
-            isMockMode = true;
-             systemLogs.push({
-                id: Date.now(),
-                type: 'error',
-                action: 'SMTP Connection Failed',
-                details: error.message,
-                time: new Date().toISOString()
-            });
-        } else {
-            console.log('✅ [MAIL SETUP] Sunucu gerçek mail gönderimi için hazır');
-            // Ensure Mock Mode is OFF if verify succeeds !
-            isMockMode = false; 
-             systemLogs.push({
-                id: Date.now(),
-                type: 'success',
-                action: 'System Ready',
-                details: 'SMTP Connection Established',
-                time: new Date().toISOString()
-            });
-        }
-    });
+        // Verify connection
+        transporter.verify(function (error, success) {
+            if (error) {
+                console.error('❌ [MAIL SETUP] Sunucu mail bağlantı hatası (DETAYLI):');
+                console.error(JSON.stringify(error, null, 2)); // Log full error object
+                console.error('Stack:', error.stack);
+                
+                console.warn('⚠️ [MAIL SETUP] Falling back to Mock Mode due to verification failure.');
+                isMockMode = true;
+                systemLogs.push({
+                    id: Date.now(),
+                    type: 'error',
+                    action: 'SMTP Connection Failed',
+                    details: error.message, 
+                    time: new Date().toISOString()
+                });
+            } else {
+                console.log('✅ [MAIL SETUP] Sunucu gerçek mail gönderimi için hazır');
+                isMockMode = false;
+                systemLogs.push({
+                    id: Date.now(),
+                    type: 'success',
+                    action: 'System Ready',
+                    details: 'SMTP Connection Established',
+                    time: new Date().toISOString()
+                });
+            }
+        });
+    } catch (e) {
+        console.error("❌ Critical Error initializing Nodemailer:", e);
+        isMockMode = true;
+    }
 } else {
     // Ensure mock transporter object exists if needed, or handle null check
     // Here we will just rely on isMockMode flag
