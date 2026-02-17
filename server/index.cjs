@@ -964,8 +964,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         const user = await dbAdapter.findUserByEmail(email);
         if (!user) {
             console.log(`[FORGOT-PASSWORD] User not found for email: ${email}`);
-            // Security: Don't reveal user existence, just say code sent if account exists
-            return res.json({ success: true, message: 'Eğer kayıtlı bir hesabınız varsa, şifre sıfırlama kodu gönderildi.' });
+            return res.status(404).json({ success: false, message: 'Bu e-posta adresi ile kayıtlı kullanıcı bulunamadı.' });
         }
 
         // Generate 6-digit code
