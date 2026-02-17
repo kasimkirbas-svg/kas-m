@@ -22,11 +22,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_change_in_prod
 
 // --- POSTGRESQL CONNECTION (Primary) ---
 // If DATABASE_URL is present, we use PostgreSQL as preferred in requirements
-const PG_CONNECTION_STRING = process.env.DATABASE_URL;
+// Also fallback to POSTGRES_URL which Vercel/Supabase integration adds automatically
+const PG_CONNECTION_STRING = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
 let pgPool = null;
 if (PG_CONNECTION_STRING) {
     try {
+        console.log('🔌 Connecting to PostgreSQL...');
         pgPool = new Pool({
             connectionString: PG_CONNECTION_STRING,
             ssl: {
