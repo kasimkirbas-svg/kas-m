@@ -12,17 +12,12 @@ export const getApiUrl = () => {
              return TUNNEL_URL;
         }
 
-        // If on localhost development, try to use relative path to leverage Vite proxy
-        // This avoids CORS issues and port conflicts
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        // If on localhost development (or local network), try to use relative path to leverage Vite proxy
+        // This avoids CORS issues and port conflicts and firewall issues for port 3001
+        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
              // Returning empty string makes requests relative (e.g. /api/users)
              // which go through Vite dev server proxy to backend
              return ''; 
-        }
-
-        // Keep local IP logic for local network testing (e.g. accessing from phone)
-        if (hostname.startsWith('192.168.')) {
-            return `http://${hostname}:3001`; // Direct access to backend
         }
     }
     
