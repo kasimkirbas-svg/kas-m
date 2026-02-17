@@ -55,18 +55,20 @@ const getEmailBody = (type: string, data: any) => {
 import { fetchApi } from '../src/utils/api';
 
 export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [authView, setAuthView] = useState<'login' | 'signup' | 'forgot-password' | 'reset-password'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loginAttempts, setLoginAttempts] = useState(0);
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     name: '',
     companyName: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    resetCode: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,25 +140,44 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       if (response.ok && data.success) {
         // Save Token
         localStorage.setItem('authToken', data.token);
+        setLoginAttempts(0); // Reset attempts on success
 
         setSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
         setTimeout(() => {
           onLoginSuccess(data.user);
         }, 1000);
       } else {
-      
-      // Connection Error Handling
-      let errorMessage = 'Giriş başarısız.';
-      if (response.status === 500) {
-          errorMessage = data?.message || 'Sunucu hatası (500). Beklenmeyen bir durum oluştu.';
-      } else if (response.status === 404) {
-          errorMessage = 'Sunucu bulunamadı (404). API adresi yanlış olabilir.';
-      } else if (data && data.message) {
-          errorMessage = data.message;
-      }
-      
-      setError(errorMessage);
+        // Check for 429 Too Many Requests
+        if (response.status === 429) {
+             setLoginAttempts(prev => prev + 1);
+             setError('Çok fazla başarısız giriş denemesi. Lütfen daha sonra tekrar deneyin veya şifrenizi sıfırlayın.');
+             // Auto switch to forgot password if too many attempts or explicitly lockout
+             setTimeout(() => setAuthView('forgot-password'), 2000); 
+             return;
+        }
 
+        // Connection Error Handling
+        let errorMessage = 'Giriş başarısız.';
+        if (response.status === 500) {
+            errorMessage = data?.message || 'Sunucu hatası (500). Beklenmeyen bir durum oluştu.';
+        } else if (response.status === 404) {
+            errorMessage = 'Sunucu bulunamadı (404). API adresi yanlış olabilir.';
+        } else if (data && data.message) {
+            errorMessage = data.message;
+        }
+        
+        setError(errorMessage);
+        if (data?.message?.includes('verify') || data?.message?.includes('lock')) {
+            setTimeout(() => setAuthView('forgot-password'), 2000);
+        } else {
+             setLoginAttempts(prev => {
+                const newAttempts = prev + 1;
+                if (newAttempts >= 3) {
+                     setError('Çok fazla başarısız deneme. Şifrenizi mi unuttunuz?');
+                }
+                return newAttempts;
+             });
+        }
       }
     } catch (err: any) {
       console.error('Login error:', err);
@@ -237,6 +258,79 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!formData.email) {
+        setError('Lütfen e-posta adresinizi girin.');
+        return;
+    }
+
+    setIsLoading(true);
+
+    try {
+        const response = await fetchApi('/api/auth/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: formData.email })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            setSuccess('Sıfırlama kodu e-posta adresinize gönderildi.');
+            setTimeout(() => setAuthView('reset-password'), 1500);
+        } else {
+            setError(data.message || 'İşlem başarısız.');
+        }
+    } catch (err) {
+        setError('Sunucu bağlantı hatası.');
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!formData.resetCode || !formData.password) {
+        setError('Kod ve yeni şifre gereklidir.');
+        return;
+    }
+
+    setIsLoading(true);
+
+    try {
+        const response = await fetchApi('/api/auth/reset-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: formData.email,
+                code: formData.resetCode,
+                newPassword: formData.password
+            })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            setSuccess('Şifreniz başarıyla sıfırlandı. Giriş yapabilirsiniz.');
+            setTimeout(() => {
+                setAuthView('login');
+                setFormData(prev => ({ ...prev, password: '', resetCode: '' }));
+            }, 2000);
+        } else {
+            setError(data.message || 'Sıfırlama başarısız.');
+        }
+    } catch (err) {
+        setError('Sunucu bağlantı hatası.');
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10 overflow-y-auto">
       <div className="w-full max-w-md">
@@ -252,36 +346,52 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
           {/* Tabs */}
-          <div className="flex gap-4 mb-6 border-b border-slate-200">
-            <button
-              onClick={() => {
-                setIsLogin(true);
-                setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '' });
-                setError('');
-              }}
-              className={`pb-3 font-semibold transition ${
-                isLogin
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              {t?.auth?.login || 'Giriş Yap'}
-            </button>
-            <button
-              onClick={() => {
-                setIsLogin(false);
-                setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '' });
-                setError('');
-              }}
-              className={`pb-3 font-semibold transition ${
-                !isLogin
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              {t?.auth?.signup || 'Kaydol'}
-            </button>
-          </div>
+          {(authView === 'login' || authView === 'signup') && (
+            <div className="flex gap-4 mb-6 border-b border-slate-200">
+                <button
+                onClick={() => {
+                    setAuthView('login');
+                    setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' });
+                    setError('');
+                }}
+                className={`pb-3 font-semibold transition ${
+                    authView === 'login'
+                    ? 'text-blue-600 border-b-2 border-blue-600'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+                >
+                {t?.auth?.login || 'Giriş Yap'}
+                </button>
+                <button
+                onClick={() => {
+                    setAuthView('signup');
+                    setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' });
+                    setError('');
+                }}
+                className={`pb-3 font-semibold transition ${
+                    authView === 'signup'
+                    ? 'text-blue-600 border-b-2 border-blue-600'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+                >
+                {t?.auth?.signup || 'Kaydol'}
+                </button>
+            </div>
+          )}
+
+          {authView === 'forgot-password' && (
+              <div className="mb-6 text-center">
+                  <h3 className="text-lg font-semibold text-slate-900">Şifremi Unuttum</h3>
+                  <p className="text-sm text-slate-500">E-posta adresinize sıfırlama kodu göndereceğiz.</p>
+              </div>
+          )}
+
+           {authView === 'reset-password' && (
+              <div className="mb-6 text-center">
+                  <h3 className="text-lg font-semibold text-slate-900">Şifre Sıfırlama</h3>
+                  <p className="text-sm text-slate-500">Gelen kodu ve yeni şifrenizi girin.</p>
+              </div>
+          )}
 
           {/* Error Message */}
           {error && (
@@ -300,8 +410,14 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
           )}
 
           {/* Form */}
-          <form onSubmit={isLogin ? handleLogin : handleSignUp} className="space-y-4">
-            {!isLogin && (
+          <form onSubmit={
+              authView === 'login' ? handleLogin : 
+              authView === 'signup' ? handleSignUp : 
+              authView === 'forgot-password' ? handleForgotPassword :
+              handleResetPassword
+            } className="space-y-4">
+            
+            {authView === 'signup' && (
               <>
                 {/* Name Field */}
                 <div>
@@ -343,8 +459,9 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
               </>
             )}
 
-            {/* Email Field */}
-            <div>
+            {/* Email Field - Used in all views except reset password logic if cached, but let's keep it visible or read-only if needed. Actually Reset Password needs email too usually. */}
+            {(authView !== 'reset-password' || !formData.email) && (
+             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
                 E-posta *
               </label>
@@ -357,15 +474,38 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                   onChange={handleInputChange}
                   placeholder="ornek@email.com"
                   className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
-                  disabled={isLoading}
+                  disabled={isLoading || (authView === 'reset-password')}
                 />
               </div>
             </div>
+            )}
 
-            {/* Password Field */}
+            {/* Reset Code Field */}
+            {authView === 'reset-password' && (
+                 <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Doğrulama Kodu *
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
+                    <input
+                      type="text"
+                      name="resetCode"
+                      value={formData.resetCode}
+                      onChange={handleInputChange}
+                      placeholder="6 haneli kod"
+                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
+                      disabled={isLoading}
+                    />
+                  </div>
+                </div>
+            )}
+
+            {/* Password Field - Login, Signup, Reset Password */}
+            {authView !== 'forgot-password' && (
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                Şifre * {!isLogin && '(En az 6 karakter)'}
+                {authView === 'reset-password' ? 'Yeni Şifre *' : 'Şifre *'} {authView === 'signup' && '(En az 6 karakter)'}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
@@ -387,9 +527,10 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                 </button>
               </div>
             </div>
+            )}
 
             {/* Confirm Password Field (SignUp Only) */}
-            {!isLogin && (
+            {authView === 'signup' && (
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Şifre Onayla *
@@ -408,6 +549,19 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                 </div>
               </div>
             )}
+            
+            {/* Forgot Password Link (Login Only) */}
+            {authView === 'login' && (
+                 <div className="flex justify-end">
+                    <button
+                        type="button"
+                        onClick={() => setAuthView('forgot-password')}
+                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                    >
+                        {loginAttempts >= 3 ? <strong>Şifrenizi mi unuttunuz?</strong> : 'Şifremi Unuttum'}
+                    </button>
+                </div>
+            )}
 
             {/* Submit Button */}
             <button
@@ -418,32 +572,50 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="animate-spin">⏳</span>
-                  {isLogin ? 'Giriş yapılıyor...' : 'Kayıt oluşturuluyor...'}
+                  İşlem yapılıyor...
                 </span>
               ) : (
-                isLogin ? t?.auth?.login || 'Giriş Yap' : t?.auth?.signup || 'Kaydol'
+                authView === 'login' ? (t?.auth?.login || 'Giriş Yap') :
+                authView === 'signup' ? (t?.auth?.signup || 'Kaydol') :
+                authView === 'forgot-password' ? 'Kod Gönder' : 
+                'Şifreyi Sıfırla'
               )}
             </button>
+            
+            {/* Back to Login (Forgot/Reset Password) */}
+             {(authView === 'forgot-password' || authView === 'reset-password') && (
+                 <button
+                    type="button"
+                    onClick={() => setAuthView('login')}
+                    className="w-full mt-3 px-4 py-2 text-slate-600 font-medium hover:text-slate-900 transition"
+                 >
+                     Giriş Yap'a Dön
+                 </button>
+             )}
           </form>
 
           {/* Terms */}
-          <p className="text-xs text-slate-500 text-center mt-6">
-            {t?.common?.welcome || 'Devam ederek'} <a href="#" className="text-blue-600 hover:underline">şartlar ve koşulları</a> kabul etmiş olursunuz.
-            <br />
-            <a href="#" className="text-blue-600 hover:underline">{t?.settings?.privacy || 'Gizlilik Politikası'}</a>
-          </p>
+          {(authView === 'login' || authView === 'signup') && (
+            <p className="text-xs text-slate-500 text-center mt-6">
+                {t?.common?.welcome || 'Devam ederek'} <a href="#" className="text-blue-600 hover:underline">şartlar ve koşulları</a> kabul etmiş olursunuz.
+                <br />
+                <a href="#" className="text-blue-600 hover:underline">{t?.settings?.privacy || 'Gizlilik Politikası'}</a>
+            </p>
+          )}
         </div>
 
         {/* Footer */}
-        <p className="text-center text-slate-600 text-sm mt-6">
-          {isLogin ? t?.auth?.noAccount || "Hesabınız yok mu? " : t?.auth?.haveAccount || "Zaten hesabınız var mı? "}
-          <button
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-600 font-semibold hover:underline"
-          >
-            {isLogin ? t?.auth?.createAccount || 'Kaydol' : t?.auth?.signInInstead || 'Giriş Yap'}
-          </button>
-        </p>
+        {(authView === 'login' || authView === 'signup') && (
+            <p className="text-center text-slate-600 text-sm mt-6">
+            {authView === 'login' ? t?.auth?.noAccount || "Hesabınız yok mu? " : t?.auth?.haveAccount || "Zaten hesabınız var mı? "}
+            <button
+                onClick={() => setAuthView(authView === 'login' ? 'signup' : 'login')}
+                className="text-blue-600 font-semibold hover:underline"
+            >
+                {authView === 'login' ? t?.auth?.createAccount || 'Kaydol' : t?.auth?.signInInstead || 'Giriş Yap'}
+            </button>
+            </p>
+        )}
       </div>
     </div>
   );

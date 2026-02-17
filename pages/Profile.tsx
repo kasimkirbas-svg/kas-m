@@ -28,19 +28,29 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
     confirmPassword: ''
   });
 
-  // Mock Invoices - In a real app, fetch from API
-  const [invoices, setInvoices] = useState<Invoice[]>([
-    {
-      id: 'INV-2024-001',
-      userId: user?.id || '1',
-      invoiceNumber: 'INV001',
-      date: new Date().toISOString(),
-      amount: user?.plan === 'YEARLY' ? 1200 : 150,
-      planType: user?.plan || SubscriptionPlan.FREE,
-      status: 'PAID',
-      period: 'Şubat 2026'
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+  // Fetch Invoices
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      if (!user?.id) return;
+      
+      try {
+        const response = await fetchApi('/api/auth/invoices');
+        const data = await response.json();
+        
+        if (data.success && Array.isArray(data.invoices)) {
+          setInvoices(data.invoices);
+        }
+      } catch (error) {
+        console.error('Error fetching invoices:', error);
+      }
+    };
+
+    if (showInvoices) {
+      fetchInvoices();
     }
-  ]);
+  }, [showInvoices, user?.id]);
 
   // Sync state with props if they change
   useEffect(() => {

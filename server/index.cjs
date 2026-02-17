@@ -493,6 +493,9 @@ seedAdmin();
 
 // In-memory Logs (Real-world app would use DB)
 const systemLogs = [];
+// In-memory Auth Rate Limit & Reset Codes
+const loginAttempts = {}; // { email: { count: 0, firstAttempt: timestamp } }
+const forgotPasswordCodes = new Map(); // Map<email, { code, expiresAt }>
 const startTime = Date.now();
 
 // Logger Middleware
@@ -737,11 +740,20 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     
+    // Rate Limiting Check
+    const now = Date.now();
+    const attempt = loginAttempts[email] || { count: 0, firstAttempt: now };
+
+    if (attempt.count >= 3 && now - attempt.firstAttempt < 15 * 60 * 1000) {
+        return res.status(403).json({ success: false, error: 'LOCKED_OUT', message: 'Çok fazla başarısız giriş denemesi. Lütfen şifrenizi sıfırlayın.' });
+    }
+
     try {
         const user = await dbAdapter.findUserByEmail(email);
 
         if (user && (await bcrypt.compare(password, user.password))) {
             // Correct Password
+            if (loginAttempts[email]) delete loginAttempts[email]; // Reset attempts
             
             const token = jwt.sign(
                 { id: user.id, email: user.email, role: user.role },
@@ -761,6 +773,15 @@ app.post('/api/auth/login', async (req, res) => {
             const { password: _, ...userWithoutPassword } = user;
             res.json({ success: true, user: userWithoutPassword, token });
         } else {
+            // Failed Attempt Logic
+            const currentAttempt = loginAttempts[email] || { count: 0, firstAttempt: now };
+            if (now - currentAttempt.firstAttempt > 15 * 60 * 1000) {
+                 // Reset window if passed
+                 loginAttempts[email] = { count: 1, firstAttempt: now };
+            } else {
+                 loginAttempts[email] = { count: currentAttempt.count + 1, firstAttempt: currentAttempt.firstAttempt };
+            }
+            
             res.status(401).json({ success: false, message: 'E-posta veya şifre hatalı.' });
         }
     } catch (error) {
@@ -852,6 +873,165 @@ app.post('/api/auth/change-password', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Change Password Error:', error);
         res.status(500).json({ success: false, message: 'Şifre değiştirme işlemi başarısız.' });
+    }
+});
+
+// Get User Invoices (Mock)
+app.get('/api/auth/invoices', authenticateToken, async (req, res) => {
+    try {
+        const user = await dbAdapter.findUserById(req.user.id);
+        if (!user) return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+
+        if (user.plan === 'FREE') {
+            return res.json({ success: true, invoices: [] });
+        }
+
+        const invoices = [];
+        const startDate = new Date(user.subscriptionStartDate);
+        const now = new Date();
+        const planPrice = user.plan === 'YEARLY' ? 1200 : 120; // Example prices
+        const description = user.plan === 'YEARLY' ? 'Yıllık Abonelik Yenileme' : 'Aylık Abonelik Yenileme';
+
+        // Generate mocked invoices based on subscription duration
+        let currentDate = new Date(startDate);
+        let idCounter = 1;
+
+        while (currentDate <= now) {
+            invoices.push({
+                id: `INV-${currentDate.getFullYear()}${idCounter.toString().padStart(4, '0')}`,
+                date: currentDate.toISOString(),
+                amount: planPrice,
+                status: 'PAID', // All past invoices assumed paid
+                invoiceNumber: `KAS-${Date.now().toString().slice(-6)}-${idCounter}`,
+                description: description
+            });
+
+            // Increment based on plan
+            if (user.plan === 'YEARLY') {
+                currentDate.setFullYear(currentDate.getFullYear() + 1);
+            } else {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+            }
+            idCounter++;
+        }
+        
+        // Reverse to show newest first
+        res.json({ success: true, invoices: invoices.reverse() });
+    } catch (error) {
+        console.error('Invoices Error:', error);
+        res.status(500).json({ success: false, message: 'Faturalar alınamadı.' });
+    }
+});
+
+// Forgot Password - Send Code
+app.post('/api/auth/forgot-password', async (req, res) => {
+    const { email } = req.body;
+    
+    if (!email) return res.status(400).json({ success: false, message: 'E-posta gereklidir.' });
+
+    try {
+        const user = await dbAdapter.findUserByEmail(email);
+        if (!user) {
+            // Security: Don't reveal user existence, just say code sent if account exists
+            return res.json({ success: true, message: 'Eğer kayıtlı bir hesabınız varsa, şifre sıfırlama kodu gönderildi.' });
+        }
+
+        // Generate 6-digit code
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Store code (valid for 5 mins)
+        forgotPasswordCodes.set(email, {
+            code,
+            expiresAt: Date.now() + 5 * 60 * 1000
+        });
+
+        // Send Email
+        console.log(`[PASSWORD RESET] Code for ${email}: ${code}`);
+        
+        if (transporter) {
+             const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Şifre Sıfırlama Kodu - Kırbaş Doküman',
+                html: `
+                    <div style="font-family: sans-serif; padding: 20px;">
+                        <h2>Şifre Sıfırlama İsteği</h2>
+                        <p>Hesabınız için şifre sıfırlama talebi aldık. Onay kodunuz:</p>
+                        <h1 style="color: #2563eb; letter-spacing: 5px;">${code}</h1>
+                        <p>Bu kodu 5 dakika içinde kullanmalısınız.</p>
+                        <p>Siz talep etmediyseniz bu e-postayı dikkate almayın.</p>
+                    </div>
+                `
+            };
+            
+            transporter.sendMail(mailOptions, (err) => {
+                 if (err) console.error('Reset email failed:', err);
+            });
+        }
+
+        res.json({ success: true, message: 'Şifre sıfırlama kodu e-posta adresinize gönderildi.' });
+    } catch (error) {
+         console.error('Forgot Password Error:', error);
+         res.status(500).json({ success: false, message: 'İşlem başarısız.' });
+    }
+});
+
+// Reset Password - Verify & Update
+app.post('/api/auth/reset-password', async (req, res) => {
+    const { email, code, newPassword } = req.body;
+
+    if (!email || !code || !newPassword) {
+        return res.status(400).json({ success: false, message: 'E-posta, kod ve yeni şifre gereklidir.' });
+    }
+
+    if (newPassword.length < 6) {
+        return res.status(400).json({ success: false, message: 'Yeni şifre en az 6 karakter olmalıdır.' });
+    }
+
+    try {
+        const stored = forgotPasswordCodes.get(email);
+        
+        if (!stored) {
+             return res.status(400).json({ success: false, message: 'Geçersiz veya süresi dolmuş kod.' });
+        }
+
+        if (Date.now() > stored.expiresAt) {
+            forgotPasswordCodes.delete(email);
+            return res.status(400).json({ success: false, message: 'Kodun süresi dolmuş.' });
+        }
+
+        if (stored.code !== code.toString()) {
+            return res.status(400).json({ success: false, message: 'Hatalı kod.' });
+        }
+
+        const user = await dbAdapter.findUserByEmail(email);
+        if (!user) {
+             return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+        }
+
+        // Update Password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        
+        await dbAdapter.updateUser(user.id, { password: hashedPassword });
+        
+        // Clear code and reset persistent failed logins
+        forgotPasswordCodes.delete(email);
+        if (loginAttempts[email]) delete loginAttempts[email];
+
+        systemLogs.unshift({
+            id: Date.now(),
+            type: 'warning',
+            action: 'Password Reset',
+            details: `User ${email} reset password via code`,
+            time: new Date().toISOString()
+        });
+
+        res.json({ success: true, message: 'Şifreniz başarıyla sıfırlandı. Giriş yapabilirsiniz.' });
+
+    } catch (error) {
+        console.error('Reset Password Error:', error);
+        res.status(500).json({ success: false, message: 'Sıfırlama işlemi başarısız.' });
     }
 });
 
