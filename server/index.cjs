@@ -17,6 +17,9 @@ const app = express();
 app.set('trust proxy', 1); // Trust first proxy (required for rate-limit behind localtunnel/vercel)
 const PORT = process.env.PORT || 3001;
 
+// Define JWT_SECRET if not in .env (Fallback for development/vercel simple deploy)
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_change_in_production_12345';
+
 // --- POSTGRESQL CONNECTION (Primary) ---
 // If DATABASE_URL is present, we use PostgreSQL as preferred in requirements
 const PG_CONNECTION_STRING = process.env.DATABASE_URL;
