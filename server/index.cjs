@@ -483,19 +483,21 @@ const seedAdmin = async () => {
             writeDB(db);
             console.log(`✅ Admin kullanıcısı oluşturuldu: ${adminEmail}`);
         } else {
-             // FORCE PASSWORD RESET (Geçici)
-             console.log("⚙️  Admin şifresi varsayılana (FORCE RESET) güncelleniyor...");
-             const salt = await bcrypt.genSalt(10);
-             const hashedPassword = await bcrypt.hash(adminPass, salt);
-             
-             const adminIndex = db.users.findIndex(u => u.email === adminEmail);
-             if (adminIndex !== -1) {
-                 // Sadece şifre hash'i farklıysa güncelle, gereksiz yazma işlemini önle
-                 // (bcrypt hash her seferinde farklı olur ama bu basit check için yeterli değil)
-                 db.users[adminIndex].password = hashedPassword;
-                 db.users[adminIndex].role = 'ADMIN';
-                 writeDB(db);
-                 console.log(`✅ Admin şifresi güncellendi: ${adminEmail}`);
+             // FORCE PASSWORD RESET ONLY IF ENV VAR SET
+             if (process.env.FORCE_ADMIN_RESET === 'true') {
+                 console.log("⚙️  Admin şifresi varsayılana (FORCE RESET) güncelleniyor...");
+                 const salt = await bcrypt.genSalt(10);
+                 const hashedPassword = await bcrypt.hash(adminPass, salt);
+                 
+                 const adminIndex = db.users.findIndex(u => u.email === adminEmail);
+                 if (adminIndex !== -1) {
+                     db.users[adminIndex].password = hashedPassword;
+                     db.users[adminIndex].role = 'ADMIN';
+                     writeDB(db);
+                     console.log(`✅ Admin şifresi güncellendi: ${adminEmail}`);
+                 }
+             } else {
+                 console.log(`ℹ️  Admin kullanıcısı mevcut: ${adminEmail} (Şifre sıfırlanmadı)`);
              }
         }
     } catch (error) {
