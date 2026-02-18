@@ -562,10 +562,12 @@ if (!EMAIL_USER || EMAIL_USER.includes('senin_mailin') || !EMAIL_PASS) {
 let transporter;
 
 if (!isMockMode) {
-    console.log("[MAIL DEBUG] Attempting to configure Nodemailer with Gmail...");
+    console.log("[MAIL DEBUG] Attempting to configure Nodemailer with Gmail (SMTP)...");
     try {
         transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false, // true for 465, false for other ports
             auth: {
                 user: EMAIL_USER,
                 pass: EMAIL_PASS,
@@ -973,9 +975,22 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         
         // Store code (valid for 5 mins)
+        const expiresAt = Date.now() + 5 * 60 * 1000;
+        
+        // Persist in DB for serverless reliability
+        try {
+            await dbAdapter.updateUser(user.id, { 
+                resetCode: code, 
+                resetCodeExpires: expiresAt 
+            });
+        } catch (dbErr) {
+            console.error("Failed to persist reset code:", dbErr);
+        }
+
+        // Also keep in memory
         forgotPasswordCodes.set(email, {
             code,
-            expiresAt: Date.now() + 5 * 60 * 1000
+            expiresAt
         });
 
         console.log(`[PASSWORD RESET] Generated code for ${email}: ${code}`);
@@ -1028,43 +1043,73 @@ app.post('/api/auth/forgot-password', async (req, res) => {
 // Reset Password - Verify & Update
 app.post('/api/auth/reset-password', async (req, res) => {
     const { email, code, newPassword } = req.body;
+    console.log(`[RESET-PASSWORD] Request for: ${email}, Code: ${code}`);
 
     if (!email || !code || !newPassword) {
+        console.log('[RESET-PASSWORD] Missing fields');
         return res.status(400).json({ success: false, message: 'E-posta, kod ve yeni şifre gereklidir.' });
     }
 
     if (newPassword.length < 6) {
+        console.log('[RESET-PASSWORD] Password too short');
         return res.status(400).json({ success: false, message: 'Yeni şifre en az 6 karakter olmalıdır.' });
     }
 
     try {
-        const stored = forgotPasswordCodes.get(email);
+        const user = await dbAdapter.findUserByEmail(email);
+        if (!user) {
+             console.log('[RESET-PASSWORD] User not found during verify');
+             return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+        }
         
-        if (!stored) {
+        // Check DB stored code first (persistent), then memory (fallback)
+        let validCode = false;
+        let storedCode = user.resetCode;
+        let storedExpires = user.resetCodeExpires;
+
+        // Fallback to memory if not in DB (or if DB write failed previously)
+        if (!storedCode) {
+             const memMatches = forgotPasswordCodes.get(email);
+             if (memMatches) {
+                 storedCode = memMatches.code;
+                 storedExpires = memMatches.expiresAt;
+                 console.log('[RESET-PASSWORD] Using memory-stored code');
+             }
+        } else {
+             console.log('[RESET-PASSWORD] Using DB-stored code');
+        }
+
+        if (!storedCode) {
+             console.log('[RESET-PASSWORD] No stored code found (expired or missing)');
              return res.status(400).json({ success: false, message: 'Geçersiz veya süresi dolmuş kod.' });
         }
 
-        if (Date.now() > stored.expiresAt) {
+        if (Date.now() > storedExpires) {
+            console.log('[RESET-PASSWORD] Code expired');
+            // Clean up
+            await dbAdapter.updateUser(user.id, { resetCode: null, resetCodeExpires: null });
             forgotPasswordCodes.delete(email);
             return res.status(400).json({ success: false, message: 'Kodun süresi dolmuş.' });
         }
 
-        if (stored.code !== code.toString()) {
+        if (storedCode.toString() !== code.toString()) {
+            console.log(`[RESET-PASSWORD] Code mismatch. Expected: ${storedCode}, Got: ${code}`);
             return res.status(400).json({ success: false, message: 'Hatalı kod.' });
         }
 
-        const user = await dbAdapter.findUserByEmail(email);
-        if (!user) {
-             return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
-        }
+        console.log('[RESET-PASSWORD] Code verified. Updating password...');
 
         // Update Password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
         
-        await dbAdapter.updateUser(user.id, { password: hashedPassword });
+        await dbAdapter.updateUser(user.id, { 
+            password: hashedPassword,
+            resetCode: null,        // Clear used code
+            resetCodeExpires: null 
+        });
         
-        // Clear code and reset persistent failed logins
+        // Clear memory cache too
         forgotPasswordCodes.delete(email);
         if (loginAttempts[email]) delete loginAttempts[email];
 
