@@ -1132,8 +1132,8 @@ app.post('/api/auth/register', async (req, res) => {
     const { name, email, password, companyName } = req.body;
     
     // VALIDATION: Daha güçlü kontrol
-    if (!name || !email || !password || !companyName) {
-        return res.status(400).json({ success: false, message: 'Tüm alanlar zorunludur.' });
+    if (!name || !email || !password) {
+        return res.status(400).json({ success: false, message: 'İsim, e-posta ve şifre zorunludur.' });
     }
     if (password.length < 6) {
         return res.status(400).json({ success: false, message: 'Şifre en az 6 karakter olmalıdır.' });
@@ -1155,7 +1155,7 @@ app.post('/api/auth/register', async (req, res) => {
             name,
             email,
             password: hashedPassword, // SECURED
-            companyName,
+            companyName: companyName || '', // Optional
             role: 'SUBSCRIBER',
             plan: 'FREE',
             remainingDownloads: 3,
@@ -1191,7 +1191,7 @@ app.post('/api/auth/register', async (req, res) => {
                             <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; margin: 25px 0;">
                                 <h3 style="color: #334155; margin-top: 0; margin-bottom: 15px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Üyelik Bilgileriniz</h3>
                                 <ul style="list-style: none; padding: 0; margin: 0; color: #475569;">
-                                    <li style="margin-bottom: 10px;">🏢 <strong>Belirtilen Firma:</strong> ${companyName}</li>
+                                    ${companyName ? `<li style="margin-bottom: 10px;">🏢 <strong>Belirtilen Firma:</strong> ${companyName}</li>` : ''}
                                     <li style="margin-bottom: 10px;">📧 <strong>E-posta Adresi:</strong> ${email}</li>
                                     <li style="margin-bottom: 0;">🌟 <strong>Paket:</strong> Ücretsiz Deneme</li>
                                 </ul>

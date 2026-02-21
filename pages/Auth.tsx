@@ -42,11 +42,13 @@ const getEmailSubject = (type: string, data: any) => {
 const getEmailBody = (type: string, data: any) => {
   switch (type) {
     case 'signup-confirmation':
-      return `Merhaba ${data.name},\n\nKırbaş Doküman platformuna hoş geldiniz! Hesabınız başarıyla oluşturulmuştur.\n\nE-posta: ${data.email}\nŞirket: ${data.companyName}\n\nUygulamaya giriş yaparak belgelerinizi oluşturmaya başlayabilirsiniz.\n\nİyi çalışmalar!\nKırbaş Doküman Ekibi`;
+      const companyPart = data.companyName ? `\nŞirket: ${data.companyName}` : '';
+      return `Merhaba ${data.name},\n\nKırbaş Doküman platformuna hoş geldiniz! Hesabınız başarıyla oluşturulmuştur.\n\nE-posta: ${data.email}${companyPart}\n\nUygulamaya giriş yaparak belgelerinizi oluşturmaya başlayabilirsiniz.\n\nİyi çalışmalar!\nKırbaş Doküman Ekibi`;
     case 'admin-alert':
-      return `Yeni bir kullanıcı Kırbaş Doküman\'a kaydolmuştur.\n\nAdı: ${data.name}\nE-posta: ${data.email}\nŞirket: ${data.companyName}\nKayıt Tarihi: ${new Date().toLocaleString('tr-TR')}\n\nYönetim panelinden daha fazla bilgi alabilirsiniz.`;
+      const companyPartAdmin = data.companyName ? `\nŞirket: ${data.companyName}` : '';
+      return `Yeni bir kullanıcı Kırbaş Doküman\'a kaydolmuştur.\n\nAdı: ${data.name}\nE-posta: ${data.email}${companyPartAdmin}\nKayıt Tarihi: ${new Date().toLocaleString('tr-TR')}\n\nYönetim panelinden daha fazla bilgi alabilirsiniz.`;
     case 'user-alert':
-      return `Merhaba,\n\n${data.name} (${data.companyName}) adlı yeni bir kullanıcı Kırbaş Doküman\'a katıldı!\n\nEkibiniz büyümeye devam ediyor.`;
+      return `Merhaba,\n\n${data.name} ${data.companyName ? `(${data.companyName}) ` : ''}adlı yeni bir kullanıcı Kırbaş Doküman\'a katıldı!\n\nEkibiniz büyümeye devam ediyor.`;
     default:
       return '';
   }
@@ -198,8 +200,8 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     setSuccess('');
 
     // Validasyon
-    if (!formData.email || !formData.password || !formData.name || !formData.companyName) {
-      setError('Tüm alanlar zorunludur.');
+    if (!formData.email || !formData.password || !formData.name) {
+      setError('E-posta, şifre ve ad soyad alanları zorunludur.');
       return;
     }
 
@@ -461,7 +463,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Şirket Adı</label>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Şirket Adı <span className="text-xs text-slate-400 font-normal">(İsteğe Bağlı)</span></label>
                         <div className="relative group">
                             <Building2 className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
                             <input

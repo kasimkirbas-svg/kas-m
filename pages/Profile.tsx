@@ -338,7 +338,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">{t?.profile?.companyName || 'Şirket Adı'}</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">{t?.profile?.companyName || 'Şirket Adı'} <span className="text-xs text-slate-400 font-normal">(İsteğe Bağlı)</span></label>
                   <input
                     type="text"
                     name="companyName"
