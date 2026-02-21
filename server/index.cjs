@@ -96,20 +96,19 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
+
 // File DB Helper
+// Ensure consistency by using the robust readDB/writeDB functions defined later
 const readFileDB = () => {
-    try {
-        if (!fs.existsSync(DB_FILE)) return { users: [], documents: [] };
-        return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
-    } catch (err) { return { users: [], documents: [] }; }
+    // This wrapper allows readDB to be defined later in the file but used here via closure
+    // execution happens only when API routes are hit, by which time readDB is defined.
+    return readDB();
 };
 
 const writeFileDB = (data) => {
-    try {
-        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-        return true;
-    } catch (e) { return false; }
+    return writeDB(data);
 };
+
 
 // Unified DB Access (Postgres > MongoDB > File-System)
 const dbAdapter = {
@@ -1661,7 +1660,16 @@ app.delete('/api/auth/delete-account', authenticateToken, async (req, res) => {
             });
 
             db.users.splice(userIndex, 1);
-            writeDB(db);
+            const writeDirectSuccess = writeDB(db);
+
+            // Double Check Persistence
+            const verifyDb = readDB();
+            const stillExists = verifyDb.users.find(u => u.id === userId);
+            
+            if (!writeDirectSuccess || stillExists) {
+                 console.error('CRITICAL: Delete failed despite write attempt!', { writeSuccess: writeDirectSuccess, userStillExists: !!stillExists });
+                 return res.status(500).json({ success: false, message: 'Silme işlemi diske yazılamadı.' });
+            }
 
             // Also remove from Postgres/Mongo if connected (basic implementation)
             if (pgPool) {
@@ -1734,7 +1742,14 @@ app.delete('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
     }
 
     db.users = filteredUsers;
-    writeDB(db);
+    const writeSuccess = writeDB(db);
+    
+    // Verify persistence
+    const checkDb = readDB();
+    if (!writeSuccess || checkDb.users.some(u => u.id === id)) {
+         console.error('CRITICAL: Admin delete failed!', { writeSuccess, id });
+         return res.status(500).json({ success: false, message: 'Kullanıcı silinemedi (Disk Hatası).' });
+    }
 
     // Sync PostgreSQL / Mongo
     if (pgPool) {

@@ -389,6 +389,31 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                   <p className="text-sm text-slate-500 mb-1">{t?.profile?.companyName || 'Şirket Adı'}</p>
                   <p className="text-lg font-semibold text-slate-900">{user?.companyName || '-'}</p>
                 </div>
+                
+                <div className="pt-6 border-t border-slate-100 mt-6">
+                    <button 
+                        onClick={() => {
+                            if(window.confirm(t?.profile?.confirmDeleteAccount || 'Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
+                                fetchApi('/api/auth/delete-account', { method: 'DELETE' })
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if(data.success) {
+                                            alert(data.message);
+                                            localStorage.removeItem('authToken');
+                                            localStorage.removeItem('currentUser');
+                                            window.location.href = '/';
+                                        } else {
+                                            alert(data.message || 'Hata oluştu.');
+                                        }
+                                    });
+                            }
+                        }}
+                        className="text-red-600 text-sm hover:underline flex items-center gap-1 opacity-80 hover:opacity-100"
+                    >
+                        <AlertCircle size={14} />
+                        {t?.profile?.deleteAccount || 'Hesabımı Sil'}
+                    </button>
+                </div>
               </div>
             )}
           </div>
