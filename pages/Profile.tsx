@@ -394,9 +394,20 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                     <button 
                         onClick={async () => {
                             if(window.confirm(t?.profile?.confirmDeleteAccount || 'Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
-                                try {
-                                    const res = await fetchApi('/api/auth/delete-account', { method: 'DELETE' });
-                                    const data = await res.json();
+                                    try {
+                                        const res = await fetchApi('/api/auth/delete-account', { 
+                                            method: 'DELETE',
+                                            headers: { 
+                                              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                                            }
+                                        });
+                                        // Handle non-200 OK responses
+                                        if (!res.ok) {
+                                            const errorData = await res.json();
+                                            throw new Error(errorData.message || 'Silme işlemi başarısız.');
+                                        }
+
+                                        const data = await res.json();
                                     
                                     if(data.success) {
                                         // Force clear everything immediately
