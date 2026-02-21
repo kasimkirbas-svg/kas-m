@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { GeneratedDocument } from '../types';
+import { GeneratedDocument, DocumentTemplate } from '../types';
 import { FileText, Calendar, Download, Trash2, Search, Eye, Edit } from 'lucide-react';
 
 interface MyDocumentsProps {
   documents: GeneratedDocument[];
+  templates?: DocumentTemplate[]; // Optional to avoid breaking tests if any
   onDeleteDocument: (id: string) => void;
   onPreviewDocument?: (doc: GeneratedDocument) => void;
   onEditDocument?: (doc: GeneratedDocument) => void;
@@ -12,6 +13,7 @@ interface MyDocumentsProps {
 
 export const MyDocuments: React.FC<MyDocumentsProps> = ({ 
   documents, 
+  templates = [],
   onDeleteDocument,
   onPreviewDocument,
   onEditDocument,
@@ -66,15 +68,15 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                           <FileText size={20} />
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900">{doc.templateId} {t?.myDocuments?.documentSuffix}</p>
-                          <p className="text-xs text-slate-500">ID: {doc.id.slice(0, 8)}</p>
+                          <p className="font-medium text-slate-900">{templates.find(t => t.id === doc.templateId)?.title || doc.templateId}</p>
+                          <p className="text-xs text-slate-500">#{doc.id.slice(-6).toUpperCase()}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-slate-600">
                       <div className="flex items-center gap-2">
                         <Calendar size={16} className="text-slate-400" />
-                        {new Date(doc.createdAt).toLocaleDateString()}
+                        {new Date(doc.createdAt).toLocaleDateString("tr-TR")}
                         <span className="text-xs text-slate-400">{new Date(doc.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                       </div>
                     </td>

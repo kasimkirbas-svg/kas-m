@@ -244,15 +244,66 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
           {/* Fields */}
           {template.fields.length > 0 && (
-             <div className="space-y-3">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Alanlar</label>
+             <div className="space-y-4">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 border-b border-slate-100 pb-1">
+                {t?.editor?.fields || 'Doküman Alanları'}
+              </label>
               {template.fields.map(field => (
-                  <div key={field.key}>
-                    <span className="text-xs text-slate-500 mb-1 block">{field.label}</span>
+                  <div key={field.key} className="space-y-1">
+                    <span className="text-sm font-medium text-slate-700 flex items-center">
+                      {field.label}
+                      {field.required && <span className="text-red-500 ml-1" title="Zorunlu">*</span>}
+                    </span>
+                    
                     {field.type === 'textarea' ? (
-                      <textarea disabled={isReadOnly} name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm" placeholder={field.placeholder} />
+                      <textarea 
+                        disabled={isReadOnly} 
+                        name={field.key} 
+                        value={formData[field.key] || ''} 
+                        onChange={handleInputChange} 
+                        className="w-full px-3 py-2 border border-slate-300 bg-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none h-24 resize-y text-sm transition-shadow" 
+                        placeholder={field.placeholder || `${field.label} giriniz...`} 
+                      />
+                    ) : field.type === 'select' ? (
+                      <div className="relative">
+                        <select
+                          disabled={isReadOnly}
+                          name={field.key}
+                          value={formData[field.key] || ''}
+                          onChange={(e) => setFormData(prev => ({...prev, [field.key]: e.target.value}))} // Type casting issue with generic handler, manual update
+                          className="w-full px-3 py-2 border border-slate-300 bg-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-sm appearance-none cursor-pointer"
+                        >
+                          <option value="" disabled selected>Seçiniz...</option>
+                          {field.options?.map((opt, i) => (
+                            <option key={i} value={opt}>{opt}</option>
+                          ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                      </div>
+                    ) : field.type === 'checkbox' ? (
+                       <label className="flex items-center space-x-3 cursor-pointer p-2 border border-slate-200 rounded hover:bg-slate-50 transition">
+                         <input 
+                            disabled={isReadOnly}
+                            type="checkbox"
+                            name={field.key}
+                            checked={!!formData[field.key]}
+                            onChange={(e) => setFormData(prev => ({...prev, [field.key]: e.target.checked}))}
+                            className="form-checkbox h-5 w-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition duration-150 ease-in-out"
+                         />
+                         <span className="text-sm text-slate-700">{field.placeholder || field.label}</span>
+                       </label>
                     ) : (
-                      <input disabled={isReadOnly} type={field.type} name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm" placeholder={field.placeholder} />
+                      <input 
+                        disabled={isReadOnly} 
+                        type={field.type} 
+                        name={field.key} 
+                        value={formData[field.key] || ''} 
+                        onChange={handleInputChange} 
+                        className="w-full px-3 py-2 border border-slate-300 bg-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-sm transition-shadow file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                        placeholder={field.placeholder || `${field.label} giriniz...`} 
+                      />
                     )}
                   </div>
                 ))}
@@ -372,7 +423,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         {template.fields.map((field) => (
                           <tr key={field.key} className="group">
                              <td className="py-3 pr-4 text-sm font-bold text-slate-700 align-top group-hover:bg-slate-50/50 transition-colors">{field.label}</td>
-                             <td className="py-3 text-sm text-slate-600 font-medium whitespace-pre-wrap align-top group-hover:bg-slate-50/50 transition-colors">{formData[field.key] || '-'}</td>
+                             <td className="py-3 text-sm text-slate-600 font-medium whitespace-pre-wrap align-top group-hover:bg-slate-50/50 transition-colors">
+                                {field.type === 'checkbox' 
+                                    ? (formData[field.key] ? (t?.common?.yes || 'Evet') : (t?.common?.no || 'Hayır')) 
+                                    : (formData[field.key] || '-')}
+                             </td>
                           </tr>
                         ))}
                       </tbody>

@@ -66,15 +66,16 @@ const App = () => {
     const savedUser = localStorage.getItem('currentUser');
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;
-    const loadedDocs = localStorage.getItem('generatedDocuments');
+    // Documents are loaded from API when user is logged in
+    // const loadedDocs = localStorage.getItem('generatedDocuments');
 
-    if (loadedDocs) {
+    /* if (loadedDocs) {
       try {
         setSavedDocuments(JSON.parse(loadedDocs));
       } catch (e) {
         console.error('Error loading documents', e);
       }
-    }
+    } */
 
     if (savedUser) {
       try {
@@ -119,6 +120,31 @@ const App = () => {
 
     setIsLoading(false);
   }, []);
+
+  // Fetch Documents
+  useEffect(() => {
+    const fetchDocs = async () => {
+        if (!user) {
+            setSavedDocuments([]);
+            return;
+        }
+        try {
+            const res = await fetchApi('/api/documents');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success && Array.isArray(data.documents)) {
+                    setSavedDocuments(data.documents);
+                } else {
+                    // Fallback if data structure is different or no documents yet
+                    setSavedDocuments([]);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load documents', e);
+        }
+    };
+    fetchDocs();
+  }, [user]);
 
   // Update direction when language changes
   useEffect(() => {
@@ -263,8 +289,8 @@ const App = () => {
               setEditingDocument(undefined);
               setPreviewDocument(undefined); // Reset preview
             }}
-            onDocumentGenerated={(doc: GeneratedDocument) => {
-              // Save document
+            onDocumentGenerated={async (doc: GeneratedDocument) => {
+              // Optimistic UI update
               let newDocs;
               if (editingDocument) {
                  newDocs = savedDocuments.map(d => d.id === editingDocument.id ? doc : d);
@@ -273,7 +299,19 @@ const App = () => {
               }
               
               setSavedDocuments(newDocs);
-              localStorage.setItem('generatedDocuments', JSON.stringify(newDocs));
+              // Save to API
+              try {
+                  await fetchApi('/api/documents', {
+                      method: 'POST',
+                      body: JSON.stringify(doc)
+                  });
+              } catch (e) {
+                  console.error('Failed to save document to API', e);
+                  // Optionally revert state?
+                  alert('Doküman sunucuya kaydedilemedi ancak yerel önbellekte görüntülenebilir.');
+              }
+              
+              localStorage.setItem('generatedDocuments', JSON.stringify(newDocs)); // Keep backup
               setEditingDocument(undefined);
               
               alert(`✓ ${selectedTemplate.title} ${t?.editor?.photoSuccess || 'dokümanı başarıyla oluşturuldu ve kaydedildi.'}`);
@@ -289,14 +327,24 @@ const App = () => {
     if (user && currentView === 'my-documents') {
         return (
             <MyDocuments 
+                templates={templates}
                 onEditDocument={handleEditDocument}
                 onPreviewDocument={handlePreviewDocument} 
                 documents={savedDocuments.filter(d => d.userId === user.id)}
-                onDeleteDocument={(id) => {
+                onDeleteDocument={async (id) => {
                     if (window.confirm(t?.common?.confirmDelete || 'Bu dokümanı silmek istediğinize emin misiniz?')) {
+                        // Optimistic Delete
                         const newDocs = savedDocuments.filter(d => d.id !== id);
                         setSavedDocuments(newDocs);
-                        localStorage.setItem('generatedDocuments', JSON.stringify(newDocs));
+                        
+                        try {
+                             await fetchApi(`/api/documents/${id}`, { method: 'DELETE' });
+                             localStorage.setItem('generatedDocuments', JSON.stringify(newDocs)); // Sync backup
+                        } catch (e) {
+                             console.error('Failed to delete document', e);
+                             alert('Doküman sunucudan silinemedi.');
+                             // Optionally revert?
+                        }
                     }
                 }}
                 t={t}

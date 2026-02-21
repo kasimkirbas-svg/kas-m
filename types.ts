@@ -52,9 +52,10 @@ export interface DocumentTemplate {
 export interface DocumentField {
   key: string;
   label: string;
-  type: 'text' | 'date' | 'textarea' | 'list' | 'number' | 'email';
+  type: 'text' | 'date' | 'textarea' | 'list' | 'number' | 'email' | 'select' | 'checkbox';
   placeholder?: string;
   required?: boolean;
+  options?: string[]; // For select/list types
 }
 
 export interface DocumentPhoto {

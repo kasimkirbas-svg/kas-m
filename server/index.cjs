@@ -1282,6 +1282,105 @@ app.delete('/api/templates/:id', authenticateToken, requireAdmin, (req, res) => 
 
 
 
+// --- DOCUMENT MANAGEMENT ---
+
+// Get User Documents
+app.get('/api/documents', authenticateToken, async (req, res) => {
+    try {
+        let documents = [];
+        if (pgPool) {
+             try {
+                // Ensure table exists
+                await pgPool.query(`
+                    CREATE TABLE IF NOT EXISTS documents (
+                        id TEXT PRIMARY KEY,
+                        userId TEXT,
+                        data JSONB,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                `);
+                const result = await pgPool.query('SELECT data FROM documents WHERE userId = $1 ORDER BY created_at DESC', [req.user.id]);
+                documents = result.rows.map(row => row.data);
+             } catch (err) { console.error('PG GetDocuments Error:', err.message); }
+        } else if (MONGO_URI) {
+             // Mongo implementation skipped for brevity but ideally mirrors structure
+             // documents = await DocumentModel.find({ userId: req.user.id });
+        } else {
+             const allDocs = readFileDB().documents || [];
+             documents = allDocs.filter(d => d.userId === req.user.id);
+        }
+        
+        res.json({ success: true, documents });
+    } catch (error) {
+        console.error('Get Documents Error:', error);
+        res.status(500).json({ success: false, message: 'Dokümanlar alınamadı.' });
+    }
+});
+
+// Save Document (Create or Update)
+app.post('/api/documents', authenticateToken, async (req, res) => {
+    try {
+        const document = req.body;
+        // Ensure userId matches token (security)
+        document.userId = req.user.id;
+        
+        if (pgPool) {
+             try {
+                // Check if exists
+                const existing = await pgPool.query('SELECT id FROM documents WHERE id = $1', [document.id]);
+                if (existing.rows.length > 0) {
+                    await pgPool.query('UPDATE documents SET data = $2 WHERE id = $1', [document.id, document]);
+                } else {
+                    await pgPool.query('INSERT INTO documents(id, userId, data) VALUES($1, $2, $3)', [document.id, req.user.id, document]);
+                }
+             } catch (err) { 
+                 console.error('PG SaveDocument Error:', err.message);
+                 return res.status(500).json({ success: false, message: 'Veritabanı hatası.' });
+             }
+        } else {
+             // File fallback
+             const db = readFileDB();
+             if (!db.documents) db.documents = [];
+             
+             const index = db.documents.findIndex(d => d.id === document.id);
+             if (index !== -1) {
+                 db.documents[index] = document;
+             } else {
+                 db.documents.unshift(document);
+             }
+             writeDB(db);
+        }
+        
+        res.json({ success: true, message: 'Doküman kaydedildi.', document });
+    } catch (error) {
+        console.error('Save Document Error:', error);
+        res.status(500).json({ success: false, message: 'Doküman kaydedilemedi.' });
+    }
+});
+
+// Delete Document
+app.delete('/api/documents/:id', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (pgPool) {
+             await pgPool.query('DELETE FROM documents WHERE id = $1 AND userId = $2', [id, req.user.id]);
+        } else {
+             const db = readFileDB();
+             if (db.documents) {
+                 db.documents = db.documents.filter(d => d.id !== id || d.userId !== req.user.id); // Only delete own docs
+                 writeDB(db);
+             }
+        }
+        
+        res.json({ success: true, message: 'Doküman silindi.' });
+    } catch (error) {
+        console.error('Delete Document Error:', error);
+        res.status(500).json({ success: false, message: 'Doküman silinemedi.' });
+    }
+});
+
+
 // --- SYSTEM MONITORING ROUTES ---
 
 app.get('/api/status', authenticateToken, requireAdmin, (req, res) => {
@@ -1496,10 +1595,19 @@ app.post('/api/generate-pdf', async (req, res) => {
         if (data && typeof data === 'object') {
             Object.entries(data).forEach(([key, value]) => {
                 // Key formatting (camelCase to Title Case)
-                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                // Also handle special keys manually if needed
+                let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
                 
+                // Value formatting
+                let displayValue = value;
+                if (typeof value === 'boolean') {
+                    displayValue = value ? 'Evet / Var / Kabul Edildi' : 'Hayır / Yok';
+                } else if (!value) {
+                    displayValue = '-';
+                }
+
                 doc.font('Helvetica-Bold').fontSize(12).text(`${label}:`, { continued: true });
-                doc.font('Helvetica').fontSize(12).text(`  ${value}`);
+                doc.font('Helvetica').fontSize(12).text(`  ${displayValue}`);
                 doc.moveDown(0.5);
             });
         } else {

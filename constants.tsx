@@ -33,20 +33,30 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     monthlyLimit: 30,
     photoCapacity: 15,
     fields: [
-      { key: 'companyName', label: 'Firma Adı', type: 'text', required: true },
-      { key: 'preparedBy', label: 'Hazırlayan', type: 'text', required: true },
-      { key: 'date', label: 'Tarih', type: 'date', required: true }
+      { key: 'companyName', label: 'Firma Adı', type: 'text', required: true, placeholder: 'Şirket tam unvanı' },
+      { key: 'dangerLevel', label: 'Tehlike Sınıfı', type: 'select', options: ['Az Tehlikeli', 'Tehlikeli', 'Çok Tehlikeli'], required: true },
+      { key: 'employeeCount', label: 'Çalışan Sayısı', type: 'number', required: true },
+      { key: 'emergencyTeamLeader', label: 'Acil Durum Ekip Lideri', type: 'text', required: true },
+      { key: 'assemblyPoint', label: 'Toplanma Alanı Konumu', type: 'textarea', required: true },
+      { key: 'lastDrillDate', label: 'Son Tatbikat Tarihi', type: 'date' }
     ]
   },
   {
     id: '2',
-    title: 'Hizmet Şablonu Oluştur',
+    title: 'Hizmet Teklif Formu',
     category: 'Genel',
     description: 'Standart hizmet teklif ve kapsam belirleme formu.',
     isPremium: false,
     monthlyLimit: 30,
     photoCapacity: 12,
-    fields: []
+    fields: [
+      { key: 'clientName', label: 'Müşteri Adı', type: 'text', required: true },
+      { key: 'serviceType', label: 'Hizmet Türü', type: 'select', options: ['Danışmanlık', 'Eğitim', 'Denetim', 'Yazılım', 'Bakım/Onarım'], required: true },
+      { key: 'projectDuration', label: 'Proje Süresi (Gün)', type: 'number' },
+      { key: 'projectScope', label: 'Proje Kapsamı ve Detaylar', type: 'textarea', required: true },
+      { key: 'budgetEstimate', label: 'Tahmini Bütçe (TL)', type: 'number' },
+      { key: 'validUntil', label: 'Teklif Geçerlilik Tarihi', type: 'date' }
+    ]
   },
   {
     id: '3',
@@ -55,25 +65,46 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Personel eğitimleri sonrası verilecek başarı sertifikası.',
     isPremium: true,
     photoCapacity: 10,
-    fields: []
+    fields: [
+      { key: 'participantName', label: 'Katılımcı Adı Soyadı', type: 'text', required: true },
+      { key: 'trainingTopic', label: 'Eğitim Konusu', type: 'text', required: true },
+      { key: 'trainerName', label: 'Eğitmen Adı', type: 'text', required: true },
+      { key: 'trainingDate', label: 'Eğitim Tarihi', type: 'date', required: true },
+      { key: 'durationHours', label: 'Eğitim Süresi (Saat)', type: 'number' },
+      { key: 'competencyLevel', label: 'Yetkinlik Seviyesi', type: 'select', options: ['Başlangıç', 'Orta', 'İleri', 'Uzman'] }
+    ]
   },
   {
     id: '4',
-    title: 'Denetim Raporu',
+    title: 'Saha Denetim Raporu',
     category: 'Denetim',
     description: 'Saha denetimleri için detaylı raporlama formatı.',
     isPremium: true,
     photoCapacity: 15,
-    fields: []
+    fields: [
+      { key: 'siteLocation', label: 'Denetim Bölgesi / Lokasyon', type: 'text', required: true },
+      { key: 'auditType', label: 'Denetim Türü', type: 'select', options: ['Haberli Denetim', 'Habersiz Denetim', 'Periyodik Kontrol', 'Şikayet Üzerine'] },
+      { key: 'complianceScore', label: 'Uygunluk Skoru (0-100)', type: 'number' },
+      { key: 'observations', label: 'Gözlemler ve Bulgular', type: 'textarea', required: true },
+      { key: 'criticalNonConformity', label: 'Kritik Uygunsuzluk Var mı?', type: 'checkbox', placeholder: 'Evet, kritik risk mevcut' },
+      { key: 'correctiveActionDeadline', label: 'DÖF Termin Tarihi', type: 'date' }
+    ]
   },
   {
     id: '5',
-    title: 'Risk Analizi Formu',
+    title: 'Risk Analizi Formu (5x5 L Tipi)',
     category: 'ISG',
     description: '5x5 Risk matrisi değerlendirme formu.',
     isPremium: true,
     photoCapacity: 10,
-    fields: []
+    fields: [
+      { key: 'workActivity', label: 'Yapılan İş / Faaliyet', type: 'textarea', required: true },
+      { key: 'hazardSource', label: 'Tehlike Kaynağı', type: 'text', required: true },
+      { key: 'riskDescription', label: 'Risk Tanımı', type: 'textarea', required: true },
+      { key: 'probability', label: 'Olasılık (1-5)', type: 'select', options: ['1 - Çok Küçük', '2 - Küçük', '3 - Orta', '4 - Yüksek', '5 - Çok Yüksek'], required: true },
+      { key: 'severity', label: 'Şiddet (1-5)', type: 'select', options: ['1 - Çok Hafif', '2 - Hafif', '3 - Orta', '4 - Ciddi', '5 - Çok Ciddi'], required: true },
+      { key: 'precautions', label: 'Alınacak Önlemler', type: 'textarea', required: true }
+    ]
   },
   {
     id: '6',
@@ -82,7 +113,14 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Çalışan görev ve sorumluluk bildirim formu.',
     isPremium: false,
     monthlyLimit: 30,
-    fields: []
+    fields: [
+      { key: 'employeeName', label: 'Personel Adı', type: 'text', required: true },
+      { key: 'jobTitle', label: 'Ünvan / Pozisyon', type: 'text', required: true },
+      { key: 'serviceDepartment', label: 'Departman', type: 'text', required: true },
+      { key: 'reportsTo', label: 'Bağlı Olduğu Yönetici', type: 'text' },
+      { key: 'responsibilities', label: 'Temel Sorumluluklar', type: 'textarea', required: true, placeholder: 'Maddeler halinde giriniz...' },
+      { key: 'requiredSkills', label: 'Aranan Nitelikler', type: 'textarea' }
+    ]
   },
   {
     id: '7',
@@ -91,7 +129,14 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Periyodik bakım takip çizelgesi.',
     isPremium: true,
     photoCapacity: 12,
-    fields: []
+    fields: [
+      { key: 'machineName', label: 'Makine Adı/Kodu', type: 'text', required: true },
+      { key: 'maintenanceType', label: 'Bakım Türü', type: 'select', options: ['Günlük', 'Haftalık', 'Aylık', 'Yıllık', 'Arıza Müdahale'] },
+      { key: 'technicianName', label: 'Bakım Yapan Teknisyen', type: 'text', required: true },
+      { key: 'partsReplaced', label: 'Değişen Parçalar', type: 'textarea' },
+      { key: 'nextMaintenanceDate', label: 'Gelecek Bakım Tarihi', type: 'date', required: true },
+      { key: 'cost', label: 'Bakım Maliyeti', type: 'number' }
+    ]
   },
   {
     id: '8',
@@ -100,8 +145,15 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'İş kazası bildirim ve tespit formu.',
     isPremium: false,
     monthlyLimit: 30,
-    photoCapacity: 15,
-    fields: []
+    photoCapacity: 20,
+    fields: [
+      { key: 'accidentTime', label: 'Kaza Tarihi ve Saati', type: 'date', required: true }, // datetime type not available yet, using date
+      { key: 'location', label: 'Kaza Yeri', type: 'text', required: true },
+      { key: 'injuredPerson', label: 'Kazazede Adı Soyadı', type: 'text', required: true },
+      { key: 'injuryType', label: 'Yaralanma Türü', type: 'select', options: ['Kesik/Sıyrık', 'Burkulma/Ezilme', 'Kırık/Çıkık', 'Yanık', 'Elektrik Çarpması', 'Diğer'] },
+      { key: 'accidentDescription', label: 'Kaza Oluş Şekli (Detaylı)', type: 'textarea', required: true },
+      { key: 'witnesses', label: 'Tanıklar', type: 'text' }
+    ]
   },
   {
     id: '9',
@@ -110,7 +162,14 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Demirbaş teslim tutanağı.',
     isPremium: false,
     monthlyLimit: 30,
-    fields: []
+    fields: [
+      { key: 'recipientName', label: 'Teslim Alan Personel', type: 'text', required: true },
+      { key: 'itemName', label: 'Demirbaş Adı', type: 'text', required: true },
+      { key: 'itemSerial', label: 'Seri No / Kod', type: 'text' },
+      { key: 'condition', label: 'Malzeme Durumu', type: 'select', options: ['Sıfır', 'Yeni Gibi', 'Kullanılmış', 'Tamirli'] },
+      { key: 'deliveryDate', label: 'Teslim Tarihi', type: 'date', required: true },
+      { key: 'returnDate', label: 'İade Alınacak Tarih (Varsa)', type: 'date' }
+    ]
   },
   {
     id: '10',
@@ -119,7 +178,12 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Kişisel verilerin korunması kanunu rıza beyanı.',
     isPremium: false,
     monthlyLimit: 30,
-    fields: []
+    fields: [
+       { key: 'personName', label: 'İlgili Kişi Adı Soyadı', type: 'text', required: true },
+       { key: 'identityNumber', label: 'T.C. Kimlik No', type: 'text', required: true },
+       { key: 'dataTypes', label: 'İşlenecek Veri Kategorileri', type: 'textarea', placeholder: 'Kimlik, İletişim, Finansal veriler vb.' },
+       { key: 'consentGiven', label: 'Aşağıdaki şartları okudum, anladım ve onaylıyorum.', type: 'checkbox', required: true, placeholder: 'Kabul Ediyorum' }
+    ]
   },
   {
     id: '11',
@@ -128,226 +192,44 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Yıllık personel performans raporlama formu.',
     isPremium: false,
     monthlyLimit: 30,
-    fields: []
+    fields: [
+       { key: 'employee', label: 'Değerlendirilen Personel', type: 'text', required: true },
+       { key: 'period', label: 'Değerlendirme Dönemi', type: 'text', placeholder: '2026/Q1' },
+       { key: 'goalsAchievement', label: 'Hedef Gerçekleştirme Oranı (%)', type: 'number' },
+       { key: 'strengths', label: 'Güçlü Yönler', type: 'textarea' },
+       { key: 'developmentAreas', label: 'Gelişime Açık Yönler', type: 'textarea' },
+       { key: 'overallRating', label: 'Genel Puan (1-5)', type: 'select', options: ['1 (Zayıf)', '2 (Gelişmeli)', '3 (Beklenen)', '4 (İyi)', '5 (Üstün)'] }
+    ]
   },
   {
     id: '12',
-    title: 'Sağlık ve Güvenlik Yönetmeliği',
+    title: 'İş Sağlığı ve Güvenliği Kurulu Kararı',
     category: 'ISG',
-    description: 'Kurumsal sağlık ve güvenlik politika belgesi.',
+    description: 'Kurul toplantı tutanağı ve alınan kararlar.',
     isPremium: true,
     photoCapacity: 10,
-    fields: []
+    fields: [
+       { key: 'meetingParams', label: 'Toplantı No / Tarih', type: 'text', required: true },
+       { key: 'attendees', label: 'Katılımcılar', type: 'textarea', required: true },
+       { key: 'agenda', label: 'Gündem Maddeleri', type: 'textarea', required: true },
+       { key: 'decisions', label: 'Alınan Kararlar', type: 'textarea', required: true },
+       { key: 'nextMeetingDate', label: 'Sonraki Toplantı Tarihi', type: 'date' }
+    ]
   },
   {
     id: '13',
     title: 'Müşteri Memnuniyet Anketi',
     category: 'Kalite',
-    description: 'Müşteri geri bildirim ve tahmini değerlendirme formu.',
+    description: 'Müşteri geri bildirim ve talep değerlendirme formu.',
     isPremium: false,
     monthlyLimit: 30,
-    fields: []
-  },
-  {
-    id: '14',
-    title: 'Sertifikasyon Belgesi',
-    category: 'Belgelendirme',
-    description: 'ISO ve diğer standart sertifika şablonu.',
-    isPremium: true,
-    photoCapacity: 12,
-    fields: []
-  },
-  {
-    id: '15',
-    title: 'Eğitim Planı Şablonu',
-    category: 'İK',
-    description: 'Çalışanlar için yıllık eğitim programı planlama belgesi.',
-    isPremium: false,
-    monthlyLimit: 30,
-    fields: []
-  },
-  {
-    id: '16',
-    title: 'Uyum İhlali Raporu',
-    category: 'Hukuk',
-    description: 'Mevzuat ve standartlara uyum denetimi sonuç raporu.',
-    isPremium: true,
-    photoCapacity: 15,
-    fields: []
-  },
-  {
-    id: '17',
-    title: 'Bakım ve Onarım Planı',
-    category: 'Teknik',
-    description: 'Ekipman bakım takvimi ve planlama belgesi.',
-    isPremium: false,
-    monthlyLimit: 30,
-    photoCapacity: 15,
-    fields: []
-  },
-  {
-    id: '18',
-    title: 'İş Sözleşmesi Şablonu',
-    category: 'İK',
-    description: 'Personel istihdam sözleşmesi standart formu.',
-    isPremium: true,
-    fields: []
-  },
-  {
-    id: '19',
-    title: 'Kütüphaneler ve Kategoriler',
-    category: 'Arşiv',
-    description: 'Belge sınıflandırma ve arşivleme kataloğu.',
-    isPremium: false,
-    monthlyLimit: 30,
-    fields: []
-  },
-  {
-    id: '20',
-    title: 'Bilgi Güvenliği Politikası',
-    category: 'Güvenlik',
-    description: 'Veri ve sistem güvenliği yönetim belgeleri.',
-    isPremium: true,
-    photoCapacity: 10,
-    fields: []
-  },
-  {
-    id: '21',
-    title: 'Kaynaklar Planlama Formu',
-    category: 'Yönetim',
-    description: 'Proje kaynakları tahsis ve planlama belgesi.',
-    isPremium: false,
-    monthlyLimit: 30,
-    fields: []
-  },
-  {
-    id: '22',
-    title: 'Müşteri Hizmet Dosyası',
-    category: 'Müşteri',
-    description: 'Müşteri ilişkileri yönetimi döküman şablonu.',
-    isPremium: false,
-    monthlyLimit: 30,
-    photoCapacity: 12,
-    fields: []
-  },
-  {
-    id: '23',
-    title: 'Kayıt Tutma Prosedürü',
-    category: 'Yönetim',
-    description: 'Kurumsal kayıt ve belge tutma prosesi belgesi.',
-    isPremium: true,
-    fields: []
-  },
-  {
-    id: '24',
-    title: 'İş Akışı Şeması',
-    category: 'Yönetim',
-    description: 'İş süreçleri ve akış diagramları oluşturma şablonu.',
-    isPremium: false,
-    monthlyLimit: 30,
-    photoCapacity: 15,
-    fields: []
-  },
-  {
-    id: '25',
-    title: 'Proje Tamamlama Raporu',
-    category: 'Yönetim',
-    description: 'Tamamlanan proje sonuç ve değerlendirme belgesı.',
-    isPremium: false,
-    monthlyLimit: 30,
-    photoCapacity: 15,
-    fields: []
-  },
-  {
-    id: '26',
-    title: 'Tedarikçi Değerlendirme',
-    category: 'Satın Alma',
-    description: 'Tedarikçi seçim ve performans değerlendirme formu.',
-    isPremium: true,
-    photoCapacity: 10,
-    fields: []
-  },
-  {
-    id: '27',
-    title: 'Bütçe Planlama Şablonu',
-    category: 'Finans',
-    description: 'Yıllık bütçe tahminlemesi ve planlama belgesi.',
-    isPremium: true,
-    fields: []
-  },
-  {
-    id: '28',
-    title: 'İnsan Kaynakları İstatistikleri',
-    category: 'İK',
-    description: 'Personel hareketi ve demografik veriler raporu.',
-    isPremium: false,
-    monthlyLimit: 30,
-    fields: []
-  },
-  {
-    id: '29',
-    title: 'Çevresel Etki Değerlendirmesi',
-    category: 'Çevre',
-    description: 'Çevresel uyum ve etki analiz belgesi.',
-    isPremium: true,
-    photoCapacity: 15,
-    fields: []
-  },
-  {
-    id: '30',
-    title: 'Sicil Dosyası Şablonu',
-    category: 'İK',
-    description: 'Personel sicil ve kariyer dosyası belgesi.',
-    isPremium: false,
-    monthlyLimit: 30,
-    fields: []
-  },
-  {
-    id: '31',
-    title: 'Reklam ve Pazarlama Planı',
-    category: 'Pazarlama',
-    description: 'Yıllık reklam ve tanıtım stratejisi belgesi.',
-    isPremium: true,
-    photoCapacity: 12,
-    fields: []
-  },
-  {
-    id: '32',
-    title: 'Kalite Kontrol Raporu',
-    category: 'Kalite',
-    description: 'Ürün ve hizmet kalite denetim sonuçları belgesi.',
-    isPremium: false,
-    monthlyLimit: 30,
-    photoCapacity: 15,
-    fields: []
-  },
-  {
-    id: '33',
-    title: 'Tehlike Analizi (HAZOP)',
-    category: 'ISG',
-    description: 'Tehlike ve işletilebilirlik analizi şablonu.',
-    isPremium: true,
-    photoCapacity: 10,
-    fields: []
-  },
-  {
-    id: '34',
-    title: 'Yönetmelik Uygunluk Denetimi',
-    category: 'Hukuk',
-    description: 'Yasal ve yönetmelik mevzuat uyum denetim belgesi.',
-    isPremium: true,
-    photoCapacity: 12,
-    fields: []
-  },
-  {
-    id: '35',
-    title: 'Teklif ve Fiyatlandırma Formu',
-    category: 'Satış',
-    description: 'Müşteri teklifleri ve fiyatlandırma şablonu.',
-    isPremium: false,
-    monthlyLimit: 30,
-    photoCapacity: 10,
-    fields: []
+    fields: [
+       { key: 'customer', label: 'Müşteri / Firma', type: 'text' },
+       { key: 'serviceQuality', label: 'Hizmet Kalitesi (1-10)', type: 'select', options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+       { key: 'speed', label: 'Hız / Termin (1-10)', type: 'select', options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+       { key: 'communication', label: 'İletişim (1-10)', type: 'select', options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
+       { key: 'suggestions', label: 'Öneri ve Görüşler', type: 'textarea' }
+    ]
   }
 ];
 
