@@ -208,51 +208,6 @@ export const Layout: React.FC<LayoutProps> = ({ user, currentView, onNavigate, o
     </div>
   );
 };
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-slate-100"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && user && (
-          <div className="md:hidden border-t border-slate-200 bg-slate-50 p-4 space-y-2">
-            {menuItems.map(item => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.view}
-                  onClick={() => {
-                    onNavigate(item.view);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`w-full text-left px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                    currentView === item.view
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <Icon size={18} />
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </header>
+// End of file
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-slate-500">
-          <p>© 2026 Kırbaş Doküman. Tüm hakları saklıdır. | NDA Koruması Altında</p>
-        </div>
-      </footer>
-    </div>
-  );
-};
