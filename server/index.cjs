@@ -1067,20 +1067,44 @@ if (!isMockMode) {
 // --- AUTHENTICATION & USER ROUTES ---
 
 // Helper: Verify JWT Token Middleware
-const authenticateToken = (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
     if (!token) return res.status(401).json({ success: false, message: 'Oturum açmanız gerekiyor.' });
 
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) {
-            console.error("JWT Error:", err.message);
-            return res.status(403).json({ success: false, message: 'Geçersiz veya süresi dolmuş oturum.' });
+    try {
+        const decoded = await new Promise((resolve, reject) => {
+            jwt.verify(token, JWT_SECRET, (err, user) => {
+                if (err) reject(err);
+                else resolve(user);
+            });
+        });
+
+        // CRITICAL SECURITY: Just because the token is valid, doesn't mean the user still exists!
+        // We MUST verify the user is still in the database.
+        const currentUser = await dbAdapter.findUserById(decoded.id);
+
+        if (!currentUser) {
+             return res.status(401).json({ success: false, message: 'Kullanıcı artık mevcut değil. (Silinmiş Hesap)' });
         }
-        req.user = user;
+
+        if (currentUser.isBanned) {
+             // Re-check expiry
+             const expiry = currentUser.banExpiresAt ? new Date(currentUser.banExpiresAt) : null;
+             if (!expiry || expiry > new Date()) {
+                return res.status(403).json({ success: false, message: 'Hesabınız yasaklanmıştır.', banReason: currentUser.banReason });
+             }
+        }
+        
+        // Attach full user object or just necessary parts
+        req.user = decoded; // Keep using the token payload, or switch to full user
         next();
-    });
+
+    } catch(err) {
+        console.error("JWT/Auth Error:", err.message);
+        return res.status(403).json({ success: false, message: 'Geçersiz veya süresi dolmuş oturum.' });
+    }
 };
 
 // Middleware: Require Admin Role
