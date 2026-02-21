@@ -42,9 +42,7 @@ if (PG_CONNECTION_STRING) {
 
         pgPool = new Pool({
             connectionString: connectionString,
-            ssl: {
-                rejectUnauthorized: false
-            },
+            ssl: connectionString.includes('localhost') ? false : { rejectUnauthorized: false }, // Disable SSL for localhost, enable relaxed SSL for cloud
             connectionTimeoutMillis: 5000,
             idleTimeoutMillis: 10000
         });
