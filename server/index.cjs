@@ -1018,51 +1018,46 @@ if (EMAIL_PASS) {
 
 
 if (!EMAIL_USER || EMAIL_USER.includes('senin_mailin') || !EMAIL_PASS) {
-    console.warn("⚠️ [MAIL DEBUG] Geçerli mail bilgisi bulunamadı veya 'senin_mailin' içeriyor. Mock (Simülasyon) modu aktif.");
-    isMockMode = true;
-    
-    // Add logic to log to internal system logs if needed (optional based on previous context)
-    // but focusing on console output as requested.
+    console.warn("⚠️ [UYARI] E-posta bilgileri eksik veya varsayılan değerlerde. (.env dosyasını kontrol edin)");
+    console.warn("⚠️ SİSTEM GERÇEK MODDA ÇALIŞACAK VE MAİL ATMAYI DENEYECEK (BAŞARISIZ OLABİLİR).");
+    // isMockMode = false; // Intentionally NOT setting mock mode to force real attempts
 }
 
 // Transporter Configuration
 let transporter;
 
 if (!isMockMode) {
-    console.log("[MAIL DEBUG] Attempting to configure Nodemailer with Gmail (SMTP)...");
+    console.log("[MAIL DEBUG] NodeMailer (Gerçek E-posta Modu) yapılandırılıyor...");
     try {
         transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 587,
-            secure: false, // true for 465, false for other ports
+            secure: false, // TLS
             auth: {
                 user: EMAIL_USER,
                 pass: EMAIL_PASS,
             },
         });
         
-        console.log("[MAIL DEBUG] Transporter created. Verifying connection...");
+        console.log("[MAIL DEBUG] SMTP Bağlantısı doğrulanıyor...");
 
         // Verify connection
         transporter.verify(function (error, success) {
             if (error) {
-                console.error('❌ [MAIL DEBUG] Connection Failed!');
-                console.error(error); // Log full error object
-                console.error('[MAIL DEBUG] Stack:', error.stack);
-                
-                console.warn('⚠️ [MAIL DEBUG] Falling back to Mock Mode due to verification failure.');
-                isMockMode = true;
+                console.error('❌ [SMTP ERROR] Mail Sunucusu Bağlantı Hatası!');
+                console.error('❌ E-postalar gitmeyecek. Lütfen .env dosyasındaki EMAIL_USER ve EMAIL_PASS bilgilerini kontrol edin.');
+                console.error('İpucu: Gmail için "Uygulama Şifresi" kullanmalısınız.');
+                // isMockMode = true; // ARTIK MOCK MODA DÜŞMÜYORUZ, HATALI İSE HATALI KALSIN
             } else {
-                console.log('✅ [MAIL DEBUG] Server is ready to take our messages');
-                isMockMode = false;
+                console.log('✅ [SMTP SUCCESS] Mail sunucusu hazır ve çalışıyor!');
             }
         });
     } catch (e) {
-        console.error("❌ [MAIL DEBUG] Critical Error initializing Nodemailer:", e);
-        isMockMode = true;
+        console.error("❌ [CRITICAL] NodeMailer Başlatılamadı:", e);
     }
 } else {
-    console.log("[MAIL DEBUG] Skipping Nodemailer configuration (Mock Mode is ON)");
+    // Should roughly never reach here unless isMockMode forced manually
+    console.log("[MAIL DEBUG] Mock (Simülasyon) Modu Aktif.");
 }
 
 // --- AUTHENTICATION & USER ROUTES ---
@@ -1487,16 +1482,12 @@ app.post('/api/auth/forgot-password', async (req, res) => {
                 console.log(`[FORGOT-PASSWORD] Server response: ${info.response}`);
             } catch (mailError) {
                 console.error(`[FORGOT-PASSWORD] Email failed:`, mailError);
-                
-                systemLogs.push({
-                    id: Date.now(),
-                    type: 'error',
-                    action: 'Email Send Failed',
-                    details: `To: ${email}, Error: ${mailError.message}`,
-                    time: new Date().toISOString()
-                });
+                throw new Error("E-posta sunucusuna erişilemedi. Lütfen daha sonra tekrar deneyin veya yönetici ile iletişime geçin.");
             }
         } else {
+             if (!isMockMode) {
+                 throw new Error("E-posta servisi yapılandırılmamış. Şifre sıfırlama kodu gönderilemiyor.");
+             }
              console.warn(`[MOCK MODE] Password reset email not sent. Code: ${code}. Transporter: ${!!transporter}, isMockMode: ${isMockMode}`);
         }
 
@@ -1791,6 +1782,11 @@ app.post('/api/send-document', async (req, res) => {
             await transporter.sendMail(mailOptions);
             console.log(`[EMAIL] Document sent to ${email}`);
         } else {
+             // If we reach here and isMockMode is explicitly false, it means transporter creation failed but wasn't caught earlier?
+             // Or transporter is undefined.
+             if (!isMockMode) {
+                 throw new Error("E-posta servisi başlatılamadı (Transporter yok). Lütfen sunucu yapılandırmasını kontrol edin.");
+             }
             console.log(`[MOCK EMAIL] Simulating sending document to ${email}`);
             // In mock mode, we just log success.
         }
