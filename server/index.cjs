@@ -1519,6 +1519,11 @@ app.post('/api/send-document', async (req, res) => {
 
 
     try {
+        let pdfContent = pdfBase64;
+        if (pdfBase64.includes('base64,')) {
+            pdfContent = pdfBase64.split('base64,')[1];
+        }
+
         const mailOptions = {
             from: `"Kırbaş Doküman" <${process.env.EMAIL_USER || 'info@kirbas.com'}>`,
             to: email,
@@ -1527,7 +1532,7 @@ app.post('/api/send-document', async (req, res) => {
             attachments: [
                 {
                     filename: `${documentName || 'Dokuman'}.pdf`,
-                    content: pdfBase64.split('base64,')[1],
+                    content: pdfContent,
                     encoding: 'base64'
                 }
             ]

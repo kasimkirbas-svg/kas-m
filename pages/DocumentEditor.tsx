@@ -3,7 +3,7 @@ import { DocumentTemplate, GeneratedDocument, DocumentPhoto } from '../types';
 import { Upload, Trash2, Plus, Download, CheckCircle, Mail, AlertTriangle, ZoomIn, ArrowLeft } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import { fetchApi } from '../src/utils/api'; // Import fetchApi for consistent endpoint handling
+import { fetchApi } from '../src/utils/api'; 
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -13,8 +13,8 @@ interface DocumentEditorProps {
   userEmail?: string;
   companyName?: string;
   preparedBy?: string;
-  initialData?: GeneratedDocument; // For editing existing docs
-  isReadOnly?: boolean; // New prop to disable editing
+  initialData?: GeneratedDocument; 
+  isReadOnly?: boolean; 
   t?: any;
 }
 
@@ -27,10 +27,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   companyName = '',
   preparedBy = '',
   initialData,
-  isReadOnly = false, // Add Read-Only prop
+  isReadOnly = false, 
   t
 }) => {
-  // Initialize state with props or initialData
   const [formData, setFormData] = useState<Record<string, any>>({
     companyName: initialData?.companyName || companyName || '',
     preparedBy: initialData?.preparedBy || preparedBy || '',
@@ -46,12 +45,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   const [sendEmail, setSendEmail] = useState(false);
   const [generationSuccess, setGenerationSuccess] = useState(false);
   
-  // Ref to the preview container holding all pages
   const printContainerRef = useRef<HTMLDivElement>(null);
 
   const maxPhotos = template.photoCapacity || 15;
-
-  // --- Handlers ---
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -65,7 +61,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     const files = e.target.files;
     if (!files) return;
 
-    Array.from(files).forEach(file => {
+    Array.from(files).forEach((file: File) => {
       if (photos.length >= maxPhotos) {
         alert(t?.editor?.maxPhotoError?.replace('{count}', maxPhotos) || `Maksimum ${maxPhotos} fotoğraf ekleyebilirsiniz!`);
         return;
@@ -88,16 +84,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setPhotos(prev => prev.filter(p => p.id !== id));
   };
 
-  // --- PDF Generation ---
   const handleGenerateDocument = async () => {
     if (!printContainerRef.current) return;
     
-    // Email Validation
     if (sendEmail) {
         if (!userEmail) {
              alert(t?.editor?.emailMissing || 'E-posta adresi bulunamadı. Lütfen profilinizi güncelleyin.');
              setSendEmail(false);
-             return; // Stop? No, maybe just disable email
+             return; 
         }
     }
 
@@ -105,7 +99,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setGenerationSuccess(false);
 
     try {
-      // Find all page elements (the A4 divs)
       const pageElements = printContainerRef.current.querySelectorAll('.print-page');
       
       if (pageElements.length === 0) {
@@ -118,11 +111,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         format: 'a4'
       });
 
-      // Process each page individually
       for (let i = 0; i < pageElements.length; i++) {
         const pageEl = pageElements[i] as HTMLElement;
         
-        // Render to canvas
         const canvas = await html2canvas(pageEl, {
           scale: 2, 
           useCORS: true,
@@ -131,10 +122,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         });
 
         const imgData = canvas.toDataURL('image/jpeg', 0.90);
-        const imgWidth = 210; // A4 Width mm
-        const imgHeight = 297; // A4 Height mm
+        const imgWidth = 210; 
+        const imgHeight = 297; 
 
-        // Add page (skip first for init)
         if (i > 0) pdf.addPage();
         
         pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
@@ -143,10 +133,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       const pdfBase64 = pdf.output('datauristring');
       const fileName = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
 
-      // Send Email
       if (sendEmail && userEmail) {
         try {
-          // Use fetchApi helper instead of direct fetch to handle base URL automatically
           const response = await fetchApi('/api/send-document', {
             method: 'POST',
             body: JSON.stringify({
@@ -161,7 +149,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             console.error('Email sending failed', result);
             alert(`E-posta gönderilemedi: ${result.message || 'Sunucu hatası'}.`);
           } else {
-             // Email success toast?
              console.log('Email sent successfully');
           }
         } catch (error) {
@@ -170,10 +157,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         }
       }
 
-      // Download
       pdf.save(fileName);
       
-      // Save Record
       const documentRecord: GeneratedDocument = {
         id: initialData?.id || 'doc-' + Date.now(),
         userId,
@@ -199,7 +184,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }
   };
 
-  // --- Chunk photos ---
   const photoChunks = [];
   for (let i = 0; i < photos.length; i += 6) {
     photoChunks.push(photos.slice(i, i + 6));
@@ -208,16 +192,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-110px)] overflow-hidden">
       
-       {/* 
-          LAYOUT ADJUSTMENT:
-          Input (Flex 3) / Preview (Flex 2) -> Input is larger.
-       */}
-
-      {/* ---------------- SECTION 1 (Left): INPUT FORM (Expanded) ---------------- */}
-       {/* Hiding input form if in ReadOnly mode to maximize preview */}
        {!isReadOnly && (
        <div className="lg:flex-[3] bg-white rounded-xl shadow-xl overflow-hidden flex flex-col min-w-[320px] border border-slate-200 order-1 relative z-10">
-        {/* Header */}
         <div className="bg-gradient-to-r from-slate-50 to-white px-6 py-4 border-b border-slate-200 flex justify-between items-center shrink-0">
           <div>
             <h2 className="text-xl font-bold text-slate-800 tracking-tight">Editör</h2>
@@ -230,10 +206,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           )}
         </div>
 
-        {/* Scrollable Form Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-slate-50/30">
           
-          {/* Info */}
           <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm space-y-4">
              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
                 <div className="w-1 h-4 bg-blue-500 rounded-full"></div>
@@ -255,7 +229,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
              </div>
           </div>
 
-          {/* Fields */}
           {template.fields.length > 0 && (
              <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm space-y-4">
               <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
@@ -329,7 +302,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             </div>
           )}
 
-          {/* Notes */}
           <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm space-y-2">
               <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
                 <div className="w-1 h-4 bg-yellow-500 rounded-full"></div>
@@ -338,7 +310,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
               <textarea disabled={isReadOnly} value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none h-24 resize-none text-sm font-medium" placeholder="Varsa eklemek istediğiniz notlar..." />
           </div>
 
-          {/* Photos */}
           <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm space-y-3">
               <div className="flex justify-between items-center mb-2 pb-2 border-b border-slate-100">
                 <div className="flex items-center gap-2">
@@ -373,10 +344,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
               </div>
           </div>
         
-          <div className="h-10"></div> {/* Spacer */}
+          <div className="h-10"></div>
         </div>
 
-        {/* Footer Actions */}
         <div className="p-4 border-t border-slate-200 bg-white shrink-0 z-20 shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.05)]">
            <div className="flex items-center gap-3 mb-4 bg-slate-50 p-3 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors">
               <div className="relative flex items-center">
@@ -397,10 +367,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       </div>
       )}
 
-      {/* ---------------- SECTION 2 (Right): PREVIEW (Shrunk) ---------------- */}
       <div className={`bg-slate-800 rounded-xl shadow-2xl overflow-hidden flex flex-col relative order-2 border border-slate-700 ${isReadOnly ? 'lg:flex-[10] w-full' : 'lg:flex-[2] hidden lg:flex'}`}>
-          {/* Legend/Info Badge */}
-          {/* If ReadOnly mode, add a "Close Preview" button absolutely positioned */}
           {isReadOnly && onClose && (
             <button onClick={onClose} className="fixed top-24 right-8 z-[50] bg-white text-slate-800 px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-2 hover:bg-slate-100 transition hover:scale-105 active:scale-95">
               ✕ Önizlemeyi Kapat
@@ -413,13 +380,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
              <span className="flex items-center gap-1">📸 {photos.length} Foto</span>
           </div>
           
-          {/* Scrollable Preview Area */}
-          {/* Use CSS transform based scaling instead of fixed dimensions to prevent layout shifts */}
           <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-slate-900/50 p-4 md:p-8 flex justify-center items-start">
             <div className={`transition-all duration-300 origin-top ${isReadOnly ? 'scale-100' : 'scale-[0.45] md:scale-[0.5] lg:scale-[0.45] xl:scale-[0.55] 2xl:scale-[0.65]'}`}>
               <div ref={printContainerRef} className="flex flex-col gap-10 shadow-2xl">
             
-            {/* --- PAGE 1: TEXT CONTENT --- */}
             <div className="print-page bg-white shadow-2xl relative" style={{ width: '210mm', height: '297mm', padding: '15mm', boxSizing: 'border-box', color: '#1e293b', background: 'white' }}>
                 <div className="border-b-4 border-slate-900 pb-6 mb-8 flex justify-between items-start">
                    <div className="max-w-[70%]">
@@ -434,7 +398,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                    </div>
                 </div>
 
-                {/* Sub-Header Grid */}
                 <div className="grid grid-cols-2 gap-8 mb-10">
                    <div className="bg-blue-50/50 p-4 border-l-4 border-blue-600 rounded-r-lg">
                       <span className="block text-[10px] text-blue-400 uppercase font-bold mb-1 tracking-wider">{t?.editor?.firmName}</span>
@@ -446,7 +409,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                    </div>
                 </div>
 
-                {/* Main Content Table */}
                 <div className="mb-8">
                    <table className="w-full border-collapse text-left">
                       <thead>
@@ -470,7 +432,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                    </table>
                 </div>
 
-                {/* Notes Section - Grows until bottom of page */}
                 {additionalNotes && (
                   <div className="mt-8 p-5 bg-yellow-50/60 border border-yellow-100 rounded-lg text-sm text-slate-700 relative">
                     <span className="absolute -top-3 left-4 bg-yellow-100 text-yellow-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded">{t?.editor?.notes || 'EK NOTLAR'}</span>
@@ -478,7 +439,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                   </div>
                 )}
                 
-                {/* Page 1 Footer */}
                 <div className="absolute bottom-10 left-10 right-10 pt-4 border-t border-slate-200 flex justify-between items-end text-[9px] text-slate-400 font-mono uppercase tracking-widest">
                    <div>
                       <p>© {new Date().getFullYear()} Kırbaş Doküman Platformu</p>
@@ -488,10 +448,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                 </div>
             </div>
 
-            {/* --- EXTRA PAGES: PHOTOS (Dynamically Created) --- */}
             {photoChunks.map((chunk, pageIndex) => (
                <div key={`photo-page-${pageIndex}`} className="print-page bg-white shadow-2xl relative flex flex-col" style={{ width: '210mm', height: '297mm', padding: '15mm', boxSizing: 'border-box', background: 'white' }}>
-                  {/* Photo Page Header */}
                   <div className="border-b-2 border-slate-200 pb-2 mb-6 flex justify-between items-end">
                      <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <span className="bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm">{pageIndex + 2}</span>
@@ -500,7 +458,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                      <span className="text-xs text-slate-400 font-mono">Bölüm {pageIndex + 1}</span>
                   </div>
 
-                  {/* 2x3 Grid for Photos */}
                   <div className="grid grid-cols-2 gap-x-6 gap-y-8 flex-1 content-start">
                      {chunk.map((photo, pIdx) => (
                        <div key={photo.id} className="flex flex-col gap-2">
@@ -516,17 +473,18 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                      ))}
                   </div>
 
-                  {/* Photo Page Footer */}
                   <div className="absolute bottom-10 left-10 right-10 pt-4 border-t border-slate-200 flex justify-between items-end text-[9px] text-slate-400 font-mono uppercase tracking-widest">
                    <div><p>{template.title} - Görsel Ekleri</p></div>
                    <div className="text-right"><p>Page {pageIndex + 2} / {1 + photoChunks.length}</p></div>
                 </div>
               </div>
             ))}
+            
+              </div>
+            </div>
           </div>
       </div>
       
-       {/* Full Screen Photo Preview Modal */}
        {photoPreview && (
           <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-[60] p-4 lg:p-12 cursor-zoom-out backdrop-blur-sm" onClick={() => setPhotoPreview(null)}>
              <img src={photoPreview} alt="Full Preview" className="max-w-full max-h-full rounded-lg shadow-2xl border border-white/10" />
