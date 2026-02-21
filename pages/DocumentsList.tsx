@@ -25,30 +25,34 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
       
       // ISG & Güvenlik
       if (normal.includes('isg') || normal.includes('guvenlik') || normal.includes('acil')) 
-          return 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?q=80&w=400&auto=format&fit=crop';
+          return 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop'; // Baret/İnşaat alanı
           
       // İK & Personel
       if (normal.includes('ik') || normal.includes('insan') || normal.includes('personel') || normal.includes('egitim')) 
-          return 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=400&auto=format&fit=crop';
+          return 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=600&auto=format&fit=crop'; // Toplantı/Ekip
           
       // Muhasebe & Finans
       if (normal.includes('muhasebe') || normal.includes('finans') || normal.includes('fatura') || normal.includes('masraf')) 
-          return 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=400&auto=format&fit=crop';
+          return 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop'; // Hesap makinesi/Grafik
           
       // Hukuk & Sözleşme
       if (normal.includes('hukuk') || normal.includes('sozlesme') || normal.includes('kvkk')) 
-          return 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400&auto=format&fit=crop';
+          return 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=600&auto=format&fit=crop'; // Adalet terazisi/Hukuk
           
-      // Teknik & Bakım
-      if (normal.includes('teknik') || normal.includes('bakim') || normal.includes('arac') || normal.includes('makine')) 
-          return 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=400&auto=format&fit=crop';
+      // Teknik & Bakım & İnşaat
+      if (normal.includes('teknik') || normal.includes('bakim') || normal.includes('arac') || normal.includes('makine') || normal.includes('insaat') || normal.includes('santiye')) 
+          return 'https://images.unsplash.com/photo-1581094794329-cd56b507d18b?q=80&w=600&auto=format&fit=crop'; // Mühendis/Blueprint
           
       // Kalite & Denetim
       if (normal.includes('kalite') || normal.includes('denetim') || normal.includes('anket')) 
-          return 'https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=400&auto=format&fit=crop';
+          return 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=600&auto=format&fit=crop'; // İş planı/Analiz
+          
+      // Satış & Teklif
+      if (normal.includes('satis') || normal.includes('teklif') || normal.includes('pazarlama')) 
+          return 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=600&auto=format&fit=crop'; // El sıkışma/Anlaşma
           
       // Genel Ofis
-      return 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=400&auto=format&fit=crop';
+      return 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600&auto=format&fit=crop'; // Modern Ofis
   };
 
   const categories = Array.from(new Set(templates.map(t => t.category)));
