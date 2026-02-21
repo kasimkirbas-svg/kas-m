@@ -6,6 +6,11 @@
   :root {
     --primary: theme('colors.indigo.600');
     --primary-hover: theme('colors.indigo.700');
+    color-scheme: light; 
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
@@ -58,4 +63,32 @@ h2 { @apply text-3xl font-bold tracking-tight; }
 h3 { @apply text-2xl font-semibold; }
 input:focus, select:focus, textarea:focus {
   @apply outline-none ring-2 ring-indigo-500/50 border-indigo-500 transition-shadow;
+}
+
+/* Global Input Styles to fix visibility issues */
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+input[type="number"], 
+input[type="date"], 
+textarea, 
+select {
+  @apply bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-lg shadow-sm transition-colors;
+}
+
+/* Fix for autofill background being yellow/blue */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #0f172a !important;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover, 
+.dark input:-webkit-autofill:focus, 
+.dark input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+    -webkit-text-fill-color: #f1f5f9 !important;
 }

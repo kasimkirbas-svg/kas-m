@@ -62,7 +62,7 @@ export const Layout: React.FC<LayoutProps> = ({
         ];
 
   return (
-    <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300 font-sans ${theme}`}>
+    <div className={`min-h-screen flex transition-colors duration-300 font-sans ${theme === 'dark' ? 'dark bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
       
       {/* Sidebar - Desktop */}
       <aside 
