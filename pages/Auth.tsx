@@ -97,15 +97,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     }
   };
 
-  const getStrength = (pass: string) => {
-    if (pass.length < 6) return 'Zayıf';
-    if (pass.length < 8) return 'Zayıf';
-    if (/^[a-zA-Z]+$/.test(pass) || /^[0-9]+$/.test(pass)) return 'Orta';
-    return 'Güçlü';
-  }
 
-  const strength = getStrength(formData.password);
-  
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -617,24 +609,6 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                     </div>
                 )}
 
-                <button
-                
-                {authView === 'signup' && (
-                    <div>
-                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Şifre Tekrar</label>
-                         <div className="relative group">
-                            <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
-                            <input
-                            type={showPassword ? 'text' : 'password'}
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                            placeholder="••••••••"
-                            />
-                        </div>
-                    </div>
-                )}
 
                 <button
                     type="submit"
