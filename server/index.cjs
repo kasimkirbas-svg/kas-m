@@ -454,7 +454,7 @@ const seedAdmin = async () => {
         const db = readDB();
         const adminEmail = process.env.ADMIN_EMAIL || 'admin@kirbas.com';
         // GÜVENLİK: Admin şifresi hardcoded olmamalıdır. Çevresel değişkenden alınır.
-        const adminPass = process.env.ADMIN_PASSWORD || 'admin123'; 
+        const adminPass = process.env.ADMIN_PASSWORD || 'Admin123456'; 
         
         if (!db.users || !Array.isArray(db.users)) {
             db.users = [];

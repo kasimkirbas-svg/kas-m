@@ -1,19 +1,6 @@
 {
   "users": [
     {
-      "id": "admin-001",
-      "name": "Kürşat Kırbaş",
-      "email": "admin@kirbas.com",
-      "password": "$2b$10$6Vh3ZYHWJEHHLjjo2N7ex.JyEMTQoqHkI1.HcG51GR3ds4ogHbm.2",
-      "companyName": "Kırbaş Doküman Yazılımları",
-      "role": "ADMIN",
-      "plan": "YEARLY",
-      "remainingDownloads": "UNLIMITED",
-      "subscriptionStartDate": "2026-02-12T00:05:55.882Z",
-      "isActive": true,
-      "createdAt": "2026-02-12T00:05:55.882Z"
-    },
-    {
       "id": "user-1770855043374",
       "name": "Kasim",
       "email": "kasimmkirbass@gmail.com",
