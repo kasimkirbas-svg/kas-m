@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, Lock, Eye, Globe, Shield, Trash2, CheckCircle, AlertCircle, Save, X } from 'lucide-react';
+import { fetchApi } from '../src/utils/api';
 
 interface SettingsProps {
   user?: any;
@@ -117,14 +118,34 @@ export const Settings: React.FC<SettingsProps> = ({ user, theme, language, t, on
     }, 1000);
   };
 
-  const handleDeleteAccount = () => {
+
+// Moved import to top of file
+// import { fetchApi } from '../src/utils/api';
+
+  const handleDeleteAccount = async () => {
     if (window.confirm('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
       if (window.confirm('Lütfen onayladığınızı tekrar belirtin.')) {
         setIsLoading(true);
-        setTimeout(() => {
-          localStorage.removeItem('currentUser');
-          window.location.href = '/';
-        }, 1000);
+
+        try {
+          const response = await fetchApi('/api/auth/delete-account', {
+              method: 'DELETE',
+          });
+
+          if (response.ok) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            window.location.href = '/';
+          } else {
+             const data = await response.json();
+             alert(data.message || 'Hata oluştu.');
+             setIsLoading(false);
+          }
+        } catch (error) {
+             console.error(error);
+             alert('Sunucu hatası.');
+             setIsLoading(false);
+        }
       }
     }
   };

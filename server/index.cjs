@@ -1621,6 +1621,46 @@ app.post('/api/users/upgrade', authenticateToken, async (req, res) => {
     }
 });
 
+// Delete Account (Self)
+app.delete('/api/auth/delete-account', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const db = readDB();
+        
+        // Remove from DB (File System Logic) -- In postgres/mongo create a deleteUser adapter method
+        const userIndex = db.users.findIndex(u => u.id === userId);
+        if (userIndex !== -1) {
+            
+            // Log deletion
+            systemLogs.unshift({
+                id: Date.now(),
+                type: 'warning',
+                action: 'Account Deleted',
+                details: `${db.users[userIndex].email} deleted their account`,
+                time: new Date().toISOString()
+            });
+
+            db.users.splice(userIndex, 1);
+            writeDB(db);
+
+            // Also remove from Postgres/Mongo if connected (basic implementation)
+            if (pgPool) {
+                await pgPool.query('DELETE FROM users WHERE id = $1', [userId]);
+            } else if (MONGO_URI) {
+                await connectDB();
+                await User.deleteOne({ id: userId });
+            }
+
+            return res.json({ success: true, message: 'Hesap başarıyla silindi.' });
+        } else {
+            return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+        }
+    } catch (e) {
+        console.error('Delete Account Error:', e);
+        res.status(500).json({ success: false, message: 'Hesap silinemedi.' });
+    }
+});
+
 // Admin: Get All Users (Protected)
 app.get('/api/users', authenticateToken, requireAdmin, async (req, res) => {
     try {
