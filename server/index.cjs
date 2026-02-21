@@ -1166,7 +1166,8 @@ app.post('/api/auth/register', async (req, res) => {
         await dbAdapter.addUser(newUser);
 
         // --- SEND WELCOME EMAIL ---
-        if (transporter && !isMockMode) {
+        // If transporter is available OR we are in mock mode (simulation)
+        if (transporter || !isMockMode) {
             const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: email,
@@ -1212,10 +1213,29 @@ app.post('/api/auth/register', async (req, res) => {
             };
 
             // Using callback approach for transporter
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) console.error('❌ Welcome email failed:', error.message);
-                // else console.log('✅ Welcome email sent');
-            });
+             if (transporter) {
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) console.error('❌ Welcome email failed:', error.message);
+                    else {
+                        systemLogs.unshift({
+                            id: Date.now(),
+                            type: 'success',
+                            action: 'Welcome Email Sent',
+                            details: `To: ${email}`,
+                            time: new Date().toISOString()
+                        });
+                    }
+                });
+            } else {
+                 console.log('⚠️ [MOCK] Welcome email skipped (No SMTP). Logged for Admin.');
+                 systemLogs.unshift({
+                    id: Date.now(),
+                    type: 'info',
+                    action: 'Welcome Email (Mock)',
+                    details: `To: ${email}`,
+                    time: new Date().toISOString()
+                });
+            }
         }
 
         // Create Token
@@ -1715,6 +1735,13 @@ app.delete('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
 
     db.users = filteredUsers;
     writeDB(db);
+
+    // Sync PostgreSQL / Mongo
+    if (pgPool) {
+        pgPool.query('DELETE FROM users WHERE id = $1', [id]).catch(e => console.error(e));
+    } else if (MONGO_URI) {
+        connectDB().then(() => User.deleteOne({ id })).catch(e => console.error(e));
+    }
     
     res.json({ success: true, message: 'Kullanıcı silindi.' });
 });
