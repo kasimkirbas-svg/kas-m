@@ -192,6 +192,145 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     }
   };
 
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    // Validasyon
+    if (!formData.email || !formData.password || !formData.name || !formData.companyName) {
+      setError('Tüm alanlar zorunludur.');
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setError('Geçerli bir e-posta adresi girin.');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Şifre en az 6 karakter olmalıdır.');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Şifreler eşleşmiyor.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetchApi('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          companyName: formData.companyName
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Send email notifications (Client side visual only)
+        sendEmailNotification('signup-confirmation', data.user.email, data.user);
+        
+        // Save Token
+        localStorage.setItem('authToken', data.token);
+
+        setSuccess('Hesap başarıyla oluşturuldu! Giriş yapılıyor...');
+        setTimeout(() => {
+          onLoginSuccess(data.user);
+        }, 1500);
+      } else {
+        setError(data.message || 'Kayıt başarısız.');
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
+      setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!formData.email) {
+        setError('Lütfen e-posta adresinizi girin.');
+        return;
+    }
+
+    setIsLoading(true);
+
+    try {
+        const response = await fetchApi('/api/auth/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: formData.email })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            setSuccess('Sıfırlama kodu e-posta adresinize gönderildi.');
+            setTimeout(() => setAuthView('reset-password'), 1500);
+        } else {
+            setError(data.message || 'İşlem başarısız.');
+        }
+    } catch (err) {
+        setError('Sunucu bağlantı hatası.');
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!formData.resetCode || !formData.password) {
+        setError('Kod ve yeni şifre gereklidir.');
+        return;
+    }
+
+    setIsLoading(true);
+
+    try {
+        const response = await fetchApi('/api/auth/reset-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: formData.email,
+                code: formData.resetCode,
+                newPassword: formData.password
+            })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            setSuccess('Şifreniz başarıyla sıfırlandı. Giriş yapabilirsiniz.');
+            setTimeout(() => {
+                setAuthView('login');
+                setFormData(prev => ({ ...prev, password: '', resetCode: '' }));
+            }, 2000);
+        } else {
+            setError(data.message || 'Sıfırlama başarısız.');
+        }
+    } catch (err) {
+        setError('Sunucu bağlantı hatası.');
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full flex bg-slate-50 dark:bg-slate-900 overflow-hidden">
       

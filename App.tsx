@@ -153,6 +153,45 @@ const App = () => {
     document.documentElement.lang = language;
   }, [language]);
 
+  // Cross-tab Synchronization
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'currentUser') {
+         if (e.newValue) {
+             const newUser = JSON.parse(e.newValue);
+             setUser(newUser);
+         } else {
+             setUser(null);
+             setCurrentView('auth');
+         }
+      }
+      if (e.key === 'authToken' && !e.newValue) {
+          setUser(null);
+          setCurrentView('auth');
+      }
+      if (e.key === 'theme' && e.newValue) {
+          const newTheme = e.newValue as 'light' | 'dark';
+          setTheme(newTheme);
+          // applyTheme handles DOM update, but we need to define it first or move this effect. 
+          // Since applyTheme is defined below, we can just duplicate logic or rely on the function being available (closure).
+          const html = document.documentElement;
+          if (newTheme === 'dark') {
+            html.classList.add('dark');
+          } else {
+            html.classList.remove('dark');
+          }
+      }
+      if (e.key === 'language' && e.newValue) {
+          const lang = e.newValue as 'tr' | 'en' | 'ar';
+          setLanguage(lang);
+          setT(getTranslation(lang));
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   const applyTheme = (themeType: 'light' | 'dark') => {
     const html = document.documentElement;
     if (themeType === 'dark') {
