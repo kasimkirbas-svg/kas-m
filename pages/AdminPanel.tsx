@@ -623,17 +623,61 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                        {u.plan === SubscriptionPlan.YEARLY ? 'Yıllık Pro' : u.plan === SubscriptionPlan.MONTHLY ? 'Aylık' : 'Ücretsiz'}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        u.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
-                        {u.isActive ? 'Aktif' : 'Pasif'}
-                      </span>
+                      {u.isBanned ? (
+                           <span className="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-red-800 text-white animate-pulse">
+                             YASAKLI 🚫
+                           </span>
+                      ) : (
+                          <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${
+                            u.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {u.isActive ? 'Aktif' : 'Pasif'}
+                          </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-slate-600">
                         {u.role === UserRole.ADMIN ? <b className="text-purple-600">Yönetici</b> : 'Kullanıcı'}
+                        {u.isBanned && <div className="text-[10px] text-red-500 max-w-[120px] truncate" title={u.banReason}>{u.banReason}</div>}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2 justify-end">
+                        {u.role !== UserRole.ADMIN && (
+                            <button
+                                onClick={async () => {
+                                    if(u.isBanned) {
+                                        if(window.confirm('Bu kullanıcının yasağını kaldırmak istiyor musunuz?')) {
+                                            try {
+                                                const token = localStorage.getItem('authToken');
+                                                await fetchApi(`/api/users/${u.id}/unban`, {
+                                                    method: 'POST',
+                                                    headers: { 'Authorization': `Bearer ${token}` }
+                                                });
+                                                loadUsers();
+                                            } catch(e) { alert('İşlem başarısız.'); }
+                                        }
+                                    } else {
+                                        const reason = prompt('Yasaklama sebebi (isteğe bağlı):');
+                                        if (reason !== null) {
+                                            if(window.confirm('Kullanıcıyı süresiz yasaklamak istediğinize emin misiniz?')) {
+                                                try {
+                                                    const token = localStorage.getItem('authToken');
+                                                    await fetchApi(`/api/users/${u.id}/ban`, {
+                                                        method: 'POST',
+                                                        headers: { 'Authorization': `Bearer ${token}` },
+                                                        body: JSON.stringify({ banReason: reason })
+                                                    });
+                                                    loadUsers();
+                                                } catch(e) { alert('İşlem başarısız.'); }
+                                            }
+                                        }
+                                    }
+                                }}
+                                className={`p-1.5 hover:bg-slate-100 rounded transition ${u.isBanned ? 'text-green-600' : 'text-amber-600'}`}
+                                title={u.isBanned ? "Yasağı Kaldır" : "Yasakla (Ban)"}
+                            >
+                                <Shield size={16} />
+                            </button>
+                        )}
                         <button 
                             onClick={() => handleSendWelcomeEmail(u)}
                             disabled={emailSending[u.id]}

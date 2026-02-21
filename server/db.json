@@ -4,7 +4,7 @@
       "id": "admin-001",
       "name": "Sistem Yöneticisi",
       "email": "admin@kirbas.com",
-      "password": "$2b$10$Gf7FJT7DOkLgz0DdIY8lyuDVV4cgtdqTpXdC7ISIM9g0cSYI/bItK",
+      "password": "$2b$10$mVDWt9CXjbvAWuorP52BJuU8g1zlhMPj1PwxS.XywRjQT51plEJM2",
       "companyName": "Yönetim Paneli",
       "role": "ADMIN",
       "plan": "YEARLY",

@@ -22,6 +22,9 @@ export interface User {
   subscriptionEndDate?: string;
   isActive?: boolean;
   password?: string;
+  isBanned?: boolean;
+  banReason?: string;
+  banExpiresAt?: string;
 }
 
 export interface Subscription {

@@ -91,7 +91,11 @@ const userSchema = new mongoose.Schema({
     subscriptionStartDate: String,
     subscriptionEndDate: String,
     isActive: Boolean,
-    createdAt: String
+    createdAt: String,
+    isBanned: Boolean,
+    banReason: String,
+    banExpiresAt: String,
+    bannedIp: String
 }, { strict: false });
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
@@ -1269,6 +1273,19 @@ app.post('/api/auth/login', async (req, res) => {
     try {
         const user = await dbAdapter.findUserByEmail(email);
 
+        if (user && user.isBanned) {
+             const expiry = user.banExpiresAt ? new Date(user.banExpiresAt) : null;
+             if (!expiry || expiry > new Date()) {
+                
+                return res.status(403).json({ 
+                    success: false, 
+                    message: `Hesabınız yasaklandı. ${expiry ? 'Yasak Bitiş: ' + expiry.toLocaleString('tr-TR') : 'Süresiz'}`,
+                    banReason: user.banReason || 'Yönetici tarafından engellendi.'
+                });
+             }
+             // If expired, we proceed (effectively auto-unban on login)
+        }
+
         if (user && (await bcrypt.compare(password, user.password))) {
             // Correct Password
             if (loginAttempts[email]) delete loginAttempts[email]; // Reset attempts
@@ -1759,6 +1776,58 @@ app.delete('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
     }
     
     res.json({ success: true, message: 'Kullanıcı silindi.' });
+});
+
+// Admin: Ban User
+app.post('/api/users/:id/ban', authenticateToken, requireAdmin, (req, res) => {
+    const { id } = req.params;
+    const { banReason, durationMinutes } = req.body;
+    
+    // Self-ban check
+    if (req.user.id === id) {
+        return res.status(400).json({ success: false, message: 'Kendinizi yasaklayamazsınız.' });
+    }
+
+    const db = readDB();
+    const index = db.users.findIndex(u => u.id === id);
+    if (index === -1) {
+        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    }
+
+    const banExpiresAt = durationMinutes 
+        ? new Date(Date.now() + durationMinutes * 60 * 1000).toISOString() 
+        : null; // Null means permanent
+
+    db.users[index] = { 
+        ...db.users[index], 
+        isBanned: true, 
+        banReason: banReason || 'Yönetici kararı',
+        banExpiresAt: banExpiresAt
+    };
+    
+    writeDB(db);
+    res.json({ success: true, message: 'Kullanıcı yasaklandı.', user: db.users[index] });
+});
+
+// Admin: Unban User
+app.post('/api/users/:id/unban', authenticateToken, requireAdmin, (req, res) => {
+    const { id } = req.params;
+    const db = readDB();
+    const index = db.users.findIndex(u => u.id === id);
+    
+    if (index === -1) {
+        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    }
+
+    db.users[index] = { 
+        ...db.users[index], 
+        isBanned: false, 
+        banReason: null,
+        banExpiresAt: null
+    };
+    
+    writeDB(db);
+    res.json({ success: true, message: 'Kullanıcı yasağı kaldırıldı.' });
 });
 
 // --- TEMPLATE MANAGEMENT (Admin & Public) ---
