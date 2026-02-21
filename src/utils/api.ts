@@ -44,5 +44,10 @@ export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
+    // Default cache control: no-store to prevent caching of dynamic data
+    if (!options.cache) {
+        options.cache = 'no-store';
+    }
+
     return fetch(url, { ...options, headers });
 };

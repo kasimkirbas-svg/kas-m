@@ -596,13 +596,26 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
 
       {/* Subscribers Tab (Active Management) */}
       {activeTab === 'subscribers' && (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-            <h3 className="font-bold text-slate-900">{t?.admin?.allSubscribers || 'Tüm Aboneler'}</h3>
-            <div className="text-sm text-slate-500">
-              Toplam: <b>{allUsers.length}</b> Abone
-            </div>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+             <div>
+                <h3 className="text-lg font-bold text-slate-900">{t?.admin?.allSubscribers || 'Tüm Aboneler'}</h3>
+                <div className="text-sm text-slate-500">
+                    Toplam: <b>{allUsers.length}</b> Kayıtlı Kullanıcı
+                </div>
+             </div>
+             <button 
+                onClick={loadUsers} 
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 font-medium transition"
+             >
+                <div className="w-4 h-4 animate-spin-slow" style={{ animationDuration: '3s' }}>
+                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-1.343 3-3s-1.343-3-3-3m0 6c-1.657 0-3-1.343-3-3s1.343-3 3-3m-9 0c0-1.657 1.343-3 3-3s3 1.343 3 3m-6 0c0 1.657-1.343 3-3 3s-3-1.343-3-3m0-6c0-1.657 1.343-3 3-3s3 1.343 3 3m-6 0c0 1.657-1.343 3-3 3s-3-1.343-3-3"/></svg>
+                </div>
+                Listeyi Yenile
+             </button>
           </div>
+
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
@@ -669,6 +682,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
               </tbody>
             </table>
           </div>
+        </div>
         </div>
       )}
 
