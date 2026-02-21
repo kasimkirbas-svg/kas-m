@@ -242,12 +242,22 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">{_t('editor.title', 'Editör')}</h2>
             <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">{_t('editor.subtitle', 'Doküman detaylarını giriniz')}</p>
           </div>
-          {onClose && (
+          <div className="flex gap-2">
+            {/* E-posta alanı */}
+            <input 
+              type="text" 
+              placeholder="Alıcı E-posta (Opsiyonel)" 
+              value={formData.email || ''} 
+              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:ring-1 focus:ring-indigo-500 outline-none hidden sm:block w-48"
+            />
+            {onClose && (
             <button onClick={onClose} className="hover:bg-red-50 text-slate-400 hover:text-red-500 dark:hover:bg-red-900/20 p-2 rounded-full transition duration-200">
               <span className="sr-only">Kapat</span>
               ✕
             </button>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-slate-50/30 dark:bg-slate-950/30">
@@ -300,25 +310,37 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-700 pb-2">{_t('editor.details', 'Detaylar')}</h3>
              <div className="grid gap-4">
-                {template.fields.map(field => (
-                  <div key={field.id} className="space-y-1.5">
+                {template.fields.map((field) => (
+                  <div key={field.key} className="space-y-1.5">
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                       {field.label}
                     </label>
                     {field.type === 'textarea' ? (
                       <textarea
-                        name={field.name}
-                        value={formData[field.name] || ''}
+                        name={field.key}
+                        value={formData[field.key] || ''}
                         onChange={handleInputChange}
                         rows={3}
                         placeholder={field.placeholder}
                         className="w-full p-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
                       />
+                    ) : field.type === 'select' ? (
+                       <select
+                         name={field.key}
+                         value={formData[field.key] || ''}
+                         onChange={(e) => setFormData(prev => ({ ...prev, [field.key]: e.target.value }))}
+                         className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                       >
+                         <option value="">Seçiniz</option>
+                         {field.options?.map((opt, i) => (
+                           <option key={i} value={opt}>{opt}</option>
+                         ))}
+                       </select>
                     ) : (
                       <input
                         type={field.type}
-                        name={field.name}
-                        value={formData[field.name] || ''}
+                        name={field.key}
+                        value={formData[field.key] || ''}
                         onChange={handleInputChange}
                         placeholder={field.placeholder}
                         className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
@@ -396,15 +418,22 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
         {/* Footer Actions */}
         <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-4 shrink-0">
-           <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 sm:mr-auto cursor-pointer select-none">
-              <input 
-                type="checkbox" 
-                checked={sendEmail}
-                onChange={(e) => setSendEmail(e.target.checked)}
-                className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300"
-              />
-              {_t('editor.sendEmail', 'Oluşturunca e-posta gönder')}
-           </label>
+           
+           {/* Direct Mail Link Instead of Server-Side Send */}
+           <a 
+              href={formData.email ? `mailto:${formData.email}?subject=${encodeURIComponent(template.title)}&body=${encodeURIComponent("Merhaba,\n\nDokümanınızı ekte görebilirsiniz.\n\nTeşekkürler.")}` : '#'}
+              className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-2 sm:mr-auto"
+              onClick={(e) => {
+                 if (!formData.email) {
+                    e.preventDefault();
+                    return;
+                 }
+                 // Let the PDF download complete first, then user can attach manually
+                 alert("PDF İndiriliyor...\n\nOtomatik mail sistemi kapalıdır. İndirilen dosyayı açılan mail ekranına ekleyerek gönderebilirsiniz.");
+              }}
+           >
+              Önce İndir Sonra Gönder
+           </a>
            
            <button 
              onClick={handleGenerateDocument}
@@ -419,7 +448,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
              ) : (
                <>
                  <Download size={18} />
-                 {_t('editor.createPDF', 'PDF Oluştur')}
+                 {_t('editor.createPDF', 'İndir & Paylaş')}
                </>
              )}
            </button>
@@ -466,10 +495,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                      </div>
                      
                      {template.fields.map(field => (
-                        <div key={field.id} className={`${field.type === 'textarea' ? 'col-span-2' : 'col-span-1'}`}>
+                        <div key={field.key} className={`${field.type === 'textarea' ? 'col-span-2' : 'col-span-1'}`}>
                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">{field.label}</span>
                            <div className="text-sm text-slate-800 border-b border-slate-200 pb-1 min-h-[1.5rem] break-words whitespace-pre-wrap">
-                              {formData[field.name]}
+                              {formData[field.key]}
                            </div>
                         </div>
                      ))}

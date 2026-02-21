@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { DocumentTemplate } from '../types';
 import { 
-  Search, FileText, CheckCircle, Smartphone, Layout, ArrowRight,
-  ShieldCheck, Briefcase, Calculator, Construction, Scale, Megaphone, UserCheck, FileSpreadsheet, Layers
+  Search, FileText, CheckCircle, Smartphone, Layout, ArrowRight
 } from 'lucide-react';
 
 interface DocumentsListProps {
@@ -21,17 +20,35 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const getCategoryStyle = (cat: string) => {
-    const normal = cat?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-    if (normal?.includes('ISG')) return { bg: 'bg-orange-50', icon: ShieldCheck, color: 'text-orange-500', badge: 'bg-orange-100 text-orange-700' };
-    if (normal?.includes('IK') || normal?.includes('INSAN')) return { bg: 'bg-blue-50', icon: UserCheck, color: 'text-blue-500', badge: 'bg-blue-100 text-blue-700' };
-    if (normal?.includes('MUHASEBE') || normal?.includes('MATI')) return { bg: 'bg-emerald-50', icon: Calculator, color: 'text-emerald-500', badge: 'bg-emerald-100 text-emerald-700' };
-    if (normal?.includes('HUKUK')) return { bg: 'bg-slate-100', icon: Scale, color: 'text-slate-600', badge: 'bg-slate-200 text-slate-700' };
-    if (normal?.includes('PAZARLAMA')) return { bg: 'bg-pink-50', icon: Megaphone, color: 'text-pink-500', badge: 'bg-pink-100 text-pink-700' };
-    if (normal?.includes('TEKNIK') || normal?.includes('BAKIM')) return { bg: 'bg-cyan-50', icon: Construction, color: 'text-cyan-600', badge: 'bg-cyan-100 text-cyan-700' };
-    if (normal?.includes('KALITE')) return { bg: 'bg-violet-50', icon: CheckCircle, color: 'text-violet-500', badge: 'bg-violet-100 text-violet-700' };
-    if (normal?.includes('LOJISTIK')) return { bg: 'bg-yellow-50', icon: Layers, color: 'text-yellow-600', badge: 'bg-yellow-100 text-yellow-700' };
-    return { bg: 'bg-slate-50', icon: FileSpreadsheet, color: 'text-slate-400', badge: 'bg-slate-100 text-slate-600' };
+  const getCategoryVisual = (cat: string) => {
+      const normal = cat?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() || '';
+      
+      // ISG & Güvenlik
+      if (normal.includes('isg') || normal.includes('guvenlik') || normal.includes('acil')) 
+          return 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?q=80&w=400&auto=format&fit=crop';
+          
+      // İK & Personel
+      if (normal.includes('ik') || normal.includes('insan') || normal.includes('personel') || normal.includes('egitim')) 
+          return 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=400&auto=format&fit=crop';
+          
+      // Muhasebe & Finans
+      if (normal.includes('muhasebe') || normal.includes('finans') || normal.includes('fatura') || normal.includes('masraf')) 
+          return 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=400&auto=format&fit=crop';
+          
+      // Hukuk & Sözleşme
+      if (normal.includes('hukuk') || normal.includes('sozlesme') || normal.includes('kvkk')) 
+          return 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400&auto=format&fit=crop';
+          
+      // Teknik & Bakım
+      if (normal.includes('teknik') || normal.includes('bakim') || normal.includes('arac') || normal.includes('makine')) 
+          return 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=400&auto=format&fit=crop';
+          
+      // Kalite & Denetim
+      if (normal.includes('kalite') || normal.includes('denetim') || normal.includes('anket')) 
+          return 'https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=400&auto=format&fit=crop';
+          
+      // Genel Ofis
+      return 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=400&auto=format&fit=crop';
   };
 
   const categories = Array.from(new Set(templates.map(t => t.category)));
@@ -120,8 +137,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
             const isLocked = template.isPremium && !userIsPremium;
             const title = t?.templates?.[`t${template.id}_title`] || template.title;
             const desc = t?.templates?.[`t${template.id}_desc`] || template.description;
-            const style = getCategoryStyle(template.category);
-            const Icon = style.icon;
+            const imageUrl = getCategoryVisual(template.category);
             
             return (
               <div
@@ -129,30 +145,38 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                 className={`bg-white rounded-xl border border-slate-200 hover:border-indigo-300 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col h-full relative ${isLocked ? 'grayscale opacity-75 hover:grayscale-0 hover:opacity-100' : ''}`}
                 onClick={() => !isLocked && onSelectTemplate(template)}
               >
-                {/* Banner Image / Color */}
-                <div className={`h-40 w-full relative overflow-hidden flex items-center justify-center ${isLocked ? 'bg-slate-100' : style.bg}`}>
-                   <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#64748b 1px, transparent 1px)', backgroundSize: '12px 12px' }}></div>
+                {/* Banner Image */}
+                <div className="h-40 w-full relative overflow-hidden">
+                   <img 
+                      src={imageUrl} 
+                      alt={template.category} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                   />
                    
-                   <div className={`transform transition-transform duration-500 group-hover:scale-110 ${style.color}`}>
-                      <Icon size={56} strokeWidth={1.5} className="drop-shadow-sm" />
-                   </div>
-                   
+                   {/* Overlay Gradient */}
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                   {/* Premium Badge */}
                    {template.isPremium && (
-                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg border border-amber-100 shadow-sm text-amber-500 text-[10px] font-bold flex items-center gap-1">
+                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg border border-amber-100 shadow-sm text-amber-500 text-[10px] font-bold flex items-center gap-1 z-10">
                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                        PRO
                      </div>
                    )}
+                   
+                   {/* Category Badge on Image */}
+                   <div className="absolute bottom-3 left-3">
+                      <span className="text-[10px] uppercase font-bold px-2 py-1 rounded bg-white/90 text-slate-800 shadow-sm backdrop-blur-sm">
+                        {template.category}
+                      </span>
+                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex-1 flex flex-col relative z-20 bg-white">
-                  <div className="flex items-start justify-between mb-3">
-                     <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded tracking-wider ${style.badge}`}>
-                       {template.category}
-                     </span>
+                <div className="p-5 flex-1 flex flex-col relative bg-white">
+                  <div className="flex items-center gap-2 mb-2">
                      <span className="text-slate-400 text-xs flex items-center gap-1">
-                       <Smartphone size={12} /> Mobil
+                       <Smartphone size={12} /> Mobil Uyumlu
                      </span>
                   </div>
                   

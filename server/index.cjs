@@ -1018,10 +1018,11 @@ if (EMAIL_PASS) {
 
 
 if (!EMAIL_USER || EMAIL_USER.includes('senin_mailin') || !EMAIL_PASS) {
-    console.warn("⚠️ [UYARI] E-posta bilgileri eksik veya varsayılan değerlerde. (.env dosyasını kontrol edin)");
-    console.warn("⚠️ SİSTEM GERÇEK MODDA ÇALIŞACAK VE MAİL ATMAYI DENEYECEK (BAŞARISIZ OLABİLİR).");
-    // isMockMode = false; // Intentionally NOT setting mock mode to force real attempts
+    if (!isMockMode) {
+      console.log("ℹ️ [INFO] E-posta ayarları girilmedi. Mail özellikleri devre dışı kalacak, sadece indirme çalışacak.");
+    }
 }
+
 
 // Transporter Configuration
 let transporter;
@@ -1210,8 +1211,8 @@ app.post('/api/auth/register', async (req, res) => {
 
             // Using callback approach for transporter
             transporter.sendMail(mailOptions, (error, info) => {
-                if (error) console.error('❌ Welcome email failed:', error);
-                else console.log('✅ Welcome email sent:', info.response);
+                if (error) console.error('❌ Welcome email failed:', error.message);
+                // else console.log('✅ Welcome email sent');
             });
         }
 
@@ -1455,16 +1456,17 @@ app.post('/api/auth/forgot-password', async (req, res) => {
             expiresAt
         });
 
-        console.log(`[PASSWORD RESET] Generated code for ${email}: ${code}`);
+        // console.log(`[PASSWORD RESET] Generated code for ${email}: ${code}`); // REMOVED FOR PRIVACY
         
         // Check if we can send email
         if (transporter && !isMockMode) {
-            console.log(`[FORGOT-PASSWORD] Attempting to send email to ${email}...`);
+            console.log(`[FORGOT-PASSWORD] Sending reset email to user...`);
              const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: email,
                 subject: 'Şifre Sıfırlama Kodu - Kırbaş Doküman',
                 html: `
+
                     <div style="font-family: sans-serif; padding: 20px;">
                         <h2>Şifre Sıfırlama İsteği</h2>
                         <p>Hesabınız için şifre sıfırlama talebi aldık. Onay kodunuz:</p>
@@ -1477,12 +1479,11 @@ app.post('/api/auth/forgot-password', async (req, res) => {
             
             // Promisify sendMail to await it and catch errors properly
             try {
-                const info = await transporter.sendMail(mailOptions);
-                console.log(`[FORGOT-PASSWORD] Email sent successfully: ${info.messageId}`);
-                console.log(`[FORGOT-PASSWORD] Server response: ${info.response}`);
+                await transporter.sendMail(mailOptions);
+                console.log(`[FORGOT-PASSWORD] Email sent successfully.`);
             } catch (mailError) {
                 console.error(`[FORGOT-PASSWORD] Email failed:`, mailError);
-                throw new Error("E-posta sunucusuna erişilemedi. Lütfen daha sonra tekrar deneyin veya yönetici ile iletişime geçin.");
+                throw new Error("E-posta sunucusuna erişilemedi.");
             }
         } else {
              if (!isMockMode) {
@@ -1780,15 +1781,14 @@ app.post('/api/send-document', async (req, res) => {
             };
 
             await transporter.sendMail(mailOptions);
-            console.log(`[EMAIL] Document sent to ${email}`);
+            console.log(`[EMAIL] Document sent to user.`);
         } else {
              // If we reach here and isMockMode is explicitly false, it means transporter creation failed but wasn't caught earlier?
              // Or transporter is undefined.
              if (!isMockMode) {
-                 throw new Error("E-posta servisi başlatılamadı (Transporter yok). Lütfen sunucu yapılandırmasını kontrol edin.");
+                 throw new Error("E-posta servisi başlatılamadı. Lütfen sunucu yapılandırmasını kontrol edin.");
              }
-            console.log(`[MOCK EMAIL] Simulating sending document to ${email}`);
-            // In mock mode, we just log success.
+            // MOCK LOG REMOVED
         }
 
         res.json({ success: true, message: 'E-posta başarıyla gönderildi.' });
