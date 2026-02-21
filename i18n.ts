@@ -46,7 +46,8 @@ const tr = {
     settings: 'Ayarlar',
     admin: 'Yönetici',
     subscribers: 'Aboneler',
-    templates: 'Şablonlar'
+    templates: 'Şablonlar',
+    create: 'Yeni Oluştur'
   },
   settings: {
     title: 'Ayarlar',
@@ -247,6 +248,24 @@ const tr = {
     noDocsDesc: 'Şablonlardan birini seçerek hemen profesyonel bir doküman oluşturmaya başlayın.',
     documentSuffix: 'Dokümanı',
     downloadSimulated: 'İndirme işlemi simüle edildi.'
+  },
+  templates: {
+    t1_title: 'Acil Durum Hizmet Planı',
+    t1_desc: 'İş yerleri için zorunlu acil durum eylem ve hizmet planı şablonu.',
+    t2_title: 'Hizmet Teklif Formu',
+    t2_desc: 'Standart hizmet teklif ve kapsam belirleme formu.',
+    t3_title: 'Eğitim Katılım Sertifikası',
+    t3_desc: 'Personel eğitimleri sonrası verilecek başarı sertifikası.',
+    t4_title: 'Saha Denetim Raporu',
+    t4_desc: 'Saha denetimleri için detaylı raporlama formatı.',
+    t5_title: 'Risk Analizi Formu (5x5 L Tipi)',
+    t5_desc: '5x5 Risk matrisi değerlendirme formu.',
+    t6_title: 'Personel Görev Tanımı',
+    t6_desc: 'Çalışan görev ve sorumluluk bildirim formu.',
+    t7_title: 'Makine Bakım Kartı',
+    t7_desc: 'Periyodik bakım takip çizelgesi.',
+    t8_title: 'Kaza Tespit Tutanağı',
+    t8_desc: 'İş kazası bildirim ve tespit formu.'
   }
 };
 
@@ -300,7 +319,8 @@ const en = {
     settings: 'Settings',
     admin: 'Admin',
     subscribers: 'Subscribers',
-    templates: 'Templates'
+    templates: 'Templates',
+    create: 'Create New'
   },
   settings: {
     title: 'Settings',
@@ -479,6 +499,24 @@ const en = {
     noDocsDesc: 'Start creating a professional document by selecting one of the templates.',
     documentSuffix: 'Document',
     downloadSimulated: 'Download simulated.'
+  },
+  templates: {
+    t1_title: "Emergency Service Plan",
+    t1_desc: "Mandatory emergency action and service plan template for workplaces.",
+    t2_title: "Service Proposal Form",
+    t2_desc: "Standard service proposal and scope definition form.",
+    t3_title: "Training Participation Certificate",
+    t3_desc: "Achievement certificate to be given after personnel training.",
+    t4_title: "Field Inspection Report",
+    t4_desc: "Detailed reporting format for field inspections.",
+    t5_title: "Risk Analysis Form (5x5 L Type)",
+    t5_desc: "5x5 Risk matrix assessment form.",
+    t6_title: "Personnel Job Description",
+    t6_desc: "Employee duty and responsibility notification form.",
+    t7_title: "Machine Maintenance Card",
+    t7_desc: "Periodic maintenance tracking schedule.",
+    t8_title: "Accident Assessment Report",
+    t8_desc: "Work accident notification and assessment form."
   }
 };
 
@@ -532,7 +570,8 @@ const ar = {
     settings: 'الإعدادات',
     admin: 'إدارة',
     subscribers: 'المشتركون',
-    templates: 'القوالب'
+    templates: 'القوالب',
+    create: 'إنشاء جديد'
   },
   settings: {
     title: 'الإعدادات',
@@ -711,6 +750,24 @@ const ar = {
     noDocsDesc: 'ابدأ في إنشاء مستند احترافي باختيار أحد القوالب.',
     documentSuffix: 'مستند',
     downloadSimulated: 'تم محاكاة التنزيل.'
+  },
+  templates: {
+    t1_title: "خطة خدمة الطوارئ",
+    t1_desc: "نموذج خطة عمل وخدمة الطوارئ الإلزامية لأماكن العمل.",
+    t2_title: "نموذج عرض الخدمة",
+    t2_desc: "نموذج قياسي لعرض الخدمة وتحديد النطاق.",
+    t3_title: "شهادة مشاركة في التدريب",
+    t3_desc: "شهادة إنجاز تُمنح بعد تدريب الموظفين.",
+    t4_title: "تقرير التفتيش الميداني",
+    t4_desc: "تنسيق تقرير مفصل لعمليات التفتيش الميداني.",
+    t5_title: "نموذج تحليل المخاطر (نوع L 5x5)",
+    t5_desc: "نموذج تقييم مصفوفة المخاطر 5x5.",
+    t6_title: "الوصف الوظيفي للموظف",
+    t6_desc: "نموذج إشعار بمهام ومسؤوليات الموظف.",
+    t7_title: "بطاقة صيانة الآلة",
+    t7_desc: "جدول تتبع الصيانة الدورية.",
+    t8_title: "تقرير تقييم الحوادث",
+    t8_desc: "نموذج الإبلاغ عن حوادث العمل وتقييمها."
   }
 };
 

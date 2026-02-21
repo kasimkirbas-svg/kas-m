@@ -698,7 +698,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                   templates.map((template, idx) => (
                     <tr key={idx} className="hover:bg-slate-50">
                       <td className="px-6 py-4 font-medium text-slate-900">
-                        {template.title}
+                        {t?.templates?.[`t${template.id}_title`] || template.title}
                         {template.isPremium && <span className="ml-2 inline-block px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] rounded border border-amber-200">PRO</span>}
                       </td>
                       <td className="px-6 py-4 text-slate-600">{template.category}</td>

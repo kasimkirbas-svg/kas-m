@@ -23,8 +23,11 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
 
   // Filter templates
   const filteredTemplates = templates.filter(template => {
-    const matchesSearch = template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          template.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const title = t?.templates?.[`t${template.id}_title`] || template.title;
+    const desc = t?.templates?.[`t${template.id}_desc`] || template.description;
+
+    const matchesSearch = title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          desc.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = !selectedCategory || template.category === selectedCategory;
     
     // Show all templates but mark lock state if premium
@@ -104,6 +107,8 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredTemplates.map(template => {
             const isLocked = template.isPremium && !userIsPremium;
+            const title = t?.templates?.[`t${template.id}_title`] || template.title;
+            const desc = t?.templates?.[`t${template.id}_desc`] || template.description;
             
             return (
               <div
@@ -138,11 +143,11 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                   </div>
                   
                   <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition-colors">
-                    {template.title}
+                    {title}
                   </h3>
                   
                   <p className="text-slate-500 text-sm leading-relaxed mb-4 flex-1 line-clamp-3">
-                    {template.description}
+                    {desc}
                   </p>
                   
                   {/* Footer Stats/Action */}
