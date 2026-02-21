@@ -189,6 +189,48 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     loadUsers();
   }, []);
 
+
+  // --- BAN SYSTEM ---
+  const [banModal, setBanModal] = useState<{ isOpen: boolean; userId: string; userName: string }>({ 
+    isOpen: false, userId: '', userName: '' 
+  });
+  const [banForm, setBanForm] = useState({ reason: '', duration: 'permanent' });
+
+  const handleBanSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!banModal.userId) return;
+    
+    try {
+        const payload = {
+            banReason: banForm.reason,
+            durationMinutes: banForm.duration === 'permanent' ? null : parseInt(banForm.duration)
+        };
+        
+        const res = await fetchApi(`/api/users/${banModal.userId}/ban`, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error('Yasaklama başarısız.');
+        
+        loadUsers();
+        setBanModal({ isOpen: false, userId: '', userName: '' });
+        setBanForm({ reason: '', duration: 'permanent' });
+    } catch(err) {
+        alert('İşlem başarısız.');
+    }
+  };
+
+  const handleUnbanUser = async (user: User) => {
+      if(window.confirm(`${user.name} kullanıcısının yasağını kaldırmak istiyor musunuz?`)) {
+        try {
+            await fetchApi(`/api/users/${user.id}/unban`, { method: 'POST' });
+            loadUsers();
+        } catch(e) { alert('İşlem başarısız.'); }
+      }
+  };
+
+
   // --- TEMPLATE HANDLERS ---
   const handleEditTemplate = (tpl: DocumentTemplate) => {
     setEditingTemplate(tpl);
@@ -275,20 +317,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   };
 
   const handleDeleteUser = async (userId: string) => {
-    if (window.confirm(t?.common?.confirmDelete || 'Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
+    if (window.confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
       try {
-        const token = localStorage.getItem('authToken');
-        await fetchApi(`/api/users/${userId}`, { 
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-        });
+        const res = await fetchApi(`/api/users/${userId}`, { method: 'DELETE' });
+        if (!res.ok) {
+           const json = await res.json();
+           throw new Error(json.message || 'Silme işlemi başarısız');
+        }
         
         // Refresh list
         loadUsers();
       } catch(e) {
-        alert('Silme işlemi başarısız');
+        console.error(e);
+        alert(e instanceof Error ? e.message : 'Silme işlemi başarısız');
       }
     }
   };
@@ -643,39 +684,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                       <div className="flex gap-2 justify-end">
                         {u.role !== UserRole.ADMIN && (
                             <button
-                                onClick={async () => {
+                                onClick={() => {
                                     if(u.isBanned) {
-                                        if(window.confirm('Bu kullanıcının yasağını kaldırmak istiyor musunuz?')) {
-                                            try {
-                                                const token = localStorage.getItem('authToken');
-                                                await fetchApi(`/api/users/${u.id}/unban`, {
-                                                    method: 'POST',
-                                                    headers: { 'Authorization': `Bearer ${token}` }
-                                                });
-                                                loadUsers();
-                                            } catch(e) { alert('İşlem başarısız.'); }
-                                        }
+                                      handleUnbanUser(u);
                                     } else {
-                                        const reason = prompt('Yasaklama sebebi (isteğe bağlı):');
-                                        if (reason !== null) {
-                                            if(window.confirm('Kullanıcıyı süresiz yasaklamak istediğinize emin misiniz?')) {
-                                                try {
-                                                    const token = localStorage.getItem('authToken');
-                                                    await fetchApi(`/api/users/${u.id}/ban`, {
-                                                        method: 'POST',
-                                                        headers: { 'Authorization': `Bearer ${token}` },
-                                                        body: JSON.stringify({ banReason: reason })
-                                                    });
-                                                    loadUsers();
-                                                } catch(e) { alert('İşlem başarısız.'); }
-                                            }
-                                        }
+                                      setBanModal({ isOpen: true, userId: u.id, userName: u.name });
                                     }
                                 }}
-                                className={`p-1.5 hover:bg-slate-100 rounded transition ${u.isBanned ? 'text-green-600' : 'text-amber-600'}`}
+                                className={`p-1.5 hover:bg-slate-100 rounded transition ${u.isBanned ? 'text-green-600 ring-2 ring-green-100 bg-green-50' : 'text-amber-600'}`}
                                 title={u.isBanned ? "Yasağı Kaldır" : "Yasakla (Ban)"}
                             >
-                                <Shield size={16} />
+                                <Shield size={16} fill={u.isBanned ? "currentColor" : "none"}/>
                             </button>
                         )}
                         <button 
@@ -1086,6 +1105,85 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                     <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-4">
                         <button type="button" onClick={() => setIsPlanModalOpen(false)} className="px-4 py-2 text-slate-700 hover:bg-slate-100 font-medium rounded-lg transition">İptal</button>
                         <button type="submit" className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+      )}
+      {/* Ban User Modal */}
+      {banModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl border border-slate-200 overflow-hidden transform transition-all scale-100">
+                <div className="bg-red-50 p-6 border-b border-red-100 flex items-center gap-4">
+                    <div className="p-3 bg-red-100 rounded-full text-red-600">
+                        <Shield size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-slate-800">Kullanıcıyı Yasakla</h3>
+                        <p className="text-sm text-red-600 font-medium">@{banModal.userName}</p>
+                    </div>
+                    <button 
+                        onClick={() => setBanModal({isOpen: false, userId: '', userName: ''})}
+                        className="ml-auto text-slate-400 hover:text-slate-600 transition"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                <form onSubmit={handleBanSubmit} className="p-6 space-y-5">
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">Yasaklama Sebebi</label>
+                        <textarea 
+                            required
+                            placeholder="Örn: Hizmet şartları ihlali..."
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all resize-none text-slate-700 placeholder-slate-400"
+                            rows={3}
+                            value={banForm.reason}
+                            onChange={e => setBanForm({...banForm, reason: e.target.value})}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">Süre</label>
+                        <div className="grid grid-cols-3 gap-3">
+                            {[
+                                { val: '60', label: '1 Saat' },
+                                { val: '1440', label: '1 Gün' },
+                                { val: '10080', label: '1 Hafta' },
+                                { val: '43200', label: '1 Ay' },
+                                { val: 'permanent', label: 'Süresiz' }
+                            ].map(opt => (
+                                <button
+                                    key={opt.val}
+                                    type="button"
+                                    onClick={() => setBanForm({...banForm, duration: opt.val})}
+                                    className={`py-2 px-3 text-sm font-medium rounded-lg border transition-all ${
+                                        banForm.duration === opt.val 
+                                        ? 'bg-red-600 text-white border-red-600 shadow-md transform scale-105' 
+                                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                                    }`}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="pt-4 flex gap-3">
+                        <button 
+                            type="button" 
+                            onClick={() => setBanModal({isOpen: false, userId: '', userName: ''})}
+                            className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium transition"
+                        >
+                            İptal
+                        </button>
+                        <button 
+                            type="submit" 
+                            className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-bold shadow-lg shadow-red-200 transition active:scale-[0.98] flex items-center justify-center gap-2"
+                        >
+                            <Shield size={18} />
+                            Yasakla
+                        </button>
                     </div>
                 </form>
             </div>
