@@ -392,20 +392,29 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                 
                 <div className="pt-6 border-t border-slate-100 mt-6">
                     <button 
-                        onClick={() => {
+                        onClick={async () => {
                             if(window.confirm(t?.profile?.confirmDeleteAccount || 'Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
-                                fetchApi('/api/auth/delete-account', { method: 'DELETE' })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if(data.success) {
-                                            alert(data.message);
-                                            localStorage.removeItem('authToken');
-                                            localStorage.removeItem('currentUser');
-                                            window.location.href = '/';
-                                        } else {
-                                            alert(data.message || 'Hata oluştu.');
-                                        }
-                                    });
+                                try {
+                                    const res = await fetchApi('/api/auth/delete-account', { method: 'DELETE' });
+                                    const data = await res.json();
+                                    
+                                    if(data.success) {
+                                        // Force clear everything immediately
+                                        localStorage.removeItem('authToken');
+                                        localStorage.removeItem('currentUser');
+                                        localStorage.clear(); // Clear all app data
+                                        
+                                        // Redirect to login/home
+                                        window.location.href = '/auth?mode=login';
+                                        
+                                        alert(data.message || 'Hesabınız silindi.');
+                                    } else {
+                                        alert(data.message || 'Hata oluştu.');
+                                    }
+                                } catch (e) {
+                                    console.error(e);
+                                    alert('Bir hata oluştu.');
+                                }
                             }
                         }}
                         className="text-red-600 text-sm hover:underline flex items-center gap-1 opacity-80 hover:opacity-100"

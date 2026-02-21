@@ -79,10 +79,38 @@ const App = () => {
 
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
         setCurrentView('dashboard');
+        
+        // Security Check: Verify user still exists (invalidates deleted users on refresh)
+        fetchApi('/api/auth/me')
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('User invalid');
+                }
+                return res.json();
+            })
+            .then(data => {
+                if(!data.success) {
+                     throw new Error('Session invalid');
+                }
+                // Optional: Update user data
+                // setUser(data.user);
+            })
+            .catch(() => {
+                // If API returns 401/403 or user not found
+                console.warn('Session expired or user deleted. Logging out.');
+                setUser(null);
+                setCurrentView('auth');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('authToken');
+            });
+
       } catch (error) {
         console.error('Error loading user:', error);
+        setUser(null);
+        localStorage.removeItem('currentUser');
       }
     }
 
