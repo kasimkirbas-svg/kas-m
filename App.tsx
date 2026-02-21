@@ -516,6 +516,9 @@ const App = () => {
       onNavigate={setCurrentView} 
       onLogout={handleLogout}
       language={language}
+      onLanguageChange={handleLanguageChange}
+      theme={theme}
+      onThemeChange={handleThemeChange}
       t={t}
     >
       {renderContent()}
