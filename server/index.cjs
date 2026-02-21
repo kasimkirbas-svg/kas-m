@@ -189,7 +189,9 @@ const dbAdapter = {
         
         const data = readFileDB();
         data.users.push(user);
-        writeFileDB(data);
+        if (!writeFileDB(data)) {
+            throw new Error("Veritabanına yazma hatası (Perms/DiskFull?)");
+        }
         return user;
     },
     
@@ -1163,9 +1165,12 @@ app.post('/api/auth/register', async (req, res) => {
     }
 
     try {
+        console.log('[Register] Attempting to register:', email); // DEBUG LOG
+
         // Check if user exists
         const existingUser = await dbAdapter.findUserByEmail(email);
         if (existingUser) {
+            console.log('[Register] Email already exists:', email); // DEBUG LOG
             return res.status(400).json({ success: false, message: 'Bu e-posta adresi zaten kullanımda.' });
         }
 
@@ -1190,6 +1195,7 @@ app.post('/api/auth/register', async (req, res) => {
             createdAt: new Date().toISOString()
         };
 
+        console.log('[Register] Adding user to DB:', newUser.id); // DEBUG LOG
         await dbAdapter.addUser(newUser);
 
         // --- SEND WELCOME EMAIL ---
