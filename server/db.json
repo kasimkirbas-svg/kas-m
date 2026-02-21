@@ -1,38 +1,10 @@
 {
   "users": [
     {
-      "id": "user-1770855043374",
-      "name": "Kasim",
-      "email": "kasimmkirbass@gmail.com",
-      "password": "$2b$10$8wCKjyVZEuFJYgbEfDKq3Ot5ZEfVLy9dSragHjmc56j/Ps6pTreWG",
-      "companyName": "Ksm",
-      "role": "SUBSCRIBER",
-      "plan": "FREE",
-      "remainingDownloads": 3,
-      "subscriptionStartDate": "2026-02-12T00:10:43.374Z",
-      "subscriptionEndDate": "2026-02-26T00:10:43.374Z",
-      "isActive": true,
-      "createdAt": "2026-02-12T00:10:43.374Z"
-    },
-    {
-      "id": "user-1770857019119",
-      "name": "Altundaş",
-      "email": "yunus2861altundas@gmail.com",
-      "password": "$2b$10$J6WImpJOJuJ6W7FX0fKT0.FUwa5CX/fK4Umjwjs6ic2PuYTtP.uJC",
-      "companyName": "ALTe Logistic",
-      "role": "SUBSCRIBER",
-      "plan": "FREE",
-      "remainingDownloads": 3,
-      "subscriptionStartDate": "2026-02-12T00:43:39.119Z",
-      "subscriptionEndDate": "2026-02-26T00:43:39.119Z",
-      "isActive": true,
-      "createdAt": "2026-02-12T00:43:39.119Z"
-    },
-    {
       "id": "admin-001",
       "name": "Sistem Yöneticisi",
       "email": "admin@kirbas.com",
-      "password": "$2b$10$NapChBMRLAKroHqZW6TRs.XQrjWUSs8PHCR0nq1ompsSoHgSMBmye",
+      "password": "$2b$10$Gf7FJT7DOkLgz0DdIY8lyuDVV4cgtdqTpXdC7ISIM9g0cSYI/bItK",
       "companyName": "Yönetim Paneli",
       "role": "ADMIN",
       "plan": "YEARLY",
@@ -135,6 +107,71 @@
       "description": "İş kazası bildirim ve tespit formu.",
       "isPremium": true,
       "photoCapacity": 20,
+      "fields": []
+    },
+    {
+      "id": "9",
+      "title": "Bakım Onarım İstek Formu",
+      "category": "Teknik",
+      "description": "İşletme içi arıza bildirim ve onarım talep formu.",
+      "isPremium": false,
+      "monthlyLimit": 30,
+      "photoCapacity": 5,
+      "fields": []
+    },
+    {
+      "id": "10",
+      "title": "Zimmet Tutanağı",
+      "category": "İK",
+      "description": "Personel malzeme ve araç teslim formu.",
+      "isPremium": false,
+      "monthlyLimit": 30,
+      "photoCapacity": 5,
+      "fields": []
+    },
+    {
+      "id": "11",
+      "title": "İzin Talep Formu",
+      "category": "İK",
+      "description": "Yıllık veya mazeret izni talep dilekçesi.",
+      "isPremium": false,
+      "monthlyLimit": 30,
+      "fields": []
+    },
+    {
+      "id": "12",
+      "title": "Toplantı tutanağı",
+      "category": "Genel",
+      "description": "Toplantı kararları ve katılımcı listesi kayıt formu.",
+      "isPremium": false,
+      "monthlyLimit": 30,
+      "fields": []
+    },
+    {
+      "id": "13",
+      "title": "Teklif Formu",
+      "category": "Genel",
+      "description": "Müşteriler için fiyat ve hizmet teklif formu.",
+      "isPremium": true,
+      "photoCapacity": 10,
+      "fields": []
+    },
+    {
+      "id": "14",
+      "title": "Şantiye Günlük Raporu",
+      "category": "Teknik",
+      "description": "Günlük yapılan işler ve personel durumu.",
+      "isPremium": true,
+      "photoCapacity": 20,
+      "fields": []
+    },
+    {
+      "id": "15",
+      "title": "Fatura Talep Formu",
+      "category": "Muhasebe",
+      "description": "Muhasebe departmanına iletilecek fatura bilgileri.",
+      "isPremium": false,
+      "monthlyLimit": 30,
       "fields": []
     }
   ]
