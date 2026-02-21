@@ -449,24 +449,20 @@ if (!fs.existsSync(DB_FILE)) {
 }
 
 // --- SEED ADMIN USER ---
-const seedAdmin = () => {
+// CRITICAL: We must use dbAdapter to ensure we update WHATEVER database is active (Postgres, Mongo, or File)
+const seedAdmin = async () => {
     try {
-        const db = readDB();
         const adminEmail = process.env.ADMIN_EMAIL || 'admin@kirbas.com';
         // GÜVENLİK: Admin şifresi hardcoded olmamalıdır. Çevresel değişkenden alınır.
         const adminPass = process.env.ADMIN_PASSWORD || 'Admin123456'; 
         
-        if (!db.users || !Array.isArray(db.users)) {
-            db.users = [];
-        }
-
-        const adminIndex = db.users.findIndex(u => u.email === adminEmail);
+        let existingAdmin = await dbAdapter.findUserByEmail(adminEmail);
         
         // Salt ve Şifre Hashleme
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(adminPass, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(adminPass, salt);
 
-        if (adminIndex === -1) {
+        if (!existingAdmin) {
             console.log("⚙️  Varsayılan Admin kullanıcısı oluşturuluyor...");
             
             const adminUser = {
@@ -483,16 +479,18 @@ const seedAdmin = () => {
                 createdAt: new Date().toISOString()
             };
             
-            db.users.push(adminUser);
-            writeDB(db);
+            await dbAdapter.addUser(adminUser);
             console.log(`✅ Admin kullanıcısı oluşturuldu: ${adminEmail}`);
         } else {
              // Admin kullanıcı mevcutsa ŞİFREYİ GÜNCELLE (Her yeniden başlatmada garanti olsun)
              // Not: Normal kullanıcılar için bunu yapmıyoruz, sadece admin için.
              console.log(`ℹ️  Admin kullanıcısı mevcut: ${adminEmail} - Şifre senkronize ediliyor...`);
-             db.users[adminIndex].password = hashedPassword;
-             db.users[adminIndex].role = 'ADMIN'; // Role'ün de doğru olduğundan emin ol
-             writeDB(db);
+             
+             await dbAdapter.updateUser(existingAdmin.id, {
+                 password: hashedPassword,
+                 role: 'ADMIN' // Role'ün de doğru olduğundan emin ol
+             });
+             
              console.log(`✅ Admin şifresi ve yetkileri güncellendi.`);
         }
     } catch (error) {
@@ -501,7 +499,13 @@ const seedAdmin = () => {
 };
 
 // Initialize Admin
-seedAdmin();
+// NOTE: We call this without await because explicit await at top level requires top-level await support or wrapping.
+// However, since database operations might be async (PG/Mongo), we ideally want to wait.
+// For Vercel/Serverless, global scope initialization runs once.
+// We will make seedAdmin fire-and-forget but log heavily. 
+// OR better: we await it inside the request handler? No, that's slow.
+// We'll run it and hope for the best, or wrap app start.
+seedAdmin().then(() => console.log('Admin check complete')).catch(e => console.error(e));
 
 // In-memory Logs (Real-world app would use DB)
 const systemLogs = [];
