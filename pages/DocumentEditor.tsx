@@ -92,6 +92,15 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   const handleGenerateDocument = async () => {
     if (!printContainerRef.current) return;
     
+    // Email Validation
+    if (sendEmail) {
+        if (!userEmail) {
+             alert(t?.editor?.emailMissing || 'E-posta adresi bulunamadı. Lütfen profilinizi güncelleyin.');
+             setSendEmail(false);
+             return; // Stop? No, maybe just disable email
+        }
+    }
+
     setIsGenerating(true);
     setGenerationSuccess(false);
 
@@ -148,13 +157,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           });
           
           const result = await response.json();
-          if (!response.ok) {
+          if (!response.ok || !result.success) {
             console.error('Email sending failed', result);
-            alert(`E-posta gönderilemedi: ${result.message || 'Sunucu hatası'}. Lütfen sunucu ayarlarını kontrol edin.`);
+            alert(`E-posta gönderilemedi: ${result.message || 'Sunucu hatası'}.`);
+          } else {
+             // Email success toast?
+             console.log('Email sent successfully');
           }
         } catch (error) {
           console.error('Email network error:', error);
-          alert('E-posta sunucusuna erişilemedi. İnternet bağlantınızı veya sunucu durumunu kontrol edin.');
+          alert('E-posta sunucusuna erişilemedi. İnternet bağlantınızı kontrol edin.');
         }
       }
 
@@ -194,62 +206,68 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-100px)]">
+    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-110px)] overflow-hidden">
       
        {/* 
           LAYOUT ADJUSTMENT:
-          User requested: "önizlemenin boyutunu küçült editör panelini büyüt yani boyları tam tersi abartı olmıcak şekilde"
-          
-          Previous: Input (Flex 1) / Preview (Flex 3)
-          New: Input (Flex 4) / Preview (Flex 5) -> A more balanced approach where input is significantly larger than before
+          Input (Flex 3) / Preview (Flex 2) -> Input is larger.
        */}
 
       {/* ---------------- SECTION 1 (Left): INPUT FORM (Expanded) ---------------- */}
        {/* Hiding input form if in ReadOnly mode to maximize preview */}
        {!isReadOnly && (
-       <div className="lg:flex-[6] bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-w-[350px] border-r border-slate-200 order-1">
+       <div className="lg:flex-[3] bg-white rounded-xl shadow-xl overflow-hidden flex flex-col min-w-[320px] border border-slate-200 order-1 relative z-10">
         {/* Header */}
-        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center shrink-0">
+        <div className="bg-gradient-to-r from-slate-50 to-white px-6 py-4 border-b border-slate-200 flex justify-between items-center shrink-0">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">Editör Paneli</h2>
-            <p className="text-slate-500 text-xs">Bilgileri doldurun</p>
+            <h2 className="text-xl font-bold text-slate-800 tracking-tight">Editör</h2>
+            <p className="text-slate-500 text-xs font-medium">Doküman detaylarını giriniz</p>
           </div>
           {onClose && (
-            <button onClick={onClose} className="hover:bg-red-50 text-slate-400 hover:text-red-500 p-2 rounded-full transition" title="Kapat">
+            <button onClick={onClose} className="hover:bg-red-50 text-slate-400 hover:text-red-500 p-2 rounded-full transition duration-200" title="Kapat">
               ✕
             </button>
           )}
         </div>
 
         {/* Scrollable Form Content */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-slate-50/30">
           
           {/* Info */}
-          <div className="space-y-3">
-             <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Genel Bilgiler</label>
-             <div>
-               <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.firmName || 'Firma Adı'} *</span>
-               <input disabled={isReadOnly} type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" placeholder="Firma..." />
+          <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm space-y-4">
+             <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
+                <div className="w-1 h-4 bg-blue-500 rounded-full"></div>
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">Genel Bilgiler</label>
              </div>
-             <div>
-                <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.preparedBy || 'Hazırlayan'} *</span>
-               <input disabled={isReadOnly} type="text" name="preparedBy" value={formData.preparedBy} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" placeholder="İsim Soyisim..." />
-             </div>
-             <div>
-                <span className="text-xs text-slate-500 mb-1 block">{t?.editor?.date || 'Tarih'} *</span>
-               <input disabled={isReadOnly} type="date" name="date" value={formData.date} onChange={handleInputChange} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm" />
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                   <span className="text-xs font-medium text-slate-500 mb-1 block">{t?.editor?.firmName || 'Firma Adı'} <span className="text-red-500">*</span></span>
+                   <input disabled={isReadOnly} type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full px-3 py-2.5 border border-slate-200 bg-slate-50 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm font-medium" placeholder="Firma..." />
+                </div>
+                <div>
+                    <span className="text-xs font-medium text-slate-500 mb-1 block">{t?.editor?.preparedBy || 'Hazırlayan'} <span className="text-red-500">*</span></span>
+                   <input disabled={isReadOnly} type="text" name="preparedBy" value={formData.preparedBy} onChange={handleInputChange} className="w-full px-3 py-2.5 border border-slate-200 bg-slate-50 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm font-medium" placeholder="İsim Soyisim..." />
+                </div>
+                <div className="md:col-span-2">
+                    <span className="text-xs font-medium text-slate-500 mb-1 block">{t?.editor?.date || 'Tarih'} <span className="text-red-500">*</span></span>
+                   <input disabled={isReadOnly} type="date" name="date" value={formData.date} onChange={handleInputChange} className="w-full px-3 py-2.5 border border-slate-200 bg-slate-50 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-sm font-medium" />
+                </div>
              </div>
           </div>
-          <hr className="border-slate-100" />
 
           {/* Fields */}
           {template.fields.length > 0 && (
-             <div className="space-y-4">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 border-b border-slate-100 pb-1">
-                {t?.editor?.fields || 'Doküman Alanları'}
-              </label>
+             <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm space-y-4">
+              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
+                <div className="w-1 h-4 bg-indigo-500 rounded-full"></div>
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">
+                  {t?.editor?.fields || 'Doküman Alanları'}
+                </label>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-4">
               {template.fields.map(field => (
-                  <div key={field.key} className="space-y-1">
+                  <div key={field.key} className="space-y-1.5">
                     <span className="text-sm font-medium text-slate-700 flex items-center">
                       {field.label}
                       {field.required && <span className="text-red-500 ml-1" title="Zorunlu">*</span>}
@@ -261,7 +279,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         name={field.key} 
                         value={formData[field.key] || ''} 
                         onChange={handleInputChange} 
-                        className="w-full px-3 py-2 border border-slate-300 bg-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none h-24 resize-y text-sm transition-shadow" 
+                        className="w-full px-3 py-2 border border-slate-300 bg-white rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none h-24 resize-y text-sm transition-shadow shadow-sm" 
                         placeholder={field.placeholder || `${field.label} giriniz...`} 
                       />
                     ) : field.type === 'select' ? (
@@ -270,29 +288,29 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                           disabled={isReadOnly}
                           name={field.key}
                           value={formData[field.key] || ''}
-                          onChange={(e) => setFormData(prev => ({...prev, [field.key]: e.target.value}))} // Type casting issue with generic handler, manual update
-                          className="w-full px-3 py-2 border border-slate-300 bg-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-sm appearance-none cursor-pointer"
+                          onChange={(e) => setFormData(prev => ({...prev, [field.key]: e.target.value}))} 
+                          className="w-full px-3 py-2.5 border border-slate-300 bg-white rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-sm appearance-none cursor-pointer shadow-sm font-medium"
                         >
-                          <option value="" disabled selected>Seçiniz...</option>
+                          <option value="" disabled>Seçiniz...</option>
                           {field.options?.map((opt, i) => (
                             <option key={i} value={opt}>{opt}</option>
                           ))}
                         </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
                           <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                         </div>
                       </div>
                     ) : field.type === 'checkbox' ? (
-                       <label className="flex items-center space-x-3 cursor-pointer p-2 border border-slate-200 rounded hover:bg-slate-50 transition">
+                       <label className="flex items-center space-x-3 cursor-pointer p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition bg-slate-50/50">
                          <input 
                             disabled={isReadOnly}
                             type="checkbox"
                             name={field.key}
                             checked={!!formData[field.key]}
                             onChange={(e) => setFormData(prev => ({...prev, [field.key]: e.target.checked}))}
-                            className="form-checkbox h-5 w-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition duration-150 ease-in-out"
+                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
                          />
-                         <span className="text-sm text-slate-700">{field.placeholder || field.label}</span>
+                         <span className="text-sm font-medium text-slate-700">{field.placeholder || field.label}</span>
                        </label>
                     ) : (
                       <input 
@@ -301,87 +319,105 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         name={field.key} 
                         value={formData[field.key] || ''} 
                         onChange={handleInputChange} 
-                        className="w-full px-3 py-2 border border-slate-300 bg-white rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-sm transition-shadow file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                        className="w-full px-3 py-2.5 border border-slate-300 bg-white rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-sm transition-shadow shadow-sm font-medium placeholder:font-normal placeholder:text-slate-400" 
                         placeholder={field.placeholder || `${field.label} giriniz...`} 
                       />
                     )}
                   </div>
                 ))}
+              </div>
             </div>
           )}
-          <hr className="border-slate-100" />
 
           {/* Notes */}
-          <div className="space-y-3">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Notlar</label>
-              <textarea disabled={isReadOnly} value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none h-20 resize-none text-sm" placeholder="Notlar..." />
+          <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm space-y-2">
+              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
+                <div className="w-1 h-4 bg-yellow-500 rounded-full"></div>
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">Ek Notlar</label>
+              </div>
+              <textarea disabled={isReadOnly} value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none h-24 resize-none text-sm font-medium" placeholder="Varsa eklemek istediğiniz notlar..." />
           </div>
-          <hr className="border-slate-100" />
 
           {/* Photos */}
-          <div className="space-y-3">
-              <div className="flex justify-between items-end">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Fotoğraflar</label>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full ${photos.length >= maxPhotos ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+          <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm space-y-3">
+              <div className="flex justify-between items-center mb-2 pb-2 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                    <div className="w-1 h-4 bg-purple-500 rounded-full"></div>
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">Fotoğraf Ekle</label>
+                </div>
+                <span className={`text-[10px] px-2 py-1 rounded-full font-bold ${photos.length >= maxPhotos ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
                   {photos.length}/{maxPhotos}
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-2">
+              
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                  {photos.map((photo) => (
-                   <div key={photo.id} className="relative aspect-square rounded overflow-hidden group bg-white border border-slate-200 shadow-sm">
-                     <img src={photo.base64} className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition" onClick={() => setPhotoPreview(photo.base64)} />
+                   <div key={photo.id} className="relative aspect-square rounded-lg overflow-hidden group bg-slate-100 border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                     <img src={photo.base64} className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition" onClick={() => setPhotoPreview(photo.base64)} />
                      {!isReadOnly && (
-                     <button onClick={() => handleRemovePhoto(photo.id)} className="absolute top-0 right-0 bg-red-500/80 hover:bg-red-600 text-white p-1 rounded-bl-lg transition" title="Sil">
-                       <Trash2 size={10} />
+                     <button onClick={() => handleRemovePhoto(photo.id)} className="absolute top-1 right-1 bg-white/90 text-red-500 p-1.5 rounded-full hover:bg-red-500 hover:text-white transition shadow-sm z-10" title="Sil">
+                       <Trash2 size={12} />
                      </button>
                      )}
                    </div>
                  ))}
                  {!isReadOnly && photos.length < maxPhotos && (
-                   <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 hover:border-blue-400 rounded aspect-square cursor-pointer hover:bg-blue-50 transition group">
-                      <Plus className="text-slate-300 group-hover:text-blue-500" size={20} />
+                   <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-lg aspect-square cursor-pointer hover:bg-blue-50 transition group bg-slate-50">
+                      <div className="bg-white p-2 rounded-full shadow-sm group-hover:scale-110 transition-transform mb-1">
+                          <Plus className="text-slate-400 group-hover:text-blue-500" size={20} />
+                      </div>
+                      <span className="text-[10px] text-slate-400 group-hover:text-blue-600 font-bold uppercase tracking-wider">Seç</span>
                       <input type="file" multiple accept="image/*" onChange={handlePhotoUpload} className="hidden" />
                    </label>
                  )}
               </div>
           </div>
+        
+          <div className="h-10"></div> {/* Spacer */}
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-slate-200 bg-white shrink-0">
-           <div className="flex items-center gap-2 mb-4 bg-blue-50 p-2 rounded border border-blue-100">
-              <input disabled={isReadOnly} type="checkbox" id="sendEmail" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
-              <label htmlFor="sendEmail" className="text-xs font-bold text-blue-800 cursor-pointer select-none flex-1">
-                 Mail Gönder ({userEmail})
+        <div className="p-4 border-t border-slate-200 bg-white shrink-0 z-20 shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.05)]">
+           <div className="flex items-center gap-3 mb-4 bg-slate-50 p-3 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors">
+              <div className="relative flex items-center">
+                <input disabled={isReadOnly} type="checkbox" id="sendEmail" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="peer w-5 h-5 text-blue-600 rounded focus:ring-blue-500 cursor-pointer border-slate-300" />
+              </div>
+              <label htmlFor="sendEmail" className="text-sm font-bold text-slate-700 cursor-pointer select-none flex-1 flex items-center gap-2">
+                 <Mail size={16} className={sendEmail ? 'text-blue-600' : 'text-slate-400'} />
+                 <span>PDF'i E-posta ile Gönder</span>
+                 <span className="text-xs font-normal text-slate-400 hidden sm:inline">({userEmail || 'Email yok'})</span>
               </label>
-              {sendEmail && !userEmail && <AlertTriangle size={14} className="text-orange-500" title="Mail adresi eksik" />}
+              {sendEmail && !userEmail && <AlertTriangle size={16} className="text-orange-500 animate-pulse" title="Mail adresi eksik" />}
            </div>
            
-           <button onClick={handleGenerateDocument} disabled={isGenerating || !formData.companyName} className={`w-full py-3 rounded-lg text-white font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 transition shadow-lg ${isGenerating ? 'bg-slate-400 cursor-not-allowed' : generationSuccess ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}>
-              {isGenerating ? <><span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span> Hazırlanıyor...</> : generationSuccess ? <><CheckCircle size={18} /> Tamamlandı</> : <><Download size={18} /> Oluştur ve İndir</>}
+           <button onClick={handleGenerateDocument} disabled={isGenerating || !formData.companyName} className={`w-full py-4 rounded-xl text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-3 transition-all shadow-lg active:scale-[0.98] ${isGenerating ? 'bg-slate-400 cursor-not-allowed' : generationSuccess ? 'bg-green-600 hover:bg-green-700 shadow-green-200' : 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 shadow-blue-200'}`}>
+              {isGenerating ? <><span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span> Lütfen Bekleyin...</> : generationSuccess ? <><CheckCircle size={20} /> Başarıyla Oluşturuldu</> : <><Download size={20} /> Dokümanı Oluştur</>}
             </button>
         </div>
       </div>
       )}
 
       {/* ---------------- SECTION 2 (Right): PREVIEW (Shrunk) ---------------- */}
-      <div className={`bg-slate-800/80 p-4 rounded-lg shadow-inner overflow-hidden flex flex-col items-center justify-start relative overflow-y-auto custom-scrollbar order-2 ${isReadOnly ? 'lg:flex-[10] w-full' : 'lg:flex-[4]'}`}>
+      <div className={`bg-slate-800 rounded-xl shadow-2xl overflow-hidden flex flex-col relative order-2 border border-slate-700 ${isReadOnly ? 'lg:flex-[10] w-full' : 'lg:flex-[2] hidden lg:flex'}`}>
           {/* Legend/Info Badge */}
           {/* If ReadOnly mode, add a "Close Preview" button absolutely positioned */}
           {isReadOnly && onClose && (
-            <button onClick={onClose} className="fixed top-24 right-8 z-[50] bg-white text-slate-800 px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-2 hover:bg-slate-100 transition">
-              ✕ Kapat
+            <button onClick={onClose} className="fixed top-24 right-8 z-[50] bg-white text-slate-800 px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-2 hover:bg-slate-100 transition hover:scale-105 active:scale-95">
+              ✕ Önizlemeyi Kapat
             </button>
           )}
 
-          <div className="sticky top-0 z-10 mb-4 bg-black/70 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-mono border border-white/10 shadow-xl flex gap-3">
-             <span className="flex items-center gap-1">📄 {t?.editor?.previewMode || 'A4 Canlı Önizleme'}</span>
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 bg-black/80 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-mono border border-white/10 shadow-xl flex gap-3 whitespace-nowrap">
+             <span className="flex items-center gap-1">📄 {t?.editor?.previewMode || 'Canlı Önizleme'}</span>
              <span className="opacity-50">|</span>
-             <span className="flex items-center gap-1">📸 {photos.length} Fotoğraf</span>
-             {photoChunks.length > 0 && <span className="text-yellow-400">({photoChunks.length} Ek Sayfa)</span>}
+             <span className="flex items-center gap-1">📸 {photos.length} Foto</span>
           </div>
-
-          <div ref={printContainerRef} className={`flex flex-col gap-8 pb-10 origin-top transition-transform ${isReadOnly ? 'scale-100' : 'xl:scale-75 lg:scale-50 md:scale-50 sm:scale-50'}`}>
+          
+          {/* Scrollable Preview Area */}
+          {/* Use CSS transform based scaling instead of fixed dimensions to prevent layout shifts */}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-slate-900/50 p-4 md:p-8 flex justify-center items-start">
+            <div className={`transition-all duration-300 origin-top ${isReadOnly ? 'scale-100' : 'scale-[0.45] md:scale-[0.5] lg:scale-[0.45] xl:scale-[0.55] 2xl:scale-[0.65]'}`}>
+              <div ref={printContainerRef} className="flex flex-col gap-10 shadow-2xl">
             
             {/* --- PAGE 1: TEXT CONTENT --- */}
             <div className="print-page bg-white shadow-2xl relative" style={{ width: '210mm', height: '297mm', padding: '15mm', boxSizing: 'border-box', color: '#1e293b', background: 'white' }}>
