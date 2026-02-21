@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { DocumentTemplate } from '../types';
-import { Search, FileText, CheckCircle, Smartphone, Layout, ArrowRight } from 'lucide-react';
+import { 
+  Search, FileText, CheckCircle, Smartphone, Layout, ArrowRight,
+  ShieldCheck, Briefcase, Calculator, Construction, Scale, Megaphone, UserCheck, FileSpreadsheet, Layers
+} from 'lucide-react';
 
 interface DocumentsListProps {
   templates: DocumentTemplate[];
@@ -18,10 +21,21 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Get unique categories
+  const getCategoryStyle = (cat: string) => {
+    const normal = cat?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    if (normal?.includes('ISG')) return { bg: 'bg-orange-50', icon: ShieldCheck, color: 'text-orange-500', badge: 'bg-orange-100 text-orange-700' };
+    if (normal?.includes('IK') || normal?.includes('INSAN')) return { bg: 'bg-blue-50', icon: UserCheck, color: 'text-blue-500', badge: 'bg-blue-100 text-blue-700' };
+    if (normal?.includes('MUHASEBE') || normal?.includes('MATI')) return { bg: 'bg-emerald-50', icon: Calculator, color: 'text-emerald-500', badge: 'bg-emerald-100 text-emerald-700' };
+    if (normal?.includes('HUKUK')) return { bg: 'bg-slate-100', icon: Scale, color: 'text-slate-600', badge: 'bg-slate-200 text-slate-700' };
+    if (normal?.includes('PAZARLAMA')) return { bg: 'bg-pink-50', icon: Megaphone, color: 'text-pink-500', badge: 'bg-pink-100 text-pink-700' };
+    if (normal?.includes('TEKNIK') || normal?.includes('BAKIM')) return { bg: 'bg-cyan-50', icon: Construction, color: 'text-cyan-600', badge: 'bg-cyan-100 text-cyan-700' };
+    if (normal?.includes('KALITE')) return { bg: 'bg-violet-50', icon: CheckCircle, color: 'text-violet-500', badge: 'bg-violet-100 text-violet-700' };
+    if (normal?.includes('LOJISTIK')) return { bg: 'bg-yellow-50', icon: Layers, color: 'text-yellow-600', badge: 'bg-yellow-100 text-yellow-700' };
+    return { bg: 'bg-slate-50', icon: FileSpreadsheet, color: 'text-slate-400', badge: 'bg-slate-100 text-slate-600' };
+  };
+
   const categories = Array.from(new Set(templates.map(t => t.category)));
 
-  // Filter templates
   const filteredTemplates = templates.filter(template => {
     const title = t?.templates?.[`t${template.id}_title`] || template.title;
     const desc = t?.templates?.[`t${template.id}_desc`] || template.description;
@@ -30,7 +44,6 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
                           desc.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = !selectedCategory || template.category === selectedCategory;
     
-    // Show all templates but mark lock state if premium
     return matchesSearch && matchesCategory;
   });
 
@@ -44,7 +57,6 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
             Profesyonel şablonlardan birini seçerek raporlarınızı saniyeler içinde hazırlayın, PDF olarak indirin ve paylaşın.
           </p>
           
-          {/* Search Bar Inside Hero */}
           <div className="relative max-w-lg">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
@@ -57,7 +69,6 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
           </div>
         </div>
         
-        {/* Background Decor */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
         <div className="absolute bottom-0 right-20 w-32 h-32 bg-indigo-500/20 rounded-full blur-xl"></div>
       </div>
@@ -104,60 +115,62 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
           {filteredTemplates.map(template => {
             const isLocked = template.isPremium && !userIsPremium;
             const title = t?.templates?.[`t${template.id}_title`] || template.title;
             const desc = t?.templates?.[`t${template.id}_desc`] || template.description;
+            const style = getCategoryStyle(template.category);
+            const Icon = style.icon;
             
             return (
               <div
                 key={template.id}
-                className={`bg-white rounded-xl border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col h-full relative ${isLocked ? 'grayscale opacity-75 hover:grayscale-0 hover:opacity-100' : ''}`}
+                className={`bg-white rounded-xl border border-slate-200 hover:border-indigo-300 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col h-full relative ${isLocked ? 'grayscale opacity-75 hover:grayscale-0 hover:opacity-100' : ''}`}
                 onClick={() => !isLocked && onSelectTemplate(template)}
               >
                 {/* Banner Image / Color */}
-                <div className={`h-32 w-full relative overflow-hidden ${isLocked ? 'bg-slate-100' : 'bg-gradient-to-br from-slate-50 to-slate-100'}`}>
-                   {/* Create a dynamic pattern or icon based on ID */}
-                   <div className="absolute inset-0 flex items-center justify-center text-slate-200 group-hover:scale-110 transition-transform duration-500">
-                      <Layout size={64} opacity={0.2} />
+                <div className={`h-40 w-full relative overflow-hidden flex items-center justify-center ${isLocked ? 'bg-slate-100' : style.bg}`}>
+                   <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#64748b 1px, transparent 1px)', backgroundSize: '12px 12px' }}></div>
+                   
+                   <div className={`transform transition-transform duration-500 group-hover:scale-110 ${style.color}`}>
+                      <Icon size={56} strokeWidth={1.5} className="drop-shadow-sm" />
                    </div>
                    
-                   {/* Premium Badge */}
                    {template.isPremium && (
-                     <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1">
-                       PREMIUM
+                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg border border-amber-100 shadow-sm text-amber-500 text-[10px] font-bold flex items-center gap-1">
+                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                       PRO
                      </div>
                    )}
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex-1 flex flex-col">
+                <div className="p-5 flex-1 flex flex-col relative z-20 bg-white">
                   <div className="flex items-start justify-between mb-3">
-                     <span className="text-[10px] uppercase font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded tracking-wider">
+                     <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded tracking-wider ${style.badge}`}>
                        {template.category}
                      </span>
                      <span className="text-slate-400 text-xs flex items-center gap-1">
-                       <Smartphone size={12} /> Mobil Uyumlu
+                       <Smartphone size={12} /> Mobil
                      </span>
                   </div>
                   
-                  <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-700 transition-colors">
+                  <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-indigo-700 transition-colors line-clamp-1" title={title}>
                     {title}
                   </h3>
                   
-                  <p className="text-slate-500 text-sm leading-relaxed mb-4 flex-1 line-clamp-3">
+                  <p className="text-slate-500 text-sm leading-relaxed mb-4 flex-1 line-clamp-2">
                     {desc}
                   </p>
                   
-                  {/* Footer Stats/Action */}
                   <div className="pt-4 border-t border-slate-100 flex justify-between items-center mt-auto">
-                     <div className="flex items-center gap-1 text-slate-400 text-xs">
+                     <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">
                         <Layout size={14} />
                         <span>{template.fields.length} Alan</span>
                      </div>
                      
-                     <div className="flex items-center gap-1 text-blue-600 font-bold text-sm opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                     <div className="flex items-center gap-1 text-indigo-600 font-bold text-sm transform translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                         {isLocked ? 'Yükselt' : 'Oluştur'} <ArrowRight size={16} />
                      </div>
                   </div>
@@ -170,3 +183,4 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
     </div>
   );
 };
+

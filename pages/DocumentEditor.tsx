@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { DocumentTemplate, GeneratedDocument, DocumentPhoto } from '../types';
-import { Upload, Trash2, Plus, Download, CheckCircle, Mail, AlertTriangle, ZoomIn, ArrowLeft } from 'lucide-react';
+import { Upload, Trash2, Plus, Download, CheckCircle, Mail, AlertTriangle, ZoomIn, ArrowLeft, Edit2, FileText, Calendar as CalendarIcon } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { fetchApi } from '../src/utils/api'; 
@@ -34,8 +34,24 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     companyName: initialData?.companyName || companyName || '',
     preparedBy: initialData?.preparedBy || preparedBy || '',
     date: initialData?.data?.date || new Date().toISOString().split('T')[0],
+    // Spread initialData first so we don't lose anything
     ...initialData?.data
   });
+
+  // Re-initialize if initialData changes (e.g. when opening "Edit")
+  useEffect(() => {
+    if (initialData) {
+        setFormData(prev => ({
+            ...prev,
+            ...initialData.data,
+            companyName: initialData.companyName || prev.companyName,
+            preparedBy: initialData.preparedBy || prev.preparedBy,
+            date: initialData.data?.date || prev.date
+        }));
+        setPhotos(initialData.photos || []);
+        setAdditionalNotes(initialData.additionalNotes || '');
+    }
+  }, [initialData]);
 
   const [photos, setPhotos] = useState<DocumentPhoto[]>(initialData?.photos || []);
   const [additionalNotes, setAdditionalNotes] = useState(initialData?.additionalNotes || '');
@@ -203,11 +219,24 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     photoChunks.push(photos.slice(i, i + 6));
   }
 
+  const [previewMode, setPreviewMode] = useState(false);
+
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-130px)] lg:h-[calc(100vh-110px)] overflow-hidden">
+    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-130px)] lg:h-[calc(100vh-110px)] overflow-hidden relative">
       
+       {/* Mobile Preview Toggle */}
+       <div className="lg:hidden absolute bottom-4 right-4 z-50">
+          <button 
+            onClick={() => setPreviewMode(!previewMode)}
+            className="bg-blue-600 text-white p-3 rounded-full shadow-lg flex items-center gap-2"
+          >
+             {previewMode ? <Edit2 size={20} /> : <FileText size={20} />}
+             <span className="text-sm font-bold">{previewMode ? 'Düzenle' : 'Önizle'}</span>
+          </button>
+       </div>
+
        {!isReadOnly && (
-       <div className="lg:flex-[3] bg-white dark:bg-slate-900 rounded-xl shadow-xl overflow-hidden flex flex-col min-w-[320px] border border-slate-200 dark:border-slate-800 order-1 relative z-10 w-full lg:w-auto h-full">
+       <div className={`lg:flex-[3] bg-white dark:bg-slate-900 rounded-xl shadow-xl overflow-hidden flex flex-col min-w-[320px] border border-slate-200 dark:border-slate-800 order-1 relative z-10 w-full lg:w-auto h-full ${previewMode ? 'hidden lg:flex' : 'flex'}`}>
         <div className="bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0">
           <div>
             <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">{_t('editor.title', 'Editör')}</h2>
@@ -399,7 +428,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       )}
 
       {/* Preview Section */}
-      <div className={`flex-[4] bg-slate-200 dark:bg-slate-900/50 rounded-xl overflow-hidden flex flex-col order-2 relative ${isReadOnly ? 'w-full flex-1' : ''}`}>
+      <div className={`lg:flex-[4] bg-slate-200 dark:bg-slate-900/50 rounded-xl overflow-hidden flex-col order-2 relative ${isReadOnly ? 'w-full flex-1 flex' : ''} ${previewMode ? 'flex' : 'hidden lg:flex'}`}>
          <div className="bg-slate-800 text-white px-4 py-3 flex justify-between items-center shadow-md z-20 shrink-0">
             <div className="flex items-center gap-2">
                <span className="font-medium text-sm">{template.title} - {_t('common.preview', 'Önizleme')}</span>

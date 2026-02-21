@@ -1747,6 +1747,62 @@ app.delete('/api/templates/:id', authenticateToken, requireAdmin, (req, res) => 
 
 
 
+// --- EMAIL SENDING ENDPOINT ---
+app.post('/api/send-document', async (req, res) => {
+    const { email, pdfBase64, documentName } = req.body;
+
+    if (!email || !pdfBase64) {
+        return res.status(400).json({ success: false, message: 'E-posta ve PDF verisi gereklidir.' });
+    }
+
+    // Check if transporter is ready
+    if (!transporter && !isMockMode) {
+        console.warn('Email service not configured (No Transporter).');
+        return res.status(503).json({ success: false, message: 'E-posta servisi şu anda kullanılamıyor (Sunucu Yapılandırması Eksik).' });
+    }
+
+    try {
+        const base64Data = pdfBase64.split(';base64,').pop();
+        
+        if (transporter && !isMockMode) {
+             const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: `Dokümanınız Hazır: ${documentName || 'Belge'} - Kırbaş Doküman`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px;">
+                        <h2>Dokümanınız Hazır!</h2>
+                        <p>Merhaba,</p>
+                        <p>Oluşturmuş olduğunuz <strong>${documentName}</strong> başlıklı doküman ektedir.</p>
+                        <p>Kırbaş Doküman Platformunu tercih ettiğiniz için teşekkür ederiz.</p>
+                        <br>
+                        <p style="font-size: 12px; color: #888;">Bu e-posta otomatik olarak gönderilmiştir.</p>
+                    </div>
+                `,
+                attachments: [
+                    {
+                        filename: `${(documentName || 'dokuman').replace(/[^a-z0-9]/gi, '_')}.pdf`,
+                        content: base64Data,
+                        encoding: 'base64'
+                    }
+                ]
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(`[EMAIL] Document sent to ${email}`);
+        } else {
+            console.log(`[MOCK EMAIL] Simulating sending document to ${email}`);
+            // In mock mode, we just log success.
+        }
+
+        res.json({ success: true, message: 'E-posta başarıyla gönderildi.' });
+
+    } catch (error) {
+        console.error('Send Document Error:', error);
+        res.status(500).json({ success: false, message: 'E-posta gönderimi başarısız: ' + error.message });
+    }
+});
+
 // --- DOCUMENT MANAGEMENT ---
 
 // Get User Documents

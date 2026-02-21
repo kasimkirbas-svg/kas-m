@@ -2,19 +2,39 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# Kırbaş Doküman Platformu
 
-This contains everything you need to run your app locally.
+## Kurulum ve Çalıştırma
 
-View your app in AI Studio: https://ai.studio/apps/drive/1qJgN_ZR7QVZNbTWv0VvT1FfjavtYZZ_y
+**Gereksinimler:**  Node.js v14+
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
+1. Bağımlılıkları yükleyin:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+
+2. Ortam Değişkenlerini Ayarlayın (.env dosyası):
+   Aşağıdaki değişkenleri `.env` dosyasına ekleyin. Eğer dosya yoksa oluşturun.
+
+   ```env
+   # Email Gönderimi İçin (Gmail Örneği)
+   EMAIL_USER=sizin_email@gmail.com
+   EMAIL_PASS=uygulama_sifresi_buraya # Google App Password kullanın
+   
+   # Veritabanı (Opsiyonel - Postgres/Mongo)
+   # DATABASE_URL=...
+   
+   # JWT Güvenlik
+   JWT_SECRET=gizli_anahtar_buraya
+   ```
+
+   > **Not:** Gmail kullanıyorsanız, normal şifreniz çalışmaz. Google Hesabı > Güvenlik > Uygulama Şifreleri bölümünden bir şifre oluşturmalısınız.
+   > Eğer bu bilgiler girilmezse sistem **Simülasyon Modunda** çalışır (Loglara yazar ama mail atmaz).
+
+3. Uygulamayı başlatın:
    `npm run dev`
+
+## Özellikler
+- Dinamik Doküman Şablonları (İSG, İK, Muhasebe vb.)
+- PDF Oluşturma ve İndirme
+- E-posta ile Paylaşım
+- Mobil Uyumlu Arayüz
+- Admin Paneli
