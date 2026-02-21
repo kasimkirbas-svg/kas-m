@@ -449,7 +449,7 @@ if (!fs.existsSync(DB_FILE)) {
 }
 
 // --- SEED ADMIN USER ---
-const seedAdmin = async () => {
+const seedAdmin = () => {
     try {
         const db = readDB();
         const adminEmail = process.env.ADMIN_EMAIL || 'admin@kirbas.com';
@@ -462,8 +462,8 @@ const seedAdmin = async () => {
 
         if (!db.users.some(u => u.email === adminEmail)) {
             console.log("⚙️  Varsayılan Admin kullanıcısı oluşturuluyor...");
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(adminPass, salt);
+            const salt = bcrypt.genSaltSync(10);
+            const hashedPassword = bcrypt.hashSync(adminPass, salt);
             
             const adminUser = {
                 id: 'admin-001',
@@ -486,8 +486,8 @@ const seedAdmin = async () => {
              // FORCE PASSWORD RESET ONLY IF ENV VAR SET
              if (process.env.FORCE_ADMIN_RESET === 'true') {
                  console.log("⚙️  Admin şifresi varsayılana (FORCE RESET) güncelleniyor...");
-                 const salt = await bcrypt.genSalt(10);
-                 const hashedPassword = await bcrypt.hash(adminPass, salt);
+                 const salt = bcrypt.genSaltSync(10);
+                 const hashedPassword = bcrypt.hashSync(adminPass, salt);
                  
                  const adminIndex = db.users.findIndex(u => u.email === adminEmail);
                  if (adminIndex !== -1) {
