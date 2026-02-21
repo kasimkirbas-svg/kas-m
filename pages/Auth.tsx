@@ -309,7 +309,13 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
         const data = await response.json();
 
         if (data.success) {
-            setSuccess('Sıfırlama kodu e-posta adresinize gönderildi.');
+            // Check for developer mode code (when email is not configured)
+            if (data.debugCode) {
+                 alert(`[TEST MODU]\nE-posta sunucusu yapılandırılmadığı için kodunuz burada gösterilmektedir:\n\nSıfırlama Kodunuz: ${data.debugCode}`);
+                 setSuccess('Sıfırlama kodu ekranda gösterildi (Test Modu).');
+            } else {
+                 setSuccess('Sıfırlama kodu e-posta adresinize gönderildi.');
+            }
             setTimeout(() => setAuthView('reset-password'), 1500);
         } else {
             setError(data.message || 'İşlem başarısız.');
