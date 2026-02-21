@@ -188,434 +188,276 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
          setError('Sunucu bağlantı hatası. Lütfen internet bağlantınızı kontrol edin veya daha sonra tekrar deneyin.');
       }
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    // Validasyon
-    if (!formData.email || !formData.password || !formData.name || !formData.companyName) {
-      setError('Tüm alanlar zorunludur.');
-      return;
-    }
-
-    if (!validateEmail(formData.email)) {
-      setError('Geçerli bir e-posta adresi girin.');
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError('Şifre en az 6 karakter olmalıdır.');
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Şifreler eşleşmiyor.');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const response = await fetchApi('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          companyName: formData.companyName
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Send email notifications (Client side visual only)
-        sendEmailNotification('signup-confirmation', data.user.email, data.user);
-        
-        // Save Token
-        localStorage.setItem('authToken', data.token);
-
-        setSuccess('Hesap başarıyla oluşturuldu! Giriş yapılıyor...');
-        setTimeout(() => {
-          onLoginSuccess(data.user);
-        }, 1500);
-      } else {
-        setError(data.message || 'Kayıt başarısız.');
-      }
-    } catch (err) {
-      console.error('Signup error:', err);
-      setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (!formData.email) {
-        setError('Lütfen e-posta adresinizi girin.');
-        return;
-    }
-
-    setIsLoading(true);
-
-    try {
-        const response = await fetchApi('/api/auth/forgot-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: formData.email })
-        });
-        const data = await response.json();
-
-        if (data.success) {
-            setSuccess('Sıfırlama kodu e-posta adresinize gönderildi.');
-            setTimeout(() => setAuthView('reset-password'), 1500);
-        } else {
-            setError(data.message || 'İşlem başarısız.');
-        }
-    } catch (err) {
-        setError('Sunucu bağlantı hatası.');
-    } finally {
-        setIsLoading(false);
-    }
-  };
-
-  const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (!formData.resetCode || !formData.password) {
-        setError('Kod ve yeni şifre gereklidir.');
-        return;
-    }
-
-    setIsLoading(true);
-
-    try {
-        const response = await fetchApi('/api/auth/reset-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: formData.email,
-                code: formData.resetCode,
-                newPassword: formData.password
-            })
-        });
-        const data = await response.json();
-
-        if (data.success) {
-            setSuccess('Şifreniz başarıyla sıfırlandı. Giriş yapabilirsiniz.');
-            setTimeout(() => {
-                setAuthView('login');
-                setFormData(prev => ({ ...prev, password: '', resetCode: '' }));
-            }, 2000);
-        } else {
-            setError(data.message || 'Sıfırlama başarısız.');
-        }
-    } catch (err) {
-        setError('Sunucu bağlantı hatası.');
-    } finally {
         setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10 overflow-y-auto">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
-            K
-          </div>
-          <h1 className="text-3xl font-bold text-slate-900">Kırbaş Doküman</h1>
-          <p className="text-slate-600 mt-2">{t?.dashboard?.greetings || 'Profesyonel Dokümanlarınız Dakikalar İçinde'}</p>
+    <div className="min-h-screen w-full flex bg-slate-50 dark:bg-slate-900 overflow-hidden">
+      
+      {/* Left Side - Visual Branding */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-indigo-600 dark:bg-indigo-900 items-center justify-center overflow-hidden">
+        {/* Abstract Background Shapes */}
+        <div className="absolute inset-0 opacity-20">
+            <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-purple-500 blur-3xl"></div>
+            <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] rounded-full bg-blue-400 blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-indigo-400 blur-3xl"></div>
         </div>
-
-        {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
-          {/* Tabs */}
-          {(authView === 'login' || authView === 'signup') && (
-            <div className="flex gap-4 mb-6 border-b border-slate-200">
-                <button
-                onClick={() => {
-                    setAuthView('login');
-                    setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' });
-                    setError('');
-                }}
-                className={`pb-3 font-semibold transition ${
-                    authView === 'login'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-                >
-                {t?.auth?.login || 'Giriş Yap'}
-                </button>
-                <button
-                onClick={() => {
-                    setAuthView('signup');
-                    setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' });
-                    setError('');
-                }}
-                className={`pb-3 font-semibold transition ${
-                    authView === 'signup'
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-                >
-                {t?.auth?.signup || 'Kaydol'}
-                </button>
+        
+        <div className="relative z-10 text-center px-12 max-w-2xl">
+            <div className="w-24 h-24 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center text-white font-bold text-4xl mx-auto mb-8 shadow-2xl border border-white/20">
+              K
             </div>
-          )}
-
-          {authView === 'forgot-password' && (
-              <div className="mb-6 text-center">
-                  <h3 className="text-lg font-semibold text-slate-900">Şifremi Unuttum</h3>
-                  <p className="text-sm text-slate-500">E-posta adresinize sıfırlama kodu göndereceğiz.</p>
-              </div>
-          )}
-
-           {authView === 'reset-password' && (
-              <div className="mb-6 text-center">
-                  <h3 className="text-lg font-semibold text-slate-900">Şifre Sıfırlama</h3>
-                  <p className="text-sm text-slate-500">Gelen kodu ve yeni şifrenizi girin.</p>
-              </div>
-          )}
-
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-              <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={18} />
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
-              <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={18} />
-              <p className="text-sm text-green-700">{success}</p>
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={
-              authView === 'login' ? handleLogin : 
-              authView === 'signup' ? handleSignUp : 
-              authView === 'forgot-password' ? handleForgotPassword :
-              handleResetPassword
-            } className="space-y-4">
+            <h1 className="text-5xl font-bold text-white mb-6">Kırbaş Doküman</h1>
+            <p className="text-indigo-100 text-xl leading-relaxed">
+              İşletmeniz için profesyonel belgeler, raporlar ve formlar oluşturmanın en hızlı ve güvenli yolu.
+            </p>
             
-            {authView === 'signup' && (
-              <>
-                {/* Name Field */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Ad Soyad *
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 text-slate-400" size={18} />
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="Adınız ve soyadınız"
-                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
-
-                {/* Company Field */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Şirket Adı *
-                  </label>
-                  <div className="relative">
-                    <Building2 className="absolute left-3 top-3 text-slate-400" size={18} />
-                    <input
-                      type="text"
-                      name="companyName"
-                      value={formData.companyName}
-                      onChange={handleInputChange}
-                      placeholder="Şirketinizin adı"
-                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Email Field - Used in all views except reset password logic if cached, but let's keep it visible or read-only if needed. Actually Reset Password needs email too usually. */}
-            {(authView !== 'reset-password' || !formData.email) && (
-             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                E-posta *
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 text-slate-400" size={18} />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="ornek@email.com"
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
-                  disabled={isLoading || (authView === 'reset-password')}
-                />
-              </div>
+            <div className="mt-12 grid grid-cols-2 gap-6 text-left">
+               <div className="bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10">
+                  <CheckCircle className="text-green-400 mb-2" size={24} />
+                  <h3 className="text-white font-semibold">30+ Hazır Şablon</h3>
+                  <p className="text-indigo-200 text-sm mt-1">İhtiyacınız olan tüm kurumsal formatlar.</p>
+               </div>
+               <div className="bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10">
+                  <Shield className="text-blue-400 mb-2" size={24} />
+                  <h3 className="text-white font-semibold">Güvenli Arşiv</h3>
+                  <p className="text-indigo-200 text-sm mt-1">Belgeleriniz bulutta güvende.</p>
+               </div>
             </div>
-            )}
+        </div>
+      </div>
 
-            {/* Reset Code Field */}
-            {authView === 'reset-password' && (
-                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Doğrulama Kodu *
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
-                    <input
-                      type="text"
-                      name="resetCode"
-                      value={formData.resetCode}
-                      onChange={handleInputChange}
-                      placeholder="6 haneli kod"
-                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
-            )}
+      {/* Right Side - Auth Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 overflow-y-auto">
+        <div className="w-full max-w-md space-y-8 animate-fade-in">
+          
+          <div className="text-center lg:text-left">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
+              {authView === 'login' && 'Tekrar Hoşgeldiniz'}
+              {authView === 'signup' && 'Hesap Oluşturun'}
+              {authView === 'forgot-password' && 'Şifrenizi Sıfırlayın'}
+              {authView === 'reset-password' && 'Yeni Şifre Belirleyin'}
+            </h2>
+            <p className="mt-2 text-slate-600 dark:text-slate-400">
+               {authView === 'login' && 'Hesabınıza giriş yaparak devam edin.'}
+               {authView === 'signup' && '30 gün boyunca tüm özelliklere ücretsiz erişin.'}
+               {authView === 'forgot-password' && 'E-posta adresinize bir kod göndereceğiz.'}
+            </p>
+          </div>
 
-            {/* Password Field - Login, Signup, Reset Password */}
-            {authView !== 'forgot-password' && (
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                {authView === 'reset-password' ? 'Yeni Şifre *' : 'Şifre *'} {authView === 'signup' && '(En az 6 karakter)'}
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="••••••"
-                  className="w-full pl-10 pr-12 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-            )}
-
-            {/* Confirm Password Field (SignUp Only) */}
-            {authView === 'signup' && (
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Şifre Onayla *
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="••••••"
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-base sm:text-sm"
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-            )}
-            
-            {/* Forgot Password Link (Login Only) */}
-            {authView === 'login' && (
-                 <div className="flex justify-end">
+          {/* Form Card */}
+          <div className="bg-white dark:bg-slate-800 p-0 sm:p-8 rounded-2xl sm:shadow-xl sm:border border-slate-200 dark:border-slate-700">
+             
+             {/* View Toggle (Tabs) */}
+             {(authView === 'login' || authView === 'signup') && (
+                <div className="flex bg-slate-100 dark:bg-slate-700/50 p-1 rounded-xl mb-8">
                     <button
-                        type="button"
-                        onClick={() => setAuthView('forgot-password')}
-                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                        onClick={() => {
+                            setAuthView('login');
+                            setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' });
+                            setError('');
+                        }}
+                        className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all shadow-sm ${
+                            authView === 'login' 
+                            ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md' 
+                            : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 shadow-none'
+                        }`}
                     >
-                        {loginAttempts >= 3 ? <strong>Şifrenizi mi unuttunuz?</strong> : 'Şifremi Unuttum'}
+                        Giriş Yap
+                    </button>
+                    <button
+                        onClick={() => {
+                            setAuthView('signup');
+                            setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' });
+                            setError('');
+                        }}
+                         className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all shadow-sm ${
+                            authView === 'signup' 
+                            ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md' 
+                            : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 shadow-none'
+                        }`}
+                    >
+                        Kayıt Ol
                     </button>
                 </div>
+             )}
+
+            {/* Messages */}
+            {error && (
+                <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl flex gap-3 items-start">
+                <AlertCircle className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" size={18} />
+                <p className="text-sm text-red-700 dark:text-red-200">{error}</p>
+                </div>
+            )}
+            
+            {success && (
+                <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50 rounded-xl flex gap-3 items-start">
+                <CheckCircle className="text-green-600 dark:text-green-400 mt-0.5 shrink-0" size={18} />
+                <p className="text-sm text-green-700 dark:text-green-200">{success}</p>
+                </div>
             )}
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full mt-6 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="animate-spin">⏳</span>
-                  İşlem yapılıyor...
-                </span>
-              ) : (
-                authView === 'login' ? (t?.auth?.login || 'Giriş Yap') :
-                authView === 'signup' ? (t?.auth?.signup || 'Kaydol') :
-                authView === 'forgot-password' ? 'Kod Gönder' : 
-                'Şifreyi Sıfırla'
-              )}
-            </button>
+            <form onSubmit={
+                authView === 'login' ? handleLogin : 
+                authView === 'signup' ? handleSignUp : 
+                authView === 'forgot-password' ? handleForgotPassword :
+                handleResetPassword
+            } className="space-y-5">
+                
+                {authView === 'signup' && (
+                <>
+                     <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Ad Soyad</label>
+                        <div className="relative group">
+                            <User className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                            <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                            placeholder="John Doe"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Şirket Adı</label>
+                        <div className="relative group">
+                            <Building2 className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                            <input
+                            type="text"
+                            name="companyName"
+                            value={formData.companyName}
+                            onChange={handleInputChange}
+                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                            placeholder="Acme Inc."
+                            />
+                        </div>
+                    </div>
+                </>
+                )}
+
+                {(authView !== 'reset-password' || !formData.email) && (
+                <div>
+                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">E-posta Adresi</label>
+                     <div className="relative group">
+                        <Mail className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                        <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                        placeholder="mail@sirket.com"
+                        disabled={authView === 'reset-password'}
+                        />
+                    </div>
+                </div>
+                )}
+
+                {authView === 'reset-password' && (
+                     <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Doğrulama Kodu</label>
+                        <div className="relative group">
+                            <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                            <input
+                            type="text"
+                            name="resetCode"
+                            value={formData.resetCode}
+                            onChange={handleInputChange}
+                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all tracking-widest text-center font-mono"
+                            placeholder="123456"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {authView !== 'forgot-password' && (
+                <div>
+                     <div className="flex justify-between items-center mb-1.5">
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Şifre</label>
+                        {authView === 'login' && (
+                            <button type="button" onClick={() => setAuthView('forgot-password')} className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline">
+                                Şifremi Unuttum?
+                            </button>
+                        )}
+                     </div>
+                     <div className="relative group">
+                        <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                        <input
+                        type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 pr-12 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                        placeholder="••••••••"
+                        />
+                         <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                        >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                    </div>
+                </div>
+                )}
+                
+                {authView === 'signup' && (
+                    <div>
+                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Şifre Tekrar</label>
+                         <div className="relative group">
+                            <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                            <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleInputChange}
+                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                            placeholder="••••••••"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {isLoading ? (
+                        <span className="flex items-center justify-center gap-2">
+                        <span className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span>
+                        İşleniyor...
+                        </span>
+                    ) : (
+                        authView === 'login' ? (t?.auth?.login || 'Giriş Yap') :
+                        authView === 'signup' ? (t?.auth?.signup || 'Hemen Başla') :
+                        authView === 'forgot-password' ? 'Sıfırlama Kodu Gönder' : 
+                        'Şifreyi Güncelle'
+                    )}
+                </button>
+
+                 {(authView === 'forgot-password' || authView === 'reset-password') && (
+                     <button
+                        type="button"
+                        onClick={() => setAuthView('login')}
+                        className="w-full py-2 text-slate-600 hover:text-slate-900 font-medium"
+                     >
+                         Geri Dön
+                     </button>
+                 )}
+            </form>
             
-            {/* Back to Login (Forgot/Reset Password) */}
-             {(authView === 'forgot-password' || authView === 'reset-password') && (
-                 <button
-                    type="button"
-                    onClick={() => setAuthView('login')}
-                    className="w-full mt-3 px-4 py-2 text-slate-600 font-medium hover:text-slate-900 transition"
-                 >
-                     Giriş Yap'a Dön
-                 </button>
-             )}
-          </form>
-
-          {/* Terms */}
-          {(authView === 'login' || authView === 'signup') && (
-            <p className="text-xs text-slate-500 text-center mt-6">
-                {t?.common?.welcome || 'Devam ederek'} <a href="#" className="text-blue-600 hover:underline">şartlar ve koşulları</a> kabul etmiş olursunuz.
+            <p className="text-center text-xs text-slate-500 mt-6">
+                © 2026 Kırbaş Doküman Platformu. Tüm hakları saklıdır.
                 <br />
-                <a href="#" className="text-blue-600 hover:underline">{t?.settings?.privacy || 'Gizlilik Politikası'}</a>
+                <a href="#" className="hover:text-indigo-600 hover:underline">Gizlilik</a> • <a href="#" className="hover:text-indigo-600 hover:underline">Kullanım Şartları</a>
             </p>
-          )}
-        </div>
 
-        {/* Footer */}
-        {(authView === 'login' || authView === 'signup') && (
-            <p className="text-center text-slate-600 text-sm mt-6">
-            {authView === 'login' ? t?.auth?.noAccount || "Hesabınız yok mu? " : t?.auth?.haveAccount || "Zaten hesabınız var mı? "}
-            <button
-                onClick={() => setAuthView(authView === 'login' ? 'signup' : 'login')}
-                className="text-blue-600 font-semibold hover:underline"
-            >
-                {authView === 'login' ? t?.auth?.createAccount || 'Kaydol' : t?.auth?.signInInstead || 'Giriş Yap'}
-            </button>
-            </p>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

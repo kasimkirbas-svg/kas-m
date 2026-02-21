@@ -27,6 +27,19 @@
       "subscriptionEndDate": "2026-02-26T00:43:39.119Z",
       "isActive": true,
       "createdAt": "2026-02-12T00:43:39.119Z"
+    },
+    {
+      "id": "admin-001",
+      "name": "Sistem Yöneticisi",
+      "email": "admin@kirbas.com",
+      "password": "$2b$10$4TDYRWkj812KZP748As79e0luHhs7Uo0eir22ca79a31SEJkz3iNy",
+      "companyName": "Yönetim Paneli",
+      "role": "ADMIN",
+      "plan": "YEARLY",
+      "remainingDownloads": "UNLIMITED",
+      "subscriptionStartDate": "2026-02-21T01:43:35.769Z",
+      "isActive": true,
+      "createdAt": "2026-02-21T01:43:35.769Z"
     }
   ],
   "documents": [],

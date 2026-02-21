@@ -1,0 +1,526 @@
+import React, { useState, useEffect } from 'react';
+import { Layout } from './components/Layout';
+import { DocumentEditor } from './pages/DocumentEditor';
+import { DocumentsList } from './pages/DocumentsList';
+import { AdminPanel } from './pages/AdminPanel';
+import { Auth } from './pages/Auth';
+import { Profile } from './pages/Profile';
+import { Settings } from './pages/Settings';
+import { MyDocuments } from './pages/MyDocuments'; // Add this import
+import { SubscriptionPage } from './pages/SubscriptionPage';
+import { Button } from './components/Button';
+import { APP_NAME, PLANS, MOCK_TEMPLATES, ADMIN_USER } from './constants';
+import { User, UserRole, SubscriptionPlan, DocumentTemplate, GeneratedDocument } from './types';
+import { fetchApi } from './src/utils/api';
+import { Check, Lock, Shield, Star, Users, FileText, DollarSign, TrendingUp, Search, MoreHorizontal, ArrowLeft } from 'lucide-react';
+import { getTranslation } from './i18n';
+
+const App = () => {
+  // State
+  const [user, setUser] = useState<User | null>(null);
+  const [currentView, setCurrentView] = useState('auth');
+  const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
+  const [templates, setTemplates] = useState<DocumentTemplate[]>(MOCK_TEMPLATES);
+  const [isLoading, setIsLoading] = useState(true);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
+  const [t, setT] = useState(getTranslation('tr'));
+  const [savedDocuments, setSavedDocuments] = useState<GeneratedDocument[]>([]);
+  const [editingDocument, setEditingDocument] = useState<GeneratedDocument | undefined>(undefined);
+  // NEW: State for Read-Only Preview Mode
+  const [previewDocument, setPreviewDocument] = useState<GeneratedDocument | undefined>(undefined);
+
+  const handleEditDocument = (doc: GeneratedDocument) => {
+    const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
+    if (template) {
+      setSelectedTemplate(template);
+      setEditingDocument(doc);
+      setPreviewDocument(undefined); // Ensure preview is off
+      setCurrentView('editor');
+    } else {
+      alert('Bu dokümana ait şablon bulunamadı.');
+    }
+  };
+
+  const handlePreviewDocument = (doc: GeneratedDocument) => {
+    const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
+    if (template) {
+       setSelectedTemplate(template);
+       setPreviewDocument(doc); // Turn on preview mode
+       setEditingDocument(doc); // Still need data to populate fields
+       setCurrentView('editor');
+    } else {
+       alert('Bu dokümana ait şablon bulunamadı.');
+    }
+  };
+
+  // Initialize application on mount (load users, theme, language, documents)
+  useEffect(() => {
+    // Initialize admin user if no users exist
+    const existingUsers = localStorage.getItem('allUsers');
+    if (!existingUsers) {
+      const initialUsers: User[] = [ADMIN_USER];
+      localStorage.setItem('allUsers', JSON.stringify(initialUsers));
+    }
+
+    const savedUser = localStorage.getItem('currentUser');
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;
+    // Documents are loaded from API when user is logged in
+    // const loadedDocs = localStorage.getItem('generatedDocuments');
+
+    /* if (loadedDocs) {
+      try {
+        setSavedDocuments(JSON.parse(loadedDocs));
+      } catch (e) {
+        console.error('Error loading documents', e);
+      }
+    } */
+
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+        setCurrentView('dashboard');
+      } catch (error) {
+        console.error('Error loading user:', error);
+      }
+    }
+
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+    
+    // Fetch Templates from Backend
+    const loadTemplates = async () => {
+        try {
+            const res = await fetchApi('/api/templates');
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    setTemplates(data);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load templates', e);
+        }
+    };
+    loadTemplates();
+
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+      setT(getTranslation(savedLanguage));
+      // Update info for RTL
+      const dir = savedLanguage === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.dir = dir;
+      document.documentElement.lang = savedLanguage;
+    }
+
+    // Apply theme
+    applyTheme(savedTheme || 'light');
+
+    setIsLoading(false);
+  }, []);
+
+  // Fetch Documents
+  useEffect(() => {
+    const fetchDocs = async () => {
+        if (!user) {
+            setSavedDocuments([]);
+            return;
+        }
+        try {
+            const res = await fetchApi('/api/documents');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success && Array.isArray(data.documents)) {
+                    setSavedDocuments(data.documents);
+                } else {
+                    // Fallback if data structure is different or no documents yet
+                    setSavedDocuments([]);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load documents', e);
+        }
+    };
+    fetchDocs();
+  }, [user]);
+
+  // Update direction when language changes
+  useEffect(() => {
+    const dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = dir;
+    document.documentElement.lang = language;
+  }, [language]);
+
+  const applyTheme = (themeType: 'light' | 'dark') => {
+    const html = document.documentElement;
+    if (themeType === 'dark') {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+  };
+
+  const handleThemeChange = (newTheme: 'light' | 'dark') => {
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    applyTheme(newTheme);
+  };
+
+  const handleLanguageChange = (newLanguage: 'tr' | 'en' | 'ar') => {
+    setLanguage(newLanguage);
+    setT(getTranslation(newLanguage));
+    localStorage.setItem('language', newLanguage);
+  };
+
+  // Auth Handlers
+  const handleLogin = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('currentUser', JSON.stringify(userData));
+    
+    // Belirle admin mi user mi
+    if (userData.role === UserRole.ADMIN) {
+      setCurrentView('admin');
+    } else {
+      setCurrentView('dashboard');
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setCurrentView('auth');
+    setSelectedTemplate(null);
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('authToken'); // Clear auth token
+  };
+
+  const handleUpgrade = (selectedPlan: SubscriptionPlan) => {
+    if (!user) return;
+
+    // Determined limits based on plan
+    let newLimit: number | 'UNLIMITED' = 5; // Default free
+    if (selectedPlan === SubscriptionPlan.MONTHLY) newLimit = 30;
+    if (selectedPlan === SubscriptionPlan.YEARLY) newLimit = 'UNLIMITED';
+
+    const updatedUser: User = {
+      ...user,
+      plan: selectedPlan,
+      remainingDownloads: newLimit,
+      subscriptionStartDate: new Date().toISOString(),
+      subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Mock 30 days
+      isActive: true
+    };
+
+    // Update State
+    setUser(updatedUser);
+    
+    // Update LocalStorage (CurrentUser)
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+    // Update LocalStorage (AllUsers)
+    const allUsersStr = localStorage.getItem('allUsers');
+    if (allUsersStr) {
+      const allUsers: User[] = JSON.parse(allUsersStr);
+      const newAllUsers = allUsers.map(u => u.id === user.id ? updatedUser : u);
+      localStorage.setItem('allUsers', JSON.stringify(newAllUsers));
+    }
+
+    // Update Legacy Users (if exists)
+    const legacyUsersStr = localStorage.getItem('users');
+    if (legacyUsersStr) {
+      const legacyUsers: User[] = JSON.parse(legacyUsersStr);
+      const newLegacyUsers = legacyUsers.map(u => u.id === user.id ? updatedUser : u);
+      localStorage.setItem('users', JSON.stringify(newLegacyUsers));
+    }
+
+    alert(t?.subscription?.successMessage || 'Aboneliğiniz başarıyla başlatıldı.');
+    setCurrentView('profile');
+  };
+
+  // Navigation Logic
+  const renderContent = () => {
+    // Loading
+    if (isLoading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-600 font-medium">Yükleniyor...</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Auth Page
+    if (!user) {
+      return <Auth onLoginSuccess={handleLogin} t={t} language={language} />
+    }
+
+    // ADMIN ROUTING (Prioritize Admin Views)
+    if (user?.role === UserRole.ADMIN && ['admin', 'dashboard', 'users', 'templates'].includes(currentView)) {
+      return <AdminPanel user={user} t={t} currentView={currentView} />
+    }
+
+    // 1. Document Editor
+    if (user && currentView === 'editor' && selectedTemplate) {
+      return (
+        <div className="space-y-4">
+          <button 
+            onClick={() => {
+              setCurrentView('templates');
+              setEditingDocument(undefined);
+            }}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4"
+          >
+            <ArrowLeft size={18} />
+            {t?.editor?.back || 'Şablonlara Dön'}
+          </button>
+          <DocumentEditor 
+            template={selectedTemplate}
+            initialData={editingDocument}
+            isReadOnly={!!previewDocument} // Pass read-only flag if we are previewing
+            userId={user.id}
+            userEmail={user.email}
+            companyName={user.companyName}
+            preparedBy={user.name}
+            onClose={() => {
+              setCurrentView('templates');
+              setEditingDocument(undefined);
+              setPreviewDocument(undefined); // Reset preview
+            }}
+            onDocumentGenerated={async (doc: GeneratedDocument) => {
+              // Optimistic UI update
+              let newDocs;
+              if (editingDocument) {
+                 newDocs = savedDocuments.map(d => d.id === editingDocument.id ? doc : d);
+              } else {
+                 newDocs = [doc, ...savedDocuments];
+              }
+              
+              setSavedDocuments(newDocs);
+              // Save to API
+              try {
+                  await fetchApi('/api/documents', {
+                      method: 'POST',
+                      body: JSON.stringify(doc)
+                  });
+              } catch (e) {
+                  console.error('Failed to save document to API', e);
+                  // Optionally revert state?
+                  alert('Doküman sunucuya kaydedilemedi ancak yerel önbellekte görüntülenebilir.');
+              }
+              
+              localStorage.setItem('generatedDocuments', JSON.stringify(newDocs)); // Keep backup
+              setEditingDocument(undefined);
+              
+              alert(`✓ ${selectedTemplate.title} ${t?.editor?.photoSuccess || 'dokümanı başarıyla oluşturuldu ve kaydedildi.'}`);
+              setCurrentView('my-documents');
+            }}
+            t={t}
+          />
+        </div>
+      );
+    }
+
+    // 2. My Documents List
+    if (user && currentView === 'my-documents') {
+        return (
+            <MyDocuments 
+                templates={templates}
+                onEditDocument={handleEditDocument}
+                onPreviewDocument={handlePreviewDocument} 
+                documents={savedDocuments.filter(d => d.userId === user.id)}
+                onDeleteDocument={async (id) => {
+                    if (window.confirm(t?.common?.confirmDelete || 'Bu dokümanı silmek istediğinize emin misiniz?')) {
+                        // Optimistic Delete
+                        const newDocs = savedDocuments.filter(d => d.id !== id);
+                        setSavedDocuments(newDocs);
+                        
+                        try {
+                             await fetchApi(`/api/documents/${id}`, { method: 'DELETE' });
+                             localStorage.setItem('generatedDocuments', JSON.stringify(newDocs)); // Sync backup
+                        } catch (e) {
+                             console.error('Failed to delete document', e);
+                             alert('Doküman sunucudan silinemedi.');
+                             // Optionally revert?
+                        }
+                    }
+                }}
+                t={t}
+            />
+        );
+    }
+
+    // 3. Template List (Documents)
+    if (user && currentView === 'templates') {
+      return (
+        <div>
+          <button 
+            onClick={() => setCurrentView('dashboard')}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-6"
+          >
+            <ArrowLeft size={18} />
+            {t?.common?.back || 'Ana Sayfaya Dön'}
+          </button>
+          <DocumentsList 
+            templates={templates}
+            userIsPremium={user.plan === SubscriptionPlan.YEARLY}
+            onSelectTemplate={(template) => {
+              setSelectedTemplate(template);
+              setCurrentView('editor');
+            }}
+            t={t}
+          />
+        </div>
+      );
+    }
+
+    // 3. Dashboard (Home)
+    if (user && currentView === 'dashboard') {
+      return (
+        <div>
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-slate-800">{t?.dashboard?.welcome || `Hoşgeldin, ${user.name}!`} 👋</h1>
+            <p className="text-slate-500 text-lg mt-2">{t?.dashboard?.greetings || 'Bugün ne oluşturmak istersiniz?'}</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+             <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg shadow-blue-200">
+                <div className="text-sm opacity-90 font-medium">{t?.dashboard?.remainingDownloads || 'Kalan İndirme Hakkı'}</div>
+                <div className="text-4xl font-bold mt-2">{user.remainingDownloads === 'UNLIMITED' ? '∞' : user.remainingDownloads}</div>
+                <p className="text-sm opacity-75 mt-4">
+                  {t?.dashboard?.package || 'Paketiniz'}: <span className="font-semibold">{user.plan === SubscriptionPlan.YEARLY ? (t?.dashboard?.yearly || 'Yıllık Pro') : (t?.dashboard?.monthly || 'Aylık Standart')}</span>
+                </p>
+             </div>
+             <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg shadow-green-200 flex flex-col justify-center">
+                <p className="opacity-90 font-medium mb-3">{t?.dashboard?.greetings || 'Yeni Doküman Oluşturmaya Başla'}</p>
+                <Button 
+                  onClick={() => setCurrentView('templates')} 
+                  className="bg-white text-green-600 hover:bg-gray-100 font-semibold"
+                >
+                  + {t?.dashboard?.createDocument || 'Doküman Oluştur'}
+                </Button>
+             </div>
+             <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                <h3 className="font-bold text-slate-800 mb-4">{t?.dashboard?.recentActivity || 'Son İşlemler'}</h3>
+                <ul className="space-y-3">
+                  {savedDocuments.filter(d => d.userId === user.id).slice(0, 3).map(doc => (
+                      <li key={doc.id} className="flex justify-between items-center text-sm">
+                        <span className="text-slate-600 truncate max-w-[150px]">{doc.templateId} Dokümanı</span>
+                        <span className="text-xs text-slate-400">{new Date(doc.createdAt).toLocaleDateString()}</span>
+                      </li>
+                  ))}
+                  {savedDocuments.filter(d => d.userId === user.id).length === 0 && (
+                      <li className="text-sm text-slate-400 italic text-center py-2">
+                          {t?.dashboard?.noActivity || 'Henüz işlem yok.'}
+                      </li>
+                  )}
+                  <li className="flex justify-between items-center text-sm border-t border-slate-100 pt-2 mt-2">
+                    <span className="text-slate-600">Abonelik Durumu</span>
+                    <span className="text-xs text-green-600 font-medium">✓ {t?.common?.active || 'Aktif'}</span>
+                  </li>
+                </ul>
+             </div>
+          </div>
+
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-slate-800">{t?.dashboard?.quickAccess || 'Hızlı Erişim'}</h2>
+              <button 
+                onClick={() => setCurrentView('templates')}
+                className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+              >
+                {t?.dashboard?.viewAll || 'Tümünü Gör'} →
+              </button>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+               {MOCK_TEMPLATES.slice(0, 6).map(template => (
+                  <div 
+                    key={template.id} 
+                    onClick={() => {
+                      setSelectedTemplate(template);
+                      if (!template.isPremium || user.plan === SubscriptionPlan.YEARLY) {
+                        setCurrentView('editor');
+                      } else {
+                        alert('Bu premium şablon yalnızca Yıllık Pro paketine dahildir.');
+                      }
+                    }} 
+                    className="cursor-pointer bg-white p-5 rounded-lg border border-slate-200 hover:shadow-md hover:border-blue-400 transition-all group"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition">
+                        <FileText size={20} />
+                      </div>
+                      {template.isPremium && (
+                        <span className="bg-purple-100 text-purple-600 text-xs font-bold px-2 py-0.5 rounded">
+                          PREMIUM
+                        </span>
+                      )}
+                    </div>
+                    <h4 className="font-semibold text-slate-800 mb-1">{template.title}</h4>
+                    <p className="text-xs text-slate-500 mb-3">{template.category}</p>
+                    <p className="text-xs text-slate-600 line-clamp-2">{template.description}</p>
+                  </div>
+               ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 4. Profile Page
+    if (user && currentView === 'profile') {
+      return <Profile user={user} t={t} onNavigate={setCurrentView} />
+    }
+
+    // 5. Settings Page
+    if (user && currentView === 'settings') {
+      return (
+        <Settings 
+          user={user}
+          theme={theme}
+          language={language}
+          t={t}
+          onThemeChange={handleThemeChange}
+          onLanguageChange={handleLanguageChange}
+        />
+      );
+    }
+
+    // 6. Subscription Page
+    if (user && currentView === 'subscription') {
+      return (
+         <SubscriptionPage 
+            user={user}
+            t={t}
+            onUpgrade={handleUpgrade}
+            onBack={() => setCurrentView('profile')}
+         />
+      );
+    }
+    
+    // 7. Admin Panel (Handles all admin-related views)
+    if (user?.role === UserRole.ADMIN && ['admin', 'subscribers', 'users', 'admin-templates', 'admin-packages'].includes(currentView)) {
+      return <AdminPanel user={user} t={t} currentView={currentView} />
+    }
+
+    // Default Fallback
+    return <div className="p-8 text-center text-slate-500">Sayfa yükleniyor... ({currentView})</div>;
+  };
+
+  return (
+    <Layout 
+      user={user} 
+      currentView={currentView} 
+      onNavigate={setCurrentView} 
+      onLogout={handleLogout}
+      language={language}
+      t={t}
+    >
+      {renderContent()}
+    </Layout>
+  );
+};
+
+export default App;
