@@ -1154,10 +1154,12 @@ app.post('/api/auth/register', async (req, res) => {
             companyName: companyName || '', // Optional
             role: 'SUBSCRIBER',
             plan: 'FREE',
-            remainingDownloads: 3,
+            remainingDownloads: 50, // 30 Days Free -> Updated to 50 as requested
+            downloadsThisMonth: 0,
             subscriptionStartDate: new Date().toISOString(),
-            subscriptionEndDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+            subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 Days fixed
             isActive: true,
+            isTrial: true,
             createdAt: new Date().toISOString()
         };
 

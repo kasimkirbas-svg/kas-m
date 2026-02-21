@@ -71,10 +71,10 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
   return (
     <div className="w-full flex flex-col gap-6">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10 max-w-2xl">
-          <h2 className="text-3xl font-bold mb-3">{t?.documents?.allTemplates || 'Yeni Bir Doküman Oluştur'}</h2>
-          <p className="text-blue-100 text-lg mb-6">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">{t?.documents?.allTemplates || 'Yeni Bir Doküman Oluştur'}</h2>
+          <p className="text-blue-100 text-sm sm:text-lg mb-6">
             Profesyonel şablonlardan birini seçerek raporlarınızı saniyeler içinde hazırlayın, PDF olarak indirin ve paylaşın.
           </p>
           

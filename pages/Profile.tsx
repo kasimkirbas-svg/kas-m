@@ -161,15 +161,15 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
       )}
 
       {/* Profile Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-8 text-white flex items-center gap-4 shadow-lg">
-        <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-3xl font-bold">
-          {user?.name?.charAt(0) || 'U'}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 sm:p-8 text-white flex flex-col sm:flex-row items-center sm:items-start gap-4 shadow-lg text-center sm:text-left">
+        <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-3xl font-bold shrink-0">
+          {(user?.name || 'U').charAt(0)}
         </div>
-        <div>
-          <h1 className="text-3xl font-bold">{user?.name}</h1>
+        <div className="flex-1">
+          <h1 className="text-2xl sm:text-3xl font-bold">{user?.name}</h1>
           <p className="text-blue-100">{user?.email}</p>
           {user?.companyName && (
-              <p className="text-blue-200 text-sm flex items-center gap-1 mt-1">
+              <p className="text-blue-200 text-sm flex items-center justify-center sm:justify-start gap-1 mt-1">
                   <Building2 size={14} /> {user.companyName}
               </p>
           )}
@@ -180,14 +180,14 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
             setShowPasswordChange(false);
             setShowInvoices(false);
           }}
-          className="ml-auto px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium flex items-center gap-2 transition"
+          className="mt-4 sm:mt-0 sm:ml-auto w-full sm:w-auto px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium flex items-center justify-center gap-2 transition"
         >
           <Edit2 size={18} />
           {isEditing ? (t?.common?.cancel || 'İptal') : (t?.common?.edit || 'Düzenle')}
         </button>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Left: Profile Information & Settings */}
         <div className="md:col-span-2 space-y-6">
           

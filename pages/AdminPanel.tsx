@@ -159,6 +159,31 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     }
   };
 
+  const loadUsers = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+      
+      const response = await fetchApi('/api/users', {
+          headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const users = await response.json();
+        setAllUsers(users);
+        
+        const activeCount = users.filter((u: any) => u.isActive).length;
+        const revenue = users.reduce((acc: number, curr: any) => {
+          if (curr.plan === 'YEARLY') return acc + 4999;
+          if (curr.plan === 'MONTHLY') return acc + 499;
+          return acc;
+        }, 0);
+
+        setStats(prev => ({ ...prev, activeUsers: activeCount, revenue }));
+      }
+    } catch (error) { console.error("Failed to load users", error); }
+  };
+
   useEffect(() => {
     loadData();
     loadUsers();
@@ -247,47 +272,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     setSubscriptionPlans(updated);
     localStorage.setItem('subscriptionPlans', JSON.stringify(updated));
     setIsPlanModalOpen(false);
-  };
-
-  const loadUsers = async () => {
-    try {
-      // Fetch users from API
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        console.warn("No auth token found, cannot fetch users");
-        return;
-      }
-      
-      const response = await fetchApi('/api/users', {
-          headers: {
-              'Authorization': `Bearer ${token}`
-          }
-      });
-      
-      if (response.ok) {
-        const users = await response.json();
-        setAllUsers(users);
-        
-        // Calculate stats
-        const activeCount = users.filter((u: any) => u.isActive).length;
-        const revenue = users.reduce((acc: number, curr: any) => {
-          if (curr.plan === 'YEARLY') return acc + 4999;
-          if (curr.plan === 'MONTHLY') return acc + 499;
-          return acc;
-        }, 0);
-
-        setStats(prev => ({
-          ...prev,
-          activeUsers: activeCount,
-          revenue: revenue
-        }));
-      } else {
-         console.error("Failed to fetch users:", response.status);
-         // Do not fall back to local storage to avoid sync issues
-      }
-    } catch (error) {
-      console.error("Failed to load users", error);
-    }
   };
 
   const handleDeleteUser = async (userId: string) => {

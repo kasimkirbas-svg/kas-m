@@ -162,31 +162,20 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       const pdfBase64 = pdf.output('datauristring');
       const fileName = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
 
-      if (sendEmail && userEmail) {
-        try {
-          const response = await fetchApi('/api/send-document', {
-            method: 'POST',
-            body: JSON.stringify({
-              email: userEmail,
-              pdfBase64: pdfBase64,
-              documentName: template.title
-            })
-          });
-          
-          const result = await response.json();
-          if (!response.ok || !result.success) {
-            console.error('Email sending failed', result);
-            alert(`E-posta gönderilemedi: ${result.message || 'Sunucu hatası'}.`);
-          } else {
-             console.log('Email sent successfully');
-          }
-        } catch (error) {
-          console.error('Email network error:', error);
-          alert('E-posta sunucusuna erişilemedi. İnternet bağlantınızı kontrol edin.');
-        }
-      }
-
       pdf.save(fileName);
+      
+      // Client-side "Send Email" Logic
+      if (sendEmail) {
+          const recipient = formData.email || userEmail || '';
+          const subject = encodeURIComponent(`${template.title} - ${formData.companyName}`);
+          const body = encodeURIComponent(`Merhaba,\n\n${template.title} dokümanı ektedir.\n\nFirma: ${formData.companyName}\nHazırlayan: ${formData.preparedBy}\n\n(Not: İndirilen PDF dosyasını lütfen bu maile ekleyiniz.)\n\nİyi çalışmalar.`);
+          
+          // Open default mail client
+          window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+          
+          // Inform user
+          alert("Doküman indirildi.\n\nE-posta uygulamanız açıldı. Lütfen indirilen dosyayı maile EKLEYEREK gönderiniz.");
+      }
       
       const documentRecord: GeneratedDocument = {
         id: initialData?.id || 'doc-' + Date.now(),
@@ -222,10 +211,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   const [previewMode, setPreviewMode] = useState(false);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-130px)] lg:h-[calc(100vh-110px)] overflow-hidden relative">
+    <div className="flex flex-col lg:flex-row gap-0 lg:gap-6 h-[calc(100dvh-80px)] lg:h-[calc(100vh-110px)] overflow-hidden relative -mx-4 sm:mx-0 -mb-4 sm:mb-0">
       
        {/* Mobile Preview Toggle */}
-       <div className="lg:hidden absolute bottom-4 right-4 z-50">
+       <div className="lg:hidden absolute bottom-20 right-4 z-50">
           <button 
             onClick={() => setPreviewMode(!previewMode)}
             className="bg-blue-600 text-white p-3 rounded-full shadow-lg flex items-center gap-2"
@@ -275,7 +264,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     name="date"
                     value={formData.date}
                     onChange={handleInputChange}
-                    className="w-full pl-10 h-10 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-sm"
+                    className="w-full pl-10 h-10 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-base sm:text-sm"
                   />
                  </div>
                </div>
@@ -288,7 +277,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     value={formData.companyName}
                     onChange={handleInputChange}
                     placeholder={_t('editor.companyNamePlaceholder', 'Örn: ABC İnşaat Ltd. Şti.')}
-                    className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm placeholder:text-slate-400"
+                    className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-base sm:text-sm placeholder:text-slate-400"
                   />
                </div>
 
@@ -300,7 +289,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     value={formData.preparedBy}
                     onChange={handleInputChange}
                     placeholder="Adınız Soyadınız"
-                    className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm placeholder:text-slate-400"
+                    className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-base sm:text-sm placeholder:text-slate-400"
                   />
                </div>
              </div>
@@ -322,14 +311,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         onChange={handleInputChange}
                         rows={3}
                         placeholder={field.placeholder}
-                        className="w-full p-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                        className="w-full p-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-base sm:text-sm"
                       />
                     ) : field.type === 'select' ? (
                        <select
                          name={field.key}
                          value={formData[field.key] || ''}
                          onChange={(e) => setFormData(prev => ({ ...prev, [field.key]: e.target.value }))}
-                         className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                         className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-base sm:text-sm"
                        >
                          <option value="">Seçiniz</option>
                          {field.options?.map((opt, i) => (
@@ -343,7 +332,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         value={formData[field.key] || ''}
                         onChange={handleInputChange}
                         placeholder={field.placeholder}
-                        className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                        className="w-full h-10 px-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-base sm:text-sm"
                       />
                     )}
                   </div>
@@ -356,7 +345,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                       onChange={(e) => setAdditionalNotes(e.target.value)}
                       rows={3}
                       placeholder={_t('editor.notesPlaceholder', 'Varsa eklemek istediğiniz notlar...')}
-                      className="w-full p-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-sm"
+                      className="w-full p-3 rounded-lg border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 transition-all text-base sm:text-sm"
                     />
                 </div>
              </div>
@@ -419,21 +408,18 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         {/* Footer Actions */}
         <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-4 shrink-0">
            
-           {/* Direct Mail Link Instead of Server-Side Send */}
-           <a 
-              href={formData.email ? `mailto:${formData.email}?subject=${encodeURIComponent(template.title)}&body=${encodeURIComponent("Merhaba,\n\nDokümanınızı ekte görebilirsiniz.\n\nTeşekkürler.")}` : '#'}
-              className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-2 sm:mr-auto"
-              onClick={(e) => {
-                 if (!formData.email) {
-                    e.preventDefault();
-                    return;
-                 }
-                 // Let the PDF download complete first, then user can attach manually
-                 alert("PDF İndiriliyor...\n\nOtomatik mail sistemi kapalıdır. İndirilen dosyayı açılan mail ekranına ekleyerek gönderebilirsiniz.");
-              }}
-           >
-              Önce İndir Sonra Gönder
-           </a>
+           <div className="flex items-center gap-2 sm:mr-auto">
+              <input 
+                type="checkbox" 
+                id="sendEmailCheckbox"
+                checked={sendEmail}
+                onChange={(e) => setSendEmail(e.target.checked)}
+                className="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+              />
+              <label htmlFor="sendEmailCheckbox" className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none">
+                 E-posta ile Gönder
+              </label>
+           </div>
            
            <button 
              onClick={handleGenerateDocument}
@@ -471,7 +457,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
          <div className="flex-1 overflow-y-auto p-4 sm:p-8 flex items-start justify-center custom-scrollbar bg-slate-500/10">
             {/* The A4 Container */}
-            <div ref={printContainerRef} className="print-container bg-transparent transform origin-top scale-[0.6] sm:scale-[0.8] xl:scale-100 transition-transform duration-300">
+            <div ref={printContainerRef} className="print-container bg-transparent transform origin-top scale-[0.35] xs:scale-[0.45] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.8] xl:scale-100 transition-transform duration-300">
                {/* PAGE 1: Main Content */}
                <div className="print-page bg-white text-black shadow-2xl relative mx-auto overflow-hidden" style={{ width: '210mm', minHeight: '297mm', padding: '15mm' }}>
                   

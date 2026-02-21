@@ -63,6 +63,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loginAttempts, setLoginAttempts] = useState(0);
+  const [strength, setStrength] = useState(''); // Password strength state
 
   const [formData, setFormData] = useState({
     email: '',
@@ -80,9 +81,31 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       [name]: value
     }));
     setError('');
+
+    if (name === 'password') {
+      let score = 0;
+      if (value.length > 5) score++;
+      if (value.length > 8) score++;
+      if (/[A-Z]/.test(value)) score++;
+      if (/[0-9]/.test(value)) score++;
+      if (/[^a-zA-Z0-9]/.test(value)) score++;
+
+      if (value.length === 0) setStrength('');
+      else if (score < 2) setStrength('Zayıf');
+      else if (score < 4) setStrength('Orta');
+      else setStrength('Güçlü');
+    }
   };
 
-  // Basit email validasyonu
+  const getStrength = (pass: string) => {
+    if (pass.length < 6) return 'Zayıf';
+    if (pass.length < 8) return 'Zayıf';
+    if (/^[a-zA-Z]+$/.test(pass) || /^[0-9]+$/.test(pass)) return 'Orta';
+    return 'Güçlü';
+  }
+
+  const strength = getStrength(formData.password);
+  
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -213,6 +236,11 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     if (formData.password.length < 6) {
       setError('Şifre en az 6 karakter olmalıdır.');
       return;
+    }
+
+    if (getStrength(formData.password) === 'Zayıf') {
+       setError('Lütfen daha güçlü bir şifre belirleyin (En az 8 karakter, harf ve rakam).');
+       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -542,8 +570,48 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                     </div>
+
+                    {/* Password Strength Meter */}
+                    {authView === 'signup' && formData.password && (
+                      <div className="mt-2 text-xs">
+                         <div className="flex gap-1 h-1 mb-1">
+                            <div className={`flex-1 rounded-full transition-all duration-300 ${strength === 'Zayıf' || strength === 'Orta' || strength === 'Güçlü' ? (strength === 'Zayıf' ? 'bg-red-500' : strength === 'Orta' ? 'bg-yellow-500' : 'bg-green-500') : 'bg-slate-200'}`}></div>
+                            <div className={`flex-1 rounded-full transition-all duration-300 ${strength === 'Orta' || strength === 'Güçlü' ? (strength === 'Orta' ? 'bg-yellow-500' : 'bg-green-500') : 'bg-slate-200'}`}></div>
+                            <div className={`flex-1 rounded-full transition-all duration-300 ${strength === 'Güçlü' ? 'bg-green-500' : 'bg-slate-200'}`}></div>
+                         </div>
+                         <p className={`text-right font-medium ${strength === 'Zayıf' ? 'text-red-500' : strength === 'Orta' ? 'text-yellow-600' : 'text-green-600'}`}>
+                           {strength} Şifre
+                         </p>
+                      </div>
+                    )}
                 </div>
                 )}
+                
+                {authView === 'signup' && (
+                    <div className="space-y-4">
+                         <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Şifre Tekrar</label>
+                            <div className="relative group">
+                                <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                                <input
+                                type={showPassword ? 'text' : 'password'}
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleInputChange}
+                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                                placeholder="••••••••"
+                                />
+                            </div>
+                         </div>
+                         
+                         <div className="flex items-start gap-2 text-sm text-slate-500 dark:text-slate-400 p-3 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-900/20">
+                            <CheckCircle size={16} className="text-blue-500 mt-0.5 shrink-0" />
+                            <p>Tüm yeni üyelere özel <strong>30 Gün Ücretsiz</strong> sınırlı kullanım hakkı tanımlanacaktır. Süre sonunda ücretli pakete geçmeniz gerekir.</p>
+                         </div>
+                    </div>
+                )}
+
+                <button
                 
                 {authView === 'signup' && (
                     <div>
