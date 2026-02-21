@@ -224,9 +224,14 @@ const dbAdapter = {
     findUserByEmail: async (email) => {
         if (pgPool) {
              try {
+                // Short timeout for login check if possible, though pgPool config handles connection timeout.
+                // We rely on pool error handling.
                 const res = await pgPool.query('SELECT data FROM users WHERE email = $1', [email]);
                 return res.rows.length ? res.rows[0].data : undefined;
-             } catch (err) { console.error('PG Error:', err); }
+             } catch (err) { 
+                 console.error('PG FindUserByEmail Error:', err.message); 
+                 // If PG fails, we MUST fallback. The catch block allows execution to continue below.
+             }
         }
 
         if (MONGO_URI) {
@@ -245,7 +250,7 @@ const dbAdapter = {
              try {
                 const res = await pgPool.query('SELECT data FROM users WHERE id = $1', [id]);
                 return res.rows.length ? res.rows[0].data : undefined;
-             } catch (err) { console.error('PG Error:', err); }
+             } catch (err) { console.error('PG FindUserById Error:', err.message); }
         }
 
         if (MONGO_URI) {
