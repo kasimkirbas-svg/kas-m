@@ -435,7 +435,10 @@ const App = () => {
               </button>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-               {MOCK_TEMPLATES.slice(0, 6).map(template => (
+               {MOCK_TEMPLATES.slice(0, 6).map(template => {
+                 const title = t?.templates?.[`t${template.id}_title`] || template.title;
+                 const desc = t?.templates?.[`t${template.id}_desc`] || template.description;
+                 return (
                   <div 
                     key={template.id} 
                     onClick={() => {
@@ -458,11 +461,11 @@ const App = () => {
                         </span>
                       )}
                     </div>
-                    <h4 className="font-semibold text-slate-800 mb-1">{template.title}</h4>
+                    <h4 className="font-semibold text-slate-800 mb-1">{title}</h4>
                     <p className="text-xs text-slate-500 mb-3">{template.category}</p>
-                    <p className="text-xs text-slate-600 line-clamp-2">{template.description}</p>
+                    <p className="text-xs text-slate-600 line-clamp-2">{desc}</p>
                   </div>
-               ))}
+               )})}
             </div>
           </div>
         </div>
