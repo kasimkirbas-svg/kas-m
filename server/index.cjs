@@ -289,13 +289,50 @@ app.use(limiter);
 
 // --- SIMPLE FILE-BASED DATABASE ---
 // On Vercel, only /tmp is writable.
-// We'll use /tmp/db.json as the working DB, but initialize it from the source db.json if available.
+// We'll use /tmp/db.json as the working DB but synchronize.
 const SOURCE_DB_FILE = path.join(__dirname, 'db.json');
-const DB_FILE = process.env.VERCEL 
+
+// Determine if we are in a read-only environment (Vercel Production)
+// VERCEL_ENV is 'production', 'preview', or 'development'
+const IS_VERCEL_PROD = process.env.VERCEL && process.env.VERCEL_ENV === 'production';
+
+// Use /tmp only if we are forced to (Vercel Prod), otherwise update local file for persistence
+const DB_FILE = IS_VERCEL_PROD 
     ? path.join('/tmp', 'db.json') 
     : path.join(__dirname, 'db.json');
 
-// --- MOCK TEMPLATES (Initialize DB) ---
+console.log(`📂 Database File Path: ${DB_FILE}`);
+
+// Helper to read/write DB
+const readDB = () => {
+    try {
+        if (!fs.existsSync(DB_FILE)) {
+             // If DB_FILE is in /tmp and missing, copy from SOURCE_DB_FILE if reachable
+             if (IS_VERCEL_PROD && fs.existsSync(SOURCE_DB_FILE)) {
+                 try {
+                    const params = fs.readFileSync(SOURCE_DB_FILE, 'utf8');
+                    fs.writeFileSync(DB_FILE, params);
+                    return JSON.parse(params);
+                 } catch(e) {
+                     console.error("Failed to copy source DB to tmp:", e);
+                 }
+             }
+            return { users: [], documents: [], templates: INITIAL_TEMPLATES };
+        }
+        const data = fs.readFileSync(DB_FILE, 'utf8');
+        try {
+            const parsed = JSON.parse(data);
+             if (!parsed.templates) parsed.templates = INITIAL_TEMPLATES;
+            return parsed;
+        } catch (parseErr) {
+            console.error("DB Parse Error - Corrupt File:", parseErr);
+            return { users: [], documents: [], templates: INITIAL_TEMPLATES };
+        }
+    } catch (err) {
+        console.error("DB Read Error:", err);
+        return { users: [], documents: [], templates: INITIAL_TEMPLATES };
+    }
+};
 const INITIAL_TEMPLATES = [
   {
     id: '1',
@@ -1773,7 +1810,11 @@ app.put('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
     });
 
     db.users[index] = { ...db.users[index], ...safeUpdates };
-    writeDB(db);
+    
+    // Critical: Check write success
+    if (!writeDB(db)) {
+        return res.status(500).json({ success: false, message: 'Veritabanına yazılamadı (Disk Hatası).' });
+    }
     
     // Sync PostgreSQL if available
     if (pgPool) {
