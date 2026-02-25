@@ -54,6 +54,20 @@ const getEmailBody = (type: string, data: any) => {
   }
 };
 
+const getStrength = (password: string) => {
+  let score = 0;
+  if (password.length > 5) score++;
+  if (password.length > 8) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^a-zA-Z0-9]/.test(password)) score++;
+
+  if (password.length === 0) return '';
+  if (score < 2) return 'Zayıf';
+  if (score < 4) return 'Orta';
+  return 'Güçlü';
+};
+
 import { fetchApi } from '../src/utils/api';
 
 export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
@@ -83,17 +97,8 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     setError('');
 
     if (name === 'password') {
-      let score = 0;
-      if (value.length > 5) score++;
-      if (value.length > 8) score++;
-      if (/[A-Z]/.test(value)) score++;
-      if (/[0-9]/.test(value)) score++;
-      if (/[^a-zA-Z0-9]/.test(value)) score++;
-
-      if (value.length === 0) setStrength('');
-      else if (score < 2) setStrength('Zayıf');
-      else if (score < 4) setStrength('Orta');
-      else setStrength('Güçlü');
+      const s = getStrength(value);
+      setStrength(s);
     }
   };
 
@@ -218,6 +223,16 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     if (!formData.email || !formData.password || !formData.name) {
       setError('E-posta, şifre ve ad soyad alanları zorunludur.');
       return;
+    const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Signup triggered"); // Debug
+    setError('');
+    setSuccess('');
+
+    // Validasyon
+    if (!formData.email || !formData.password || !formData.name) {
+      setError('E-posta, şifre ve ad soyad alanları zorunludur.');
+      return;
     }
 
     if (!validateEmail(formData.email)) {
@@ -230,10 +245,11 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       return;
     }
 
-    if (getStrength(formData.password) === 'Zayıf') {
-       setError('Lütfen daha güçlü bir şifre belirleyin (En az 8 karakter, harf ve rakam).');
-       return;
-    }
+    // Şifre gücü kontrolü (Devre dışı bırakıldı - çok katı olmasın)
+    // if (getStrength(formData.password) === 'Zayıf') {
+    //    setError('Lütfen daha güçlü bir şifre belirleyin (En az 8 karakter, harf ve rakam).');
+    //    return;
+    // }
 
     if (formData.password !== formData.confirmPassword) {
       setError('Şifreler eşleşmiyor.');
@@ -243,6 +259,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     setIsLoading(true);
 
     try {
+      console.log('Sending register request...');
       const response = await fetchApi('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -256,7 +273,16 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
         }),
       });
 
-      const data = await response.json();
+      // Parse JSON safely
+      let data;
+      try {
+           data = await response.json();
+      } catch (e) {
+           console.error('Registration JSON error:', e);
+           throw new Error('Sunucu geçerli bir yanıt döndürmedi.');
+      }
+      
+      console.log('Register response:', data);
 
       if (data.success) {
         // Send email notifications (Client side visual only)
@@ -272,18 +298,9 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       } else {
         setError(data.message || 'Kayıt başarısız.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Signup error:', err);
-      setError('Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
+      setError(err.message || '');
 
     if (!formData.email) {
         setError('Lütfen e-posta adresinizi girin.');
