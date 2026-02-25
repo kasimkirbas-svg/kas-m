@@ -6,6 +6,7 @@ import { AdminPanel } from './pages/AdminPanel';
 import { Auth } from './pages/Auth';
 import { Profile } from './pages/Profile';
 import { Settings } from './pages/Settings';
+import { Dashboard } from './pages/Dashboard';
 import { MyDocuments } from './pages/MyDocuments'; // Add this import
 import { SubscriptionPage } from './pages/SubscriptionPage';
 import { Button } from './components/Button';
