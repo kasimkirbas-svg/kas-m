@@ -193,13 +193,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-2rem)] relative overflow-hidden">
+    <div className="flex flex-col lg:flex-row gap-4 h-[calc(100dvh-6rem)] lg:h-[calc(100vh-2rem)] relative overflow-hidden">
       
        {/* Mobile Preview Toggle */}
-       <div className="lg:hidden absolute bottom-24 right-4 z-50">
+       <div className="fixed lg:hidden bottom-24 right-6 z-50 safe-area-bottom">
           <button 
             onClick={() => setPreviewMode(!previewMode)}
-            className="bg-indigo-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center transition-transform active:scale-95"
+            className="bg-indigo-600 text-white p-4 rounded-full shadow-xl shadow-indigo-500/40 flex items-center justify-center transition-transform active:scale-95 hover:scale-105"
           >
              {previewMode ? <Edit2 size={24} /> : <FileText size={24} />}
           </button>
@@ -207,32 +207,35 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
        {/* Editor Panel */}
        {!isReadOnly && (
-       <div className={`lg:flex-[3] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden flex flex-col min-w-[320px] border border-white/20 dark:border-slate-800 order-1 relative z-10 w-full lg:w-auto h-full ${previewMode ? 'hidden lg:flex' : 'flex'}`}>
+       <div className={`
+         w-full lg:flex-[3] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-xl overflow-hidden flex flex-col border border-white/20 dark:border-slate-800 order-1 relative z-10 h-full
+         ${previewMode ? 'hidden lg:flex' : 'flex'}
+       `}>
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-100 to-white dark:from-slate-800 dark:to-slate-900 px-8 py-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0">
-          <div>
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{_t('editor.title', 'Editör')}</h2>
-            <p className="text-slate-500 dark:text-slate-400 font-medium">{template.title}</p>
+        <div className="bg-gradient-to-r from-slate-100 to-white dark:from-slate-800 dark:to-slate-900 px-4 md:px-8 py-4 md:py-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0">
+          <div className="flex-1 min-w-0 pr-4">
+            <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight truncate">{_t('editor.title', 'Editör')}</h2>
+            <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 font-medium truncate">{template.title}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 shrink-0">
              {onClose && (
-                <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors">
-                    <ArrowLeft className="text-slate-500 dark:text-slate-400" />
+                <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors active:scale-95">
+                    <ArrowLeft className="text-slate-500 dark:text-slate-400" size={24} />
                 </button>
              )}
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 md:space-y-8 custom-scrollbar scroll-smooth">
           
           {/* General Info Section */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wider text-xs mb-2">
-                <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
+                <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-sm shadow-indigo-500/50"></div>
                 {_t('editor.generalInfo', 'Genel Bilgiler')}
              </div>
              
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                <div className="col-span-1">
                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{_t('common.date', 'Tarih')}</label>
                  <div className="relative group">

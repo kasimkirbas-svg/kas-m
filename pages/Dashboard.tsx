@@ -73,34 +73,34 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
     <div className="space-y-8 animate-fade-in pb-12 relative min-h-screen flex flex-col">
       
       {/* HEADER - Simplified */}
-      <div className="flex flex-col md:flex-row justify-between items-end gap-4 mb-2">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
          <div>
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               YILLIK DOKÜMAN YÖNETİM PANELİ
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 font-medium">
+            <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 font-medium">
                Sektörel İş Analizi ve Doküman Takip Sistemi
             </p>
          </div>
-         <div className="flex gap-4 text-sm font-bold">
+         <div className="flex gap-4 text-xs md:text-sm font-bold">
             <div className="flex items-center gap-2">
-               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-               <span className="text-emerald-600 dark:text-emerald-400">Aktif: {savedDocuments.length}</span>
+               <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+               <span className="text-emerald-700 dark:text-emerald-400">Aktif: {savedDocuments.length}</span>
             </div>
             <div className="flex items-center gap-2">
-               <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-               <span className="text-amber-600 dark:text-amber-400">Bekleyen: 0</span>
+               <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></span>
+               <span className="text-amber-700 dark:text-amber-400">Bekleyen: 0</span>
             </div>
          </div>
       </div>
 
       {/* MAIN SECTOR COLUMNS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 flex-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 flex-1">
           {sectors.map((sector) => (
              <div 
                key={sector.id}
                onClick={() => onNavigate('templates', { category: sector.searchQuery })}
-               className="group relative h-[500px] rounded-2xl overflow-hidden cursor-pointer transition-transform hover:-translate-y-2 hover:shadow-2xl border border-slate-200 dark:border-slate-800 bg-slate-900"
+               className="group relative h-[300px] md:h-[500px] rounded-2xl overflow-hidden cursor-pointer transition-transform hover:-translate-y-2 hover:shadow-2xl border border-slate-200 dark:border-slate-800 bg-slate-900"
              >
                 {/* Background Image with Gradient Overlay */}
                 <div className="absolute inset-0">

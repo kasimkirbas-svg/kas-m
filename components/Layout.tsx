@@ -64,20 +64,23 @@ export const Layout: React.FC<LayoutProps> = ({
   return (
     <div className={`min-h-screen flex transition-colors duration-300 font-sans ${theme === 'dark' ? 'dark bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
       
-      {/* Sidebar - Desktop */}
+      {/* Sidebar - Desktop & Mobile */}
       <aside 
-        className={`${sidebarOpen ? 'w-full md:w-64' : 'w-0 md:w-20'} 
-        md:flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/95 backdrop-blur-2xl transition-all duration-300 fixed h-full z-50 shadow-2xl shadow-indigo-500/10`}
+        className={`fixed inset-y-0 left-0 z-50 transition-all duration-300 transform 
+        ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0 md:w-20'} 
+        flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl shadow-2xl shadow-indigo-500/10`}
       >
-        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800/50">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800/50 shrink-0">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="min-w-[40px] h-10 bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/30 transform hover:rotate-3 transition-transform">
+            <div className="min-w-[40px] h-10 bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/30">
               K
             </div>
-            <span className={`font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 whitespace-nowrap transition-opacity duration-300 ${!sidebarOpen && 'opacity-0 w-0'}`}>
+            <span className={`font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 whitespace-nowrap transition-opacity duration-300 ${!sidebarOpen && 'md:opacity-0 md:w-0'}`}>
               Kırbaş Panel
             </span>
           </div>
+          
+          {/* Desktop Toggle */}
           <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="hidden md:flex p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-all hover:scale-105"
@@ -85,6 +88,7 @@ export const Layout: React.FC<LayoutProps> = ({
             {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
           </button>
           
+          {/* Mobile Close */}
           <button 
             onClick={() => setSidebarOpen(false)}
             className="md:hidden p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
@@ -93,7 +97,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </button>
         </div>
 
-        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto custom-scrollbar">
           {menuItems.map((item) => {
             const isActive = currentView === item.view;
             return (
@@ -111,13 +115,13 @@ export const Layout: React.FC<LayoutProps> = ({
                 `}
               >
                 <item.icon size={22} className={`shrink-0 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                <span className={`font-medium whitespace-nowrap transition-all duration-300 ${!sidebarOpen && 'opacity-0 w-0 hidden'}`}>
+                <span className={`font-medium whitespace-nowrap transition-all duration-300 ${!sidebarOpen && 'md:opacity-0 md:w-0 md:hidden'}`}>
                   {item.label}
                 </span>
                 
-                {/* Tooltip for collapsed state */}
+                {/* Tooltip for collapsed state (Desktop only) */}
                 {!sidebarOpen && (
-                   <div className="absolute left-full ml-6 px-3 py-1.5 bg-slate-900 text-white text-sm font-medium rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-50 shadow-xl border border-slate-700/50 translate-x-2 group-hover:translate-x-0">
+                   <div className="hidden md:block absolute left-full ml-6 px-3 py-1.5 bg-slate-900 text-white text-sm font-medium rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-50 shadow-xl border border-slate-700/50 translate-x-2 group-hover:translate-x-0">
                      {item.label}
                    </div>
                 )}
@@ -127,9 +131,9 @@ export const Layout: React.FC<LayoutProps> = ({
         </nav>
 
         {/* Usage Stats (Visible only when open) */}
-        {sidebarOpen && user.role !== 'ADMIN' && (
-          <div className="px-6 py-6 mt-auto">
-            <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-indigo-900/20 dark:to-slate-900/40 rounded-2xl p-5 border border-slate-200/10 dark:border-indigo-500/20 shadow-xl relative overflow-hidden group">
+        {(sidebarOpen) && user.role !== 'ADMIN' && (
+          <div className="px-5 py-6 mt-auto">
+            <div className={`bg-gradient-to-br from-slate-900 to-slate-800 dark:from-indigo-900/20 dark:to-slate-900/40 rounded-2xl p-5 border border-slate-200/10 dark:border-indigo-500/20 shadow-xl relative overflow-hidden group transition-all duration-300 ${!sidebarOpen && 'md:hidden'}`}>
                {/* Background Glow */}
                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-indigo-500/30 transition-colors duration-500"></div>
                
@@ -167,8 +171,16 @@ export const Layout: React.FC<LayoutProps> = ({
         </div>
       </aside>
 
+      {/* BACKDROP for Mobile Sidebar */}
+      {sidebarOpen && (
+         <div 
+           className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden"
+           onClick={() => setSidebarOpen(false)}
+         ></div>
+      )}
+
       {/* Main Content Wrapper */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
+      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 w-full md:pl-0 ${sidebarOpen ? 'md:pl-64' : 'md:pl-20'}`}>
         
         {/* Top Header */}
         <header className="h-20 px-6 md:px-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 sticky top-0 z-30 flex items-center justify-between transition-colors duration-300">
@@ -282,8 +294,8 @@ export const Layout: React.FC<LayoutProps> = ({
         </header>
 
         {/* Dynamic Content */}
-        <main className="flex-1 p-4 md:p-6 overflow-x-hidden w-full">
-          <div className="max-w-7xl mx-auto animate-fade-in space-y-6">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-x-hidden w-full relative">
+          <div className="max-w-7xl mx-auto animate-fade-in space-y-6 md:space-y-8 pb-20 md:pb-0">
              {children}
           </div>
         </main>
