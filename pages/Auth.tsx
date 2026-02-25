@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User, Building2, Eye, EyeOff, AlertCircle, CheckCircle, Shield } from 'lucide-react';
+import { Mail, Lock, User, Building2, Eye, EyeOff, AlertCircle, CheckCircle, Shield, ArrowRight, Zap, Globe, Key } from 'lucide-react';
 
 interface AuthProps {
   onLoginSuccess: (userData: any) => void;
@@ -377,75 +377,125 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-slate-50 dark:bg-slate-900 overflow-hidden">
+    <div className="min-h-screen w-full flex bg-[#0B1120] text-slate-200 font-sans overflow-hidden selection:bg-indigo-500/30">
       
-      {/* Left Side - Visual Branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-indigo-600 dark:bg-indigo-900 items-center justify-center overflow-hidden">
-        {/* Abstract Background Shapes */}
-        <div className="absolute inset-0 opacity-20">
-            <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-purple-500 blur-3xl"></div>
-            <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] rounded-full bg-blue-400 blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
-            <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-indigo-400 blur-3xl"></div>
-        </div>
+      {/* LEFT SIDE - BRANDING & VISUALS */}
+      <div className="hidden lg:flex lg:w-[45%] xl:w-[40%] relative flex-col justify-between p-12 overflow-hidden bg-[#0f172a]">
         
-        <div className="relative z-10 text-center px-12 max-w-2xl">
-            <div className="w-24 h-24 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center text-white font-bold text-4xl mx-auto mb-8 shadow-2xl border border-white/20">
-              K
+        {/* Background Gradients */}
+        <div className="absolute inset-0 z-0">
+           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/20 via-[#0f172a] to-[#0f172a] opacity-80"></div>
+           <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] mix-blend-screen animate-pulse"></div>
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-600/5 rounded-full blur-[120px]"></div>
+           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+        </div>
+
+        {/* Content Wrapper */}
+        <div className="relative z-10 h-full flex flex-col justify-between">
+            {/* Top Logo Area */}
+            <div>
+               <div className="flex items-center gap-3 mb-2">
+                 <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <span className="text-white font-bold text-xl">K</span>
+                 </div>
+                 <span className="text-xl font-bold tracking-tight text-white">Kırbaş Doküman</span>
+               </div>
+               <div className="h-1 w-20 bg-gradient-to-r from-indigo-500 to-transparent rounded-full mt-4"></div>
             </div>
-            <h1 className="text-5xl font-bold text-white mb-6">Kırbaş Doküman</h1>
-            <p className="text-indigo-100 text-xl leading-relaxed">
-              İşletmeniz için profesyonel belgeler, raporlar ve formlar oluşturmanın en hızlı ve güvenli yolu.
-            </p>
-            
-            <div className="mt-12 grid grid-cols-2 gap-6 text-left">
-               <div className="bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-                  <CheckCircle className="text-green-400 mb-2" size={24} />
-                  <h3 className="text-white font-semibold">30+ Hazır Şablon</h3>
-                  <p className="text-indigo-200 text-sm mt-1">İhtiyacınız olan tüm kurumsal formatlar.</p>
+
+            {/* Middle Hero Text */}
+            <div className="space-y-6 max-w-md">
+               <h1 className="text-4xl xl:text-5xl font-bold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-indigo-300">
+                  Belge Yönetiminde <br/>
+                  <span className="text-white">Yeni Standart.</span>
+               </h1>
+               <p className="text-lg text-slate-400 font-light leading-relaxed">
+                  Kurumsal belgelerinizi oluşturun, yönetin ve arşivleyin. Güvenli bulut altyapısı ile iş akışınızı hızlandırın.
+               </p>
+               
+               <div className="flex flex-wrap gap-3 mt-4">
+                  <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 backdrop-blur-sm flex items-center gap-2 text-sm text-indigo-100">
+                     <Zap size={16} className="text-yellow-400" />
+                     <span>Hızlı Kurulum</span>
+                  </div>
+                  <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 backdrop-blur-sm flex items-center gap-2 text-sm text-indigo-100">
+                     <Shield size={16} className="text-green-400" />
+                     <span>Uçtan Uca Şifreleme</span>
+                  </div>
                </div>
-               <div className="bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-                  <Shield className="text-blue-400 mb-2" size={24} />
-                  <h3 className="text-white font-semibold">Güvenli Arşiv</h3>
-                  <p className="text-indigo-200 text-sm mt-1">Belgeleriniz bulutta güvende.</p>
-               </div>
+            </div>
+
+            {/* Bottom Testimonial/Stats */}
+            <div className="space-y-6">
+                <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md relative overflow-hidden group hover:bg-white/10 transition-colors duration-500">
+                   <div className="relative z-10 flex gap-4 items-start">
+                      <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-300 font-bold shrink-0">
+                         A
+                      </div>
+                      <div>
+                         <div className="flex text-yellow-500 mb-1">
+                            {"★★★★★".split("").map((star, i) => <span key={i}>{star}</span>)}
+                         </div>
+                         <p className="text-slate-300 text-sm leading-relaxed mb-3">
+                            "Kırbaş Doküman ile tüm sözleşme süreçlerimizi dijitalleştirdik. Artık belgelerimiz hem güvende hem de anında erişilebilir."
+                         </p>
+                         <p className="text-xs font-semibold text-white">Ahmet Yılmaz <span className="text-slate-500 font-normal ml-1">— Yılmaz Hukuk Bürosu</span></p>
+                      </div>
+                   </div>
+                </div>
+
+                <div className="flex items-center gap-6 text-xs text-slate-500 font-mono">
+                   <span>© 2026 Kırbaş Ltd.</span>
+                   <a href="#" className="hover:text-indigo-400 transition-colors">Gizlilik</a>
+                   <a href="#" className="hover:text-indigo-400 transition-colors">Şartlar</a>
+                </div>
             </div>
         </div>
       </div>
 
-      {/* Right Side - Auth Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 overflow-y-auto">
-        <div className="w-full max-w-md space-y-8 animate-fade-in">
-          
-          <div className="text-center lg:text-left">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
-              {authView === 'login' && 'Tekrar Hoşgeldiniz'}
-              {authView === 'signup' && 'Hesap Oluşturun'}
-              {authView === 'forgot-password' && 'Şifrenizi Sıfırlayın'}
-              {authView === 'reset-password' && 'Yeni Şifre Belirleyin'}
-            </h2>
-            <p className="mt-2 text-slate-600 dark:text-slate-400">
-               {authView === 'login' && 'Hesabınıza giriş yaparak devam edin.'}
-               {authView === 'signup' && '30 gün boyunca tüm özelliklere ücretsiz erişin.'}
-               {authView === 'forgot-password' && 'E-posta adresinize bir kod göndereceğiz.'}
-            </p>
-          </div>
+      {/* RIGHT SIDE - FORM */}
+      <div className="flex-1 w-full bg-slate-50 dark:bg-[#0B1120] relative flex items-center justify-center p-4 sm:p-8 overflow-y-auto">
+         {/* Mobile Visual Background (Subtle) */}
+         <div className="absolute inset-0 lg:hidden overflow-hidden pointer-events-none">
+             <div className="absolute -top-24 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+             <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+         </div>
 
-          {/* Form Card */}
-          <div className="bg-white dark:bg-slate-800 p-0 sm:p-8 rounded-2xl sm:shadow-xl sm:border border-slate-200 dark:border-slate-700">
-             
-             {/* View Toggle (Tabs) */}
+         <div className="w-full max-w-[420px] mx-auto relative z-10">
+            
+            {/* Mobile Header */}
+            <div className="lg:hidden text-center mb-10">
+                <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-lg shadow-indigo-600/30">K</div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Kırbaş Doküman</h2>
+            </div>
+
+            <div className="mb-8">
+               <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  {authView === 'login' ? 'Tekrar Hoşgeldiniz' : 
+                   authView === 'signup' ? 'Hesap Oluşturun' : 
+                   authView === 'forgot-password' ? 'Şifre Sıfırlama' : 'Yeni Şifre'}
+               </h2>
+               <p className="mt-3 text-slate-500 dark:text-slate-400 text-base">
+                  {authView === 'login' ? 'Hesabınıza giriş yaparak panelinize erişin.' : 
+                   authView === 'signup' ? 'Saniyeler içinde hesabınızı oluşturun.' : 
+                   'E-posta adresinizi doğrulayarak şifrenizi yenileyin.'}
+               </p>
+            </div>
+
+             {/* Tab Switcher */}
              {(authView === 'login' || authView === 'signup') && (
-                <div className="flex bg-slate-100 dark:bg-slate-700/50 p-1 rounded-xl mb-8">
+                <div className="grid grid-cols-2 p-1.5 mb-8 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/50 relative">
+                    {/* Animated visual indicator could trigger complexity, using pure CSS classes for now */}
                     <button
                         onClick={() => {
                             setAuthView('login');
-                            setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' });
+                            setFormData(prev => ({ ...prev, email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' }));
                             setError('');
                         }}
-                        className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all shadow-sm ${
+                        className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
                             authView === 'login' 
-                            ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md' 
-                            : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 shadow-none'
+                            ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm ring-1 ring-black/5 dark:ring-white/10' 
+                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                         }`}
                     >
                         Giriş Yap
@@ -453,13 +503,13 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                     <button
                         onClick={() => {
                             setAuthView('signup');
-                            setFormData({ email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' });
+                            setFormData(prev => ({ ...prev, email: '', password: '', name: '', companyName: '', confirmPassword: '', resetCode: '' }));
                             setError('');
                         }}
-                         className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all shadow-sm ${
+                         className={`relative z-10 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
                             authView === 'signup' 
-                            ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md' 
-                            : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 shadow-none'
+                            ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm ring-1 ring-black/5 dark:ring-white/10' 
+                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                         }`}
                     >
                         Kayıt Ol
@@ -467,18 +517,18 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                 </div>
              )}
 
-            {/* Messages */}
+            {/* Status Messages */}
             {error && (
-                <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl flex gap-3 items-start">
-                <AlertCircle className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" size={18} />
-                <p className="text-sm text-red-700 dark:text-red-200">{error}</p>
+                <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-xl flex gap-3 animate-in slide-in-from-top-2 duration-300">
+                    <AlertCircle className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" size={18} />
+                    <p className="text-sm text-red-600 dark:text-red-300 font-medium">{error}</p>
                 </div>
             )}
             
             {success && (
-                <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50 rounded-xl flex gap-3 items-start">
-                <CheckCircle className="text-green-600 dark:text-green-400 mt-0.5 shrink-0" size={18} />
-                <p className="text-sm text-green-700 dark:text-green-200">{success}</p>
+                <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30 rounded-xl flex gap-3 animate-in slide-in-from-top-2 duration-300">
+                    <CheckCircle className="text-green-600 dark:text-green-400 mt-0.5 shrink-0" size={18} />
+                    <p className="text-sm text-green-600 dark:text-green-300 font-medium">{success}</p>
                 </div>
             )}
 
@@ -490,50 +540,50 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
             } className="space-y-5">
                 
                 {authView === 'signup' && (
-                <>
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Ad Soyad</label>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Ad Soyad</label>
                         <div className="relative group">
-                            <User className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                            <User className="absolute left-3.5 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
                             <input
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                            placeholder="John Doe"
+                            className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                            placeholder="Adınız Soyadınız"
                             />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Şirket Adı <span className="text-xs text-slate-400 font-normal">(İsteğe Bağlı)</span></label>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Şirket Adı <span className="text-xs text-slate-400 font-light ml-1">(Opsiyonel)</span></label>
                         <div className="relative group">
-                            <Building2 className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                            <Building2 className="absolute left-3.5 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
                             <input
                             type="text"
                             name="companyName"
                             value={formData.companyName}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                            placeholder="Acme Inc."
+                            className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                            placeholder="Şirketiniz"
                             />
                         </div>
                     </div>
-                </>
+                </div>
                 )}
 
                 {(authView !== 'reset-password' || !formData.email) && (
-                <div>
-                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">E-posta Adresi</label>
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-75">
+                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">E-posta Adresi</label>
                      <div className="relative group">
-                        <Mail className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                        <Mail className="absolute left-3.5 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
                         <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                        placeholder="mail@sirket.com"
+                        className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
+                        placeholder="ornek@sirket.com"
                         disabled={authView === 'reset-password'}
                         />
                     </div>
@@ -541,60 +591,60 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                 )}
 
                 {authView === 'reset-password' && (
-                     <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Doğrulama Kodu</label>
+                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Doğrulama Kodu</label>
                         <div className="relative group">
-                            <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                            <Lock className="absolute left-3.5 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
                             <input
                             type="text"
                             name="resetCode"
                             value={formData.resetCode}
                             onChange={handleInputChange}
-                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all tracking-widest text-center font-mono"
+                            className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all tracking-[0.5em] text-center font-mono text-lg"
                             placeholder="123456"
+                            maxLength={6}
                             />
                         </div>
                     </div>
                 )}
 
                 {authView !== 'forgot-password' && (
-                <div>
-                     <div className="flex justify-between items-center mb-1.5">
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+                     <div className="flex justify-between items-center mb-2">
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Şifre</label>
                         {authView === 'login' && (
-                            <button type="button" onClick={() => setAuthView('forgot-password')} className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline">
+                            <button type="button" onClick={() => setAuthView('forgot-password')} className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline transition-colors">
                                 Şifremi Unuttum?
                             </button>
                         )}
                      </div>
                      <div className="relative group">
-                        <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                        <Lock className="absolute left-3.5 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
                         <input
                         type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-12 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                        className="w-full pl-11 pr-12 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
                         placeholder="••••••••"
                         />
                          <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                            className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                         >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                         </button>
                     </div>
 
-                    {/* Password Strength Meter */}
                     {authView === 'signup' && formData.password && (
-                      <div className="mt-2 text-xs">
-                         <div className="flex gap-1 h-1 mb-1">
-                            <div className={`flex-1 rounded-full transition-all duration-300 ${strength === 'Zayıf' || strength === 'Orta' || strength === 'Güçlü' ? (strength === 'Zayıf' ? 'bg-red-500' : strength === 'Orta' ? 'bg-yellow-500' : 'bg-green-500') : 'bg-slate-200'}`}></div>
-                            <div className={`flex-1 rounded-full transition-all duration-300 ${strength === 'Orta' || strength === 'Güçlü' ? (strength === 'Orta' ? 'bg-yellow-500' : 'bg-green-500') : 'bg-slate-200'}`}></div>
-                            <div className={`flex-1 rounded-full transition-all duration-300 ${strength === 'Güçlü' ? 'bg-green-500' : 'bg-slate-200'}`}></div>
+                      <div className="mt-3">
+                         <div className="flex gap-1.5 h-1.5 mb-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
+                            <div className={`flex-1 transition-all duration-500 ${strength === 'Zayıf' || strength === 'Orta' || strength === 'Güçlü' ? (strength === 'Zayıf' ? 'bg-red-500' : strength === 'Orta' ? 'bg-yellow-500' : 'bg-green-500') : 'opacity-0'}`}></div>
+                            <div className={`flex-1 transition-all duration-500 ${strength === 'Orta' || strength === 'Güçlü' ? (strength === 'Orta' ? 'bg-yellow-500' : 'bg-green-500') : 'opacity-0'}`}></div>
+                            <div className={`flex-1 transition-all duration-500 ${strength === 'Güçlü' ? 'bg-green-500' : 'opacity-0'}`}></div>
                          </div>
-                         <p className={`text-right font-medium ${strength === 'Zayıf' ? 'text-red-500' : strength === 'Orta' ? 'text-yellow-600' : 'text-green-600'}`}>
+                         <p className={`text-right text-xs font-medium ${strength === 'Zayıf' ? 'text-red-500' : strength === 'Orta' ? 'text-yellow-600' : 'text-green-600'}`}>
                            {strength} Şifre
                          </p>
                       </div>
@@ -603,45 +653,54 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                 )}
                 
                 {authView === 'signup' && (
-                    <div className="space-y-4">
+                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">
                          <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Şifre Tekrar</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Şifre Tekrar</label>
                             <div className="relative group">
-                                <Lock className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                                <Lock className="absolute left-3.5 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
                                 <input
                                 type={showPassword ? 'text' : 'password'}
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleInputChange}
-                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                                className="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600"
                                 placeholder="••••••••"
                                 />
                             </div>
                          </div>
                          
-                         <div className="flex items-start gap-2 text-sm text-slate-500 dark:text-slate-400 p-3 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-900/20">
-                            <CheckCircle size={16} className="text-blue-500 mt-0.5 shrink-0" />
-                            <p>Tüm yeni üyelere özel <strong>30 Gün Ücretsiz</strong> sınırlı kullanım hakkı tanımlanacaktır. Süre sonunda ücretli pakete geçmeniz gerekir.</p>
+                         <div className="flex items-start gap-3 p-4 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800/30">
+                            <div className="p-1 bg-blue-100 dark:bg-blue-900/30 rounded-full shrink-0">
+                                <CheckCircle size={14} className="text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                <strong>30 Gün Ücretsiz Deneme:</strong> Kayıt olduğunuzda hiçbir kredi kartı bilgisi gerekmez. Memnun kalırsanız devam edersiniz.
+                            </p>
                          </div>
                     </div>
                 )}
 
-
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 group mt-2"
                 >
                     {isLoading ? (
-                        <span className="flex items-center justify-center gap-2">
-                        <span className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span>
-                        İşleniyor...
-                        </span>
+                        <>
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <span>İşleniyor...</span>
+                        </>
                     ) : (
-                        authView === 'login' ? (t?.auth?.login || 'Giriş Yap') :
-                        authView === 'signup' ? (t?.auth?.signup || 'Hemen Başla') :
-                        authView === 'forgot-password' ? 'Sıfırlama Kodu Gönder' : 
-                        'Şifreyi Güncelle'
+                        <>
+                            {authView === 'login' ? (t?.auth?.login || 'Giriş Yap') :
+                            authView === 'signup' ? (t?.auth?.signup || 'Hemen Başla') :
+                            authView === 'forgot-password' ? 'Sıfırlama Kodu Gönder' : 
+                            'Şifreyi Güncelle'}
+                            
+                            {!isLoading && (authView === 'login' || authView === 'signup') && (
+                                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
+                            )}
+                        </>
                     )}
                 </button>
 
@@ -649,21 +708,19 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
                      <button
                         type="button"
                         onClick={() => setAuthView('login')}
-                        className="w-full py-2 text-slate-600 hover:text-slate-900 font-medium"
+                        className="w-full py-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-colors text-sm"
                      >
-                         Geri Dön
+                         Giriş Sayfasına Dön
                      </button>
                  )}
             </form>
-            
-            <p className="text-center text-xs text-slate-500 mt-6">
-                © 2026 Kırbaş Doküman Platformu. Tüm hakları saklıdır.
-                <br />
-                <a href="#" className="hover:text-indigo-600 hover:underline">Gizlilik</a> • <a href="#" className="hover:text-indigo-600 hover:underline">Kullanım Şartları</a>
-            </p>
+         </div>
 
-          </div>
-        </div>
+         {/* Mobile Footer */}
+         <div className="lg:hidden mt-12 text-center">
+            <p className="text-xs text-slate-400">© 2026 Kırbaş Doküman</p>
+         </div>
+
       </div>
     </div>
   );

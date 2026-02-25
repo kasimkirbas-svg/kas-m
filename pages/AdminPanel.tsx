@@ -400,167 +400,226 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
   const [editingPlan, setEditingPlan] = useState<any>(null);
 
   return (
-    <div className="space-y-8 relative">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+    <div className="space-y-8 relative font-sans text-slate-900 dark:text-slate-100">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{t?.admin?.title || 'Yönetici Paneli'}</h1>
-          <p className="text-slate-600 mt-1 flex items-center gap-2">
-            <span className={`inline-block w-2.5 h-2.5 rounded-full ${isServerOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
-            {isServerOnline ? (t?.admin?.backendActive || 'Backend Sistemleri Aktif') : (t?.admin?.backendOffline || 'Backend Bağlantısı Yok')}
-          </p>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400">
+            {t?.admin?.title || 'Yönetici Paneli'}
+          </h1>
+          <div className="flex items-center gap-3 mt-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
+             <span className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border ${isServerOnline ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800'}`}>
+                <span className={`w-2 h-2 rounded-full ${isServerOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
+                {isServerOnline ? 'SYSTEM ONLINE' : 'SYSTEM OFFLINE'}
+             </span>
+             <span>•</span>
+             <span>v2.4.0 Stable</span>
+          </div>
         </div>
-        <div className="flex gap-2">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2" onClick={() => setActiveTab('subscribers')}>
-                <Users size={18} />
-                {t?.admin?.subscribers || 'Aboneleri Yönet'}
+        <div className="flex gap-3">
+            <button 
+                onClick={() => setActiveTab('subscribers')}
+                className="px-5 py-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:hover:bg-indigo-900/50 rounded-xl font-semibold transition-all flex items-center gap-2 group"
+            >
+                <Users size={18} className="group-hover:scale-110 transition-transform" />
+                <span>{t?.admin?.subscribers || 'Aboneleri Yönet'}</span>
+            </button>
+            <button 
+                onClick={() => window.open('http://localhost:3001/api/status', '_blank')}
+                className="px-5 py-2.5 bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl font-semibold transition-all flex items-center gap-2 shadow-lg shadow-slate-900/20"
+            >
+                <Activity size={18} />
+                <span className="hidden sm:inline">Monitor</span>
             </button>
         </div>
       </div>
 
-       {/* Email Notification Toast */}
+       {/* Enhanced Notification Toast */}
       {emailNotification && (
-        <div className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white z-[60] flex items-center gap-2 animate-in fade-in slide-in-from-top-2 ${
-          emailNotification.type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        <div className={`fixed top-6 right-6 p-4 pr-10 rounded-2xl shadow-2xl glass-panel border z-[100] flex items-start gap-4 animate-in slide-in-from-right-4 duration-300 ${
+          emailNotification.type === 'success' ? 'bg-green-50/90 border-green-200 text-green-800 dark:bg-green-900/90 dark:border-green-800 dark:text-green-100' : 'bg-red-50/90 border-red-200 text-red-800 dark:bg-red-900/90 dark:border-red-800 dark:text-red-100'
         }`}>
-          {emailNotification.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
-          {emailNotification.message}
+          <div className={`p-2 rounded-full shrink-0 ${emailNotification.type === 'success' ? 'bg-green-100 dark:bg-green-800' : 'bg-red-100 dark:bg-red-800'}`}>
+            {emailNotification.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
+          </div>
+          <div>
+             <h4 className="font-bold text-sm tracking-wide">{emailNotification.type === 'success' ? 'BAŞARILI' : 'HATA'}</h4>
+             <p className="text-sm opacity-90">{emailNotification.message}</p>
+          </div>
+          <button onClick={() => setEmailNotification(null)} className="absolute top-4 right-4 text-current opacity-50 hover:opacity-100 transition-opacity">
+            <X size={16} />
+          </button>
         </div>
       )}
 
-      {/* Stats Cards */}
+      {/* Modern Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-blue-100 text-blue-600 rounded-lg">
-              <Users size={20} />
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-slate-900">{stats.activeUsers}</h3>
-          <p className="text-sm text-slate-600">{t?.admin?.activeSubscribers || 'Aktif Abone'}</p>
-        </div>
-        
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-purple-100 text-purple-600 rounded-lg">
-               <FileText size={20} />
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-slate-900">{stats.totalDocs}</h3>
-          <p className="text-sm text-slate-600">{t?.admin?.totalDocuments || 'Üretilen Doküman'}</p>
-        </div>
-
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-green-100 text-green-600 rounded-lg">
-               <DollarSign size={20} />
-            </div>
-          </div>
-          <h3 className="text-2xl font-bold text-slate-900">₺{stats.revenue.toLocaleString()}</h3>
-          <p className="text-sm text-slate-600">{t?.admin?.revenue || 'Tahmini Ciro'}</p>
-        </div>
-
-        {/* Server Status Mini Card */}
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg">
-               <Server size={20} />
-            </div>
-            <span className={`text-xs font-bold flex items-center ${isServerOnline ? 'text-green-500' : 'text-red-500'}`}>
-               {isServerOnline ? 'ONLINE' : 'OFFLINE'}
-            </span>
-          </div>
-          <h3 className="text-xl font-bold text-slate-900">{serverStatus ? `${serverStatus.uptime}s` : '--'}</h3>
-           <div className="flex justify-between items-end mt-1">
-               <p className="text-sm text-slate-600">{t?.admin?.systemUptime || 'Sistem Uptime'}</p>
-               <span className="text-xs text-slate-400">{serverStatus ? serverStatus.platform : ''}</span>
-           </div>
-        </div>
+        {[
+            { 
+              title: t?.admin?.activeSubscribers || 'Aktif Abone', 
+              value: stats.activeUsers, 
+              icon: Users, 
+              color: 'blue',
+              trend: '+12% bu hafta'
+            },
+            { 
+              title: t?.admin?.totalDocuments || 'Üretilen Doküman', 
+              value: stats.totalDocs, 
+              icon: FileText, 
+              color: 'purple',
+              trend: '43 bugün'
+            },
+            { 
+              title: t?.admin?.revenue || 'Tahmini Ciro', 
+              value: `₺${stats.revenue.toLocaleString()}`, 
+              icon: DollarSign, 
+              color: 'green',
+              trend: 'Hedefin %85\'i'
+            },
+            {
+               title: 'Sistem Uptime',
+               value: serverStatus ? `${Math.floor(serverStatus.uptime / 3600)}h ${(serverStatus.uptime % 3600 / 60).toFixed(0)}m` : '--',
+               icon: Server,
+               color: isServerOnline ? 'indigo' : 'red',
+               trend: serverStatus?.platform || 'Unknown'
+            }
+        ].map((stat, i) => (
+             <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
+                <div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500 text-${stat.color}-600 dark:text-${stat.color}-400`}>
+                   <stat.icon size={80} />
+                </div>
+                
+                <div className="relative z-10">
+                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-${stat.color}-50 text-${stat.color}-600 dark:bg-${stat.color}-900/30 dark:text-${stat.color}-400`}>
+                      <stat.icon size={24} />
+                   </div>
+                   <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-1 tracking-tight">{stat.value}</h3>
+                   <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{stat.title}</p>
+                   
+                   <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700/50 flex items-center gap-2 text-xs font-semibold">
+                      <TrendingUp size={14} className="text-green-500" />
+                      <span className="text-green-600 dark:text-green-400">{stat.trend}</span>
+                   </div>
+                </div>
+             </div>
+        ))}
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 gap-8 overflow-x-auto pb-1">
+      {/* Modern Tabs */}
+      <div className="bg-white dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 inline-flex flex-wrap gap-1 shadow-sm overflow-x-auto max-w-full">
         {['overview', 'subscribers', 'templates', 'packages', 'logs'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-3 font-medium border-b-2 transition whitespace-nowrap ${
+            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all flex items-center gap-2 ${
               activeTab === tab
-                ? 'text-blue-600 border-blue-600'
-                : 'text-slate-600 border-transparent hover:text-slate-900'
+                ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 shadow-sm ring-1 ring-indigo-500/10'
+                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-700/50'
             }`}
           >
-            {tab === 'overview' && (t?.admin?.overview || 'Genel Bakış')}
-            {tab === 'subscribers' && (t?.admin?.subscribers || 'Aboneler')}
-            {tab === 'templates' && (t?.admin?.templates || 'Şablonlar')}
-            {tab === 'packages' && (t?.admin?.packagesAndPrice || 'Paketler & Fiyat')}
-            {tab === 'logs' && (t?.admin?.logs || 'Sistem Kayıtları')}
+            {tab === 'overview' && <Activity size={16} />}
+            {tab === 'subscribers' && <Users size={16} />}
+            {tab === 'templates' && <FileText size={16} />}
+            {tab === 'packages' && <CreditCard size={16} />}
+            {tab === 'logs' && <List size={16} />}
+            
+            <span className="whitespace-nowrap">
+                {tab === 'overview' && (t?.admin?.overview || 'Genel Bakış')}
+                {tab === 'subscribers' && (t?.admin?.subscribers || 'Aboneler')}
+                {tab === 'templates' && (t?.admin?.templates || 'Şablonlar')}
+                {tab === 'packages' && (t?.admin?.packagesAndPrice || 'Paketler')}
+                {tab === 'logs' && (t?.admin?.logs || 'Loglar')}
+            </span>
           </button>
         ))}
       </div>
 
       {/* Overview Tab */}
       {activeTab === 'overview' && (
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8 animate-fade-in-up">
           {/* Users Table */}
-          <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h3 className="font-bold text-slate-900">{t?.admin?.recentMembers || 'Son Üyelikler'}</h3>
-              <div className="relative hidden md:block">
-                <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
+          <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50 backdrop-blur-sm">
+              <div className="flex items-center gap-3">
+                 <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                    <Users size={18} />
+                 </div>
+                 <h3 className="font-bold text-slate-900 dark:text-white text-lg">{t?.admin?.recentMembers || 'Son Üyelikler'}</h3>
+              </div>
+              
+              <div className="relativehidden md:block">
+                <Search className="absolute left-3 top-2.5 text-slate-400 dark:text-slate-500" size={16} />
                 <input
                   type="text"
-                  placeholder={t?.admin?.search || 'Ara...'}
-                  className="pl-9 pr-4 py-1.5 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder={t?.admin?.search || 'Kullanıcı Ara...'}
+                  className="pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all w-64 placeholder:text-slate-400 dark:placeholder:text-slate-600 dark:text-slate-200"
                 />
               </div>
             </div>
-            <div className="overflow-x-auto">
+            
+            <div className="overflow-x-auto flex-1">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
+                <thead className="text-xs text-slate-500 dark:text-slate-400 uppercase bg-slate-50/80 dark:bg-slate-700/30 border-b border-slate-100 dark:border-slate-700">
                   <tr>
-                    <th className="px-6 py-3">{t?.admin?.user || 'Kullanıcı'}</th>
-                    <th className="px-6 py-3">{t?.admin?.plan || 'Paket'}</th>
-                    <th className="px-6 py-3">{t?.admin?.status || 'Durum'}</th>
-                    <th className="px-6 py-3 text-right">{t?.admin?.action || 'İşlem'}</th>
+                    <th className="px-6 py-4 font-semibold">{t?.admin?.user || 'Kullanıcı'}</th>
+                    <th className="px-6 py-4 font-semibold">{t?.admin?.plan || 'Paket'}</th>
+                    <th className="px-6 py-4 font-semibold">{t?.admin?.status || 'Durum'}</th>
+                    <th className="px-6 py-4 text-right font-semibold">{t?.admin?.action || 'İşlem'}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
                   {allUsers.slice(0, 5).map((u, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50">
+                    <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group">
                       <td className="px-6 py-4">
-                        <div className="font-medium text-slate-900">{u.name}</div>
-                        <div className="text-xs text-slate-500">{u.companyName}</div>
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">
-                        {u.plan === SubscriptionPlan.YEARLY ? 'Yıllık Pro' : u.plan === SubscriptionPlan.MONTHLY ? 'Aylık' : 'Ücretsiz'}
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-indigo-500/20">
+                                {u.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div className="font-semibold text-slate-900 dark:text-slate-200">{u.name}</div>
+                                <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                                    <Building2 size={10} />
+                                    {u.companyName || 'Bireysel'}
+                                </div>
+                            </div>
+                        </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          u.isActive
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium border ${
+                             u.plan === SubscriptionPlan.YEARLY 
+                             ? 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800/50' 
+                             : u.plan === SubscriptionPlan.MONTHLY 
+                             ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50' 
+                             : 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
                         }`}>
-                          {u.isActive ? (t?.common?.active || 'Aktif') : 'Pasif'}
+                           {u.plan === SubscriptionPlan.YEARLY ? 'Pro Yıllık' : u.plan === SubscriptionPlan.MONTHLY ? 'Pro Aylık' : 'Ücretsiz'}
                         </span>
                       </td>
+                      <td className="px-6 py-4">
+                         <div className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${u.isActive ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600'}`}></span>
+                            <span className={`text-sm font-medium ${u.isActive ? 'text-green-700 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                                {u.isActive ? (t?.common?.active || 'Aktif') : 'Pasif'}
+                            </span>
+                         </div>
+                      </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end items-center gap-2">
+                        <div className="flex justify-end items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button 
                                 onClick={() => handleSendWelcomeEmail(u)}
                                 disabled={emailSending[u.id]}
-                                className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition ${
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shadow-sm ${
                                     emailSending[u.id] 
-                                    ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed' 
-                                    : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                                    ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed dark:bg-indigo-900/20 dark:text-indigo-500' 
+                                    : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/30'
                                 }`}
                                 title="Hoş Geldin Maili Gönder"
                             >
                                {emailSending[u.id] ? <Loader2 size={12} className="animate-spin"/> : <Send size={12} />}
-                               {emailSending[u.id] ? '...' : 'Mail'}
+                               {emailSending[u.id] ? '' : 'Mail'}
                             </button>
-                            <button onClick={() => handleEditUser(u)} className="text-blue-600 hover:text-blue-900 font-medium text-xs">
-                              {t?.common?.edit || 'Düzenle'}
+                            <button onClick={() => handleEditUser(u)} className="p-1.5 text-slate-400 hover:text-blue-600 dark:text-slate-500 dark:hover:text-blue-400 transition-colors">
+                              <Edit2 size={16} />
                             </button>
                         </div>
                       </td>
@@ -568,8 +627,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                   ))}
                   {allUsers.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
-                        Kayıtlı kullanıcı bulunamadı.
+                      <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center">
+                        <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
+                            <Users size={24} className="text-slate-400" />
+                        </div>
+                        <p>Henüz kayıtlı kullanıcı bulunamadı.</p>
                       </td>
                     </tr>
                   )}
@@ -579,64 +641,84 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
           </div>
 
           {/* Real System Status Widget */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col h-full">
-            <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <Activity size={20} />
-              Sistem Durumu (Canlı)
-            </h3>
+          <div className="bg-[#0f172a] text-slate-300 rounded-2xl border border-slate-800 shadow-xl overflow-hidden flex flex-col h-full relative group">
+             {/* Decorative Background */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+            
+            <div className="p-6 border-b border-slate-800 bg-slate-900/50 backdrop-blur flex justify-between items-center relative z-10">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 bg-indigo-500/20 text-indigo-400 rounded-lg border border-indigo-500/30">
+                        <Activity size={18} />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-white text-lg">Sistem Durumu</h3>
+                        <p className="text-xs text-slate-500 font-mono">live_monitor_v1.0</p>
+                    </div>
+                </div>
+                <div className={`w-3 h-3 rounded-full ${isServerOnline ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)] animate-pulse' : 'bg-red-500'}`}></div>
+            </div>
             
             {isServerOnline && serverStatus ? (
-              <div className="space-y-6 flex-1">
+              <div className="p-6 space-y-8 flex-1 relative z-10">
+                 {/* Memory Gauge */}
                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                        <span className="text-slate-600">Bellek Kullanımı</span>
-                        <span className="font-bold text-slate-800">{serverStatus.memoryUsage}</span>
+                    <div className="flex justify-between text-sm mb-2">
+                        <span className="text-slate-400 font-medium">Bellek Kullanımı</span>
+                        <span className="font-mono text-white ml-auto">{serverStatus.memoryUsage}</span>
                     </div>
-                    <div className="w-full bg-slate-100 rounded-full h-2">
-                        <div className="bg-purple-600 h-2 rounded-full" style={{ width: '30%' }}></div>
+                    <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700/50">
+                        <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-1000 ease-out" style={{ width: '42%' }}></div>
                     </div>
-                    <p className="text-xs text-right text-slate-400 mt-1">Total: {serverStatus.totalMemory}</p>
+                    <p className="text-[10px] text-right text-slate-500 mt-1.5 font-mono">Total: {serverStatus.totalMemory}</p>
                  </div>
 
                  <div className="grid grid-cols-2 gap-4">
-                     <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                         <div className="flex items-center gap-2 text-slate-500 mb-2">
+                     <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
+                         <div className="flex items-center gap-2 text-indigo-400 mb-2">
                              <Globe size={16} />
-                             <span className="text-xs font-medium">Platform</span>
+                             <span className="text-xs font-bold uppercase tracking-wider">Platform</span>
                          </div>
-                         <p className="text-sm font-bold text-slate-800 capitalize">{serverStatus.platform}</p>
+                         <p className="text-sm font-bold text-white capitalizing font-mono">{serverStatus.platform}</p>
                      </div>
-                     <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                         <div className="flex items-center gap-2 text-slate-500 mb-2">
+                     <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
+                         <div className="flex items-center gap-2 text-pink-400 mb-2">
                              <Cpu size={16} />
-                             <span className="text-xs font-medium">CPU Load</span>
+                             <span className="text-xs font-bold uppercase tracking-wider">CPU Load</span>
                          </div>
-                         <p className="text-sm font-bold text-slate-800">{serverStatus.cpuLoad ? serverStatus.cpuLoad[0].toFixed(2) : '0.00'}%</p>
+                         <p className="text-sm font-bold text-white font-mono">{serverStatus.cpuLoad ? serverStatus.cpuLoad[0].toFixed(2) : '0.00'}%</p>
                      </div>
                  </div>
 
-                 {/* Last Real Logs in Widget */}
-                 <div className="flex-1 mt-4">
-                     <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Son Loglar</h4>
-                     <div className="space-y-2">
-                        {serverLogs.slice(0, 3).map((log, idx) => (
-                            <div key={idx} className="text-xs flex gap-2">
-                                <span className={`w-1.5 h-1.5 rounded-full mt-1.5 ${
-                                    log.type === 'error' ? 'bg-red-500' : 
-                                    log.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
-                                }`}></span>
-                                <span className="text-slate-600 truncate flex-1">{log.action}: {log.details || ''}</span>
+                 {/* Terminal Logs */}
+                 <div className="flex-1 mt-2">
+                     <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <List size={10} />
+                        Console Logs
+                     </h4>
+                     <div className="font-mono text-xs space-y-2 max-h-32 overflow-y-auto custom-scrollbar pr-2">
+                        {serverLogs.slice(0, 4).map((log, idx) => (
+                            <div key={idx} className="flex gap-3 text-slate-400 hover:text-slate-200 transition-colors py-0.5">
+                                <span className={`shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full ${
+                                    log.type === 'error' ? 'bg-red-500 shadow-red-500/50' : 
+                                    log.type === 'success' ? 'bg-green-500 shadow-green-500/50' : 'bg-blue-500 shadow-blue-500/50'
+                                } shadow-sm`}></span>
+                                <span className="truncate flex-1 opacity-80">
+                                   <span className="text-slate-500 mr-2">[{new Date().toLocaleTimeString()}]</span>
+                                   {log.action}: {log.details || ''}
+                                </span>
                             </div>
                         ))}
-                        {serverLogs.length === 0 && <p className="text-xs text-slate-400 italic">Henüz log (kayıt) yok.</p>}
+                        {serverLogs.length === 0 && <p className="text-xs text-slate-600 italic">Reading stream...</p>}
                      </div>
                  </div>
               </div>
             ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
-                    <AlertCircle size={32} className="text-red-400 mb-2" />
-                    <p className="text-slate-900 font-medium">Sunucu Bağlantısı Yok</p>
-                    <p className="text-sm text-slate-500 mt-1">Backend servisinin çalıştığından emin olun.</p>
+                <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
+                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                        <AlertCircle size={32} className="text-red-500" />
+                    </div>
+                    <p className="text-white font-bold text-lg">Bağlantı Kesildi</p>
+                    <p className="text-sm text-slate-500 mt-2 max-w-[200px]">Backend servisine erişilemiyor. Lütfen sunucuyu kontrol edin.</p>
                 </div>
             )}
           </div>

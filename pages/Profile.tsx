@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Building2, Calendar, CreditCard, Download, Edit2, Check, X, Lock, FileText, AlertCircle } from 'lucide-react';
+import { User, Mail, Building2, Calendar, CreditCard, Download, Edit2, Check, X, Lock, FileText, AlertCircle, Trash2, LogOut } from 'lucide-react';
 import { Invoice, SubscriptionPlan } from '../types';
 import { fetchApi } from '../src/utils/api';
 
@@ -30,7 +30,6 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
 
   const [invoices, setInvoices] = useState<Invoice[]>([]);
 
-  // Fetch Invoices
   useEffect(() => {
     const fetchInvoices = async () => {
       if (!user?.id) return;
@@ -52,7 +51,6 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
     }
   }, [showInvoices, user?.id]);
 
-  // Sync state with props if they change
   useEffect(() => {
     if (initialUser) {
         setUser(initialUser);
@@ -94,16 +92,10 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
           setNotification({ type: 'success', message: t?.profile?.savedSuccessfully || 'Profil bilgileri güncellendi.' });
           setIsEditing(false);
           
-          // Update local state
           setUser(prev => ({ ...prev, ...formData }));
           
-          // Update local storage for persistence across reloads (optional but good for this hybrid app)
           const storedUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
           localStorage.setItem('currentUser', JSON.stringify({ ...storedUser, ...formData }));
-          
-          // Force reload to refresh main app context if needed, or better, use a context provider
-          // For now, minimal impact update:
-          // window.location.reload(); 
       } else {
           setNotification({ type: 'error', message: data.message || 'Güncelleme başarısız.' });
       }
@@ -149,68 +141,86 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in p-2">
       {/* Notifications */}
       {notification && (
-        <div className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg text-white z-50 flex items-center gap-2 ${
-          notification.type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        <div className={`fixed top-4 right-4 p-4 rounded-xl shadow-2xl text-white z-50 flex items-center gap-3 animate-in slide-in-from-right ${
+          notification.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
         }`}>
           {notification.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
-          {notification.message}
+          <span className="font-medium">{notification.message}</span>
         </div>
       )}
 
       {/* Profile Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 sm:p-8 text-white flex flex-col sm:flex-row items-center sm:items-start gap-4 shadow-lg text-center sm:text-left">
-        <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-3xl font-bold shrink-0">
-          {(user?.name || 'U').charAt(0)}
+      <div className="bg-slate-900 rounded-3xl p-8 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-8 border border-slate-800">
+        <div className="relative z-10">
+          <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-4xl font-black text-white shadow-lg mx-auto md:mx-0">
+             {(user?.name || 'U').charAt(0).toUpperCase()}
+          </div>
         </div>
-        <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold">{user?.name}</h1>
-          <p className="text-blue-100">{user?.email}</p>
-          {user?.companyName && (
-              <p className="text-blue-200 text-sm flex items-center justify-center sm:justify-start gap-1 mt-1">
-                  <Building2 size={14} /> {user.companyName}
-              </p>
-          )}
+        
+        <div className="flex-1 text-center md:text-left relative z-10 self-center">
+          <h1 className="text-3xl font-black text-white mb-1">{user?.name}</h1>
+          <p className="text-slate-400 font-medium mb-4">{user?.email}</p>
+          
+          <div className="flex flex-wrap justify-center md:justify-start gap-3">
+             {user?.companyName && (
+                  <span className="px-3 py-1 bg-slate-800 rounded-lg text-xs font-bold text-slate-300 border border-slate-700 flex items-center gap-2">
+                      <Building2 size={14} className="text-indigo-400" /> {user.companyName}
+                  </span>
+              )}
+             <span className={`px-3 py-1 rounded-lg text-xs font-bold border flex items-center gap-2 uppercase tracking-wider ${
+                 user?.plan === 'PRO' || user?.plan === 'YEARLY' 
+                   ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' 
+                   : 'bg-slate-800 text-slate-400 border-slate-700'
+             }`}>
+                {user?.plan === 'FREE' ? 'ÜCRETSİZ PLAN' : 'PREMIUM ÜYE'}
+             </span>
+          </div>
         </div>
+
         <button
           onClick={() => {
             setIsEditing(!isEditing);
             setShowPasswordChange(false);
             setShowInvoices(false);
           }}
-          className="mt-4 sm:mt-0 sm:ml-auto w-full sm:w-auto px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium flex items-center justify-center gap-2 transition"
+          className="relative z-10 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-all backdrop-blur-sm border border-white/10 flex items-center gap-2 group self-center"
         >
-          <Edit2 size={18} />
+          <Edit2 size={18} className="group-hover:rotate-12 transition-transform" />
           {isEditing ? (t?.common?.cancel || 'İptal') : (t?.common?.edit || 'Düzenle')}
         </button>
+
+        {/* Background Decor */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"></div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left: Profile Information & Settings */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-8">
           
           {/* Main Content Area */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-sm relative overflow-hidden">
             
             {/* View Switching Header */}
-            <div className="flex border-b border-slate-200 mb-6 space-x-4">
+            <div className="flex border-b border-slate-100 dark:border-slate-800 mb-8 space-x-1 pb-4 overflow-x-auto custom-scrollbar">
                 <button 
                     onClick={() => { setShowPasswordChange(false); setShowInvoices(false); }}
-                    className={`pb-2 px-1 font-medium transition ${!showPasswordChange && !showInvoices ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${!showPasswordChange && !showInvoices ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                 >
                     {t?.profile?.accountInformation || 'Hesap Bilgileri'}
                 </button>
                  <button 
                     onClick={() => { setShowPasswordChange(true); setShowInvoices(false); setIsEditing(false); }}
-                    className={`pb-2 px-1 font-medium transition ${showPasswordChange ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${showPasswordChange ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                 >
                     {t?.profile?.changePassword || 'Şifre Değiştir'}
                 </button>
                 <button 
                     onClick={() => { setShowInvoices(true); setShowPasswordChange(false); setIsEditing(false); }}
-                    className={`pb-2 px-1 font-medium transition ${showInvoices ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${showInvoices ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                 >
                     {t?.profile?.invoices || 'Faturalar'}
                 </button>
@@ -219,44 +229,48 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
             {/* Content Based on State */}
             {showPasswordChange ? (
                 // Password Change Form
-                <div className="space-y-4 max-w-md animate-fadeIn">
-                    <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                        <Lock size={20} className="text-slate-400"/> Şifre Güncelleme
-                    </h2>
+                <div className="space-y-6 max-w-lg animate-fade-in">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                             <Lock size={20} />
+                        </div>
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Şifre Güncelleme</h2>
+                    </div>
+
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Mevcut Şifre</label>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Mevcut Şifre</label>
                         <input
                             type="password"
                             name="currentPassword"
                             value={passwordData.currentPassword}
                             onChange={handlePasswordChange}
-                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Yeni Şifre</label>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Yeni Şifre</label>
                         <input
                             type="password"
                             name="newPassword"
                             value={passwordData.newPassword}
                             onChange={handlePasswordChange}
-                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Yeni Şifre (Tekrar)</label>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Yeni Şifre (Tekrar)</label>
                         <input
                             type="password"
                             name="confirmPassword"
                             value={passwordData.confirmPassword}
                             onChange={handlePasswordChange}
-                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
                         />
                     </div>
                      <div className="pt-4">
                         <button
                             onClick={handleSavePassword}
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition w-full md:w-auto"
+                            className="px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-bold transition shadow-lg shadow-indigo-500/20 active:scale-95"
                         >
                             Şifreyi Güncelle
                         </button>
@@ -264,39 +278,43 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                 </div>
             ) : showInvoices ? (
                 // Invoices List
-                <div className="space-y-4 animate-fadeIn">
-                     <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                        <FileText size={20} className="text-slate-400"/> Ödeme Geçmişi
-                    </h2>
+                <div className="space-y-6 animate-fade-in">
+                     <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                             <FileText size={20} />
+                        </div>
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Ödeme Geçmişi</h2>
+                    </div>
+
                     {invoices.length > 0 ? (
-                        <div className="overflow-x-auto">
+                        <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
                             <table className="w-full text-sm text-left">
-                                <thead className="bg-slate-50 text-slate-600 font-medium">
+                                <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 font-bold">
                                     <tr>
-                                        <th className="px-4 py-3 rounded-l-lg">Tarih</th>
-                                        <th className="px-4 py-3">Fatura No</th>
-                                        <th className="px-4 py-3">Tutar</th>
-                                        <th className="px-4 py-3">Durum</th>
-                                        <th className="px-4 py-3 rounded-r-lg text-right">İşlem</th>
+                                        <th className="px-6 py-4">Tarih</th>
+                                        <th className="px-6 py-4">Fatura No</th>
+                                        <th className="px-6 py-4">Tutar</th>
+                                        <th className="px-6 py-4">Durum</th>
+                                        <th className="px-6 py-4 text-right">İşlem</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
+                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                                     {invoices.map(invoice => (
-                                        <tr key={invoice.id} className="hover:bg-slate-50">
-                                            <td className="px-4 py-3 text-slate-900">
+                                        <tr key={invoice.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                            <td className="px-6 py-4 font-medium text-slate-900 dark:text-slate-200">
                                                 {new Date(invoice.date).toLocaleDateString('tr-TR')}
                                             </td>
-                                            <td className="px-4 py-3 text-slate-600 font-mono">{invoice.invoiceNumber}</td>
-                                            <td className="px-4 py-3 text-slate-900 font-medium">
+                                            <td className="px-6 py-4 text-slate-500 font-mono">{invoice.invoiceNumber}</td>
+                                            <td className="px-6 py-4 text-slate-900 dark:text-slate-200 font-bold">
                                                 {new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(invoice.amount)}
                                             </td>
-                                            <td className="px-4 py-3">
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <td className="px-6 py-4">
+                                                <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
                                                     Ödendi
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-right">
-                                                <button className="text-blue-600 hover:text-blue-800 font-medium text-xs flex items-center gap-1 justify-end ml-auto">
+                                            <td className="px-6 py-4 text-right">
+                                                <button className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 font-bold text-xs flex items-center gap-1 justify-end ml-auto bg-indigo-50 dark:bg-indigo-900/20 px-3 py-1.5 rounded-lg transition-colors">
                                                     <Download size={14} /> İndir
                                                 </button>
                                             </td>
@@ -306,52 +324,62 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                             </table>
                         </div>
                     ) : (
-                        <div className="text-center py-10 text-slate-500">
-                            Henüz fatura bulunmuyor.
+                        <div className="flex flex-col items-center justify-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                            <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-full mb-3 text-slate-400">
+                                <FileText size={32} />
+                            </div>
+                            <p className="font-bold text-slate-600 dark:text-slate-400">Henüz fatura bulunmuyor</p>
                         </div>
                     )}
                 </div>
             ) : isEditing ? (
               // Edit Profile Form
-              <form className="space-y-4 animate-fadeIn">
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <User size={20} className="text-slate-400"/> Bilgileri Düzenle
-                </h2>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">{t?.profile?.fullName || 'Ad Soyad'}</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+              <form className="space-y-6 animate-fade-in max-w-2xl">
+                <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                            <User size={20} />
+                    </div>
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">Bilgileri Düzenle</h2>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">{t?.profile?.email || 'E-posta'}</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t?.profile?.fullName || 'Ad Soyad'}</label>
+                    <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
+                    />
+                    </div>
+                    <div>
+                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t?.profile?.email || 'E-posta'}</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
+                    />
+                    </div>
+                    <div className="md:col-span-2">
+                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t?.profile?.companyName || 'Şirket Adı'} <span className="text-xs text-slate-400 font-normal ml-1">(İsteğe Bağlı)</span></label>
+                    <input
+                        type="text"
+                        name="companyName"
+                        value={formData.companyName}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
+                    />
+                    </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">{t?.profile?.companyName || 'Şirket Adı'} <span className="text-xs text-slate-400 font-normal">(İsteğe Bağlı)</span></label>
-                  <input
-                    type="text"
-                    name="companyName"
-                    value={formData.companyName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="flex gap-3 pt-4">
+
+                <div className="flex gap-4 pt-4">
                   <button
                     type="button"
                     onClick={handleSaveProfile}
-                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center justify-center gap-2 transition"
+                    className="flex-1 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-500/20 active:scale-95"
                   >
                     <Check size={18} />
                     {t?.profile?.saveProfile || 'Kaydet'}
@@ -359,7 +387,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                   <button
                     type="button"
                     onClick={() => setIsEditing(false)}
-                    className="flex-1 px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium flex items-center justify-center gap-2 transition"
+                    className="flex-1 px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold flex items-center justify-center gap-2 transition"
                   >
                     <X size={18} />
                     {t?.common?.cancel || 'İptal'}
@@ -368,30 +396,31 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
               </form>
             ) : (
               // View Profile Information
-              <div className="space-y-4 animate-fadeIn">
-                <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                    <User size={20} className="text-slate-400"/> Genel Bilgiler
-                </h2>
-                <div
-                  className="pb-4 border-b border-slate-100 flex justify-between items-center group hover:bg-slate-50 p-2 rounded transition">
-                  <div>
-                    <p className="text-sm text-slate-500 mb-1">{t?.profile?.fullName || 'Ad Soyad'}</p>
-                    <p className="text-lg font-semibold text-slate-900">{user?.name}</p>
-                   </div>
+              <div className="space-y-6 animate-fade-in max-w-2xl">
+                 <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                            <User size={20} />
+                    </div>
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">Genel Bilgiler</h2>
                 </div>
-                <div className="pb-4 border-b border-slate-100 flex justify-between items-center group hover:bg-slate-50 p-2 rounded transition">
-                   <div>
-                    <p className="text-sm text-slate-500 mb-1">{t?.profile?.email || 'E-posta'}</p>
-                    <p className="text-lg font-semibold text-slate-900">{user?.email}</p>
-                  </div>
+
+                <div className="group p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all bg-slate-50 dark:bg-slate-800/50">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t?.profile?.fullName || 'Ad Soyad'}</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-white">{user?.name}</p>
                 </div>
-                <div className="p-2 group hover:bg-slate-50 rounded transition">
-                  <p className="text-sm text-slate-500 mb-1">{t?.profile?.companyName || 'Şirket Adı'}</p>
-                  <p className="text-lg font-semibold text-slate-900">{user?.companyName || '-'}</p>
+
+                <div className="group p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all bg-slate-50 dark:bg-slate-800/50">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t?.profile?.email || 'E-posta'}</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-white">{user?.email}</p>
+                </div>
+
+                <div className="group p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all bg-slate-50 dark:bg-slate-800/50">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t?.profile?.companyName || 'Şirket Adı'}</p>
+                    <p className="text-lg font-bold text-slate-900 dark:text-white">{user?.companyName || '-'}</p>
                 </div>
                 
-                <div className="pt-6 border-t border-slate-100 mt-6">
-                    <button 
+                <div className="pt-8 mt-4">
+                     <button 
                         onClick={async () => {
                             if(window.confirm(t?.profile?.confirmDeleteAccount || 'Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
                                     try {
@@ -401,7 +430,6 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                               'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                                             }
                                         });
-                                        // Handle non-200 OK responses
                                         if (!res.ok) {
                                             const errorData = await res.json();
                                             throw new Error(errorData.message || 'Silme işlemi başarısız.');
@@ -410,14 +438,10 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                         const data = await res.json();
                                     
                                     if(data.success) {
-                                        // Force clear everything immediately
                                         localStorage.removeItem('authToken');
                                         localStorage.removeItem('currentUser');
-                                        localStorage.clear(); // Clear all app data
-                                        
-                                        // Redirect to login/home
+                                        localStorage.clear();
                                         window.location.href = '/auth?mode=login';
-                                        
                                         alert(data.message || 'Hesabınız silindi.');
                                     } else {
                                         alert(data.message || 'Hata oluştu.');
@@ -428,9 +452,9 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                 }
                             }
                         }}
-                        className="text-red-600 text-sm hover:underline flex items-center gap-1 opacity-80 hover:opacity-100"
+                        className="text-red-500 hover:text-red-700 font-bold text-sm flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors w-full md:w-auto justify-center md:justify-start"
                     >
-                        <AlertCircle size={14} />
+                        <Trash2 size={16} />
                         {t?.profile?.deleteAccount || 'Hesabımı Sil'}
                     </button>
                 </div>
@@ -442,41 +466,43 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
         {/* Right: Subscription & Usage Information */}
         <div className="space-y-6">
           {/* Subscription Card */}
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-6 relative overflow-hidden">
+          <div className="bg-slate-900 dark:bg-slate-950 rounded-3xl p-8 relative overflow-hidden shadow-2xl border border-slate-800">
              {/* Decorative blob */}
-             <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-200 rounded-full opacity-30 blur-2xl"></div>
+             <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16"></div>
              
-            <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2 relative z-10">
-              <CreditCard size={20} className="text-purple-600" />
+            <h3 className="font-black text-white mb-6 flex items-center gap-3 relative z-10 text-xl">
+              <span className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+                 <CreditCard size={18} className="text-white" />
+              </span>
               {t?.profile?.subscription || 'Abonelik'}
             </h3>
             
-            <div className="space-y-4 relative z-10">
-              <div className="bg-white bg-opacity-60 p-3 rounded-lg border border-purple-100">
-                <p className="text-xs text-slate-500 uppercase font-semibold mb-1">{t?.profile?.plan || 'Mevcut Paket'}</p>
-                <div className="flex items-center justify-between">
-                     <p className="text-lg font-bold text-slate-900">
-                    {user?.plan === 'YEARLY' ? (t?.profile?.yearlyPro || 'Yıllık Pro') : user?.plan === 'MONTHLY' ? (t?.profile?.monthlyStandard || 'Aylık Standart') : 'Ücretsiz Plan'}
+            <div className="space-y-6 relative z-10">
+              <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
+                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-2">{t?.profile?.plan || 'MEVCUT PAKET'}</p>
+                <div className="flex flex-col gap-2">
+                     <p className="text-2xl font-black text-white">
+                        {user?.plan === 'YEARLY' ? (t?.profile?.yearlyPro || 'Yıllık Pro') : user?.plan === 'MONTHLY' ? (t?.profile?.monthlyStandard || 'Aylık Standart') : 'Ücretsiz Plan'}
                     </p>
-                    <span className={`px-2 py-0.5 rounded text-xs font-bold ${user?.plan !== 'FREE' ? 'bg-purple-100 text-purple-700' : 'bg-slate-100 text-slate-600'}`}>
+                    <span className={`self-start px-3 py-1 rounded-lg text-xs font-bold border ${user?.plan !== 'FREE' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-slate-700 text-slate-400 border-slate-600'}`}>
                         {user?.plan}
                     </span>
                 </div>
               </div>
 
-               <div className="flex justify-between items-center">
-                 <p className="text-sm text-slate-600">{t?.profile?.status || 'Durum'}</p>
-                 <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${
-                  user?.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+               <div className="flex justify-between items-center px-2">
+                 <p className="font-bold text-slate-400">{t?.profile?.status || 'Durum'}</p>
+                 <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold ${
+                  user?.isActive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
                 }`}>
-                  {user?.isActive ? <Check size={14}/> : <X size={14}/>}
+                  <span className={`w-2 h-2 rounded-full ${user?.isActive ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
                   {user?.isActive ? (t?.profile?.active || 'Aktif') : 'Pasif'}
                 </span>
               </div>
               
               {user?.subscriptionEndDate && (
-                  <div className="text-xs text-slate-500 flex items-center gap-1">
-                      <Calendar size={12}/> 
+                  <div className="text-xs font-medium text-slate-500 flex items-center gap-2 justify-center bg-slate-800/50 py-2 rounded-lg">
+                      <Calendar size={14}/> 
                       Yenileme: {new Date(user.subscriptionEndDate).toLocaleDateString()}
                   </div>
               )}
@@ -485,38 +511,36 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
             {onNavigate && user?.role !== 'ADMIN' && (
                 <button 
                   onClick={() => onNavigate('subscription')}
-                  className="w-full mt-6 py-2.5 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition shadow-sm hover:shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
+                  className="w-full mt-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl font-bold transition shadow-lg shadow-indigo-900/40 active:scale-95 flex items-center justify-center gap-2"
                 >
-                  {user?.plan === 'FREE' ? 'Premium\'a Geç' : 'Planı Yönet'}
+                  {user?.plan === 'FREE' ? 'Premium\'a Yükselt' : 'Planı Yönet'}
                 </button>
             )}
           </div>
 
           {/* Usage Stats Widget */}
-          <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-            <h3 className="font-bold text-slate-900 mb-4">{t?.profile?.usageStatistics || 'Hakkım'}</h3>
+          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
+            <h3 className="font-bold text-slate-900 dark:text-white mb-6 text-lg">{t?.profile?.usageStatistics || 'Hakkım'}</h3>
             <div className="space-y-4">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <p className="text-sm text-slate-600">{t?.profile?.downloads || 'İndirme Limiti'}</p>
-                  <p className="font-semibold text-slate-900 text-sm">
+                <div className="flex justify-between items-end mb-2">
+                  <span className="text-sm font-medium text-slate-500">{t?.profile?.downloads || 'İndirme Limiti'}</span>
+                  <span className="font-black text-slate-900 dark:text-white text-lg">
                     {user?.remainingDownloads === 'UNLIMITED' ? (t?.profile?.unlimited || 'Sınırsız') : user?.remainingDownloads}
-                  </p>
+                  </span>
                 </div>
                 {user?.remainingDownloads !== 'UNLIMITED' && (
-                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
                           (user?.remainingDownloads || 0) < 5 ? 'bg-red-500' : 'bg-blue-600'
                       }`}
-                      style={{ width: `${Math.min(100, (user?.remainingDownloads / 10) * 100)}%` }} // Assuming 10 is default free limit for visuals
+                      style={{ width: `${Math.min(100, (user?.remainingDownloads / 10) * 100)}%` }} 
                     ></div>
                   </div>
                 )}
                 {user?.remainingDownloads !== 'UNLIMITED' && (
-                  <p className="text-xs text-slate-400 mt-2">Daha fazla indirme hakkı için paketinizi yükseltin.</p>
+                  <p className="text-xs text-slate-400 mt-2 font-medium">Daha fazla indirme hakkı için paketinizi yükseltin.</p>
                 )}
-              </div>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Lock, Eye, Globe, Shield, Trash2, CheckCircle, AlertCircle, Save, X } from 'lucide-react';
+import { Bell, Lock, Eye, Globe, Shield, Trash2, CheckCircle, AlertCircle, Save, X, Moon, Sun, Monitor, AlertTriangle } from 'lucide-react';
 import { fetchApi } from '../src/utils/api';
 
 interface SettingsProps {
@@ -118,10 +118,6 @@ export const Settings: React.FC<SettingsProps> = ({ user, theme, language, t, on
     }, 1000);
   };
 
-
-// Moved import to top of file
-// import { fetchApi } from '../src/utils/api';
-
   const handleDeleteAccount = async () => {
     if (window.confirm('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
       if (window.confirm('Lütfen onayladığınızı tekrar belirtin.')) {
@@ -151,288 +147,323 @@ export const Settings: React.FC<SettingsProps> = ({ user, theme, language, t, on
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in p-2">
       {/* Success Message */}
       {successMessage && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-          <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
-          <p className="text-sm text-green-700">{successMessage}</p>
+        <div className="fixed top-4 right-4 z-50 p-4 bg-emerald-600 text-white rounded-xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-right">
+          <CheckCircle size={20} />
+          <p className="font-bold">{successMessage}</p>
         </div>
       )}
 
       {/* Error Message */}
       {errorMessage && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-          <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
-          <p className="text-sm text-red-700">{errorMessage}</p>
-        </div>
-      )}
-
-      {/* Notifications Settings */}
-      <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-          <Bell size={24} />
-          Bildirim Ayarları
-        </h2>
-
-        <div className="space-y-4">
-          {[
-            {
-              key: 'email',
-              label: t?.settings?.emailNotifications || 'E-posta Bildirimleri',
-              description: t?.settings?.emailDesc || 'İşlemler ve güncellemeler için e-posta alın'
-            },
-            {
-              key: 'system',
-              label: t?.settings?.systemNotifications || 'Sistem Bildirimleri',
-              description: t?.settings?.systemDesc || 'Panelde anlık bildirimler alın'
-            },
-            {
-              key: 'weekly_report',
-              label: t?.settings?.weeklyReport || 'Haftalık Rapor',
-              description: t?.settings?.weeklyDesc || 'Her cuma haftalık özet raporu alın'
-            },
-            {
-              key: 'marketing',
-              label: t?.settings?.marketing || 'Pazarlama E-postaları',
-              description: t?.settings?.marketingDesc || 'Yeni özellikler ve özel teklifler hakkında bilgi alın'
-            }
-          ].map(item => (
-            <label key={item.key} className="flex items-start p-4 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer transition">
-              <input
-                type="checkbox"
-                checked={notifications[item.key as keyof typeof notifications]}
-                onChange={() => handleNotificationChange(item.key)}
-                className="w-4 h-4 mt-1 rounded text-blue-600 focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="ml-4">
-                <p className="font-medium text-slate-900">{item.label}</p>
-                <p className="text-sm text-slate-500 mt-1">{item.description}</p>
-              </div>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Privacy & Security */}
-      <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-          <Shield size={24} />
-          {t?.settings?.privacy || 'Gizlilik & Güvenlik'}
-        </h2>
-
-        <div className="space-y-4 mb-6">
-          {[
-            {
-              key: 'profile_public',
-              label: t?.settings?.profilePublic || 'Profilimi Herkese Açık Yap',
-              description: t?.settings?.profileDesc || 'Profiliniz sistem dizininde görünmesine izin verin'
-            },
-            {
-              key: 'show_in_directory',
-              label: t?.settings?.showDirectory || 'Dizinde Göster',
-              description: t?.settings?.directoryDesc || 'Başka kullanıcılar sizi bulabilsin'
-            }
-          ].map(item => (
-            <label key={item.key} className="flex items-start p-4 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer transition">
-              <input
-                type="checkbox"
-                checked={privacy[item.key as keyof typeof privacy]}
-                onChange={() => handlePrivacyChange(item.key)}
-                className="w-4 h-4 mt-1 rounded text-blue-600 focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="ml-4">
-                <p className="font-medium text-slate-900">{item.label}</p>
-                <p className="text-sm text-slate-500 mt-1">{item.description}</p>
-              </div>
-            </label>
-          ))}
-        </div>
-
-        {/* Password Change Button */}
-        {!showPasswordForm ? (
-          <button
-            onClick={() => setShowPasswordForm(true)}
-            className="w-full px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 font-medium transition flex items-center justify-center gap-2"
-          >
-            <Lock size={18} />
-            Şifre Değiştir
-          </button>
-        ) : (
-          <div className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-            <h3 className="font-semibold text-slate-900 mb-4">Şifre Değiştir</h3>
-            <form onSubmit={handlePasswordUpdate} className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Mevcut Şifre
-                </label>
-                <input
-                  type="password"
-                  name="currentPassword"
-                  value={passwordForm.currentPassword}
-                  onChange={handlePasswordChange}
-                  placeholder="••••••"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  disabled={isLoading}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Yeni Şifre
-                </label>
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={passwordForm.newPassword}
-                  onChange={handlePasswordChange}
-                  placeholder="••••••"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  disabled={isLoading}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Şifre Onayla
-                </label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={passwordForm.confirmPassword}
-                  onChange={handlePasswordChange}
-                  placeholder="••••••"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  disabled={isLoading}
-                />
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 transition"
-                >
-                  Güncelle
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowPasswordForm(false)}
-                  className="flex-1 px-3 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium"
-                >
-                  İptal
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-      </div>
-
-      {/* Display Settings */}
-      <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-          <Eye size={24} />
-          Görünüm
-        </h2>
-
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-slate-900 mb-3">Tema</label>
-            <div className="flex gap-3">
-              {['light', 'dark'].map((themeOption) => (
-                <label key={themeOption} className="flex items-center gap-2 cursor-pointer p-3 border border-slate-300 rounded-lg hover:bg-slate-50 transition" style={{
-                  borderColor: theme === themeOption ? '#2563eb' : '#cbd5e1',
-                  backgroundColor: theme === themeOption ? '#eff6ff' : 'transparent'
-                }}>
-                  <input
-                    type="radio"
-                    name="theme"
-                    value={themeOption}
-                    checked={theme === themeOption}
-                    onChange={(e) => onThemeChange(e.target.value as 'light' | 'dark')}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-slate-700 font-medium capitalize">
-                    {themeOption === 'light' ? 'Açık' : 'Koyu'}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-900 mb-3">Dil</label>
-            <select
-              value={language}
-              onChange={(e) => onLanguageChange(e.target.value as 'tr' | 'en' | 'ar')}
-              className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-            >
-              <option value="tr">Türkçe</option>
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* Danger Zone */}
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-        <h2 className="text-xl font-bold text-red-900 mb-4 flex items-center gap-2">
+        <div className="fixed top-4 right-4 z-50 p-4 bg-red-600 text-white rounded-xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-right">
           <AlertCircle size={20} />
-          Tehlikeli Alan
-        </h2>
+          <p className="font-bold">{errorMessage}</p>
+        </div>
+      )}
 
-        <p className="text-sm text-red-700 mb-4">
-          Aşağıdaki işlemler geri alınamaz. Lütfen dikkatli olun.
-        </p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* Left Column - Navigation/Summary (Optional, but good for layout) or just direct content */}
+        <div className="lg:col-span-2 space-y-8">
+            
+            {/* Display & Language Settings */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-xl">
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                        <Monitor size={20} />
+                    </div>
+                    Görünüm ve Dil
+                </h2>
 
-        <button
-          onClick={handleDeleteAccount}
-          disabled={isLoading}
-          className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition flex items-center gap-2 disabled:opacity-50"
-        >
-          <Trash2 size={18} />
-          Hesabı Sil
-        </button>
+                <div className="space-y-8">
+                    <div>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-4">Uygulama Teması</label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            {[
+                                { id: 'light', label: 'Açık', icon: <Sun size={18} /> },
+                                { id: 'dark', label: 'Koyu', icon: <Moon size={18} /> },
+                                // { id: 'system', label: 'Sistem', icon: <Monitor size={18} /> }
+                            ].map((option) => (
+                                <button
+                                    key={option.id}
+                                    onClick={() => onThemeChange(option.id as 'light' | 'dark')}
+                                    className={`flex items-center justify-center gap-3 px-4 py-4 rounded-xl border-2 transition-all font-bold ${
+                                        theme === option.id 
+                                            ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 shadow-lg shadow-indigo-500/10' 
+                                            : 'border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800'
+                                    }`}
+                                >
+                                    {option.icon}
+                                    {option.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-4">Uygulama Dili</label>
+                        <div className="relative">
+                            <select
+                                value={language}
+                                onChange={(e) => onLanguageChange(e.target.value as 'tr' | 'en' | 'ar')}
+                                className="w-full appearance-none px-6 py-4 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:border-indigo-500 outline-none transition-all font-bold text-slate-900 dark:text-white cursor-pointer"
+                            >
+                                <option value="tr">Türkçe (Turkish)</option>
+                                <option value="en">English (İngilizce)</option>
+                                <option value="ar">العربية (Arabic)</option>
+                            </select>
+                            <Globe className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Notifications Settings */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-xl">
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                        <Bell size={20} />
+                    </div>
+                    Bildirim Tercihleri
+                </h2>
+
+                <div className="space-y-4">
+                    {[
+                        {
+                            key: 'email',
+                            label: t?.settings?.emailNotifications || 'E-posta Bildirimleri',
+                            description: t?.settings?.emailDesc || 'İşlemler ve güncellemeler için e-posta alın'
+                        },
+                        {
+                            key: 'system',
+                            label: t?.settings?.systemNotifications || 'Sistem Bildirimleri',
+                            description: t?.settings?.systemDesc || 'Panelde anlık bildirimler alın'
+                        },
+                        {
+                            key: 'weekly_report',
+                            label: t?.settings?.weeklyReport || 'Haftalık Rapor',
+                            description: t?.settings?.weeklyDesc || 'Her cuma haftalık özet raporu alın'
+                        },
+                        {
+                            key: 'marketing',
+                            label: t?.settings?.marketing || 'Pazarlama E-postaları',
+                            description: t?.settings?.marketingDesc || 'Yeni özellikler ve özel teklifler hakkında bilgi alın'
+                        }
+                    ].map(item => (
+                        <div key={item.key} className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                           <div className="pr-4">
+                                <p className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{item.label}</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{item.description}</p>
+                           </div>
+                           <label className="relative inline-flex items-center cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    className="sr-only peer"
+                                    checked={notifications[item.key as keyof typeof notifications]}
+                                    onChange={() => handleNotificationChange(item.key)}
+                                />
+                                <div className="w-14 h-8 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600 shadow-inner"></div>
+                            </label>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Privacy & Security */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-8 shadow-xl">
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                        <Shield size={20} />
+                    </div>
+                    {t?.settings?.privacy || 'Gizlilik & Güvenlik'}
+                </h2>
+
+                <div className="space-y-4 mb-8">
+                    {[
+                        {
+                            key: 'profile_public',
+                            label: t?.settings?.profilePublic || 'Profilimi Herkese Açık Yap',
+                            description: t?.settings?.profileDesc || 'Profiliniz sistem dizininde görünmesine izin verin'
+                        },
+                        {
+                            key: 'show_in_directory',
+                            label: t?.settings?.showDirectory || 'Dizinde Göster',
+                            description: t?.settings?.directoryDesc || 'Başka kullanıcılar sizi bulabilsin'
+                        }
+                    ].map(item => (
+                        <div key={item.key} className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                           <div className="pr-4">
+                                <p className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{item.label}</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{item.description}</p>
+                           </div>
+                           <label className="relative inline-flex items-center cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    className="sr-only peer"
+                                    checked={privacy[item.key as keyof typeof privacy]}
+                                    onChange={() => handlePrivacyChange(item.key)}
+                                />
+                                <div className="w-14 h-8 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-600 shadow-inner"></div>
+                            </label>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Password Change Button */}
+                {!showPasswordForm ? (
+                    <button
+                        onClick={() => setShowPasswordForm(true)}
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold transition flex items-center justify-center gap-3 active:scale-[0.98]"
+                    >
+                        <Lock size={20} className="text-slate-400" />
+                        Şifre Değiştir
+                    </button>
+                ) : (
+                    <div className="border-2 border-slate-100 dark:border-slate-800 rounded-2xl p-6 bg-slate-50/50 dark:bg-slate-800/50 animate-fade-in">
+                        <h3 className="font-black text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                             <Lock size={20} className="text-indigo-600 dark:text-indigo-400" /> Şifre Güncelleme
+                        </h3>
+                        <form onSubmit={handlePasswordUpdate} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Mevcut Şifre</label>
+                                <input
+                                    type="password"
+                                    name="currentPassword"
+                                    value={passwordForm.currentPassword}
+                                    onChange={handlePasswordChange}
+                                    className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 focus:border-indigo-500 outline-none transition-all"
+                                    disabled={isLoading}
+                                />
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Yeni Şifre</label>
+                                    <input
+                                        type="password"
+                                        name="newPassword"
+                                        value={passwordForm.newPassword}
+                                        onChange={handlePasswordChange}
+                                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 focus:border-indigo-500 outline-none transition-all"
+                                        disabled={isLoading}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Şifre Onayla</label>
+                                    <input
+                                        type="password"
+                                        name="confirmPassword"
+                                        value={passwordForm.confirmPassword}
+                                        onChange={handlePasswordChange}
+                                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 focus:border-indigo-500 outline-none transition-all"
+                                        disabled={isLoading}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex gap-4 pt-4">
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-bold shadow-lg shadow-indigo-500/20 active:scale-95 transition disabled:opacity-50"
+                                >
+                                    Güncelle
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPasswordForm(false)}
+                                    className="flex-1 px-4 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 font-bold"
+                                >
+                                    İptal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+            </div>
+            
+            {/* Danger Zone */}
+            <div className="rounded-3xl border-2 border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10 p-8">
+                <h2 className="text-xl font-black text-red-900 dark:text-red-400 mb-4 flex items-center gap-3">
+                    <AlertTriangle size={24} />
+                    Tehlikeli Alan
+                </h2>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <p className="text-sm font-medium text-red-700 dark:text-red-300/80 max-w-md">
+                        Hesabınızı sildiğinizde tüm verileriniz kalıcı olarak silinir ve bu işlem geri alınamaz.
+                    </p>
+                    <button
+                        onClick={handleDeleteAccount}
+                        disabled={isLoading}
+                        className="px-6 py-3 bg-white dark:bg-slate-900 text-red-600 dark:text-red-500 border border-red-200 dark:border-red-900/50 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 font-bold transition flex items-center gap-2 shadow-sm whitespace-nowrap"
+                    >
+                        <Trash2 size={18} />
+                        Hesabı Sil
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        {/* Right Column - Summary / Save Actions */}
+        <div className="lg:col-span-1 space-y-6">
+             <div className="bg-slate-900 dark:bg-slate-950 rounded-3xl p-6 shadow-2xl border border-slate-800 sticky top-24">
+                <h3 className="font-black text-white text-lg mb-4">Değişiklik Özeti</h3>
+                
+                {!hasChanges ? (
+                     <div className="text-slate-400 text-sm font-medium py-6 text-center border-2 border-dashed border-slate-700 rounded-xl">
+                        Henüz değişiklik yapılmadı.
+                     </div>
+                ) : (
+                    <div className="space-y-4 mb-6 animate-fade-in">
+                        <div className="flex items-center gap-3 text-indigo-400">
+                            <span className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></span>
+                            <span className="text-sm font-bold">Kaydedilmemiş değişiklikler var</span>
+                        </div>
+                        <p className="text-xs text-slate-500">
+                             Yapılan değişikliklerin geçerli olması için kaydetmeyi unutmayın.
+                        </p>
+                    </div>
+                )}
+
+                <div className="mt-8 pt-6 border-t border-slate-800 space-y-3">
+                     <button
+                        onClick={handleSaveSettings}
+                        disabled={!hasChanges || isLoading}
+                        className="w-full px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl font-bold transition shadow-lg shadow-indigo-900/40 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
+                    >
+                        {isLoading ? (
+                        <>
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            <span>Kaydediliyor...</span>
+                        </>
+                        ) : (
+                        <>
+                            <Save size={18} />
+                            Değişiklikleri Kaydet
+                        </>
+                        )}
+                    </button>
+
+                    {hasChanges && (
+                        <button
+                            onClick={() => {
+                                setHasChanges(false);
+                                setNotifications(JSON.parse(localStorage.getItem('notifications') || JSON.stringify(notifications)));
+                                setPrivacy(JSON.parse(localStorage.getItem('privacy') || JSON.stringify(privacy)));
+                            }}
+                            className="w-full px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold transition flex items-center justify-center gap-2"
+                            disabled={isLoading}
+                        >
+                            <X size={18} />
+                            Değişiklikleri Geri Al
+                        </button>
+                    )}
+                </div>
+             </div>
+        </div>
       </div>
-
-      {/* Save Changes Buttons */}
-      {hasChanges && (
-        <div className="sticky bottom-0 bg-white border-t border-slate-200 p-4 flex gap-3 justify-end rounded-lg shadow-lg">
-          <button
-            onClick={() => {
-              setHasChanges(false);
-              setNotifications(JSON.parse(localStorage.getItem('notifications') || JSON.stringify(notifications)));
-              setPrivacy(JSON.parse(localStorage.getItem('privacy') || JSON.stringify(privacy)));
-            }}
-            className="px-6 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium transition flex items-center gap-2"
-            disabled={isLoading}
-          >
-            <X size={18} />
-            İptal Et
-          </button>
-          <button
-            onClick={handleSaveSettings}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition flex items-center gap-2 disabled:opacity-50"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="animate-spin">⏳</span>
-                Kaydediliyor...
-              </>
-            ) : (
-              <>
-                <Save size={18} />
-                Değişiklikleri Kaydet
-              </>
-            )}
-          </button>
-        </div>
-      )}
-
-      {!hasChanges && !showPasswordForm && (
-        <div className="text-center py-4 text-slate-500 text-sm">
-          Değişiklikleri yapmak için ayarları değiştirin.
-        </div>
-      )}
     </div>
   );
 };

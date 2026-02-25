@@ -23,36 +23,36 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
   const getCategoryVisual = (cat: string) => {
       const normal = cat?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() || '';
       
-      // ISG & Güvenlik
+      // ISG & Güvenlik -> Kırmızı
       if (normal.includes('isg') || normal.includes('guvenlik') || normal.includes('acil')) 
-          return 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop'; // Baret/İnşaat alanı
+          return { bg: 'bg-red-500', iconBg: 'bg-red-600' };
           
-      // İK & Personel
+      // İK & Personel -> Yeşil
       if (normal.includes('ik') || normal.includes('insan') || normal.includes('personel') || normal.includes('egitim')) 
-          return 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=600&auto=format&fit=crop'; // Toplantı/Ekip
+          return { bg: 'bg-emerald-500', iconBg: 'bg-emerald-600' };
           
-      // Muhasebe & Finans
+      // Muhasebe & Finans -> Pembe
       if (normal.includes('muhasebe') || normal.includes('finans') || normal.includes('fatura') || normal.includes('masraf')) 
-          return 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop'; // Hesap makinesi/Grafik
+          return { bg: 'bg-pink-500', iconBg: 'bg-pink-600' };
           
-      // Hukuk & Sözleşme
+      // Hukuk & Sözleşme -> Mor
       if (normal.includes('hukuk') || normal.includes('sozlesme') || normal.includes('kvkk')) 
-          return 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=600&auto=format&fit=crop'; // Adalet terazisi/Hukuk
+          return { bg: 'bg-violet-500', iconBg: 'bg-violet-600' };
           
-      // Teknik & Bakım & İnşaat
+      // Teknik & Bakım & İnşaat -> Mavi
       if (normal.includes('teknik') || normal.includes('bakim') || normal.includes('arac') || normal.includes('makine') || normal.includes('insaat') || normal.includes('santiye')) 
-          return 'https://images.unsplash.com/photo-1581094794329-cd56b507d18b?q=80&w=600&auto=format&fit=crop'; // Mühendis/Blueprint
+          return { bg: 'bg-blue-600', iconBg: 'bg-blue-700' };
           
-      // Kalite & Denetim
+      // Kalite & Denetim -> Turuncu
       if (normal.includes('kalite') || normal.includes('denetim') || normal.includes('anket')) 
-          return 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=600&auto=format&fit=crop'; // İş planı/Analiz
+          return { bg: 'bg-orange-500', iconBg: 'bg-orange-600' };
           
-      // Satış & Teklif
+      // Satış & Teklif -> Amber
       if (normal.includes('satis') || normal.includes('teklif') || normal.includes('pazarlama')) 
-          return 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=600&auto=format&fit=crop'; // El sıkışma/Anlaşma
+          return { bg: 'bg-amber-500', iconBg: 'bg-amber-600' };
           
-      // Genel Ofis
-      return 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600&auto=format&fit=crop'; // Modern Ofis
+      // Genel -> İndigo
+      return { bg: 'bg-indigo-500', iconBg: 'bg-indigo-600' };
   };
 
   const categories = Array.from(new Set(templates.map(t => t.category)));
@@ -69,39 +69,44 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
   });
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="w-full flex flex-col gap-8 animate-fade-in p-2">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">{t?.documents?.allTemplates || 'Yeni Bir Doküman Oluştur'}</h2>
-          <p className="text-blue-100 text-sm sm:text-lg mb-6">
+      <div className="bg-slate-900 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden text-center md:text-left border border-slate-800">
+        <div className="relative z-10 max-w-3xl">
+          <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight">
+            {t?.documents?.allTemplates || 'Yeni Bir Doküman Oluştur'}
+          </h2>
+          <p className="text-slate-400 text-lg mb-8 max-w-2xl font-medium">
             Profesyonel şablonlardan birini seçerek raporlarınızı saniyeler içinde hazırlayın, PDF olarak indirin ve paylaşın.
           </p>
           
-          <div className="relative max-w-lg">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <div className="relative max-w-xl group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-400 transition-colors" />
+            </div>
             <input
               type="text"
               placeholder={t?.documents?.search || 'Şablon adı veya açıklama ara...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl text-slate-900 focus:ring-4 focus:ring-blue-500/30 focus:outline-none shadow-lg"
+              className="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 text-white placeholder-slate-500 border border-slate-700/50 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none transition-all shadow-lg backdrop-blur-sm"
             />
           </div>
         </div>
         
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-        <div className="absolute bottom-0 right-20 w-32 h-32 bg-indigo-500/20 rounded-full blur-xl"></div>
+        {/* Background Decorations */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"></div>
       </div>
 
       {/* Category Filter Pills */}
-      <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+      <div className="flex gap-3 overflow-x-auto pb-4 custom-scrollbar px-1">
         <button
           onClick={() => setSelectedCategory(null)}
-          className={`px-5 py-2 rounded-full font-medium transition whitespace-nowrap text-sm border ${
+          className={`px-6 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap text-sm border-2 ${
             selectedCategory === null
-              ? 'bg-slate-800 text-white border-slate-800'
-              : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+              ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-600/20'
+              : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-transparent hover:border-indigo-200 dark:hover:border-slate-700'
           }`}
         >
           {t?.documents?.all || 'Tüm Şablonlar'}
@@ -110,10 +115,10 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
           <button
             key={category}
             onClick={() => setSelectedCategory(category)}
-            className={`px-5 py-2 rounded-full font-medium transition whitespace-nowrap text-sm border ${
+            className={`px-6 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap text-sm border-2 ${
               selectedCategory === category
-                ? 'bg-slate-800 text-white border-slate-800'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                ? 'bg-slate-800 dark:bg-white text-white dark:text-slate-900 border-slate-800 dark:border-white shadow-lg'
+                : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-transparent hover:border-slate-200 dark:hover:border-slate-700'
             }`}
           >
             {category}
@@ -123,14 +128,15 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
 
       {/* Templates Grid */}
       {filteredTemplates.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
-          <div className="bg-slate-100 p-4 rounded-full mb-4">
-             <FileText className="text-slate-400" size={32} />
+        <div className="flex flex-col items-center justify-center py-20 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+          <div className="bg-slate-100 dark:bg-slate-700 p-6 rounded-full mb-4">
+             <FileText className="text-slate-400 dark:text-slate-500" size={40} />
           </div>
-          <p className="text-slate-600 text-lg font-medium">{t?.documents?.noResults || 'Aradığınız kriterlere uygun şablon bulunamadı.'}</p>
+          <p className="text-slate-600 dark:text-slate-300 text-xl font-bold mb-2">{t?.documents?.noResults || 'Sonuç Bulunamadı'}</p>
+          <p className="text-slate-400 mb-6">Aradığınız kriterlere uygun şablon mevcut değil.</p>
           <button 
              onClick={() => {setSearchQuery(''); setSelectedCategory(null);}}
-             className="mt-4 text-blue-600 hover:text-blue-700 font-medium"
+             className="px-6 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-bold transition-colors"
           >
              Filtreleri Temizle
           </button>
@@ -141,68 +147,64 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
             const isLocked = template.isPremium && !userIsPremium;
             const title = t?.templates?.[`t${template.id}_title`] || template.title;
             const desc = t?.templates?.[`t${template.id}_desc`] || template.description;
-            const imageUrl = getCategoryVisual(template.category);
+            const style = getCategoryVisual(template.category);
             
             return (
               <div
                 key={template.id}
-                className={`bg-white rounded-xl border border-slate-200 hover:border-indigo-300 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col h-full relative ${isLocked ? 'grayscale opacity-75 hover:grayscale-0 hover:opacity-100' : ''}`}
+                className={`group relative bg-white dark:bg-slate-800 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-100 dark:border-slate-700 h-full flex flex-col ${isLocked ? 'grayscale-[0.8] opacity-80 hover:grayscale-0 hover:opacity-100' : 'hover:-translate-y-2'}`}
                 onClick={() => !isLocked && onSelectTemplate(template)}
               >
-                {/* Banner Image */}
-                <div className="h-40 w-full relative overflow-hidden">
-                   <img 
-                      src={imageUrl} 
-                      alt={template.category} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                   />
-                   
-                   {/* Overlay Gradient */}
-                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                 {/* Top Decor Bar */}
+                 <div className={`h-2 w-full ${style.bg}`}></div>
 
-                   {/* Premium Badge */}
-                   {template.isPremium && (
-                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg border border-amber-100 shadow-sm text-amber-500 text-[10px] font-bold flex items-center gap-1 z-10">
-                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                       PRO
-                     </div>
-                   )}
-                   
-                   {/* Category Badge on Image */}
-                   <div className="absolute bottom-3 left-3">
-                      <span className="text-[10px] uppercase font-bold px-2 py-1 rounded bg-white/90 text-slate-800 shadow-sm backdrop-blur-sm">
-                        {template.category}
-                      </span>
-                   </div>
-                </div>
+                 <div className="p-6 flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-6">
+                        {/* Icon Box */}
+                        <div className={`w-14 h-14 rounded-2xl ${style.bg} flex items-center justify-center text-white shadow-lg transform group-hover:rotate-6 transition-transform duration-300`}>
+                            <FileText size={28} />
+                        </div>
 
-                {/* Content */}
-                <div className="p-5 flex-1 flex flex-col relative bg-white">
-                  <div className="flex items-center gap-2 mb-2">
-                     <span className="text-slate-400 text-xs flex items-center gap-1">
-                       <Smartphone size={12} /> Mobil Uyumlu
-                     </span>
-                  </div>
-                  
-                  <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-indigo-700 transition-colors line-clamp-1" title={title}>
-                    {title}
-                  </h3>
-                  
-                  <p className="text-slate-500 text-sm leading-relaxed mb-4 flex-1 line-clamp-2">
-                    {desc}
-                  </p>
-                  
-                  <div className="pt-4 border-t border-slate-100 flex justify-between items-center mt-auto">
-                     <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">
-                        <Layout size={14} />
-                        <span>{template.fields.length} Alan</span>
-                     </div>
-                     
-                     <div className="flex items-center gap-1 text-indigo-600 font-bold text-sm transform translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                        {isLocked ? 'Yükselt' : 'Oluştur'} <ArrowRight size={16} />
-                     </div>
-                  </div>
-                </div>
+                        {/* Badges */}
+                        <div className="flex flex-col gap-2 items-end">
+                            {template.isPremium && (
+                                <span className="px-2 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider rounded-md border border-amber-200 dark:border-amber-900/50">
+                                PREMIUM
+                                </span>
+                            )}
+                            <span className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider rounded-md">
+                                {template.category}
+                            </span>
+                        </div>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                        {title}
+                    </h3>
+                    
+                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6 line-clamp-2">
+                        {desc}
+                    </p>
+                    
+                    <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+                         <div className="flex items-center gap-1.5 text-slate-400 text-xs font-medium">
+                            <Layout size={14} />
+                            <span>{template.fields.length} Alan</span>
+                         </div>
+                         
+                         <span className={`text-xs font-bold uppercase flex items-center gap-1 ${isLocked ? 'text-slate-400' : 'text-indigo-600 dark:text-indigo-400'}`}>
+                            {isLocked ? (
+                                <>
+                                <div className="w-2 h-2 rounded-full bg-slate-400"></div> Kilitli
+                                </>
+                            ) : (
+                                <>
+                                Oluştur <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                                </>
+                            )}
+                         </span>
+                    </div>
+                 </div>
               </div>
             );
           })}
