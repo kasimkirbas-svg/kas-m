@@ -446,96 +446,16 @@ const App = () => {
     // 3. Dashboard (Home)
     if (user && currentView === 'dashboard') {
       return (
-        <div>
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-800">{t?.dashboard?.welcome || `Hoşgeldin, ${user.name}!`} 👋</h1>
-            <p className="text-slate-500 text-lg mt-2">{t?.dashboard?.greetings || 'Bugün ne oluşturmak istersiniz?'}</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-             <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg shadow-blue-200">
-                <div className="text-sm opacity-90 font-medium">{t?.dashboard?.remainingDownloads || 'Kalan İndirme Hakkı'}</div>
-                <div className="text-4xl font-bold mt-2">{user.remainingDownloads === 'UNLIMITED' ? '∞' : user.remainingDownloads}</div>
-                <p className="text-sm opacity-75 mt-4">
-                  {t?.dashboard?.package || 'Paketiniz'}: <span className="font-semibold">{user.plan === SubscriptionPlan.YEARLY ? (t?.dashboard?.yearly || 'Yıllık Pro') : (t?.dashboard?.monthly || 'Aylık Standart')}</span>
-                </p>
-             </div>
-             <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg shadow-green-200 flex flex-col justify-center">
-                <p className="opacity-90 font-medium mb-3">{t?.dashboard?.greetings || 'Yeni Doküman Oluşturmaya Başla'}</p>
-                <Button 
-                  onClick={() => setCurrentView('templates')} 
-                  className="bg-white text-green-600 hover:bg-gray-100 font-semibold"
-                >
-                  + {t?.dashboard?.createDocument || 'Doküman Oluştur'}
-                </Button>
-             </div>
-             <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                <h3 className="font-bold text-slate-800 mb-4">{t?.dashboard?.recentActivity || 'Son İşlemler'}</h3>
-                <ul className="space-y-3">
-                  {savedDocuments.filter(d => d.userId === user.id).slice(0, 3).map(doc => (
-                      <li key={doc.id} className="flex justify-between items-center text-sm">
-                        <span className="text-slate-600 truncate max-w-[150px]">{doc.templateId} Dokümanı</span>
-                        <span className="text-xs text-slate-400">{new Date(doc.createdAt).toLocaleDateString()}</span>
-                      </li>
-                  ))}
-                  {savedDocuments.filter(d => d.userId === user.id).length === 0 && (
-                      <li className="text-sm text-slate-400 italic text-center py-2">
-                          {t?.dashboard?.noActivity || 'Henüz işlem yok.'}
-                      </li>
-                  )}
-                  <li className="flex justify-between items-center text-sm border-t border-slate-100 pt-2 mt-2">
-                    <span className="text-slate-600">Abonelik Durumu</span>
-                    <span className="text-xs text-green-600 font-medium">✓ {t?.common?.active || 'Aktif'}</span>
-                  </li>
-                </ul>
-             </div>
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-slate-800">{t?.dashboard?.quickAccess || 'Hızlı Erişim'}</h2>
-              <button 
-                onClick={() => setCurrentView('templates')}
-                className="text-blue-600 hover:text-blue-700 font-medium text-sm"
-              >
-                {t?.dashboard?.viewAll || 'Tümünü Gör'} →
-              </button>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-               {MOCK_TEMPLATES.slice(0, 6).map(template => {
-                 const title = t?.templates?.[`t${template.id}_title`] || template.title;
-                 const desc = t?.templates?.[`t${template.id}_desc`] || template.description;
-                 return (
-                  <div 
-                    key={template.id} 
-                    onClick={() => {
-                      setSelectedTemplate(template);
-                      if (!template.isPremium || user.plan === SubscriptionPlan.YEARLY) {
-                        setCurrentView('editor');
-                      } else {
-                        alert('Bu premium şablon yalnızca Yıllık Pro paketine dahildir.');
-                      }
-                    }} 
-                    className="cursor-pointer bg-white p-5 rounded-lg border border-slate-200 hover:shadow-md hover:border-blue-400 transition-all group"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition">
-                        <FileText size={20} />
-                      </div>
-                      {template.isPremium && (
-                        <span className="bg-purple-100 text-purple-600 text-xs font-bold px-2 py-0.5 rounded">
-                          PREMIUM
-                        </span>
-                      )}
-                    </div>
-                    <h4 className="font-semibold text-slate-800 mb-1">{title}</h4>
-                    <p className="text-xs text-slate-500 mb-3">{template.category}</p>
-                    <p className="text-xs text-slate-600 line-clamp-2">{desc}</p>
-                  </div>
-               )})}
-            </div>
-          </div>
-        </div>
+        <Dashboard
+          user={user}
+          t={t}
+          onNavigate={setCurrentView}
+          onTemplateSelect={(tpl) => {
+            setSelectedTemplate(tpl);
+            setCurrentView('editor');
+          }}
+          templates={templates}
+        />
       );
     }
 
