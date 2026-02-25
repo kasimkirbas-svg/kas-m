@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DocumentTemplate } from '../types';
 import { 
   Search, FileText, CheckCircle, Smartphone, Layout, ArrowRight
@@ -9,16 +9,26 @@ interface DocumentsListProps {
   onSelectTemplate: (template: DocumentTemplate) => void;
   userIsPremium?: boolean;
   t?: any;
+  initialCategory?: string | null;
+  initialSearchQuery?: string;
 }
 
 export const DocumentsList: React.FC<DocumentsListProps> = ({
   templates,
   onSelectTemplate,
   userIsPremium = false,
-  t
+  t,
+  initialCategory = null,
+  initialSearchQuery = ''
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory);
+
+  // Update effect when props change
+  useEffect(() => {
+    if (initialSearchQuery !== undefined) setSearchQuery(initialSearchQuery);
+    if (initialCategory !== undefined) setSelectedCategory(initialCategory);
+  }, [initialSearchQuery, initialCategory]);
 
   const getCategoryVisual = (cat: string) => {
       const normal = cat?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() || '';

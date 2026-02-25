@@ -5,7 +5,7 @@ import { User, DocumentTemplate, GeneratedDocument } from '../types';
 interface DashboardProps {
   user: User;
   t: any;
-  onNavigate: (view: string) => void;
+  onNavigate: (view: string, params?: { category?: string, search?: string }) => void;
   onTemplateSelect: (template: DocumentTemplate | null) => void;
   templates: DocumentTemplate[];
   recentDocuments?: GeneratedDocument[];
@@ -24,7 +24,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
       icon: Factory,
       image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400', 
       color: 'bg-rose-600',
-      items: ['İş Güvenliği', 'İş Takibi', 'Puantaj', 'İş Sırası', 'İş Emri']
+      items: ['İş Güvenliği', 'İş Takibi', 'Puantaj', 'İş Sırası', 'İş Emri'],
+      searchQuery: 'Üretim'
     },
     {
       id: 'corporate',
@@ -33,7 +34,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
       icon: Building2,
       image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400',
       color: 'bg-emerald-600',
-      items: ['Toplantı Tutanak', 'İnsan Kaynakları', 'Zimmet Formu', 'İzin Formu', 'Masraf Formu']
+      items: ['Toplantı Tutanak', 'İnsan Kaynakları', 'Zimmet Formu', 'İzin Formu', 'Masraf Formu'],
+      searchQuery: 'Kurumsal'
     },
     {
       id: 'service',
@@ -42,7 +44,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
       icon: Hotel,
       image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=400',
       color: 'bg-amber-500', 
-      items: ['Oda Kontrol', 'Müşteri Kayıt', 'Gece Raporu', 'Housekeeping', 'Arıza Bildirim']
+      items: ['Oda Kontrol', 'Müşteri Kayıt', 'Gece Raporu', 'Housekeeping', 'Arıza Bildirim'],
+      searchQuery: 'Otel'
     },
     {
       id: 'construction',
@@ -51,7 +54,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
       icon: HardHat,
       image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=400',
       color: 'bg-violet-600',
-      items: ['Saha Kontrol', 'Hakediş', 'İş Makineleri', 'Taşeron Takip', 'Günlük Rapor']
+      items: ['Saha Kontrol', 'Hakediş', 'İş Makineleri', 'Taşeron Takip', 'Günlük Rapor'],
+      searchQuery: 'İnşaat'
     },
     {
       id: 'smallres',
@@ -60,7 +64,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
       icon: Store,
       image: 'https://images.unsplash.com/photo-1556740758-90de2742e614?auto=format&fit=crop&q=80&w=400',
       color: 'bg-pink-600',
-      items: ['Satış Takip', 'Stok Sayım', 'Cari Hesap', 'Teklif Hazırla', 'Tahsilat']
+      items: ['Satış Takip', 'Stok Sayım', 'Cari Hesap', 'Teklif Hazırla', 'Tahsilat'],
+      searchQuery: 'Esnaf'
     }
   ];
 
@@ -94,7 +99,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
           {sectors.map((sector) => (
              <div 
                key={sector.id}
-               onClick={() => onNavigate('templates')}
+               onClick={() => onNavigate('templates', { search: sector.searchQuery })}
                className="group relative h-[500px] rounded-2xl overflow-hidden cursor-pointer transition-transform hover:-translate-y-2 hover:shadow-2xl border border-slate-200 dark:border-slate-800 bg-slate-900"
              >
                 {/* Background Image with Gradient Overlay */}
@@ -154,7 +159,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
               <button 
-                 onClick={() => onNavigate('templates')}
+                 onClick={() => onNavigate('templates', { search: 'Sertifika' })}
                  className="h-32 bg-rose-600 rounded-xl flex items-center justify-center gap-4 hover:bg-rose-500 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-rose-900/50 group"
               >
                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-rose-600 font-black text-xl group-hover:rotate-12 transition-transform">
@@ -164,7 +169,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
               </button>
 
               <button 
-                 onClick={() => onNavigate('my-documents')}
+                 onClick={() => onNavigate('templates', { search: 'Tutanak' })}
                  className="h-32 bg-blue-600 rounded-xl flex items-center justify-center gap-4 hover:bg-blue-500 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-blue-900/50 group"
               >
                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold group-hover:rotate-12 transition-transform">
@@ -174,7 +179,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
               </button>
 
               <button 
-                 onClick={() => onNavigate('my-documents')}
+                 onClick={() => onNavigate('templates', { search: 'Rapor' })}
                  className="h-32 bg-emerald-600 rounded-xl flex items-center justify-center gap-4 hover:bg-emerald-500 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-emerald-900/50 group"
               >
                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-emerald-600 font-bold group-hover:rotate-12 transition-transform">

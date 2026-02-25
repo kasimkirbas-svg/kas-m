@@ -30,6 +30,8 @@ const App = () => {
   const [editingDocument, setEditingDocument] = useState<GeneratedDocument | undefined>(undefined);
   // NEW: State for Read-Only Preview Mode
   const [previewDocument, setPreviewDocument] = useState<GeneratedDocument | undefined>(undefined);
+  // NEW: Navigation Params
+  const [navParams, setNavParams] = useState<{ category?: string, search?: string }>({});
 
   const handleEditDocument = (doc: GeneratedDocument) => {
     const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
@@ -42,6 +44,12 @@ const App = () => {
       alert('Bu dokümana ait şablon bulunamadı.');
     }
   };
+
+  const handleNavigate = (view: string, params?: { category?: string, search?: string }) => {
+    setNavParams(params || {});
+    setCurrentView(view);
+  };
+
 
   const handlePreviewDocument = (doc: GeneratedDocument) => {
     const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
@@ -433,6 +441,8 @@ const App = () => {
           </button>
           <DocumentsList 
             templates={templates}
+            initialCategory={navParams.category}
+            initialSearchQuery={navParams.search}
             userIsPremium={user.plan === SubscriptionPlan.YEARLY}
             onSelectTemplate={(template) => {
               setSelectedTemplate(template);
@@ -450,7 +460,7 @@ const App = () => {
         <Dashboard
           user={user}
           t={t}
-          onNavigate={setCurrentView}
+          onNavigate={handleNavigate}
           onTemplateSelect={(tpl) => {
             setSelectedTemplate(tpl);
             setCurrentView('editor');
@@ -506,7 +516,7 @@ const App = () => {
     <Layout 
       user={user} 
       currentView={currentView} 
-      onNavigate={setCurrentView} 
+      onNavigate={handleNavigate} 
       onLogout={handleLogout}
       language={language}
       onLanguageChange={handleLanguageChange}
