@@ -1761,11 +1761,29 @@ app.put('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
         return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
     }
     
-    // Prevent password overwrite if not intended (or handle separately)
-    const { password, ...safeUpdates } = updates;
+    // Explicitly select allowed fields to update
+    // This prevents overwriting id, password, createdAt, or other system fields
+    const allowedFields = ['name', 'companyName', 'role', 'plan', 'isActive', 'email', 'remainingDownloads'];
+    const safeUpdates = {};
+    
+    allowedFields.forEach(field => {
+        if (updates[field] !== undefined) {
+            safeUpdates[field] = updates[field];
+        }
+    });
 
     db.users[index] = { ...db.users[index], ...safeUpdates };
     writeDB(db);
+    
+    // Sync PostgreSQL if available
+    if (pgPool) {
+        // We only sync specific fields to PG for now to keep it simple, or update the jsonb blob
+        // Update the JSONB data column
+        pgPool.query('UPDATE users SET email = $1, data = $2 WHERE id = $3', 
+            [db.users[index].email, db.users[index], id]).catch(e => console.error('PG Update Error:', e));
+    } else if (MONGO_URI) {
+        connectDB().then(() => User.updateOne({ id }, { $set: safeUpdates })).catch(e => console.error('Mongo Update Error:', e));
+    }
     
     const { password: _, ...userWithoutPassword } = db.users[index];
     res.json({ success: true, user: userWithoutPassword });
@@ -1809,7 +1827,7 @@ app.delete('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
 });
 
 // Admin: Ban User
-app.post('/api/users/:id/ban', authenticateToken, requireAdmin, (req, res) => {
+app.post('/api/users/:id/ban', authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;
     const { banReason, durationMinutes } = req.body;
     
@@ -1836,11 +1854,21 @@ app.post('/api/users/:id/ban', authenticateToken, requireAdmin, (req, res) => {
     };
     
     writeDB(db);
+
+    // Sync PG/Mongo
+    if (pgPool) {
+        try {
+            await pgPool.query('UPDATE users SET data = $1 WHERE id = $2', [db.users[index], id]);
+        } catch(e) { console.error('PG Ban Sync Error:', e); }
+    } else if (MONGO_URI) {
+        connectDB().then(() => User.updateOne({ id }, { $set: { isBanned: true, banReason, banExpiresAt } })).catch(e => console.error(e));
+    }
+
     res.json({ success: true, message: 'Kullanıcı yasaklandı.', user: db.users[index] });
 });
 
 // Admin: Unban User
-app.post('/api/users/:id/unban', authenticateToken, requireAdmin, (req, res) => {
+app.post('/api/users/:id/unban', authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;
     const db = readDB();
     const index = db.users.findIndex(u => u.id === id);
@@ -1857,6 +1885,16 @@ app.post('/api/users/:id/unban', authenticateToken, requireAdmin, (req, res) => 
     };
     
     writeDB(db);
+
+    // Sync PG/Mongo
+    if (pgPool) {
+        try {
+            await pgPool.query('UPDATE users SET data = $1 WHERE id = $2', [db.users[index], id]);
+        } catch(e) { console.error('PG Unban Sync Error:', e); }
+    } else if (MONGO_URI) {
+         connectDB().then(() => User.updateOne({ id }, { $set: { isBanned: false, banReason: null, banExpiresAt: null } })).catch(e => console.error(e));
+    }
+
     res.json({ success: true, message: 'Kullanıcı yasağı kaldırıldı.' });
 });
 

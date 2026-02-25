@@ -211,22 +211,32 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error('Yasaklama başarısız.');
+        if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.message || 'Yasaklama başarısız.');
+        } 
         
         loadUsers();
         setBanModal({ isOpen: false, userId: '', userName: '' });
         setBanForm({ reason: '', duration: 'permanent' });
     } catch(err) {
-        alert('İşlem başarısız.');
+        alert(err instanceof Error ? err.message : 'İşlem başarısız.');
     }
   };
 
   const handleUnbanUser = async (user: User) => {
       if(window.confirm(`${user.name} kullanıcısının yasağını kaldırmak istiyor musunuz?`)) {
         try {
-            await fetchApi(`/api/users/${user.id}/unban`, { method: 'POST' });
+            const res = await fetchApi(`/api/users/${user.id}/unban`, { method: 'POST' });
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.message || 'İşlem başarısız');
+            }
             loadUsers();
-        } catch(e) { alert('İşlem başarısız.'); }
+        } catch(e) { 
+            console.error(e);
+            alert(e instanceof Error ? e.message : 'İşlem başarısız.'); 
+        }
       }
   };
 
@@ -344,22 +354,36 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
     if (!editingUser) return;
 
     try {
-        const token = localStorage.getItem('authToken');
-        await fetchApi(`/api/users/${editingUser.id}`, {
+        // Send only editable fields to backend
+        const payload = {
+            name: editingUser.name,
+            email: editingUser.email,
+            companyName: editingUser.companyName,
+            plan: editingUser.plan,
+            role: editingUser.role,
+            isActive: editingUser.isActive
+        };
+
+        const res = await fetchApi(`/api/users/${editingUser.id}`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(editingUser)
+            body: JSON.stringify(payload)
         });
+        
+        if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.message || 'Güncelleme başarısız');
+        }
         
         loadUsers(); // Refresh
         setIsModalOpen(false);
         setEditingUser(null);
-        alert(t?.common?.success || 'Kullanıcı güncellendi');
+        // alert(t?.common?.success || 'Kullanıcı güncellendi');
     } catch(e) {
-        alert('Güncelleme başarısız');
+        console.error(e);
+        alert(e instanceof Error ? e.message : 'Güncelleme başarısız');
     }
   };
 
@@ -954,6 +978,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
             </div>
             
             <form onSubmit={handleSaveUser} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">E-posta (Kullanıcı Adı)</label>
+                <input 
+                  type="email" 
+                  value={editingUser.email}
+                  onChange={e => setEditingUser({...editingUser, email: e.target.value})}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Ad Soyad</label>
                 <input 
