@@ -4,7 +4,7 @@
       "id": "admin-001",
       "name": "Sistem Yöneticisi",
       "email": "admin@kirbas.com",
-      "password": "$2b$10$j621U8gWBkGCmITcOF4Ek.EpsviwHGcaWzPLcJ7vb7wIg0vOolvxK",
+      "password": "$2b$10$YsavfVrFIEhXEP80m2vbl.3ZMN3iM1PyoyDB4myfIUwq0irqsb6XG",
       "companyName": "Yönetim Paneli",
       "role": "ADMIN",
       "plan": "YEARLY",
@@ -25,12 +25,45 @@
       "monthlyLimit": 50,
       "photoCapacity": 5,
       "fields": [
-        { "key": "orderNo", "label": "İş Emri No", "type": "text", "required": true },
-        { "key": "productName", "label": "Ürün Adı/Kodu", "type": "text", "required": true },
-        { "key": "quantity", "label": "Üretilecek Miktar", "type": "number", "required": true },
-        { "key": "deadline", "label": "Teslim Tarihi", "type": "date", "required": true },
-        { "key": "specifications", "label": "Teknik Özellikler", "type": "textarea" },
-        { "key": "priority", "label": "Öncelik Durumu", "type": "select", "options": ["Normal", "Acil", "Çok Acil"] }
+        {
+          "key": "orderNo",
+          "label": "İş Emri No",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "productName",
+          "label": "Ürün Adı/Kodu",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "quantity",
+          "label": "Üretilecek Miktar",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "deadline",
+          "label": "Teslim Tarihi",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "specifications",
+          "label": "Teknik Özellikler",
+          "type": "textarea"
+        },
+        {
+          "key": "priority",
+          "label": "Öncelik Durumu",
+          "type": "select",
+          "options": [
+            "Normal",
+            "Acil",
+            "Çok Acil"
+          ]
+        }
       ]
     },
     {
@@ -42,12 +75,43 @@
       "monthlyLimit": 30,
       "photoCapacity": 5,
       "fields": [
-        { "key": "shift", "label": "Vardiya", "type": "select", "options": ["08:00-16:00", "16:00-24:00", "24:00-08:00"], "required": true },
-        { "key": "producedQty", "label": "Üretilen Miktar", "type": "number", "required": true },
-        { "key": "scrapQty", "label": "Fire Miktarı", "type": "number" },
-        { "key": "downtime", "label": "Duruş Süresi (Dk)", "type": "number" },
-        { "key": "downtimeReason", "label": "Duruş Nedeni", "type": "textarea" },
-        { "key": "operatorNote", "label": "Operatör Notları", "type": "textarea" }
+        {
+          "key": "shift",
+          "label": "Vardiya",
+          "type": "select",
+          "options": [
+            "08:00-16:00",
+            "16:00-24:00",
+            "24:00-08:00"
+          ],
+          "required": true
+        },
+        {
+          "key": "producedQty",
+          "label": "Üretilen Miktar",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "scrapQty",
+          "label": "Fire Miktarı",
+          "type": "number"
+        },
+        {
+          "key": "downtime",
+          "label": "Duruş Süresi (Dk)",
+          "type": "number"
+        },
+        {
+          "key": "downtimeReason",
+          "label": "Duruş Nedeni",
+          "type": "textarea"
+        },
+        {
+          "key": "operatorNote",
+          "label": "Operatör Notları",
+          "type": "textarea"
+        }
       ]
     },
     {
@@ -58,12 +122,43 @@
       "isPremium": true,
       "photoCapacity": 10,
       "fields": [
-        { "key": "machineId", "label": "Makine Kodu", "type": "text", "required": true },
-        { "key": "maintenanceType", "label": "Bakım Türü", "type": "select", "options": ["Günlük", "Haftalık", "Aylık", "Arıza"] },
-        { "key": "oilCheck", "label": "Yağ Kontrolü", "type": "checkbox" },
-        { "key": "filterCheck", "label": "Filtre Temizliği", "type": "checkbox" },
-        { "key": "safetyCheck", "label": "Güvenlik Donanımı Kontrolü", "type": "checkbox" },
-        { "key": "changedParts", "label": "Değişen Parçalar", "type": "textarea" }
+        {
+          "key": "machineId",
+          "label": "Makine Kodu",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "maintenanceType",
+          "label": "Bakım Türü",
+          "type": "select",
+          "options": [
+            "Günlük",
+            "Haftalık",
+            "Aylık",
+            "Arıza"
+          ]
+        },
+        {
+          "key": "oilCheck",
+          "label": "Yağ Kontrolü",
+          "type": "checkbox"
+        },
+        {
+          "key": "filterCheck",
+          "label": "Filtre Temizliği",
+          "type": "checkbox"
+        },
+        {
+          "key": "safetyCheck",
+          "label": "Güvenlik Donanımı Kontrolü",
+          "type": "checkbox"
+        },
+        {
+          "key": "changedParts",
+          "label": "Değişen Parçalar",
+          "type": "textarea"
+        }
       ]
     },
     {
@@ -75,11 +170,35 @@
       "monthlyLimit": 30,
       "photoCapacity": 2,
       "fields": [
-        { "key": "meetingTopic", "label": "Toplantı Konusu", "type": "text", "required": true },
-        { "key": "meetingDate", "label": "Tarih", "type": "date", "required": true },
-        { "key": "participants", "label": "Katılımcılar", "type": "textarea", "required": true },
-        { "key": "decisions", "label": "Alınan Kararlar", "type": "textarea", "required": true },
-        { "key": "nextMeetingDate", "label": "Bir Sonraki Toplantı Tarihi", "type": "date" }
+        {
+          "key": "meetingTopic",
+          "label": "Toplantı Konusu",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "meetingDate",
+          "label": "Tarih",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "participants",
+          "label": "Katılımcılar",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "decisions",
+          "label": "Alınan Kararlar",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "nextMeetingDate",
+          "label": "Bir Sonraki Toplantı Tarihi",
+          "type": "date"
+        }
       ]
     },
     {
@@ -91,11 +210,41 @@
       "monthlyLimit": 50,
       "photoCapacity": 10,
       "fields": [
-        { "key": "employeeName", "label": "Personel Adı", "type": "text", "required": true },
-        { "key": "expenseType", "label": "Masraf Türü", "type": "select", "options": ["Yol/Ulaşım", "Yemek", "Konaklama", "Temsil/Ağırlama", "Diğer"] },
-        { "key": "amount", "label": "Tutar (TL)", "type": "number", "required": true },
-        { "key": "expenseDate", "label": "Harcama Tarihi", "type": "date", "required": true },
-        { "key": "description", "label": "Açıklama", "type": "textarea" }
+        {
+          "key": "employeeName",
+          "label": "Personel Adı",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "expenseType",
+          "label": "Masraf Türü",
+          "type": "select",
+          "options": [
+            "Yol/Ulaşım",
+            "Yemek",
+            "Konaklama",
+            "Temsil/Ağırlama",
+            "Diğer"
+          ]
+        },
+        {
+          "key": "amount",
+          "label": "Tutar (TL)",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "expenseDate",
+          "label": "Harcama Tarihi",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "description",
+          "label": "Açıklama",
+          "type": "textarea"
+        }
       ]
     },
     {
@@ -106,11 +255,39 @@
       "isPremium": true,
       "photoCapacity": 5,
       "fields": [
-        { "key": "recipient", "label": "Teslim Alan Personel", "type": "text", "required": true },
-        { "key": "itemName", "label": "Demirbaş Adı", "type": "text", "required": true },
-        { "key": "serialNo", "label": "Seri No / Kod", "type": "text" },
-        { "key": "condition", "label": "Malzemenin Durumu", "type": "select", "options": ["Sıfır", "İkinci El - Sağlam", "Hasarlı"] },
-        { "key": "deliveryDate", "label": "Teslim Tarihi", "type": "date", "required": true }
+        {
+          "key": "recipient",
+          "label": "Teslim Alan Personel",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "itemName",
+          "label": "Demirbaş Adı",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "serialNo",
+          "label": "Seri No / Kod",
+          "type": "text"
+        },
+        {
+          "key": "condition",
+          "label": "Malzemenin Durumu",
+          "type": "select",
+          "options": [
+            "Sıfır",
+            "İkinci El - Sağlam",
+            "Hasarlı"
+          ]
+        },
+        {
+          "key": "deliveryDate",
+          "label": "Teslim Tarihi",
+          "type": "date",
+          "required": true
+        }
       ]
     },
     {
@@ -121,11 +298,41 @@
       "isPremium": false,
       "monthlyLimit": 50,
       "fields": [
-        { "key": "leaveType", "label": "İzin Türü", "type": "select", "options": ["Yıllık İzin", "Mazeret İzni", "Hastalık İzni", "Ücretsiz İzin"], "required": true },
-        { "key": "startDate", "label": "Başlangıç Tarihi", "type": "date", "required": true },
-        { "key": "endDate", "label": "Bitiş Tarihi", "type": "date", "required": true },
-        { "key": "totalDays", "label": "Toplam Gün", "type": "number", "required": true },
-        { "key": "contactAddress", "label": "İzindeki Adres/Tel", "type": "text" }
+        {
+          "key": "leaveType",
+          "label": "İzin Türü",
+          "type": "select",
+          "options": [
+            "Yıllık İzin",
+            "Mazeret İzni",
+            "Hastalık İzni",
+            "Ücretsiz İzin"
+          ],
+          "required": true
+        },
+        {
+          "key": "startDate",
+          "label": "Başlangıç Tarihi",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "endDate",
+          "label": "Bitiş Tarihi",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "totalDays",
+          "label": "Toplam Gün",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "contactAddress",
+          "label": "İzindeki Adres/Tel",
+          "type": "text"
+        }
       ]
     },
     {
@@ -137,12 +344,45 @@
       "monthlyLimit": 100,
       "photoCapacity": 8,
       "fields": [
-        { "key": "roomNo", "label": "Oda No", "type": "text", "required": true },
-        { "key": "status", "label": "Oda Durumu", "type": "select", "options": ["Kirli", "Temiz", "Arızalı", "Dolu"], "required": true },
-        { "key": "minibarCheck", "label": "Minibar Kontrolü", "type": "checkbox" },
-        { "key": "towelCheck", "label": "Havlu Eksikliği", "type": "checkbox" },
-        { "key": "damageCheck", "label": "Hasar Kontrolü", "type": "textarea", "placeholder": "Varsa hasar belirtin..." },
-        { "key": "cleanerName", "label": "Temizleyen Personel", "type": "text" }
+        {
+          "key": "roomNo",
+          "label": "Oda No",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "status",
+          "label": "Oda Durumu",
+          "type": "select",
+          "options": [
+            "Kirli",
+            "Temiz",
+            "Arızalı",
+            "Dolu"
+          ],
+          "required": true
+        },
+        {
+          "key": "minibarCheck",
+          "label": "Minibar Kontrolü",
+          "type": "checkbox"
+        },
+        {
+          "key": "towelCheck",
+          "label": "Havlu Eksikliği",
+          "type": "checkbox"
+        },
+        {
+          "key": "damageCheck",
+          "label": "Hasar Kontrolü",
+          "type": "textarea",
+          "placeholder": "Varsa hasar belirtin..."
+        },
+        {
+          "key": "cleanerName",
+          "label": "Temizleyen Personel",
+          "type": "text"
+        }
       ]
     },
     {
@@ -154,11 +394,38 @@
       "monthlyLimit": 50,
       "photoCapacity": 5,
       "fields": [
-        { "key": "location", "label": "Arıza Yeri / Oda No", "type": "text", "required": true },
-        { "key": "urgency", "label": "Aciliyet", "type": "select", "options": ["Normal", "Acil", "Kritik"] },
-        { "key": "description", "label": "Arıza Tanımı", "type": "textarea", "required": true },
-        { "key": "reportedBy", "label": "Bildiren", "type": "text" },
-        { "key": "expectedFixTime", "label": "Tahmini Onarım Süresi", "type": "text" }
+        {
+          "key": "location",
+          "label": "Arıza Yeri / Oda No",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "urgency",
+          "label": "Aciliyet",
+          "type": "select",
+          "options": [
+            "Normal",
+            "Acil",
+            "Kritik"
+          ]
+        },
+        {
+          "key": "description",
+          "label": "Arıza Tanımı",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "reportedBy",
+          "label": "Bildiren",
+          "type": "text"
+        },
+        {
+          "key": "expectedFixTime",
+          "label": "Tahmini Onarım Süresi",
+          "type": "text"
+        }
       ]
     },
     {
@@ -169,11 +436,39 @@
       "isPremium": true,
       "photoCapacity": 3,
       "fields": [
-        { "key": "guestName", "label": "Misafir Adı", "type": "text" },
-        { "key": "roomNo", "label": "Oda No", "type": "text" },
-        { "key": "complaintType", "label": "Şikayet Konusu", "type": "select", "options": ["Temizlik", "Gürültü", "Personel", "Yemek", "Teknik"] },
-        { "key": "details", "label": "Detaylar", "type": "textarea", "required": true },
-        { "key": "actionTaken", "label": "Alınan Aksiyon", "type": "textarea" }
+        {
+          "key": "guestName",
+          "label": "Misafir Adı",
+          "type": "text"
+        },
+        {
+          "key": "roomNo",
+          "label": "Oda No",
+          "type": "text"
+        },
+        {
+          "key": "complaintType",
+          "label": "Şikayet Konusu",
+          "type": "select",
+          "options": [
+            "Temizlik",
+            "Gürültü",
+            "Personel",
+            "Yemek",
+            "Teknik"
+          ]
+        },
+        {
+          "key": "details",
+          "label": "Detaylar",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "actionTaken",
+          "label": "Alınan Aksiyon",
+          "type": "textarea"
+        }
       ]
     },
     {
@@ -185,12 +480,44 @@
       "monthlyLimit": 31,
       "photoCapacity": 20,
       "fields": [
-        { "key": "date", "label": "Tarih", "type": "date", "required": true },
-        { "key": "weather", "label": "Hava Durumu", "type": "select", "options": ["Güneşli", "Yağmurlu", "Karlı", "Rüzgarlı"] },
-        { "key": "staffCount", "label": "Sahadaki Personel Sayısı", "type": "number" },
-        { "key": "workDone", "label": "Yapılan İmalatlar", "type": "textarea", "required": true },
-        { "key": "materialArrival", "label": "Gelen Malzemeler", "type": "textarea" },
-        { "key": "delays", "label": "Gecikmeler / Sorunlar", "type": "textarea" }
+        {
+          "key": "date",
+          "label": "Tarih",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "weather",
+          "label": "Hava Durumu",
+          "type": "select",
+          "options": [
+            "Güneşli",
+            "Yağmurlu",
+            "Karlı",
+            "Rüzgarlı"
+          ]
+        },
+        {
+          "key": "staffCount",
+          "label": "Sahadaki Personel Sayısı",
+          "type": "number"
+        },
+        {
+          "key": "workDone",
+          "label": "Yapılan İmalatlar",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "materialArrival",
+          "label": "Gelen Malzemeler",
+          "type": "textarea"
+        },
+        {
+          "key": "delays",
+          "label": "Gecikmeler / Sorunlar",
+          "type": "textarea"
+        }
       ]
     },
     {
@@ -202,12 +529,40 @@
       "monthlyLimit": 10,
       "photoCapacity": 10,
       "fields": [
-        { "key": "subcontractor", "label": "Taşeron Firma", "type": "text", "required": true },
-        { "key": "period", "label": "Hakediş Dönemi", "type": "text", "placeholder": "Ocak 2024" },
-        { "key": "contractAmount", "label": "Sözleşme Bedeli (TL)", "type": "number" },
-        { "key": "completedPercent", "label": "Tamamlanma Oranı (%)", "type": "number", "required": true },
-        { "key": "paymentAmount", "label": "Ödenecek Tutar (TL)", "type": "number", "required": true },
-        { "key": "deductions", "label": "Kesintiler (Avans vb.)", "type": "number" }
+        {
+          "key": "subcontractor",
+          "label": "Taşeron Firma",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "period",
+          "label": "Hakediş Dönemi",
+          "type": "text",
+          "placeholder": "Ocak 2024"
+        },
+        {
+          "key": "contractAmount",
+          "label": "Sözleşme Bedeli (TL)",
+          "type": "number"
+        },
+        {
+          "key": "completedPercent",
+          "label": "Tamamlanma Oranı (%)",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "paymentAmount",
+          "label": "Ödenecek Tutar (TL)",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "deductions",
+          "label": "Kesintiler (Avans vb.)",
+          "type": "number"
+        }
       ]
     },
     {
@@ -219,12 +574,37 @@
       "monthlyLimit": 30,
       "photoCapacity": 5,
       "fields": [
-        { "key": "machinePlate", "label": "Makine Plaka/Kod", "type": "text", "required": true },
-        { "key": "operator", "label": "Operatör", "type": "text" },
-        { "key": "startHour", "label": "Başlangıç Saati", "type": "number" },
-        { "key": "endHour", "label": "Bitiş Saati", "type": "number" },
-        { "key": "fuelUsed", "label": "Alınan Yakıt (Lt)", "type": "number" },
-        { "key": "workZone", "label": "Çalışılan Bölge", "type": "text" }
+        {
+          "key": "machinePlate",
+          "label": "Makine Plaka/Kod",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "operator",
+          "label": "Operatör",
+          "type": "text"
+        },
+        {
+          "key": "startHour",
+          "label": "Başlangıç Saati",
+          "type": "number"
+        },
+        {
+          "key": "endHour",
+          "label": "Bitiş Saati",
+          "type": "number"
+        },
+        {
+          "key": "fuelUsed",
+          "label": "Alınan Yakıt (Lt)",
+          "type": "number"
+        },
+        {
+          "key": "workZone",
+          "label": "Çalışılan Bölge",
+          "type": "text"
+        }
       ]
     },
     {
@@ -236,12 +616,37 @@
       "monthlyLimit": 30,
       "photoCapacity": 15,
       "fields": [
-        { "key": "location", "label": "Kontrol Edilen Bölge", "type": "text", "required": true },
-        { "key": "ppeCheck", "label": "KKD Kullanımı Uygun mu?", "type": "checkbox" },
-        { "key": "scaffoldCheck", "label": "İskele Güvenliği Uygun mu?", "type": "checkbox" },
-        { "key": "electricCheck", "label": "Elektrik Panoları Kapalı mı?", "type": "checkbox" },
-        { "key": "nonConformity", "label": "Tespit Edilen Uygunsuzluklar", "type": "textarea" },
-        { "key": "deadline", "label": "Giderilme Tarihi", "type": "date" }
+        {
+          "key": "location",
+          "label": "Kontrol Edilen Bölge",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "ppeCheck",
+          "label": "KKD Kullanımı Uygun mu?",
+          "type": "checkbox"
+        },
+        {
+          "key": "scaffoldCheck",
+          "label": "İskele Güvenliği Uygun mu?",
+          "type": "checkbox"
+        },
+        {
+          "key": "electricCheck",
+          "label": "Elektrik Panoları Kapalı mı?",
+          "type": "checkbox"
+        },
+        {
+          "key": "nonConformity",
+          "label": "Tespit Edilen Uygunsuzluklar",
+          "type": "textarea"
+        },
+        {
+          "key": "deadline",
+          "label": "Giderilme Tarihi",
+          "type": "date"
+        }
       ]
     },
     {
@@ -252,11 +657,33 @@
       "isPremium": false,
       "monthlyLimit": 30,
       "fields": [
-        { "key": "date", "label": "Tarih", "type": "date", "required": true },
-        { "key": "cashSales", "label": "Nakit Satış Toplamı", "type": "number" },
-        { "key": "cardSales", "label": "Kredi Kartı Satış Toplamı", "type": "number" },
-        { "key": "totalSales", "label": "Genel Toplam", "type": "number", "required": true },
-        { "key": "notes", "label": "Notlar", "type": "textarea" }
+        {
+          "key": "date",
+          "label": "Tarih",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "cashSales",
+          "label": "Nakit Satış Toplamı",
+          "type": "number"
+        },
+        {
+          "key": "cardSales",
+          "label": "Kredi Kartı Satış Toplamı",
+          "type": "number"
+        },
+        {
+          "key": "totalSales",
+          "label": "Genel Toplam",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Notlar",
+          "type": "textarea"
+        }
       ]
     },
     {
@@ -268,12 +695,40 @@
       "monthlyLimit": 50,
       "photoCapacity": 5,
       "fields": [
-        { "key": "customerName", "label": "Müşteri Adı", "type": "text", "required": true },
-        { "key": "product", "label": "Ürün/Hizmet", "type": "textarea", "required": true },
-        { "key": "unitPrice", "label": "Birim Fiyat", "type": "number", "required": true },
-        { "key": "quantity", "label": "Adet/Miktar", "type": "number", "required": true },
-        { "key": "discount", "label": "İskonto (%)", "type": "number" },
-        { "key": "validity", "label": "Geçerlilik Süresi (Gün)", "type": "number" }
+        {
+          "key": "customerName",
+          "label": "Müşteri Adı",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "product",
+          "label": "Ürün/Hizmet",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "unitPrice",
+          "label": "Birim Fiyat",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "quantity",
+          "label": "Adet/Miktar",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "discount",
+          "label": "İskonto (%)",
+          "type": "number"
+        },
+        {
+          "key": "validity",
+          "label": "Geçerlilik Süresi (Gün)",
+          "type": "number"
+        }
       ]
     },
     {
@@ -284,12 +739,38 @@
       "isPremium": true,
       "monthlyLimit": 12,
       "fields": [
-        { "key": "countDate", "label": "Sayım Tarihi", "type": "date", "required": true },
-        { "key": "category", "label": "Kategori / Raf", "type": "text" },
-        { "key": "itemCode", "label": "Ürün Kodu", "type": "text" },
-        { "key": "expectedQty", "label": "Sistemdeki Adet", "type": "number" },
-        { "key": "actualQty", "label": "Sayılan Adet", "type": "number", "required": true },
-        { "key": "difference", "label": "Fark", "type": "number" }
+        {
+          "key": "countDate",
+          "label": "Sayım Tarihi",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "category",
+          "label": "Kategori / Raf",
+          "type": "text"
+        },
+        {
+          "key": "itemCode",
+          "label": "Ürün Kodu",
+          "type": "text"
+        },
+        {
+          "key": "expectedQty",
+          "label": "Sistemdeki Adet",
+          "type": "number"
+        },
+        {
+          "key": "actualQty",
+          "label": "Sayılan Adet",
+          "type": "number",
+          "required": true
+        },
+        {
+          "key": "difference",
+          "label": "Fark",
+          "type": "number"
+        }
       ]
     },
     {
@@ -300,10 +781,29 @@
       "isPremium": true,
       "photoCapacity": 0,
       "fields": [
-        { "key": "participantName", "label": "Katılımcı Adı Soyadı", "type": "text", "required": true },
-        { "key": "trainingName", "label": "Eğitim/Etkinlik Adı", "type": "text", "required": true },
-        { "key": "date", "label": "Tarih", "type": "date", "required": true },
-        { "key": "trainer", "label": "Eğitmen", "type": "text" }
+        {
+          "key": "participantName",
+          "label": "Katılımcı Adı Soyadı",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "trainingName",
+          "label": "Eğitim/Etkinlik Adı",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "date",
+          "label": "Tarih",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "trainer",
+          "label": "Eğitmen",
+          "type": "text"
+        }
       ]
     },
     {
@@ -315,11 +815,34 @@
       "monthlyLimit": 100,
       "photoCapacity": 10,
       "fields": [
-        { "key": "subject", "label": "Tutanak Konusu", "type": "text", "required": true },
-        { "key": "date", "label": "Olay Tarihi", "type": "date", "required": true },
-        { "key": "location", "label": "Olay Yeri", "type": "text" },
-        { "key": "statement", "label": "Olayın Özeti ve Tespitler", "type": "textarea", "required": true },
-        { "key": "witnesses", "label": "Şahitler", "type": "textarea" }
+        {
+          "key": "subject",
+          "label": "Tutanak Konusu",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "date",
+          "label": "Olay Tarihi",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "location",
+          "label": "Olay Yeri",
+          "type": "text"
+        },
+        {
+          "key": "statement",
+          "label": "Olayın Özeti ve Tespitler",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "witnesses",
+          "label": "Şahitler",
+          "type": "textarea"
+        }
       ]
     }
   ]

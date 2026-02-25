@@ -691,8 +691,16 @@ const INITIAL_TEMPLATES = [
       { key: 'statement', label: 'Olayın Özeti ve Tespitler', type: 'textarea', required: true },
       { key: 'witnesses', label: 'Şahitler', type: 'textarea' }
     ]
-  }
-];
+  },
+  {
+    id: '8',
+    title: 'İş Kazası Tutanağı',
+    category: 'İSG',
+    description: 'İş kazası tespit ve bildirim tutanağı.',
+    isPremium: true,
+    monthlyLimit: 10,
+    photoCapacity: 10,
+    fields: [
       { key: 'location', label: 'Kaza Yeri', type: 'text', required: true },
       { key: 'injuredPerson', label: 'Kazazede Adı Soyadı', type: 'text', required: true },
       { key: 'injuryType', label: 'Yaralanma Türü', type: 'select', options: ['Kesik/Sıyrık', 'Burkulma/Ezilme', 'Kırık/Çıkık', 'Yanık', 'Elektrik Çarpması', 'Diğer'] },
