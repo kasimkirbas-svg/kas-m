@@ -1866,66 +1866,52 @@ app.post('/api/users/:id/ban', authenticateToken, requireAdmin, async (req, res)
         return res.status(400).json({ success: false, message: 'Kendinizi yasaklayamazsınız.' });
     }
 
-    const db = readDB();
-    const index = db.users.findIndex(u => u.id === id);
-    if (index === -1) {
-        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    try {
+        const user = await dbAdapter.findUserById(id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+        }
+
+        const banExpiresAt = durationMinutes 
+            ? new Date(Date.now() + durationMinutes * 60 * 1000).toISOString() 
+            : null; // Null means permanent
+
+        await dbAdapter.updateUser(id, { 
+            isBanned: true, 
+            banReason: banReason || 'Yönetici kararı',
+            banExpiresAt: banExpiresAt
+        });
+
+        const updatedUser = await dbAdapter.findUserById(id);
+        res.json({ success: true, message: 'Kullanıcı yasaklandı.', user: updatedUser });
+
+    } catch(e) {
+        console.error('Ban Error:', e);
+        res.status(500).json({ success: false, message: 'Yasaklama işlemi başarısız.' });
     }
-
-    const banExpiresAt = durationMinutes 
-        ? new Date(Date.now() + durationMinutes * 60 * 1000).toISOString() 
-        : null; // Null means permanent
-
-    db.users[index] = { 
-        ...db.users[index], 
-        isBanned: true, 
-        banReason: banReason || 'Yönetici kararı',
-        banExpiresAt: banExpiresAt
-    };
-    
-    writeDB(db);
-
-    // Sync PG/Mongo
-    if (pgPool) {
-        try {
-            await pgPool.query('UPDATE users SET data = $1 WHERE id = $2', [db.users[index], id]);
-        } catch(e) { console.error('PG Ban Sync Error:', e); }
-    } else if (MONGO_URI) {
-        connectDB().then(() => User.updateOne({ id }, { $set: { isBanned: true, banReason, banExpiresAt } })).catch(e => console.error(e));
-    }
-
-    res.json({ success: true, message: 'Kullanıcı yasaklandı.', user: db.users[index] });
 });
 
 // Admin: Unban User
 app.post('/api/users/:id/unban', authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;
-    const db = readDB();
-    const index = db.users.findIndex(u => u.id === id);
     
-    if (index === -1) {
-        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    try {
+        const user = await dbAdapter.findUserById(id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+        }
+
+        await dbAdapter.updateUser(id, { 
+            isBanned: false, 
+            banReason: null,
+            banExpiresAt: null
+        });
+
+        res.json({ success: true, message: 'Kullanıcı yasağı kaldırıldı.' });
+    } catch(e) {
+        console.error('Unban Error:', e);
+        res.status(500).json({ success: false, message: 'İşlem başarısız.' });
     }
-
-    db.users[index] = { 
-        ...db.users[index], 
-        isBanned: false, 
-        banReason: null,
-        banExpiresAt: null
-    };
-    
-    writeDB(db);
-
-    // Sync PG/Mongo
-    if (pgPool) {
-        try {
-            await pgPool.query('UPDATE users SET data = $1 WHERE id = $2', [db.users[index], id]);
-        } catch(e) { console.error('PG Unban Sync Error:', e); }
-    } else if (MONGO_URI) {
-         connectDB().then(() => User.updateOne({ id }, { $set: { isBanned: false, banReason: null, banExpiresAt: null } })).catch(e => console.error(e));
-    }
-
-    res.json({ success: true, message: 'Kullanıcı yasağı kaldırıldı.' });
 });
 
 // --- TEMPLATE MANAGEMENT (Admin & Public) ---
