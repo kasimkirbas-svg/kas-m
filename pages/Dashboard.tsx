@@ -99,7 +99,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
           {sectors.map((sector) => (
              <div 
                key={sector.id}
-               onClick={() => onNavigate('templates', { search: sector.searchQuery })}
+               onClick={() => onNavigate('templates', { category: sector.searchQuery })}
                className="group relative h-[500px] rounded-2xl overflow-hidden cursor-pointer transition-transform hover:-translate-y-2 hover:shadow-2xl border border-slate-200 dark:border-slate-800 bg-slate-900"
              >
                 {/* Background Image with Gradient Overlay */}

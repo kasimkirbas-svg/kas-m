@@ -24,130 +24,324 @@ export const PLANS = [
 
 // 25-35 Document templates simulation
 export const MOCK_TEMPLATES: DocumentTemplate[] = [
+  // --- ÜRETİM / FABRİKA ---
   {
-    id: '1',
-    title: 'Acil Durum Hizmet Planı',
-    category: 'ISG',
-    description: 'İş yerleri için zorunlu acil durum eylem ve hizmet planı şablonu.',
+    id: 'prod-1',
+    title: 'Üretim İş Emri Formu',
+    category: 'Üretim',
+    description: 'Üretim hattı için detaylı iş emri ve takip formu.',
     isPremium: false,
-    monthlyLimit: 30,
-    photoCapacity: 15,
+    monthlyLimit: 50,
+    photoCapacity: 5,
     fields: [
-      { key: 'companyName', label: 'Firma Adı', type: 'text', required: true, placeholder: 'Şirket tam unvanı' },
-      { key: 'dangerLevel', label: 'Tehlike Sınıfı', type: 'select', options: ['Az Tehlikeli', 'Tehlikeli', 'Çok Tehlikeli'], required: true },
-      { key: 'employeeCount', label: 'Çalışan Sayısı', type: 'number', required: true },
-      { key: 'emergencyTeamLeader', label: 'Acil Durum Ekip Lideri', type: 'text', required: true },
-      { key: 'assemblyPoint', label: 'Toplanma Alanı Konumu', type: 'textarea', required: true },
-      { key: 'lastDrillDate', label: 'Son Tatbikat Tarihi', type: 'date' }
+      { key: 'orderNo', label: 'İş Emri No', type: 'text', required: true },
+      { key: 'productName', label: 'Ürün Adı/Kodu', type: 'text', required: true },
+      { key: 'quantity', label: 'Üretilecek Miktar', type: 'number', required: true },
+      { key: 'deadline', label: 'Teslim Tarihi', type: 'date', required: true },
+      { key: 'specifications', label: 'Teknik Özellikler', type: 'textarea' },
+      { key: 'priority', label: 'Öncelik Durumu', type: 'select', options: ['Normal', 'Acil', 'Çok Acil'] }
     ]
   },
   {
-    id: '2',
-    title: 'Hizmet Teklif Formu',
-    category: 'Genel',
-    description: 'Standart hizmet teklif ve kapsam belirleme formu.',
+    id: 'prod-2',
+    title: 'Günlük Üretim Raporu',
+    category: 'Üretim',
+    description: 'Vardiya sonu üretim, fire ve duruş raporu.',
     isPremium: false,
     monthlyLimit: 30,
-    photoCapacity: 12,
+    photoCapacity: 5,
     fields: [
-      { key: 'clientName', label: 'Müşteri Adı', type: 'text', required: true },
-      { key: 'serviceType', label: 'Hizmet Türü', type: 'select', options: ['Danışmanlık', 'Eğitim', 'Denetim', 'Yazılım', 'Bakım/Onarım'], required: true },
-      { key: 'projectDuration', label: 'Proje Süresi (Gün)', type: 'number' },
-      { key: 'projectScope', label: 'Proje Kapsamı ve Detaylar', type: 'textarea', required: true },
-      { key: 'budgetEstimate', label: 'Tahmini Bütçe (TL)', type: 'number' },
-      { key: 'validUntil', label: 'Teklif Geçerlilik Tarihi', type: 'date' }
+      { key: 'shift', label: 'Vardiya', type: 'select', options: ['08:00-16:00', '16:00-24:00', '24:00-08:00'], required: true },
+      { key: 'producedQty', label: 'Üretilen Miktar', type: 'number', required: true },
+      { key: 'scrapQty', label: 'Fire Miktarı', type: 'number' },
+      { key: 'downtime', label: 'Duruş Süresi (Dk)', type: 'number' },
+      { key: 'downtimeReason', label: 'Duruş Nedeni', type: 'textarea' },
+      { key: 'operatorNote', label: 'Operatör Notları', type: 'textarea' }
     ]
   },
   {
-    id: '3',
-    title: 'Eğitim Katılım Sertifikası',
-    category: 'İK',
-    description: 'Personel eğitimleri sonrası verilecek başarı sertifikası.',
+    id: 'prod-3',
+    title: 'Makine Bakım Formu',
+    category: 'Üretim',
+    description: 'Periyodik makine bakım ve kontrol listesi.',
     isPremium: true,
     photoCapacity: 10,
     fields: [
-      { key: 'participantName', label: 'Katılımcı Adı Soyadı', type: 'text', required: true },
-      { key: 'trainingTopic', label: 'Eğitim Konusu', type: 'text', required: true },
-      { key: 'trainerName', label: 'Eğitmen Adı', type: 'text', required: true },
-      { key: 'trainingDate', label: 'Eğitim Tarihi', type: 'date', required: true },
-      { key: 'durationHours', label: 'Eğitim Süresi (Saat)', type: 'number' },
-      { key: 'competencyLevel', label: 'Yetkinlik Seviyesi', type: 'select', options: ['Başlangıç', 'Orta', 'İleri', 'Uzman'] }
+      { key: 'machineId', label: 'Makine Kodu', type: 'text', required: true },
+      { key: 'maintenanceType', label: 'Bakım Türü', type: 'select', options: ['Günlük', 'Haftalık', 'Aylık', 'Arıza'] },
+      { key: 'oilCheck', label: 'Yağ Kontrolü', type: 'checkbox' },
+      { key: 'filterCheck', label: 'Filtre Temizliği', type: 'checkbox' },
+      { key: 'safetyCheck', label: 'Güvenlik Donanımı Kontrolü', type: 'checkbox' },
+      { key: 'changedParts', label: 'Değişen Parçalar', type: 'textarea' }
     ]
   },
+
+  // --- KURUMSAL / OFİS ---
   {
-    id: '4',
-    title: 'Saha Denetim Raporu',
-    category: 'Denetim',
-    description: 'Saha denetimleri için detaylı raporlama formatı.',
-    isPremium: true,
-    photoCapacity: 15,
-    fields: [
-      { key: 'siteLocation', label: 'Denetim Bölgesi / Lokasyon', type: 'text', required: true },
-      { key: 'auditType', label: 'Denetim Türü', type: 'select', options: ['Haberli Denetim', 'Habersiz Denetim', 'Periyodik Kontrol', 'Şikayet Üzerine'] },
-      { key: 'complianceScore', label: 'Uygunluk Skoru (0-100)', type: 'number' },
-      { key: 'observations', label: 'Gözlemler ve Bulgular', type: 'textarea', required: true },
-      { key: 'criticalNonConformity', label: 'Kritik Uygunsuzluk Var mı?', type: 'checkbox', placeholder: 'Evet, kritik risk mevcut' },
-      { key: 'correctiveActionDeadline', label: 'DÖF Termin Tarihi', type: 'date' }
-    ]
-  },
-  {
-    id: '5',
-    title: 'Risk Analizi Formu (5x5 L Tipi)',
-    category: 'ISG',
-    description: '5x5 Risk matrisi değerlendirme formu.',
-    isPremium: true,
-    photoCapacity: 10,
-    fields: [
-      { key: 'workActivity', label: 'Yapılan İş / Faaliyet', type: 'textarea', required: true },
-      { key: 'hazardSource', label: 'Tehlike Kaynağı', type: 'text', required: true },
-      { key: 'riskDescription', label: 'Risk Tanımı', type: 'textarea', required: true },
-      { key: 'probability', label: 'Olasılık (1-5)', type: 'select', options: ['1 - Çok Küçük', '2 - Küçük', '3 - Orta', '4 - Yüksek', '5 - Çok Yüksek'], required: true },
-      { key: 'severity', label: 'Şiddet (1-5)', type: 'select', options: ['1 - Çok Hafif', '2 - Hafif', '3 - Orta', '4 - Ciddi', '5 - Çok Ciddi'], required: true },
-      { key: 'precautions', label: 'Alınacak Önlemler', type: 'textarea', required: true }
-    ]
-  },
-  {
-    id: '6',
-    title: 'Personel Görev Tanımı',
-    category: 'İK',
-    description: 'Çalışan görev ve sorumluluk bildirim formu.',
+    id: 'corp-1',
+    title: 'Toplantı Tutanak Formu',
+    category: 'Kurumsal',
+    description: 'Toplantı kararları ve katılımcı listesi tutanağı.',
     isPremium: false,
     monthlyLimit: 30,
+    photoCapacity: 2,
+    fields: [
+      { key: 'meetingTopic', label: 'Toplantı Konusu', type: 'text', required: true },
+      { key: 'meetingDate', label: 'Tarih', type: 'date', required: true },
+      { key: 'participants', label: 'Katılımcılar', type: 'textarea', required: true },
+      { key: 'decisions', label: 'Alınan Kararlar', type: 'textarea', required: true },
+      { key: 'nextMeetingDate', label: 'Bir Sonraki Toplantı Tarihi', type: 'date' }
+    ]
+  },
+  {
+    id: 'corp-2',
+    title: 'Masraf Bildirim Formu',
+    category: 'Kurumsal',
+    description: 'Personel harcama ve masraf beyan formu.',
+    isPremium: false,
+    monthlyLimit: 50,
+    photoCapacity: 10,
     fields: [
       { key: 'employeeName', label: 'Personel Adı', type: 'text', required: true },
-      { key: 'jobTitle', label: 'Ünvan / Pozisyon', type: 'text', required: true },
-      { key: 'serviceDepartment', label: 'Departman', type: 'text', required: true },
-      { key: 'reportsTo', label: 'Bağlı Olduğu Yönetici', type: 'text' },
-      { key: 'responsibilities', label: 'Temel Sorumluluklar', type: 'textarea', required: true, placeholder: 'Maddeler halinde giriniz...' },
-      { key: 'requiredSkills', label: 'Aranan Nitelikler', type: 'textarea' }
+      { key: 'expenseType', label: 'Masraf Türü', type: 'select', options: ['Yol/Ulaşım', 'Yemek', 'Konaklama', 'Temsil/Ağırlama', 'Diğer'] },
+      { key: 'amount', label: 'Tutar (TL)', type: 'number', required: true },
+      { key: 'expenseDate', label: 'Harcama Tarihi', type: 'date', required: true },
+      { key: 'description', label: 'Açıklama', type: 'textarea' }
     ]
   },
   {
-    id: '7',
-    title: 'Makine Bakım Kartı',
-    category: 'Teknik',
-    description: 'Periyodik bakım takip çizelgesi.',
+    id: 'corp-3',
+    title: 'Zimmet Formu',
+    category: 'Kurumsal',
+    description: 'Personel demirbaş teslim ve zimmet tutanağı.',
     isPremium: true,
-    photoCapacity: 12,
+    photoCapacity: 5,
     fields: [
-      { key: 'machineName', label: 'Makine Adı/Kodu', type: 'text', required: true },
-      { key: 'maintenanceType', label: 'Bakım Türü', type: 'select', options: ['Günlük', 'Haftalık', 'Aylık', 'Yıllık', 'Arıza Müdahale'] },
-      { key: 'technicianName', label: 'Bakım Yapan Teknisyen', type: 'text', required: true },
-      { key: 'partsReplaced', label: 'Değişen Parçalar', type: 'textarea' },
-      { key: 'nextMaintenanceDate', label: 'Gelecek Bakım Tarihi', type: 'date', required: true },
-      { key: 'cost', label: 'Bakım Maliyeti', type: 'number' }
+      { key: 'recipient', label: 'Teslim Alan Personel', type: 'text', required: true },
+      { key: 'itemName', label: 'Demirbaş Adı', type: 'text', required: true },
+      { key: 'serialNo', label: 'Seri No / Kod', type: 'text' },
+      { key: 'condition', label: 'Malzemenin Durumu', type: 'select', options: ['Sıfır', 'İkinci El - Sağlam', 'Hasarlı'] },
+      { key: 'deliveryDate', label: 'Teslim Tarihi', type: 'date', required: true }
     ]
   },
   {
-    id: '8',
-    title: 'Kaza Tespit Tutanağı',
-    category: 'ISG',
-    description: 'İş kazası bildirim ve tespit formu.',
+    id: 'corp-4',
+    title: 'Personel İzin Formu',
+    category: 'Kurumsal',
+    description: 'Yıllık izin veya mazeret izni talep formu.',
     isPremium: false,
-    monthlyLimit: 30,
+    monthlyLimit: 50,
+    fields: [
+      { key: 'leaveType', label: 'İzin Türü', type: 'select', options: ['Yıllık İzin', 'Mazeret İzni', 'Hastalık İzni', 'Ücretsiz İzin'], required: true },
+      { key: 'startDate', label: 'Başlangıç Tarihi', type: 'date', required: true },
+      { key: 'endDate', label: 'Bitiş Tarihi', type: 'date', required: true },
+      { key: 'totalDays', label: 'Toplam Gün', type: 'number', required: true },
+      { key: 'contactAddress', label: 'İzindeki Adres/Tel', type: 'text' }
+    ]
+  },
+
+  // --- OTEL / HİZMET ---
+  {
+    id: 'hotel-1',
+    title: 'Oda Kontrol (Housekeeping)',
+    category: 'Otel',
+    description: 'Housekeeping oda temizlik ve kontrol listesi.',
+    isPremium: false,
+    monthlyLimit: 100,
+    photoCapacity: 8,
+    fields: [
+      { key: 'roomNo', label: 'Oda No', type: 'text', required: true },
+      { key: 'status', label: 'Oda Durumu', type: 'select', options: ['Kirli', 'Temiz', 'Arızalı', 'Dolu'], required: true },
+      { key: 'minibarCheck', label: 'Minibar Kontrolü', type: 'checkbox' },
+      { key: 'towelCheck', label: 'Havlu Eksikliği', type: 'checkbox' },
+      { key: 'damageCheck', label: 'Hasar Kontrolü', type: 'textarea', placeholder: 'Varsa hasar belirtin...' },
+      { key: 'cleanerName', label: 'Temizleyen Personel', type: 'text' }
+    ]
+  },
+  {
+    id: 'hotel-2',
+    title: 'Teknik Arıza Bildirimi',
+    category: 'Otel',
+    description: 'Odalar veya genel alanlar için arıza kayıt formu.',
+    isPremium: false,
+    monthlyLimit: 50,
+    photoCapacity: 5,
+    fields: [
+      { key: 'location', label: 'Arıza Yeri / Oda No', type: 'text', required: true },
+      { key: 'urgency', label: 'Aciliyet', type: 'select', options: ['Normal', 'Acil', 'Kritik'] },
+      { key: 'description', label: 'Arıza Tanımı', type: 'textarea', required: true },
+      { key: 'reportedBy', label: 'Bildiren', type: 'text' },
+      { key: 'expectedFixTime', label: 'Tahmini Onarım Süresi', type: 'text' }
+    ]
+  },
+  {
+    id: 'hotel-3',
+    title: 'Müşteri Şikayet Formu',
+    category: 'Otel',
+    description: 'Misafir şikayet ve talep takip formu.',
+    isPremium: true,
+    photoCapacity: 3,
+    fields: [
+      { key: 'guestName', label: 'Misafir Adı', type: 'text' },
+      { key: 'roomNo', label: 'Oda No', type: 'text' },
+      { key: 'complaintType', label: 'Şikayet Konusu', type: 'select', options: ['Temizlik', 'Gürültü', 'Personel', 'Yemek', 'Teknik'] },
+      { key: 'details', label: 'Detaylar', type: 'textarea', required: true },
+      { key: 'actionTaken', label: 'Alınan Aksiyon', type: 'textarea' }
+    ]
+  },
+
+  // --- İNŞAAT / ŞANTİYE ---
+  {
+    id: 'const-1',
+    title: 'Şantiye Günlük Raporu',
+    category: 'İnşaat',
+    description: 'Günlük saha ilerleme, personel ve hava durumu raporu.',
+    isPremium: true,
+    monthlyLimit: 31,
     photoCapacity: 20,
     fields: [
-      { key: 'accidentTime', label: 'Kaza Tarihi ve Saati', type: 'date', required: true }, // datetime type not available yet, using date
+      { key: 'date', label: 'Tarih', type: 'date', required: true },
+      { key: 'weather', label: 'Hava Durumu', type: 'select', options: ['Güneşli', 'Yağmurlu', 'Karlı', 'Rüzgarlı'] },
+      { key: 'staffCount', label: 'Sahadaki Personel Sayısı', type: 'number' },
+      { key: 'workDone', label: 'Yapılan İmalatlar', type: 'textarea', required: true },
+      { key: 'materialArrival', label: 'Gelen Malzemeler', type: 'textarea' },
+      { key: 'delays', label: 'Gecikmeler / Sorunlar', type: 'textarea' }
+    ]
+  },
+  {
+    id: 'const-2',
+    title: 'Hakediş Tutanağı',
+    category: 'İnşaat',
+    description: 'Taşeron veya yüklenici için ara hakediş hesaplama formu.',
+    isPremium: true,
+    monthlyLimit: 10,
+    photoCapacity: 10,
+    fields: [
+      { key: 'subcontractor', label: 'Taşeron Firma', type: 'text', required: true },
+      { key: 'period', label: 'Hakediş Dönemi', type: 'text', placeholder: 'Ocak 2024' },
+      { key: 'contractAmount', label: 'Sözleşme Bedeli (TL)', type: 'number' },
+      { key: 'completedPercent', label: 'Tamamlanma Oranı (%)', type: 'number', required: true },
+      { key: 'paymentAmount', label: 'Ödenecek Tutar (TL)', type: 'number', required: true },
+      { key: 'deductions', label: 'Kesintiler (Avans vb.)', type: 'number' }
+    ]
+  },
+  {
+    id: 'const-3',
+    title: 'İş Makineleri Takip Formu',
+    category: 'İnşaat',
+    description: 'İş makineleri çalışma saati ve yakıt takip formu.',
+    isPremium: false,
+    monthlyLimit: 30,
+    photoCapacity: 5,
+    fields: [
+      { key: 'machinePlate', label: 'Makine Plaka/Kod', type: 'text', required: true },
+      { key: 'operator', label: 'Operatör', type: 'text' },
+      { key: 'startHour', label: 'Başlangıç Saati', type: 'number' },
+      { key: 'endHour', label: 'Bitiş Saati', type: 'number' },
+      { key: 'fuelUsed', label: 'Alınan Yakıt (Lt)', type: 'number' },
+      { key: 'workZone', label: 'Çalışılan Bölge', type: 'text' }
+    ]
+  },
+  {
+    id: 'const-4',
+    title: 'İş Güvenliği Saha Kontrol Formu',
+    category: 'İnşaat',
+    description: 'Şantiye İSG uygunsuzluk tespit tutanağı.',
+    isPremium: false,
+    monthlyLimit: 30,
+    photoCapacity: 15,
+    fields: [
+      { key: 'location', label: 'Kontrol Edilen Bölge', type: 'text', required: true },
+      { key: 'ppeCheck', label: 'KKD Kullanımı Uygun mu?', type: 'checkbox' },
+      { key: 'scaffoldCheck', label: 'İskele Güvenliği Uygun mu?', type: 'checkbox' },
+      { key: 'electricCheck', label: 'Elektrik Panoları Kapalı mı?', type: 'checkbox' },
+      { key: 'nonConformity', label: 'Tespit Edilen Uygunsuzluklar', type: 'textarea' },
+      { key: 'deadline', label: 'Giderilme Tarihi', type: 'date' }
+    ]
+  },
+
+  // --- ESNAF / KÜÇÜK İŞLETME ---
+  {
+    id: 'smb-1',
+    title: 'Satış Takip Formu',
+    category: 'Esnaf',
+    description: 'Günlük satış ve ciro takip çizelgesi.',
+    isPremium: false,
+    monthlyLimit: 30,
+    fields: [
+      { key: 'date', label: 'Tarih', type: 'date', required: true },
+      { key: 'cashSales', label: 'Nakit Satış Toplamı', type: 'number' },
+      { key: 'cardSales', label: 'Kredi Kartı Satış Toplamı', type: 'number' },
+      { key: 'totalSales', label: 'Genel Toplam', type: 'number', required: true },
+      { key: 'notes', label: 'Notlar', type: 'textarea' }
+    ]
+  },
+  {
+    id: 'smb-2',
+    title: 'Teklif Hazırlama Şablonu',
+    category: 'Esnaf',
+    description: 'Müşteriye hızlı fiyat teklifi verme şablonu.',
+    isPremium: false,
+    monthlyLimit: 50,
+    photoCapacity: 5,
+    fields: [
+      { key: 'customerName', label: 'Müşteri Adı', type: 'text', required: true },
+      { key: 'product', label: 'Ürün/Hizmet', type: 'textarea', required: true },
+      { key: 'unitPrice', label: 'Birim Fiyat', type: 'number', required: true },
+      { key: 'quantity', label: 'Adet/Miktar', type: 'number', required: true },
+      { key: 'discount', label: 'İskonto (%)', type: 'number' },
+      { key: 'validity', label: 'Geçerlilik Süresi (Gün)', type: 'number' }
+    ]
+  },
+  {
+    id: 'smb-3',
+    title: 'Stok Sayım Listesi',
+    category: 'Esnaf',
+    description: 'Periyodik ürün stok sayım formu.',
+    isPremium: true,
+    monthlyLimit: 12,
+    fields: [
+      { key: 'countDate', label: 'Sayım Tarihi', type: 'date', required: true },
+      { key: 'category', label: 'Kategori / Raf', type: 'text' },
+      { key: 'itemCode', label: 'Ürün Kodu', type: 'text' },
+      { key: 'expectedQty', label: 'Sistemdeki Adet', type: 'number' },
+      { key: 'actualQty', label: 'Sayılan Adet', type: 'number', required: true },
+      { key: 'difference', label: 'Fark', type: 'number' }
+    ]
+  },
+  
+  // --- GENEL / SERTİFİKA ---
+  {
+    id: 'cert-1',
+    title: 'Katılım Sertifikası',
+    category: 'Sertifika',
+    description: 'Eğitim veya etkinlik katılım belgesi.',
+    isPremium: true,
+    photoCapacity: 0,
+    fields: [
+      { key: 'participantName', label: 'Katılımcı Adı Soyadı', type: 'text', required: true },
+      { key: 'trainingName', label: 'Eğitim/Etkinlik Adı', type: 'text', required: true },
+      { key: 'date', label: 'Tarih', type: 'date', required: true },
+      { key: 'trainer', label: 'Eğitmen', type: 'text' }
+    ]
+  },
+  {
+    id: 'report-1',
+    title: 'Genel Tutanak',
+    category: 'Tutanak',
+    description: 'Her türlü durum tespiti için genel tutanak şablonu.',
+    isPremium: false,
+    monthlyLimit: 100,
+    photoCapacity: 10,
+    fields: [
+      { key: 'subject', label: 'Tutanak Konusu', type: 'text', required: true },
+      { key: 'date', label: 'Olay Tarihi', type: 'date', required: true },
+      { key: 'location', label: 'Olay Yeri', type: 'text' },
+      { key: 'statement', label: 'Olayın Özeti ve Tespitler', type: 'textarea', required: true },
+      { key: 'witnesses', label: 'Şahitler', type: 'textarea' }
+    ]
+  }
+];
       { key: 'location', label: 'Kaza Yeri', type: 'text', required: true },
       { key: 'injuredPerson', label: 'Kazazede Adı Soyadı', type: 'text', required: true },
       { key: 'injuryType', label: 'Yaralanma Türü', type: 'select', options: ['Kesik/Sıyrık', 'Burkulma/Ezilme', 'Kırık/Çıkık', 'Yanık', 'Elektrik Çarpması', 'Diğer'] },
