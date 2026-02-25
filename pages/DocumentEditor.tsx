@@ -469,58 +469,105 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             {/* The Print Container */}
             <div ref={printContainerRef} className="print-container transform origin-top scale-[0.35] xs:scale-[0.45] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.8] xl:scale-100 transition-transform duration-300">
                {/* PAGE 1: Main Content */}
-               <div className="print-page bg-white text-black shadow-2xl relative mx-auto overflow-hidden" style={{ width: '210mm', minHeight: '297mm', padding: '15mm' }}>
+               <div className="print-page bg-white text-black shadow-2xl relative mx-auto overflow-hidden flex flex-col" style={{ width: '210mm', minHeight: '297mm', padding: '15mm' }}>
                   
-                  {/* Header */}
-                  <div className="flex border-b-2 border-slate-900 pb-5 mb-10 justify-between items-end">
-                    <div>
-                         <h1 className="text-2xl font-black uppercase tracking-widest text-slate-900 mb-2">{template.title}</h1>
-                         <div className="flex flex-col text-sm text-slate-600 font-medium">
-                            <span>{formData.companyName || _t('editor.companyName', 'Firma Adı')}</span>
-                            <span>{new Date(formData.date).toLocaleDateString("tr-TR")}</span>
-                         </div>
-                    </div>
-                    <div>
-                         <div className="text-4xl font-black text-slate-100 tracking-tighter">LOGO</div>
-                    </div>
-                  </div>
+                  {template.content ? (
+                      /* RICH HTML TEMPLATE RENDERING */
+                      <div className="h-full flex flex-col justify-between">
+                          <div 
+                            className="rich-content-wrapper prose prose-sm max-w-none text-slate-900 leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: (() => {
+                                let content = template.content || '';
+                                const safeData = {
+                                    companyName: formData.companyName || '________________',
+                                    preparedBy: formData.preparedBy || '________________',
+                                    date: new Date(formData.date).toLocaleDateString('tr-TR'),
+                                    email: formData.email || '',
+                                    ...formData
+                                };
 
-                  {/* Content Grid */}
-                  <div className="grid grid-cols-2 gap-x-12 gap-y-8 mb-10">
-                     <div className="col-span-2 bg-slate-50 p-6 rounded-xl border border-slate-100">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">{_t('editor.preparedBy', 'Hazırlayan')}</span>
-                        <span className="font-bold text-slate-900 text-xl">{formData.preparedBy || '-'}</span>
-                     </div>
-                     
-                     {template.fields.map(field => (
-                        <div key={field.key} className={`${field.type === 'textarea' ? 'col-span-2' : 'col-span-1'}`}>
-                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">{field.label}</span>
-                           <div className="text-sm font-medium text-slate-800 border-b border-slate-200 pb-2 min-h-[1.5rem] break-words whitespace-pre-wrap leading-relaxed">
-                              {formData[field.key]}
-                           </div>
+                                // Standard Replacements
+                                content = content.replace(/{{\s*companyName\s*}}/g, safeData.companyName);
+                                content = content.replace(/{{\s*preparedBy\s*}}/g, safeData.preparedBy);
+                                content = content.replace(/{{\s*date\s*}}/g, safeData.date);
+                                content = content.replace(/{{\s*email\s*}}/g, safeData.email);
+
+                                // Dynamic Field Replacements
+                                template.fields.forEach(field => {
+                                    const regex = new RegExp(`{{\\s*${field.key}\\s*}}`, 'g');
+                                    // Handle line breaks for textareas
+                                    let val = safeData[field.key] || `[${field.label}]`;
+                                    if (field.type === 'textarea') {
+                                        val = val.replace(/\n/g, '<br/>');
+                                    }
+                                    content = content.replace(regex, val);
+                                });
+                                return content;
+                            })() }}
+                          />
+                          
+                          {/* Optional: Append Additional Notes if not in HTML */}
+                          {additionalNotes && (
+                            <div className="mt-8 pt-6 border-t border-slate-200">
+                                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">{_t('editor.additionalNotes', 'Ek Notlar')}</h4>
+                                <p className="text-sm text-slate-700 whitespace-pre-wrap">{additionalNotes}</p>
+                            </div>
+                          )}
+                      </div>
+                  ) : (
+                    /* DEFAULT LEGACY GRID LAYOUT */
+                    <>
+                      {/* Header */}
+                      <div className="flex border-b-2 border-slate-900 pb-5 mb-10 justify-between items-end">
+                        <div className="flex-1">
+                             <h1 className="text-2xl font-black uppercase tracking-widest text-slate-900 mb-2">{template.title}</h1>
+                             <div className="flex flex-col text-sm text-slate-600 font-medium">
+                                <span>{formData.companyName || _t('editor.companyName', 'Firma Adı')}</span>
+                                <span>{new Date(formData.date).toLocaleDateString("tr-TR")}</span>
+                             </div>
                         </div>
-                     ))}
-                  </div>
-                  
-                  {/* Additional Notes */}
-                  {additionalNotes && (
-                      <div className="mb-12 bg-amber-50/50 p-6 rounded-xl border border-amber-100">
-                          <h4 className="text-xs font-bold text-amber-800/70 uppercase tracking-widest mb-3">{_t('editor.additionalNotes', 'Ek Notlar')}</h4>
-                          <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{additionalNotes}</p>
+                        {/* Dynamic Logo Placeholder if available */}
+                         <div className="text-4xl font-black text-slate-100 tracking-tighter select-none">LOGO</div>
                       </div>
-                  )}
 
-                  {/* Footer */}
-                  <div className="absolute bottom-16 left-16 right-16 flex justify-between items-end">
-                      <div className="text-center">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10">{_t('editor.customerSign', 'Müşteri İmza')}</p>
-                          <div className="w-40 border-b-2 border-slate-200"></div>
+                      {/* Content Grid */}
+                      <div className="grid grid-cols-2 gap-x-12 gap-y-8 mb-10">
+                         <div className="col-span-2 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">{_t('editor.preparedBy', 'Hazırlayan')}</span>
+                            <span className="font-bold text-slate-900 text-xl">{formData.preparedBy || '-'}</span>
+                         </div>
+                         
+                         {template.fields.map(field => (
+                            <div key={field.key} className={`${field.type === 'textarea' ? 'col-span-2' : 'col-span-1'}`}>
+                               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">{field.label}</span>
+                               <div className="text-sm font-medium text-slate-800 border-b border-slate-200 pb-2 min-h-[1.5rem] break-words whitespace-pre-wrap leading-relaxed">
+                                  {formData[field.key]}
+                               </div>
+                            </div>
+                         ))}
                       </div>
-                      <div className="text-center">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10">{_t('editor.companySign', 'Firma Yetkilisi')}</p>
-                          <div className="w-40 border-b-2 border-slate-200"></div>
+                      
+                      {/* Additional Notes */}
+                      {additionalNotes && (
+                          <div className="mb-12 bg-amber-50/50 p-6 rounded-xl border border-amber-100">
+                              <h4 className="text-xs font-bold text-amber-800/70 uppercase tracking-widest mb-3">{_t('editor.additionalNotes', 'Ek Notlar')}</h4>
+                              <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{additionalNotes}</p>
+                          </div>
+                      )}
+
+                      {/* Footer */}
+                      <div className="absolute bottom-16 left-16 right-16 flex justify-between items-end">
+                          <div className="text-center">
+                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10">{_t('editor.customerSign', 'Müşteri İmza')}</p>
+                              <div className="w-40 border-b-2 border-slate-200"></div>
+                          </div>
+                          <div className="text-center">
+                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10">{_t('editor.companySign', 'Firma Yetkilisi')}</p>
+                              <div className="w-40 border-b-2 border-slate-200"></div>
+                          </div>
                       </div>
-                  </div>
+                    </>
+                  )}
                </div>
 
                {/* PAGE 2+: Photo Appendices */}

@@ -49,6 +49,7 @@ export interface DocumentTemplate {
   isPremium: boolean;
   monthlyLimit?: number; // null veya UNLIMITED ise sınırsız
   fields: DocumentField[];
+  content?: string; // HTML content for rich templates
   photoCapacity?: number; // 10-15 örneği için
 }
 
