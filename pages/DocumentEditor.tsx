@@ -469,9 +469,46 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
             {/* The Print Container */}
             <div ref={printContainerRef} className="print-container transform origin-top scale-[0.35] xs:scale-[0.45] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.8] xl:scale-100 transition-transform duration-300">
                {/* PAGE 1: Main Content */}
-               <div className="print-page bg-white text-black shadow-2xl relative mx-auto overflow-hidden flex flex-col" style={{ width: '210mm', minHeight: '297mm', padding: '15mm' }}>
+               <div className="print-page bg-white text-black shadow-2xl relative mx-auto overflow-hidden flex flex-col" style={{ width: '210mm', minHeight: '297mm', padding: template.backgroundImage ? '0' : '15mm' }}>
                   
-                  {template.content ? (
+                  {template.backgroundImage ? (
+                        /* VISUAL TEMPLATE RENDERING (IMAGE BACKGROUND) */
+                       <div className="relative w-full h-full">
+                            <img 
+                                src={template.backgroundImage} 
+                                alt="Background" 
+                                className="w-full h-full object-contain pointer-events-none block"
+                            />
+                            {template.fields.filter(f => f.position).map(field => {
+                                // Calculate percentages for responsiveness within the A4 page container
+                                const layoutW = template.layout?.width || 1;
+                                const layoutH = template.layout?.height || 1;
+                                
+                                return (
+                                    <div 
+                                    key={field.key}
+                                    style={{
+                                        position: 'absolute',
+                                        left: `${(field.position!.x / layoutW) * 100}%`,
+                                        top: `${(field.position!.y / layoutH) * 100}%`,
+                                        width: `${(field.position!.width / layoutW) * 100}%`,
+                                        height: `${(field.position!.height / layoutH) * 100}%`,
+                                        fontSize: '12px',
+                                        // display: 'flex',
+                                        // alignItems: 'center',
+                                        whiteSpace: 'pre-wrap',
+                                        overflow: 'hidden',
+                                        lineHeight: '1.2',
+                                        fontFamily: 'Arial, sans-serif' // Fallback font
+                                    }}
+                                    >
+                                        {field.type === 'date' && formData[field.key] ? new Date(formData[field.key]).toLocaleDateString('tr-TR') : 
+                                         formData[field.key]}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                  ) : template.content ? (
                       /* RICH HTML TEMPLATE RENDERING */
                       <div className="h-full flex flex-col justify-between">
                           <div 

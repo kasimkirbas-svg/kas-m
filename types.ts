@@ -50,6 +50,8 @@ export interface DocumentTemplate {
   monthlyLimit?: number; // null veya UNLIMITED ise sınırsız
   fields: DocumentField[];
   content?: string; // HTML content for rich templates
+  backgroundImage?: string; // Base64 encoded background image for visual templates
+  layout?: { width: number; height: number }; // Dimensions of the background image
   photoCapacity?: number; // 10-15 örneği için
 }
 
@@ -60,6 +62,7 @@ export interface DocumentField {
   placeholder?: string;
   required?: boolean;
   options?: string[]; // For select/list types
+  position?: { x: number; y: number; width: number; height: number }; // Position for visual templates
 }
 
 export interface DocumentPhoto {

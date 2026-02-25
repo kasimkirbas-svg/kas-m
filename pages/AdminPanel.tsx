@@ -9,6 +9,7 @@ interface AdminPanelProps {
   currentView?: string;
 }
 
+import { VisualTemplateBuilder } from '../components/VisualTemplateBuilder';
 import { fetchApi } from '../src/utils/api';
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) => {
@@ -395,6 +396,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
 
   // Modal State for Templates & Plans
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [templateEditorMode, setTemplateEditorMode] = useState<'html' | 'visual'>('html');
   const [editingTemplate, setEditingTemplate] = useState<Partial<DocumentTemplate>>({});
   
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
@@ -1245,39 +1247,66 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                         </div>
                     </div>
 
-                    {/* RIGHT: HTML Editor */}
-                    <div className="w-full md:w-2/3 p-6 flex flex-col bg-white dark:bg-slate-800">
-                        <div className="flex justify-between items-center mb-2">
-                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
-                                Şablon İçeriği (HTML)
-                                <span className="ml-2 text-xs font-normal text-slate-500 italic">Değişkenleri {'{{degisken}}'} formatında kullanın.</span>
-                            </label>
-                            <div className="flex gap-1">
-                                {['{{companyName}}', '{{date}}', '{{preparedBy}}'].concat(editingTemplate.fields.map(f => `{{${f.key}}}`)).map(tag => (
-                                    <button
-                                        key={tag}
-                                        type="button"
-                                        onClick={() => setEditingTemplate(prev => ({...prev, content: (prev.content || '') + tag }))}
-                                        className="text-[10px] bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded border border-indigo-100 dark:border-indigo-800/50 hover:bg-indigo-100 transition-colors cursor-copy"
-                                        title="Tıkla ve Ekle"
-                                    >
-                                        {tag}
-                                    </button>
-                                ))}
+                    {/* RIGHT: HTML Editor or Visual Editor */}
+                    <div className="w-full md:w-2/3 flex flex-col bg-white dark:bg-slate-800 h-full overflow-hidden border-l border-slate-200 dark:border-slate-700">
+                         {/* Tab Header */}
+                         <div className="flex border-b border-slate-200 dark:border-slate-700">
+                             <button
+                                type="button"
+                                onClick={() => setTemplateEditorMode('html')}
+                                className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${templateEditorMode === 'html' ? 'border-blue-600 text-blue-600 bg-blue-50/50 dark:bg-blue-900/20' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
+                             >
+                                 HTML Kod Editörü
+                             </button>
+                             <button
+                                type="button"
+                                onClick={() => setTemplateEditorMode('visual')}
+                                className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${templateEditorMode === 'visual' ? 'border-blue-600 text-blue-600 bg-blue-50/50 dark:bg-blue-900/20' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
+                             >
+                                 Görsel Editör (Sürükle & Bırak)
+                             </button>
+                         </div>
+
+                        {templateEditorMode === 'html' ? (
+                            <div className="flex-1 flex flex-col p-6 overflow-hidden">
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
+                                        Şablon İçeriği (HTML)
+                                        <span className="ml-2 text-xs font-normal text-slate-500 italic">Değişkenleri {'{{degisken}}'} formatında kullanın.</span>
+                                    </label>
+                                    <div className="flex gap-1">
+                                        {['{{companyName}}', '{{date}}', '{{preparedBy}}'].concat(editingTemplate.fields?.map(f => `{{${f.key}}}`) || []).map(tag => (
+                                            <button
+                                                key={tag}
+                                                type="button"
+                                                onClick={() => setEditingTemplate(prev => ({...prev, content: (prev.content || '') + tag }))}
+                                                className="text-[10px] bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded border border-indigo-100 dark:border-indigo-800/50 hover:bg-indigo-100 transition-colors cursor-copy"
+                                                title="Tıkla ve Ekle"
+                                            >
+                                                {tag}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="flex-1 relative rounded-xl border border-slate-300 dark:border-slate-600 overflow-hidden shadow-inner bg-slate-50 dark:bg-slate-900">
+                                    <textarea
+                                        value={editingTemplate.content || ''}
+                                        onChange={e => setEditingTemplate({...editingTemplate, content: e.target.value})}
+                                        className="w-full h-full p-4 font-mono text-sm bg-transparent outline-none resize-none text-slate-800 dark:text-slate-300"
+                                        placeholder="<div class='print-page'>\n  <h1>{{companyName}}</h1>\n  <p>Lütfen içerik giriniz...</p>\n</div>"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex-1 relative rounded-xl border border-slate-300 dark:border-slate-600 overflow-hidden shadow-inner bg-slate-50 dark:bg-slate-900">
-                            <textarea
-                                value={editingTemplate.content || ''}
-                                onChange={e => setEditingTemplate({...editingTemplate, content: e.target.value})}
-                                className="w-full h-full p-4 font-mono text-sm bg-transparent outline-none resize-none text-slate-800 dark:text-slate-300"
-                                placeholder="<div class='print-page'>
-  <h1>{{companyName}}</h1>
-  <p>Lütfen içerik giriniz...</p>
-</div>"
-                            />
-                        </div>
-                        <div className="mt-4 flex justify-end gap-3">
+                        ) : (
+                            <div className="flex-1 overflow-hidden p-6 bg-slate-100 dark:bg-slate-900/50">
+                                <VisualTemplateBuilder 
+                                    template={editingTemplate as DocumentTemplate} 
+                                    onUpdate={(updated) => setEditingTemplate(updated)} 
+                                />
+                            </div>
+                        )}
+
+                        <div className="p-4 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3 z-20">
                             <button type="button" onClick={() => setIsTemplateModalOpen(false)} className="px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-medium rounded-lg transition">İptal</button>
                             <button type="submit" className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-blue-500/30 transition-all transform active:scale-95">Değişiklikleri Kaydet</button>
                         </div>
