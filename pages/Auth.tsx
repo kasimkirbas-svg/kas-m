@@ -7,6 +7,8 @@ interface AuthProps {
   language?: string;
 }
 
+import { fetchApi } from '../src/utils/api';
+
 // Email notification utility
 const sendEmailNotification = (type: 'signup-confirmation' | 'admin-alert' | 'user-alert', recipient: string, data: any) => {
   const notification = {
@@ -67,8 +69,6 @@ const getStrength = (password: string) => {
   if (score < 4) return 'Orta';
   return 'Güçlü';
 };
-
-import { fetchApi } from '../src/utils/api';
 
 export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
   const [authView, setAuthView] = useState<'login' | 'signup' | 'forgot-password' | 'reset-password'>('login');
