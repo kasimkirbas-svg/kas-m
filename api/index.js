@@ -3,4 +3,13 @@
 
 import app from '../server/index.cjs';
 
-export default app;
+export const config = {
+    api: {
+        externalResolver: true,
+        bodyParser: false, // Express handles parsing
+    },
+};
+
+export default function handler(req, res) {
+    return app(req, res);
+}
