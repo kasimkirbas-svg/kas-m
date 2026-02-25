@@ -110,7 +110,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
   };
 
   const handleGenerateDocument = async () => {
-    if (!printContainerRef.current) return;
     
     if (sendEmail) {
         if (!userEmail) {
@@ -124,50 +123,43 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setGenerationSuccess(false);
 
     try {
-      const pageElements = printContainerRef.current.querySelectorAll('.print-page');
-      
-      if (pageElements.length === 0) {
-        throw new Error("No pages found to generate");
-      }
-
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
+      // Use Backend Generation for Professional PDF
+      const response = await fetch('/api/generate-pdf', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}` // Ensure auth
+          },
+          body: JSON.stringify({
+              templateId: template.id,
+              title: template.title,
+              data: { ...formData, date: formData.date }, // Flatten data for PDF
+              email: sendEmail ? userEmail : undefined
+          })
       });
 
-      for (let i = 0; i < pageElements.length; i++) {
-        const pageEl = pageElements[i] as HTMLElement;
-        
-        const canvas = await html2canvas(pageEl, {
-          scale: 2, 
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#ffffff'
-        });
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.90);
-        const imgWidth = 210; 
-        const imgHeight = 297; 
-
-        if (i > 0) pdf.addPage();
-        
-        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+      if (!response.ok) {
+          throw new Error('Sunucu hatası: ' + response.statusText);
       }
 
-      const pdfBase64 = pdf.output('datauristring');
-      const fileName = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
+      const result = await response.json();
+      
+      if (!result.success) {
+          throw new Error(result.message || 'PDF oluşturulamadı');
+      }
 
-      pdf.save(fileName);
+      // Download PDF
+      const link = document.createElement('a');
+      link.href = result.pdfBase64;
+      link.download = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       
       if (sendEmail) {
-          const recipient = formData.email || userEmail || '';
-          const subject = encodeURIComponent(`${template.title} - ${formData.companyName}`);
-          const body = encodeURIComponent(`Merhaba,\n\n${template.title} dokümanı ektedir.\n\nFirma: ${formData.companyName}\nHazırlayan: ${formData.preparedBy}\n\n(Not: İndirilen PDF dosyasını lütfen bu maile ekleyiniz.)\n\nİyi çalışmalar.`);
-          
-          window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
-          
-          alert("Doküman indirildi.\n\nE-posta uygulamanız açıldı. Lütfen indirilen dosyayı maile EKLEYEREK gönderiniz.");
+          alert("Doküman oluşturuldu ve e-posta adresinize gönderildi!");
+      } else {
+          alert("Doküman başarıyla oluşturuldu ve indirildi.");
       }
       
       const documentRecord: GeneratedDocument = {

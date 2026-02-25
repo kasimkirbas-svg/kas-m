@@ -2524,7 +2524,7 @@ app.post('/api/send-document', async (req, res) => {
 // --- GENERATE DOCUMENT (PDF) ---
 // Generates a PDF on the backend using data provided
 app.post('/api/generate-pdf', async (req, res) => {
-    const { templateId, data, title } = req.body;
+    const { templateId, data, title, email } = req.body;
     
     // Log generation request
      systemLogs.unshift({
@@ -2536,55 +2536,128 @@ app.post('/api/generate-pdf', async (req, res) => {
      });
 
     try {
-        const doc = new PDFDocument();
+        const doc = new PDFDocument({ margin: 50, size: 'A4' });
         
         // Collect data chunks
         let buffers = [];
         doc.on('data', buffers.push.bind(buffers));
-        doc.on('end', () => {
+        doc.on('end', async () => {
             const pdfData = Buffer.concat(buffers);
             const base64 = pdfData.toString('base64');
+            
+            // Send Email if requested
+            if (email) {
+                try {
+                     const mailOptions = {
+                        from: `"Kırbaş Doküman" <${process.env.EMAIL_USER || 'info@kirbas.com'}>`,
+                        to: email,
+                        subject: `Dokümanınız Hazır: ${title || 'Yeni Doküman'}`,
+                        text: `Merhaba,\n\nOluşturduğunuz "${title || 'Doküman'}" isimli doküman ektedir.\n\nİyi günler,\nKırbaş Doküman Platformu`,
+                        attachments: [
+                            {
+                                filename: `${title || 'Dokuman'}.pdf`,
+                                content: pdfData
+                            }
+                        ]
+                    };
+                    
+                    if (transporter) {
+                        await transporter.sendMail(mailOptions);
+                        console.log(`PDF E-posta ile gönderildi: ${email}`);
+                    } else {
+                        console.warn('Transporter tanımlı değil, mail gönderilemedi.');
+                    }
+                } catch (mailErr) {
+                    console.error('PDF Mail Gönderme Hatası:', mailErr);
+                }
+            }
+
             res.json({ success: true, pdfBase64: `data:application/pdf;base64,${base64}` });
         });
 
         // --- PDF CONTENT GENERATION ---
         
-        // Header
-        doc.fontSize(25).fillColor('#2563eb').text(title || 'Doküman Başlığı', { align: 'center' });
-        doc.moveDown();
-        doc.fontSize(12).fillColor('black').text(`Oluşturulma Tarihi: ${new Date().toLocaleDateString('tr-TR')}`, { align: 'right' });
-        doc.moveDown();
+        // Brand Header (Top Left)
+        doc.fontSize(10).fillColor('#64748b').text('KIRBAŞ DOKÜMAN PLATFORMU', 50, 40, { align: 'left' });
+        doc.fontSize(10).text(new Date().toLocaleDateString('tr-TR'), 50, 40, { align: 'right' });
+
+        // Title Area
+        doc.moveDown(2);
+        doc.font('Helvetica-Bold').fontSize(24).fillColor('#1e293b').text(title || 'Doküman Başlığı', { align: 'center' });
+        doc.moveDown(0.5);
+        if (templateId) {
+             doc.font('Helvetica').fontSize(10).fillColor('#94a3b8').text(`Şablon Kod: ${templateId}`, { align: 'center' });
+        }
+        doc.moveDown(2);
         
         // Separator
-        doc.moveTo(50, doc.y).lineTo(550, doc.y).strokeColor('#e2e8f0').stroke();
+        doc.moveTo(50, doc.y).lineTo(550, doc.y).lineWidth(2).strokeColor('#e2e8f0').stroke();
         doc.moveDown(2);
 
-        // Dynamic Content
+        // Dynamic Content (Table-like Layout)
         if (data && typeof data === 'object') {
-            Object.entries(data).forEach(([key, value]) => {
+            const startX = 50;
+            const valueX = 200; // Alignment for values
+            let currentY = doc.y;
+
+            Object.entries(data).forEach(([key, value], index) => {
                 // Key formatting (camelCase to Title Case)
-                // Also handle special keys manually if needed
-                let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                let label = key.replace(/([A-Z])/g, ' $1')
+                             .replace(/^./, str => str.toUpperCase())
+                             .replace(/Id$/, ' ID') // Fix ID suffix
+                             .trim();
                 
                 // Value formatting
-                let displayValue = value;
+                let displayValue = "";
                 if (typeof value === 'boolean') {
-                    displayValue = value ? 'Evet / Var / Kabul Edildi' : 'Hayır / Yok';
-                } else if (!value) {
+                    displayValue = value ? 'Evet' : 'Hayır';
+                } else if (!value && value !== 0) {
                     displayValue = '-';
+                } else {
+                    displayValue = String(value);
                 }
 
-                doc.font('Helvetica-Bold').fontSize(12).text(`${label}:`, { continued: true });
-                doc.font('Helvetica').fontSize(12).text(`  ${displayValue}`);
-                doc.moveDown(0.5);
+                // Calculate height needed for this row based on value length
+                doc.font('Helvetica').fontSize(11);
+                const valueHeight = doc.heightOfString(displayValue, { width: 340 });
+                const labelHeight = doc.heightOfString(label, { width: 140 });
+                const rowHeight = Math.max(valueHeight, labelHeight) + 12; // Padding
+
+                // Check page break
+                if (currentY + rowHeight > doc.page.height - 50) {
+                    doc.addPage();
+                    currentY = 50;
+                }
+
+                // Zebra striping
+                if (index % 2 === 0) {
+                    doc.rect(50, currentY - 5, 500, rowHeight).fillColor('#f8fafc').fill();
+                }
+
+                // Label
+                doc.fillColor('#475569').font('Helvetica-Bold').fontSize(11).text(label, startX + 10, currentY, { width: 140 });
+                
+                // Value
+                doc.fillColor('#1e293b').font('Helvetica').fontSize(11).text(displayValue, valueX, currentY, { width: 340 });
+
+                currentY += rowHeight;
             });
         } else {
-             doc.text('İçerik bulunamadı.');
+             doc.font('Helvetica-Oblique').text('İçerik bulunamadı.', { align: 'center' });
         }
         
-        // Footer
-        const bottom = doc.page.height - 50;
-        doc.fontSize(10).fillColor('#94a3b8').text('Kırbaş Doküman Platformu © 2026', 50, bottom, { align: 'center', width: 500 });
+        // Footer (Page Numbers)
+        const range = doc.bufferedPageRange();
+        for (let i = range.start; i < range.start + range.count; i++) {
+            doc.switchToPage(i);
+            const bottom = doc.page.height - 40;
+            doc.fontSize(9).fillColor('#cbd5e1').text(
+                `Sayfa ${i + 1} / ${range.count} - Kırbaş Doküman Yönetim Sistemleri`, 
+                50, 
+                bottom, 
+                { align: 'center', width: 500 }
+            );
+        }
         
         // Finalize
         doc.end();
