@@ -1311,11 +1311,6 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     
-    // EMERGENCY FIX: Only allow admin login
-    if (email !== 'admin@kirbas.com') {
-         return res.status(403).json({ success: false, message: 'Bakım modu: Sadece yönetici girişi yapılabilir.' });
-    }
-
     // Rate Limiting Check
     const now = Date.now();
     const attempt = loginAttempts[email] || { count: 0, firstAttempt: now };
@@ -1763,10 +1758,7 @@ app.delete('/api/auth/delete-account', authenticateToken, async (req, res) => {
 // Admin: Get All Users (Protected)
 app.get('/api/users', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        let users = await dbAdapter.getUsers();
-        // EMERGENCY FILTER: Only show admin
-        users = users.filter(u => u.role === 'ADMIN');
-        
+        const users = await dbAdapter.getUsers();
         // Don't send passwords
         const safeUsers = users.map(({ password, ...u }) => u);
         res.json(safeUsers);
