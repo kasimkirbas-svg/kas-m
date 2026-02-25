@@ -1798,47 +1798,41 @@ app.get('/api/users', authenticateToken, requireAdmin, async (req, res) => {
 });
 
 // Admin: Update User (Protected)
-app.put('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
+app.put('/api/users/:id', authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
-    const db = readDB();
     
-    // Check if trying to edit another admin (super admin protection could go here)
-    const index = db.users.findIndex(u => u.id === id);
-    if (index === -1) {
-        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
-    }
-    
-    // Explicitly select allowed fields to update
-    // This prevents overwriting id, password, createdAt, or other system fields
-    const allowedFields = ['name', 'companyName', 'role', 'plan', 'isActive', 'email', 'remainingDownloads'];
-    const safeUpdates = {};
-    
-    allowedFields.forEach(field => {
-        if (updates[field] !== undefined) {
-            safeUpdates[field] = updates[field];
+    try {
+        // Try finding via adapter first (covers PG/Mongo/File)
+        const user = await dbAdapter.findUserById(id);
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
         }
-    });
+        
+        // Prepare safe updates
+        const allowedFields = ['name', 'companyName', 'role', 'plan', 'isActive', 'email', 'remainingDownloads'];
+        const safeUpdates = {};
+        
+        allowedFields.forEach(field => {
+            if (updates[field] !== undefined) {
+                safeUpdates[field] = updates[field];
+            }
+        });
 
-    db.users[index] = { ...db.users[index], ...safeUpdates };
-    
-    // Critical: Check write success
-    if (!writeDB(db)) {
-        return res.status(500).json({ success: false, message: 'Veritabanına yazılamadı (Disk Hatası).' });
+        // Use Adapter to Update
+        await dbAdapter.updateUser(id, safeUpdates);
+        
+        // Return updated user
+        const updatedUser = await dbAdapter.findUserById(id);
+        const { password: _, ...userWithoutPassword } = updatedUser;
+        
+        res.json({ success: true, user: userWithoutPassword });
+
+    } catch (e) {
+        console.error('Update User Error:', e);
+        res.status(500).json({ success: false, message: 'Güncelleme sırasında hata oluştu.' });
     }
-    
-    // Sync PostgreSQL if available
-    if (pgPool) {
-        // We only sync specific fields to PG for now to keep it simple, or update the jsonb blob
-        // Update the JSONB data column
-        pgPool.query('UPDATE users SET email = $1, data = $2 WHERE id = $3', 
-            [db.users[index].email, db.users[index], id]).catch(e => console.error('PG Update Error:', e));
-    } else if (MONGO_URI) {
-        connectDB().then(() => User.updateOne({ id }, { $set: safeUpdates })).catch(e => console.error('Mongo Update Error:', e));
-    }
-    
-    const { password: _, ...userWithoutPassword } = db.users[index];
-    res.json({ success: true, user: userWithoutPassword });
 });
 
 // Admin: Delete User (Protected)
