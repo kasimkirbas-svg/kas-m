@@ -66,51 +66,58 @@ export const Layout: React.FC<LayoutProps> = ({
       
       {/* Sidebar - Desktop */}
       <aside 
-        className={`${sidebarOpen ? 'w-64' : 'w-20'} 
-        hidden md:flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl transition-all duration-300 fixed h-full z-40`}
+        className={`${sidebarOpen ? 'w-full md:w-64' : 'w-0 md:w-20'} 
+        md:flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/95 backdrop-blur-2xl transition-all duration-300 fixed h-full z-50 shadow-2xl shadow-indigo-500/10`}
       >
-        <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200/50 dark:border-slate-800/50">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800/50">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="min-w-[32px] h-8 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">
+            <div className="min-w-[40px] h-10 bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/30 transform hover:rotate-3 transition-transform">
               K
             </div>
-            <span className={`font-bold text-lg text-slate-800 dark:text-slate-100 whitespace-nowrap transition-opacity duration-300 ${!sidebarOpen && 'opacity-0 w-0'}`}>
+            <span className={`font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 whitespace-nowrap transition-opacity duration-300 ${!sidebarOpen && 'opacity-0 w-0'}`}>
               Kırbaş Panel
             </span>
           </div>
           <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+            className="hidden md:flex p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-all hover:scale-105"
           >
-            {sidebarOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+            {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+          </button>
+          
+          <button 
+            onClick={() => setSidebarOpen(false)}
+            className="md:hidden p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500"
+          >
+            <X size={24} />
           </button>
         </div>
 
-        <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto custom-scrollbar">
           {menuItems.map((item) => {
             const isActive = currentView === item.view;
             return (
               <button
                 key={item.view}
-                onClick={() => onNavigate(item.view)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative overflow-hidden
+                onClick={() => {
+                  onNavigate(item.view);
+                  if(window.innerWidth < 768) setSidebarOpen(false); // Close on mobile
+                }}
+                className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group relative overflow-hidden
                   ${isActive 
-                    ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-medium' 
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200'
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40 translate-x-1' 
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
                   }
                 `}
               >
-                {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-indigo-600 rounded-r-full" />
-                )}
-                <item.icon size={20} className={`shrink-0 ${isActive && 'text-indigo-600 dark:text-indigo-400'}`} />
-                <span className={`whitespace-nowrap transition-all duration-300 ${!sidebarOpen && 'opacity-0 w-0 hidden'}`}>
+                <item.icon size={22} className={`shrink-0 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                <span className={`font-medium whitespace-nowrap transition-all duration-300 ${!sidebarOpen && 'opacity-0 w-0 hidden'}`}>
                   {item.label}
                 </span>
                 
                 {/* Tooltip for collapsed state */}
                 {!sidebarOpen && (
-                   <div className="absolute left-full ml-4 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg">
+                   <div className="absolute left-full ml-6 px-3 py-1.5 bg-slate-900 text-white text-sm font-medium rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-50 shadow-xl border border-slate-700/50 translate-x-2 group-hover:translate-x-0">
                      {item.label}
                    </div>
                 )}
@@ -121,29 +128,41 @@ export const Layout: React.FC<LayoutProps> = ({
 
         {/* Usage Stats (Visible only when open) */}
         {sidebarOpen && user.role !== 'ADMIN' && (
-          <div className="px-4 py-4 mx-2 mb-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
-             <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{_t('common.rights','Kalan Hak')}</span>
-                <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{user.remainingDownloads === 'UNLIMITED' ? '∞' : user.remainingDownloads}</span>
-             </div>
-             {user.remainingDownloads !== 'UNLIMITED' && (
-             <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-indigo-500 rounded-full transition-all duration-500" 
-                  style={{ width: `${Math.min(100, (Number(user.remainingDownloads) / 10) * 100)}%` }} 
-                />
-             </div>
-             )}
+          <div className="px-6 py-6 mt-auto">
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-indigo-900/20 dark:to-slate-900/40 rounded-2xl p-5 border border-slate-200/10 dark:border-indigo-500/20 shadow-xl relative overflow-hidden group">
+               {/* Background Glow */}
+               <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-indigo-500/30 transition-colors duration-500"></div>
+               
+               <div className="flex items-center justify-between mb-3 relative z-10">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{_t('common.rights','Kalan Hak')}</span>
+                  <span className="text-sm font-black text-white bg-white/10 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    {user.remainingDownloads === 'UNLIMITED' ? '∞' : user.remainingDownloads}
+                  </span>
+               </div>
+               
+               {user.remainingDownloads !== 'UNLIMITED' && (
+               <div className="w-full h-2 bg-slate-700/50 rounded-full overflow-hidden backdrop-blur-sm">
+                  <div 
+                    className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]" 
+                    style={{ width: `${Math.min(100, (Number(user.remainingDownloads) / 10) * 100)}%` }} 
+                  />
+               </div>
+               )}
+               
+               <button onClick={() => onNavigate('subscription')} className="w-full mt-4 py-2 text-xs font-bold text-white bg-white/10 hover:bg-white/20 rounded-lg transition-colors backdrop-blur-sm border border-white/5">
+                 Paket Yükselt
+               </button>
+            </div>
           </div>
         )}
 
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+        <div className="p-6 border-t border-slate-100 dark:border-slate-800/50">
           <button 
             onClick={onLogout}
-            className={`w-full flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors ${!sidebarOpen && 'justify-center'}`}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-300 group ${!sidebarOpen && 'justify-center'}`}
           >
-            <LogOut size={20} />
-            <span className={`${!sidebarOpen && 'hidden'}`}>{_t('common.logout', 'Çıkış Yap')}</span>
+            <LogOut size={22} className="group-hover:-translate-x-1 transition-transform" />
+            <span className={`font-medium ${!sidebarOpen && 'hidden'}`}>{_t('common.logout', 'Çıkış Yap')}</span>
           </button>
         </div>
       </aside>
@@ -152,38 +171,53 @@ export const Layout: React.FC<LayoutProps> = ({
       <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
         
         {/* Top Header */}
-        <header className="h-16 px-4 md:px-6 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 flex items-center justify-between">
+        <header className="h-20 px-6 md:px-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 sticky top-0 z-30 flex items-center justify-between transition-colors duration-300">
             {/* Mobile Toggle */}
-            <div className="md:hidden flex items-center gap-3">
+            <div className="md:hidden flex items-center gap-4">
               <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-                className="p-2 -ml-2 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
+                onClick={() => setSidebarOpen(true)} 
+                className="p-2 -ml-2 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
               >
                 <Menu size={24} />
               </button>
-              <span className="font-bold text-lg text-slate-800 dark:text-slate-100">Kırbaş Panel</span>
+              <span className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">Kırbaş Panel</span>
             </div>
 
-            {/* Universal Search (Functional Placeholder) */}
-            <div className="hidden md:flex items-center max-w-md w-full ml-4 bg-slate-100 dark:bg-slate-800/50 rounded-full px-4 py-1.5 border border-transparent focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
-               <Search size={18} className="text-slate-400" />
+            {/* Universal Search */}
+            <div className="hidden md:flex items-center max-w-lg w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-2xl px-5 py-2.5 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all shadow-inner">
+               <Search size={20} className="text-slate-400 mr-3" />
                <input 
                  type="text" 
-                 placeholder={_t('common.search', 'Belge veya şablon ara...')}
-                 className="bg-transparent border-none focus:outline-none text-sm w-full ml-2 text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
+                 placeholder={_t('common.search', 'Belge, şablon veya rapor ara...')}
+                 className="bg-transparent border-none focus:outline-none text-sm w-full text-slate-700 dark:text-slate-200 placeholder:text-slate-400 font-medium"
                />
+               <div className="hidden lg:flex items-center gap-1 ml-2">
+                 <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600">Ctrl</span>
+                 <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600">K</span>
+               </div>
             </div>
 
             {/* Right Side Actions */}
-            <div className="flex items-center gap-2 md:gap-4 ml-auto">
+            <div className="flex items-center gap-3 md:gap-4 ml-auto">
+              
+              {/* Theme Toggle */}
+              <button 
+                onClick={() => onThemeChange?.(theme === 'dark' ? 'light' : 'dark')}
+                className="p-2.5 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all active:scale-95"
+                title={theme === 'dark' ? 'Aydınlık Mod' : 'Karanlık Mod'}
+              >
+                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
+
               {/* Language Selector */}
               <div className="relative">
                 <button 
                   onClick={() => setLangMenuOpen(!langMenuOpen)}
-                  className="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="p-2.5 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all active:scale-95"
                 >
                   <Globe size={20} />
                 </button>
+
                 
                 {langMenuOpen && (
                   <>
