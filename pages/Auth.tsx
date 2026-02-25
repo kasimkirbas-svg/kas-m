@@ -300,7 +300,16 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       }
     } catch (err: any) {
       console.error('Signup error:', err);
-      setError(err.message || '');
+      setError(err.message || 'Sunucu bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
 
     if (!formData.email) {
         setError('Lütfen e-posta adresinizi girin.');
