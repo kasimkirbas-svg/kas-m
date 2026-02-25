@@ -214,15 +214,6 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    // Validasyon
-    if (!formData.email || !formData.password || !formData.name) {
-      setError('E-posta, şifre ve ad soyad alanları zorunludur.');
-      return;
     const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Signup triggered"); // Debug
