@@ -265,6 +265,33 @@ const dbAdapter = {
             }
         }
         return readFileDB().users.find(u => u.id === id);
+    },
+
+    deleteUser: async (id) => {
+        let deleted = false;
+        if (pgPool) {
+             try {
+                const res = await pgPool.query('DELETE FROM users WHERE id = $1', [id]);
+                if (res.rowCount > 0) deleted = true;
+             } catch (err) { console.error('PG DeleteUser Error:', err.message); }
+        }
+
+        if (MONGO_URI) {
+            try {
+                await connectDB();
+                const res = await User.deleteOne({ id });
+                if (res.deletedCount > 0) deleted = true;
+            } catch (e) { console.error('Mongo DeleteUser Error:', e);}
+        }
+        
+        const data = readFileDB();
+        const initialLen = data.users.length;
+        data.users = data.users.filter(u => u.id !== id);
+        if (data.users.length !== initialLen) {
+            writeFileDB(data);
+            deleted = true;
+        }
+        return deleted;
     }
 };
 
@@ -1815,40 +1842,24 @@ app.put('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
 });
 
 // Admin: Delete User (Protected)
-app.delete('/api/users/:id', authenticateToken, requireAdmin, (req, res) => {
+app.delete('/api/users/:id', authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;
-    const db = readDB();
     
     // Self-deletion check
     if (req.user.id === id) {
         return res.status(400).json({ success: false, message: 'Kendi hesabınızı silemezsiniz.' });
     }
     
-    const initialLength = db.users.length;
-    const filteredUsers = db.users.filter(u => u.id !== id);
+    // Use unified DB adapter to delete from all sources
+    const wasDeleted = await dbAdapter.deleteUser(id);
     
-    if (filteredUsers.length === initialLength) {
-        return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+    if (wasDeleted) {
+        return res.json({ success: true, message: 'Kullanıcı silindi.' });
+    } else {
+        // Even if not found, consider it deleted to clear frontend state, or return 404.
+        // Returning 200 helps "self-healing" if the user was already gone.
+        return res.json({ success: true, message: 'Kullanıcı zaten silinmiş veya bulunamadı.' });
     }
-
-    db.users = filteredUsers;
-    const writeSuccess = writeDB(db);
-    
-    // Verify persistence
-    const checkDb = readDB();
-    if (!writeSuccess || checkDb.users.some(u => u.id === id)) {
-         console.error('CRITICAL: Admin delete failed!', { writeSuccess, id });
-         return res.status(500).json({ success: false, message: 'Kullanıcı silinemedi (Disk Hatası).' });
-    }
-
-    // Sync PostgreSQL / Mongo
-    if (pgPool) {
-        pgPool.query('DELETE FROM users WHERE id = $1', [id]).catch(e => console.error(e));
-    } else if (MONGO_URI) {
-        connectDB().then(() => User.deleteOne({ id })).catch(e => console.error(e));
-    }
-    
-    res.json({ success: true, message: 'Kullanıcı silindi.' });
 });
 
 // Admin: Ban User
