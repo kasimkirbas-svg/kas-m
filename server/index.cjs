@@ -308,9 +308,11 @@ const readDB = () => {
     try {
         console.log(`🔍 DB Okunuyor: ${DB_FILE}`);
         if (!fs.existsSync(DB_FILE)) {
-             // If DB_FILE is in /tmp and missing, copy from SOURCE_DB_FILE if reachable
+             // FORCE OVERWRITE: If DB_FILE is in /tmp, ALWAYS overwrite from source on startup
+             // This ensures we start with the repo's db.json every time serverless function cold starts
              if (IS_VERCEL_PROD && fs.existsSync(SOURCE_DB_FILE)) {
                  try {
+                    console.log("🔄 Resetting /tmp DB from source...");
                     const params = fs.readFileSync(SOURCE_DB_FILE, 'utf8');
                     fs.writeFileSync(DB_FILE, params);
                     return JSON.parse(params);
