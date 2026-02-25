@@ -333,6 +333,17 @@ const readDB = () => {
         return { users: [], documents: [], templates: INITIAL_TEMPLATES };
     }
 };
+
+const writeDB = (data) => {
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+        return true;
+    } catch (err) {
+        console.error("DB Write Error:", err);
+        return false;
+    }
+};
+
 const INITIAL_TEMPLATES = [
   {
     id: '1',
@@ -915,39 +926,9 @@ if (!fs.existsSync(DB_FILE)) {
     } catch(e) {}
 }
 
-// Helper to read/write DB
-const readDB = () => {
-    try {
-        if (!fs.existsSync(DB_FILE)) {
-             // Re-try initialization logic if somehow deleted
-             if (process.env.VERCEL && fs.existsSync(SOURCE_DB_FILE)) {
-                 try {
-                    const params = fs.readFileSync(SOURCE_DB_FILE, 'utf8');
-                    fs.writeFileSync(DB_FILE, params);
-                    return JSON.parse(params);
-                 } catch(e) {}
-             }
-            return { users: [], documents: [], templates: INITIAL_TEMPLATES };
-        }
-        const data = fs.readFileSync(DB_FILE, 'utf8');
-        const parsed = JSON.parse(data);
-        if (!parsed.templates) parsed.templates = INITIAL_TEMPLATES;
-        return parsed;
-    } catch (err) {
-        console.error("DB Read Error:", err);
-        return { users: [], documents: [], templates: INITIAL_TEMPLATES };
-    }
-};
-
-const writeDB = (data) => {
-    try {
-        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-        return true;
-    } catch (err) {
-        console.error("DB Write Error:", err);
-        return false;
-    }
-};
+// Helper to read/write DB (Defined above)
+// const readDB = ... 
+// const writeDB = ...
 
 // Initialize DB if not exists
 if (!fs.existsSync(DB_FILE)) {
