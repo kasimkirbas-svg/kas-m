@@ -456,6 +456,8 @@ const App = () => {
             setCurrentView('editor');
           }}
           templates={templates}
+          recentDocuments={savedDocuments.slice(0, 5)}
+          savedDocuments={savedDocuments}
         />
       );
     }
