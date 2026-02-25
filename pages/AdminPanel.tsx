@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, FileText, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle, Mail, Send, Loader2, Server, Globe, Cpu, Database, PlayCircle, CreditCard, Save, List } from 'lucide-react';
+import { Users, FileText, Building2, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle, Mail, Send, Loader2, Server, Globe, Cpu, Database, PlayCircle, CreditCard, Save, List } from 'lucide-react';
 import { User, UserRole, SubscriptionPlan, DocumentTemplate } from '../types';
 import { PLANS as DEFAULT_PLANS, MOCK_TEMPLATES as DEFAULT_TEMPLATES } from '../constants';
 
