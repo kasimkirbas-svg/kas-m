@@ -236,7 +236,19 @@ const tr = {
     type: 'Tür',
     standard: 'Standart',
     premium: 'Premium',
-    newTemplateButton: 'Yeni Şablon'
+    newTemplateButton: 'Yeni Şablon',
+    ban: 'Yasakla',
+    unban: 'Yasağı Kaldır',
+    banUser: 'Kullanıcıyı Yasakla',
+    banReason: 'Yasaklama Nedeni',
+    banDuration: 'Süre',
+    permanent: 'Süresiz',
+    oneDay: '1 Gün',
+    oneWeek: '1 Hafta',
+    oneMonth: '1 Ay',
+    confirmBan: 'Kullanıcıyı Yasakla',
+    confirmUnban: 'Yasağı Kaldır',
+    userBanned: 'Kullanıcı Yasaklandı'
   },
   myDocuments: {
     title: 'Dokümanlarım',
