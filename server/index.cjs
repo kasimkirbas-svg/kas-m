@@ -1658,17 +1658,8 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
     }
 });
 
-// Get Invoices
-app.get('/api/auth/invoices', authenticateToken, async (req, res) => {
-    try {
-        const db = readFileDB();
-        const invoices = (db.invoices || []).filter(inv => inv.userId === req.user.id).sort((a,b) => new Date(b.date) - new Date(a.date));
-        res.json({ success: true, invoices });
-    } catch (e) {
-        console.error('Invoices Error:', e);
-        res.status(500).json({ success: false, message: 'Faturalar alınamadı.' });
-    }
-});
+// Get Invoices endpoint merged below
+
 
 // Update Profile (Self)
 app.put('/api/auth/update-profile', authenticateToken, async (req, res) => {
@@ -1742,47 +1733,16 @@ app.post('/api/auth/change-password', authenticateToken, async (req, res) => {
     }
 });
 
-// Get User Invoices (Mock)
+// Get User Invoices (Real)
 app.get('/api/auth/invoices', authenticateToken, async (req, res) => {
     try {
         const user = await dbAdapter.findUserById(req.user.id);
         if (!user) return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
 
-        if (user.plan === 'FREE') {
-            return res.json({ success: true, invoices: [] });
-        }
-
-        const invoices = [];
-        const startDate = new Date(user.subscriptionStartDate);
-        const now = new Date();
-        const planPrice = user.plan === 'YEARLY' ? 1200 : 120; // Example prices
-        const description = user.plan === 'YEARLY' ? 'Yıllık Abonelik Yenileme' : 'Aylık Abonelik Yenileme';
-
-        // Generate mocked invoices based on subscription duration
-        let currentDate = new Date(startDate);
-        let idCounter = 1;
-
-        while (currentDate <= now) {
-            invoices.push({
-                id: `INV-${currentDate.getFullYear()}${idCounter.toString().padStart(4, '0')}`,
-                date: currentDate.toISOString(),
-                amount: planPrice,
-                status: 'PAID', // All past invoices assumed paid
-                invoiceNumber: `KAS-${Date.now().toString().slice(-6)}-${idCounter}`,
-                description: description
-            });
-
-            // Increment based on plan
-            if (user.plan === 'YEARLY') {
-                currentDate.setFullYear(currentDate.getFullYear() + 1);
-            } else {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-            }
-            idCounter++;
-        }
+        const db = readFileDB();
+        const invoices = (db.invoices || []).filter(inv => inv.userId === req.user.id).sort((a,b) => new Date(b.date) - new Date(a.date));
         
-        // Reverse to show newest first
-        res.json({ success: true, invoices: invoices.reverse() });
+        res.json({ success: true, invoices });
     } catch (error) {
         console.error('Invoices Error:', error);
         res.status(500).json({ success: false, message: 'Faturalar alınamadı.' });

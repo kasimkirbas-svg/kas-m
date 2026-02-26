@@ -6,7 +6,7 @@ import { SubscriptionPlan, User } from '../types';
 interface SubscriptionPageProps {
   user: User;
   t: any;
-  onUpgrade: (plan: SubscriptionPlan) => void;
+  onUpgrade: (plan: SubscriptionPlan) => Promise<void>;
   onBack: () => void;
 }
 
@@ -50,7 +50,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
     setPaymentData(prev => ({ ...prev, [name]: formattedValue }));
   };
 
-  const handlePaymentSubmit = (e: React.FormEvent) => {
+    const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsProcessing(true);
@@ -67,14 +67,18 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
       return;
     }
 
-    // Simulate Payment API
-    setTimeout(() => {
-        setIsProcessing(false);
+    try {
         if (selectedPlan) {
-            onUpgrade(selectedPlan);
+            // Actual API call via App.tsx logic
+            await onUpgrade(selectedPlan);
             setShowPaymentModal(false);
         }
-    }, 2000);
+    } catch (err: any) {
+        console.error('Payment Error:', err);
+        setError('Ödeme ve Aktivasyon sırasında bir sorun oluştu: ' + (err.message || 'Bilinmeyen Hata'));
+    } finally {
+        setIsProcessing(false);
+    }
   };
 
   const getPlanDetails = (planId: SubscriptionPlan) => {

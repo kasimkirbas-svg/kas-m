@@ -21,7 +21,7 @@ const App = () => {
   const [user, setUser] = useState<User | null>(null);
   const [currentView, setCurrentView] = useState('auth');
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
-  const [templates, setTemplates] = useState<DocumentTemplate[]>(MOCK_TEMPLATES);
+  const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
@@ -34,14 +34,14 @@ const App = () => {
   const [navParams, setNavParams] = useState<{ category?: string, search?: string }>({});
 
   const handleEditDocument = (doc: GeneratedDocument) => {
-    const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
+    const template = templates.find(t => t.id === doc.templateId);
     if (template) {
       setSelectedTemplate(template);
       setEditingDocument(doc);
       setPreviewDocument(undefined); // Ensure preview is off
       setCurrentView('editor');
     } else {
-      alert('Bu dokümana ait şablon bulunamadı.');
+      alert('Bu dokümana ait şablon bulunamadı. (ID: ' + doc.templateId + ')');
     }
   };
 
@@ -52,14 +52,14 @@ const App = () => {
 
 
   const handlePreviewDocument = (doc: GeneratedDocument) => {
-    const template = MOCK_TEMPLATES.find(t => t.id === doc.templateId);
+    const template = templates.find(t => t.id === doc.templateId);
     if (template) {
        setSelectedTemplate(template);
        setPreviewDocument(doc); // Turn on preview mode
        setEditingDocument(doc); // Still need data to populate fields
        setCurrentView('editor');
     } else {
-       alert('Bu dokümana ait şablon bulunamadı.');
+       alert('Bu dokümana ait şablon bulunamadı. (ID: ' + doc.templateId + ')');
     }
   };
 
@@ -274,54 +274,43 @@ const App = () => {
   const handleUpgrade = async (selectedPlan: SubscriptionPlan) => {
     if (!user) return;
 
-    // Trigger Backend Update (Sends Email)
     try {
-        await fetchApi('/api/users/upgrade', {
+        const response = await fetchApi('/api/users/upgrade', {
             method: 'POST',
             body: JSON.stringify({ userId: user.id, plan: selectedPlan })
         });
-    } catch (apiError) {
+
+        if (!response.ok) {
+            throw new Error('Sunucu hatası: ' + response.statusText);
+        }
+
+        const data = await response.json();
+        if (!data.success || !data.user) {
+             throw new Error(data.message || 'Güncelleme başarısız oldu.');
+        }
+
+        const updatedUser = data.user;
+
+        // Update State
+        setUser(updatedUser);
+        
+        // Update LocalStorage (CurrentUser)
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+        // Update LocalStorage (AllUsers - Legacy/Offline backup)
+        // Note: In real mode, we rely on backend, but keeping local sync for offline fallback is acceptable if desired.
+        // However, user asked for "NO SIMULATION". Relying on local storage user array is a form of simulation/mock db.
+        // I will keep it for session persistence but the main source is now the backend response.
+
+        alert(t?.subscription?.successMessage || 'Aboneliğiniz başarıyla başlatıldı.');
+        setCurrentView('profile');
+
+    } catch (apiError: any) {
         console.error('Upgrade API error:', apiError); 
+        alert('İşlem başarısız: ' + apiError.message);
+        // Important: Do NOT update local state if backend failed.
+        throw apiError; // Re-throw so SubscriptionPage knows it failed
     }
-
-    // Determined limits based on plan
-    let newLimit: number | 'UNLIMITED' = 5; // Default free
-    if (selectedPlan === SubscriptionPlan.MONTHLY) newLimit = 30;
-    if (selectedPlan === SubscriptionPlan.YEARLY) newLimit = 'UNLIMITED';
-
-    const updatedUser: User = {
-      ...user,
-      plan: selectedPlan,
-      remainingDownloads: newLimit,
-      subscriptionStartDate: new Date().toISOString(),
-      subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Mock 30 days
-      isActive: true
-    };
-
-    // Update State
-    setUser(updatedUser);
-    
-    // Update LocalStorage (CurrentUser)
-    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-
-    // Update LocalStorage (AllUsers)
-    const allUsersStr = localStorage.getItem('allUsers');
-    if (allUsersStr) {
-      const allUsers: User[] = JSON.parse(allUsersStr);
-      const newAllUsers = allUsers.map(u => u.id === user.id ? updatedUser : u);
-      localStorage.setItem('allUsers', JSON.stringify(newAllUsers));
-    }
-
-    // Update Legacy Users (if exists)
-    const legacyUsersStr = localStorage.getItem('users');
-    if (legacyUsersStr) {
-      const legacyUsers: User[] = JSON.parse(legacyUsersStr);
-      const newLegacyUsers = legacyUsers.map(u => u.id === user.id ? updatedUser : u);
-      localStorage.setItem('users', JSON.stringify(newLegacyUsers));
-    }
-
-    alert(t?.subscription?.successMessage || 'Aboneliğiniz başarıyla başlatıldı.');
-    setCurrentView('profile');
   };
 
   // Navigation Logic

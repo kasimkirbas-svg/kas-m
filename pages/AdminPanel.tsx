@@ -146,7 +146,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
         }
     } catch (e) {
         console.error(e);
-        setTemplates(DEFAULT_TEMPLATES);
+        // setTemplates(DEFAULT_TEMPLATES); // Fallback removed as per 'Real Mode' request
+        setEmailNotification({ type: 'error', message: 'Şablonlar sunucudan yüklenemedi.' });
     }
 
     // Plans (Still LocalStorage for now)
