@@ -1298,7 +1298,8 @@ app.use((req, res, next) => {
 });
 
 // Check mode
-let isMockMode = false;
+// Mock mode completely removed as requested
+
 
 // detailed logging I added previously (specifically '[MAIL DEBUG]')
 const EMAIL_USER = process.env.EMAIL_USER;
@@ -1319,47 +1320,41 @@ if (EMAIL_PASS) {
 
 
 if (!EMAIL_USER || EMAIL_USER.includes('senin_mailin') || !EMAIL_PASS) {
-    if (!isMockMode) {
-      console.log("ℹ️ [INFO] E-posta ayarları girilmedi. Mail özellikleri devre dışı kalacak, sadece indirme çalışacak.");
-    }
+    console.log("ℹ️ [INFO] E-posta ayarları girilmedi. Mail özellikleri çalışmayacaktır.");
 }
 
 
 // Transporter Configuration
 let transporter;
 
-if (!isMockMode) {
-    console.log("[MAIL DEBUG] NodeMailer (Gerçek E-posta Modu) yapılandırılıyor...");
-    try {
-        transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false, // TLS
-            auth: {
-                user: EMAIL_USER,
-                pass: EMAIL_PASS,
-            },
-        });
-        
-        console.log("[MAIL DEBUG] SMTP Bağlantısı doğrulanıyor...");
+console.log("[MAIL DEBUG] NodeMailer (Gerçek E-posta Modu) yapılandırılıyor...");
+try {
+    transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // TLS
+        auth: {
+            user: EMAIL_USER,
+            pass: EMAIL_PASS,
+        },
+    });
+    
+    console.log("[MAIL DEBUG] SMTP Bağlantısı doğrulanıyor...");
 
-        // Verify connection
-        transporter.verify(function (error, success) {
-            if (error) {
-                console.error('❌ [SMTP ERROR] Mail Sunucusu Bağlantı Hatası!');
-                console.error('❌ E-postalar gitmeyecek. Lütfen .env dosyasındaki EMAIL_USER ve EMAIL_PASS bilgilerini kontrol edin.');
-                console.error('İpucu: Gmail için "Uygulama Şifresi" kullanmalısınız.');
-                // isMockMode = true; // ARTIK MOCK MODA DÜŞMÜYORUZ, HATALI İSE HATALI KALSIN
-            } else {
-                console.log('✅ [SMTP SUCCESS] Mail sunucusu hazır ve çalışıyor!');
-            }
-        });
-    } catch (e) {
-        console.error("❌ [CRITICAL] NodeMailer Başlatılamadı:", e);
-    }
-} else {
-    // Should roughly never reach here unless isMockMode forced manually
-    console.log("[MAIL DEBUG] Mock (Simülasyon) Modu Aktif.");
+    // Verify connection
+    transporter.verify(function (error, success) {
+        if (error) {
+            console.error('❌ [SMTP ERROR] Mail Sunucusu Bağlantı Hatası!');
+            console.error('❌ E-postalar gitmeyecek. Lütfen .env dosyasındaki EMAIL_USER ve EMAIL_PASS bilgilerini kontrol edin.');
+            console.error('İpucu: Gmail için "Uygulama Şifresi" kullanmalısınız.');
+            transporter = null; // Ensure it is null if verify fails
+        } else {
+            console.log('✅ [SMTP SUCCESS] Mail sunucusu hazır ve çalışıyor!');
+        }
+    });
+} catch (e) {
+    console.error("❌ [CRITICAL] NodeMailer Başlatılamadı:", e);
+    transporter = null;
 }
 
 // --- AUTHENTICATION & USER ROUTES ---
@@ -1506,8 +1501,7 @@ app.post('/api/auth/register', async (req, res) => {
         await dbAdapter.addUser(newUser);
 
         // --- SEND WELCOME EMAIL ---
-        // If transporter is available OR we are in mock mode (simulation)
-        if (transporter || !isMockMode) {
+        if (transporter && email) {
             const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: email,
@@ -1552,30 +1546,18 @@ app.post('/api/auth/register', async (req, res) => {
                 `
             };
 
-            // Using callback approach for transporter
-             if (transporter) {
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) console.error('❌ Welcome email failed:', error.message);
-                    else {
-                        systemLogs.unshift({
-                            id: Date.now(),
-                            type: 'success',
-                            action: 'Welcome Email Sent',
-                            details: `To: ${email}`,
-                            time: new Date().toISOString()
-                        });
-                    }
-                });
-            } else {
-                 console.log('⚠️ [MOCK] Welcome email skipped (No SMTP). Logged for Admin.');
-                 systemLogs.unshift({
-                    id: Date.now(),
-                    type: 'info',
-                    action: 'Welcome Email (Mock)',
-                    details: `To: ${email}`,
-                    time: new Date().toISOString()
-                });
-            }
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) console.error('❌ Welcome email failed:', error.message);
+                else {
+                    systemLogs.unshift({
+                        id: Date.now(),
+                        type: 'success',
+                        action: 'Welcome Email Sent',
+                        details: `To: ${email}`,
+                        time: new Date().toISOString()
+                    });
+                }
+            });
         }
 
         // Create Token
@@ -1846,7 +1828,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         // console.log(`[PASSWORD RESET] Generated code for ${email}: ${code}`); // REMOVED FOR PRIVACY
         
         // Check if we can send email
-        if (transporter && !isMockMode) {
+        if (transporter) {
             console.log(`[FORGOT-PASSWORD] Sending reset email to user...`);
              const mailOptions = {
                 from: process.env.EMAIL_USER,
@@ -1871,21 +1853,11 @@ app.post('/api/auth/forgot-password', async (req, res) => {
                 res.json({ success: true, message: 'Şifre sıfırlama kodu e-posta adresinize gönderildi.' });
             } catch (mailError) {
                 console.error(`[FORGOT-PASSWORD] Email failed:`, mailError);
-                // Fallback for development/testing when SMTP is not configured
-                console.warn(`[DEV-MODE] Returning reset code in response because email failed.`);
-                res.json({ 
-                    success: true, 
-                    message: 'E-posta servisi ayarlanmamış (DEV MODE). Kod aşağıdadır.',
-                    debugCode: code 
-                });
+                res.status(500).json({ success: false, message: 'E-posta gönderilemedi.' });
             }
         } else {
-             console.warn(`[MOCK MODE] Password reset email not sent. Code: ${code}.`);
-             res.json({ 
-                success: true, 
-                message: 'Test Modu: Şifre sıfırlama kodu oluşturuldu.',
-                debugCode: code 
-            });
+             console.error(`[FORGOT-PASSWORD] Transporter not ready.`);
+             res.status(500).json({ success: false, message: 'E-posta servisi yapılandırılmamış.' });
         }
     } catch (error) {
          console.error('[FORGOT-PASSWORD] Fatal Error:', error);
@@ -2047,11 +2019,9 @@ app.post('/api/users/upgrade', authenticateToken, async (req, res) => {
                  console.log('✅ Fatura maili başarıyla gönderildi.');
             } catch (emailErr) {
                  console.error('❌ Mail gönderim hatası:', emailErr);
-                 console.log('⚠️ [SİMÜLASYON] Fatura maili gönderildi (Mock).');
             }
-        } else {
-             console.log('⚠️ [SİMÜLASYON] Fatura maili gönderildi (E-posta ayarları eksik).');
         }
+
 
         const { password: _, ...userWithoutPassword } = updatedUser;
         res.json({ success: true, user: userWithoutPassword });
@@ -2318,7 +2288,7 @@ app.post('/api/send-document', async (req, res) => {
     }
 
     // Check if transporter is ready
-    if (!transporter && !isMockMode) {
+    if (!transporter) {
         console.warn('Email service not configured (No Transporter).');
         return res.status(503).json({ success: false, message: 'E-posta servisi şu anda kullanılamıyor (Sunucu Yapılandırması Eksik).' });
     }
@@ -2326,40 +2296,31 @@ app.post('/api/send-document', async (req, res) => {
     try {
         const base64Data = pdfBase64.split(';base64,').pop();
         
-        if (transporter && !isMockMode) {
-             const mailOptions = {
-                from: process.env.EMAIL_USER,
-                to: email,
-                subject: `Dokümanınız Hazır: ${documentName || 'Belge'} - Kırbaş Doküman`,
-                html: `
-                    <div style="font-family: Arial, sans-serif; padding: 20px;">
-                        <h2>Dokümanınız Hazır!</h2>
-                        <p>Merhaba,</p>
-                        <p>Oluşturmuş olduğunuz <strong>${documentName}</strong> başlıklı doküman ektedir.</p>
-                        <p>Kırbaş Doküman Platformunu tercih ettiğiniz için teşekkür ederiz.</p>
-                        <br>
-                        <p style="font-size: 12px; color: #888;">Bu e-posta otomatik olarak gönderilmiştir.</p>
-                    </div>
-                `,
-                attachments: [
-                    {
-                        filename: `${(documentName || 'dokuman').replace(/[^a-z0-9]/gi, '_')}.pdf`,
-                        content: base64Data,
-                        encoding: 'base64'
-                    }
-                ]
-            };
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: `Dokümanınız Hazır: ${documentName || 'Belge'} - Kırbaş Doküman`,
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>Dokümanınız Hazır!</h2>
+                    <p>Merhaba,</p>
+                    <p>Oluşturmuş olduğunuz <strong>${documentName}</strong> başlıklı doküman ektedir.</p>
+                    <p>Kırbaş Doküman Platformunu tercih ettiğiniz için teşekkür ederiz.</p>
+                    <br>
+                    <p style="font-size: 12px; color: #888;">Bu e-posta otomatik olarak gönderilmiştir.</p>
+                </div>
+            `,
+            attachments: [
+                {
+                    filename: `${(documentName || 'dokuman').replace(/[^a-z0-9]/gi, '_')}.pdf`,
+                    content: base64Data,
+                    encoding: 'base64'
+                }
+            ]
+        };
 
-            await transporter.sendMail(mailOptions);
-            console.log(`[EMAIL] Document sent to user.`);
-        } else {
-             // If we reach here and isMockMode is explicitly false, it means transporter creation failed but wasn't caught earlier?
-             // Or transporter is undefined.
-             if (!isMockMode) {
-                 throw new Error("E-posta servisi başlatılamadı. Lütfen sunucu yapılandırmasını kontrol edin.");
-             }
-            // MOCK LOG REMOVED
-        }
+        await transporter.sendMail(mailOptions);
+        console.log(`[EMAIL] Document sent to user.`);
 
         res.json({ success: true, message: 'E-posta başarıyla gönderildi.' });
 
@@ -2493,13 +2454,17 @@ app.get('/api/logs', authenticateToken, requireAdmin, (req, res) => {
 });
 
 
-// --- EMAIL ROUTES ---
 
+// --- EMAIL ROUTES RE-ADDED (CLEAN) ---
 app.post('/api/send-welcome-email', async (req, res) => {
   const { recipientEmail, recipientName, companyName, plan } = req.body;
 
   if (!recipientEmail) {
     return res.status(400).json({ success: false, message: 'Email adresi zorunludur' });
+  }
+
+  if (!transporter) {
+       return res.status(503).json({ success: false, message: 'E-posta servisi aktif değil.' });
   }
 
   const planName = plan === 'YEARLY' ? 'Yıllık Pro' : plan === 'MONTHLY' ? 'Aylık Standart' : 'Ücretsiz';
@@ -2509,7 +2474,6 @@ app.post('/api/send-welcome-email', async (req, res) => {
     from: `"Kırbaş Doküman" <${process.env.EMAIL_USER || 'info@kirbas.com'}>`,
     to: recipientEmail,
     subject: 'Kırbaş Doküman Platformuna Hoş Geldiniz',
-    text: `Sayın ${recipientName},\n\nKırbaş Doküman platformuna üyeliğiniz başarıyla tamamlanmıştır.\n\nHesap Bilgileri:\n----------------\nFirma: ${companyName || '-'}\nPaket: ${planName}\n\nSisteme giriş yaparak dokümanlarınızı oluşturmaya başlayabilirsiniz.\n\nİyi Çalışmalar,\nKırbaş Doküman Yönetimi`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
         <h2 style="color: #2563eb;">Kırbaş Doküman Platformuna Hoş Geldiniz</h2>
@@ -2522,40 +2486,14 @@ app.post('/api/send-welcome-email', async (req, res) => {
           <p style="margin: 5px 0;"><strong>Paket:</strong> <span style="color: #2563eb; font-weight: bold;">${planName}</span></p>
           <p style="margin: 5px 0;"><strong>E-posta:</strong> ${recipientEmail}</p>
         </div>
-
-        <p>Sormak istediğiniz sorular için bu maile yanıt verebilirsiniz.</p>
-        
-        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;">
         
         <p style="font-size: 12px; color: #94a3b8;">Kırbaş Doküman Yönetimi © 2026</p>
       </div>
     `
   };
 
-  if (isMockMode) {
-      console.log('---------- [MOCK EMAIL SENT] ----------');
-      
-      // Log to system logs
-      systemLogs.unshift({
-        id: Date.now(),
-        type: 'info',
-        action: 'Email Sent (Mock)',
-        details: `To: ${recipientEmail}`,
-        time: new Date().toISOString()
-      });
-
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return res.json({ 
-          success: true, 
-          message: 'Mail simülasyon olarak gönderildi (Backend Loglarını kontrol edin)', 
-          mode: 'MOCK' 
-      });
-  }
-
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log('Message sent: %s', info.messageId);
-    
     systemLogs.unshift({
         id: Date.now(),
         type: 'success',
@@ -2564,86 +2502,12 @@ app.post('/api/send-welcome-email', async (req, res) => {
         time: new Date().toISOString()
     });
 
-    res.json({ success: true, message: 'Mail başarıyla gönderildi', messageId: info.messageId, mode: 'LIVE' });
+    res.json({ success: true, message: 'Mail başarıyla gönderildi', messageId: info.messageId });
   } catch (error) {
     console.error('Mail gönderme hatası:', error);
-    
-    systemLogs.unshift({
-        id: Date.now(),
-        type: 'error',
-        action: 'Email Failed',
-        details: error.message,
-        time: new Date().toISOString()
-    });
-
-    console.log('⚠️  Gerçek gönderim başarısız oldu, simülasyon yanıtı dönülüyor.');
-    res.json({ 
-        success: true, 
-        message: 'Mail sunucuya iletildi (Simülasyon - Auth Hatası)', 
-        error: error.message 
-    });
+    res.status(500).json({ success: false, message: 'Mail gönderme hatası', error: error.message });
   }
 });
-
-
-// --- SEND DOCUMENT (PDF) ---
-app.post('/api/send-document', async (req, res) => {
-    const { email, pdfBase64, documentName } = req.body;
-
-    if (!email || !pdfBase64) {
-        return res.status(400).json({ success: false, message: 'Email ve PDF verisi zorunludur' });
-    }
-
-    // Mock mode check using global flag
-    if (isMockMode || !transporter) {
-         console.log('---------- [MOCK DOCUMENT SENT] ----------');
-         console.log(`To: ${email}`);
-         console.log(`Doc: ${documentName}`);
-         return res.json({ success: true, message: 'Doküman simülasyon olarak gönderildi (Mock Mode)' });
-    }
-
-    // Use global transporter instead of creating new one
-
-
-    try {
-        let pdfContent = pdfBase64;
-        if (pdfBase64.includes('base64,')) {
-            pdfContent = pdfBase64.split('base64,')[1];
-        }
-
-        const mailOptions = {
-            from: `"Kırbaş Doküman" <${process.env.EMAIL_USER || 'info@kirbas.com'}>`,
-            to: email,
-            subject: `Dokümanınız Hazır: ${documentName || 'Yeni Doküman'}`,
-            text: `Merhaba,\n\nOluşturduğunuz "${documentName}" isimli doküman ektedir.\n\nİyi günler,\nKırbaş Doküman`,
-            attachments: [
-                {
-                    filename: `${documentName || 'Dokuman'}.pdf`,
-                    content: pdfContent,
-                    encoding: 'base64'
-                }
-            ]
-        };
-
-        const info = await transporter.sendMail(mailOptions);
-        console.log('Document sent: %s', info.messageId);
-        
-        systemLogs.unshift({
-            id: Date.now(),
-            type: 'success',
-            action: 'Document Sent',
-            details: `To: ${email} | Doc: ${documentName}`,
-            time: new Date().toISOString()
-        });
-
-        res.json({ success: true, message: 'Doküman başarıyla gönderildi' });
-
-    } catch (error) {
-        console.error('Doküman gönderme hatası:', error);
-        res.status(500).json({ success: false, message: 'Doküman gönderilemedi', error: error.message });
-    }
-});
-
 
 // --- GENERATE DOCUMENT (PDF) ---
 // Generates a PDF on the backend using data provided
