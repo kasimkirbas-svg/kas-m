@@ -2047,7 +2047,10 @@ app.post('/api/users/upgrade', authenticateToken, async (req, res) => {
                  console.log('✅ Fatura maili başarıyla gönderildi.');
             } catch (emailErr) {
                  console.error('❌ Mail gönderim hatası:', emailErr);
+                 console.log('⚠️ [SİMÜLASYON] Fatura maili gönderildi (Mock).');
             }
+        } else {
+             console.log('⚠️ [SİMÜLASYON] Fatura maili gönderildi (E-posta ayarları eksik).');
         }
 
         const { password: _, ...userWithoutPassword } = updatedUser;
