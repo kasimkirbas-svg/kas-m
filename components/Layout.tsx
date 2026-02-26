@@ -3,7 +3,7 @@ import {
   FileText, Settings, User as UserIcon, LogOut, Menu, X, 
   LayoutDashboard, FolderOpen, PlusSquare, ChevronLeft, ChevronRight,
   Shield, CreditCard, Bell, Search, Sun, Moon, Globe,
-  HelpCircle, AlertCircle
+  HelpCircle, AlertCircle, MessageSquare
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -15,6 +15,7 @@ interface LayoutProps {
   onLanguageChange?: (lang: 'tr' | 'en' | 'ar') => void;
   theme?: 'light' | 'dark';
   onThemeChange?: (theme: 'light' | 'dark') => void;
+  documentsCount?: number;
   t?: any;
   children: React.ReactNode;
 }
@@ -23,11 +24,13 @@ export const Layout: React.FC<LayoutProps> = ({
   user, currentView, onNavigate, onLogout, 
   language = 'tr', onLanguageChange, 
   theme = 'light', onThemeChange,
+  documentsCount = 0,
   t, children 
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   if (!user) {
     return <>{children}</>;
@@ -55,11 +58,17 @@ export const Layout: React.FC<LayoutProps> = ({
         ]
       : [
           { label: _t('nav.dashboard', 'Ana Sayfa'), view: 'dashboard', icon: LayoutDashboard },
-          { label: _t('nav.documents', 'Belgelerim'), view: 'my-documents', icon: FolderOpen },
+          { label: `${_t('nav.documents', 'Belgelerim')} (${documentsCount})`, view: 'my-documents', icon: FolderOpen },
           { label: _t('nav.create', 'Yeni Oluştur'), view: 'templates', icon: PlusSquare },
           { label: _t('nav.profile', 'Profilim'), view: 'profile', icon: UserIcon },
           { label: _t('nav.settings', 'Ayarlar'), view: 'settings', icon: Settings },
         ];
+
+  // Mock Notifications
+  const notifications = [
+    { id: 1, title: 'Hoşgeldiniz', message: 'Kırbaş Panel\'e hoşgeldiniz.', time: 'Şimdi' },
+    { id: 2, title: 'Yeni Özellik', message: 'Koyu mod artık kullanılabilir.', time: '1 saat önce' },
+  ];
 
   return (
     <div className={`min-h-screen flex transition-colors duration-300 font-sans ${theme === 'dark' ? 'dark bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
@@ -189,38 +198,12 @@ export const Layout: React.FC<LayoutProps> = ({
               <button 
                 onClick={() => setSidebarOpen(true)} 
                 className="p-2 -ml-2 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
-              >
-                <Menu size={24} />
-              </button>
-              <span className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">Kırbaş Panel</span>
-            </div>
-
-            {/* Universal Search */}
-            <div className="hidden md:flex items-center max-w-lg w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 rounded-2xl px-5 py-2.5 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all shadow-inner">
-               <Search size={20} className="text-slate-400 mr-3" />
-               <input 
-                 type="text" 
-                 placeholder={_t('common.search', 'Belge, şablon veya rapor ara...')}
-                 className="bg-transparent border-none focus:outline-none text-sm w-full text-slate-700 dark:text-slate-200 placeholder:text-slate-400 font-medium"
-               />
-               <div className="hidden lg:flex items-center gap-1 ml-2">
-                 <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600">Ctrl</span>
-                 <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600">K</span>
-               </div>
-            </div>
+              >Spacer for Desktop (Since Search was here) */}
+            <div className="hidden md:block flex-1"></div>
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-3 md:gap-4 ml-auto">
               
-              {/* Theme Toggle */}
-              <button 
-                onClick={() => onThemeChange?.(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2.5 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all active:scale-95"
-                title={theme === 'dark' ? 'Aydınlık Mod' : 'Karanlık Mod'}
-              >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
-
               {/* Language Selector */}
               <div className="relative">
                 <button 
@@ -262,7 +245,7 @@ export const Layout: React.FC<LayoutProps> = ({
               {/* Theme Toggle */}
               <button 
                 onClick={() => onThemeChange?.(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2 text-slate-500 hover:text-amber-500 dark:text-slate-400 dark:hover:text-yellow-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="p-2 text-slate-500 hover:text-amber-500 dark:text-slate-400 dark:hover:text-yellow-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 title={theme === 'dark' ? 'Aydınlık Mod' : 'Karanlık Mod'}
               >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -270,11 +253,43 @@ export const Layout: React.FC<LayoutProps> = ({
 
               <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1 hidden sm:block"></div>
 
-              {/* Notifications (Active but dummy) */}
-              <button className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 relative">
-                <Bell size={20} />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></span>
-              </button>
+              {/* Notifications */}
+              <div className="relative">
+                <button 
+                    onClick={() => setNotificationsOpen(!notificationsOpen)}
+                    className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 relative"
+                >
+                    <Bell size={20} />
+                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></span>
+                </button>
+                {notificationsOpen && (
+                    <>
+                        <div className="fixed inset-0 z-40" onClick={() => setNotificationsOpen(false)}></div>
+                        <div className="absolute right-0 top-full mt-2 w-72 md:w-80 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden animate-fade-in">
+                            <div className="p-3 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+                                <h3 className="font-semibold text-slate-800 dark:text-slate-200 text-sm">Bildirimler</h3>
+                                <span className="text-xs text-indigo-500 cursor-pointer font-medium hover:underline">Tümünü Okundu İşaretle</span>
+                            </div>
+                            <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                                {notifications.map((notif) => (
+                                    <div key={notif.id} className="p-3 border-b border-slate-50 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer last:border-0 relative group">
+                                        <div className="flex gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                                                <MessageSquare size={14} />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{notif.title}</p>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{notif.message}</p>
+                                                <p className="text-[10px] text-slate-400 mt-1.5">{notif.time}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                )}
+              </div>
 
                <div className="flex items-center gap-3 pl-2">
                  <div className="text-right hidden sm:block">

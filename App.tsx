@@ -271,8 +271,18 @@ const App = () => {
     localStorage.removeItem('authToken'); // Clear auth token
   };
 
-  const handleUpgrade = (selectedPlan: SubscriptionPlan) => {
+  const handleUpgrade = async (selectedPlan: SubscriptionPlan) => {
     if (!user) return;
+
+    // Trigger Backend Update (Sends Email)
+    try {
+        await fetchApi('/api/users/upgrade', {
+            method: 'POST',
+            body: JSON.stringify({ userId: user.id, plan: selectedPlan })
+        });
+    } catch (apiError) {
+        console.error('Upgrade API error:', apiError); 
+    }
 
     // Determined limits based on plan
     let newLimit: number | 'UNLIMITED' = 5; // Default free
@@ -344,13 +354,18 @@ const App = () => {
         <div className="space-y-4">
           <button 
             onClick={() => {
-              setCurrentView('templates');
+              if (editingDocument || previewDocument) {
+                  setCurrentView('my-documents');
+              } else {
+                  setCurrentView('templates');
+              }
               setEditingDocument(undefined);
+              setPreviewDocument(undefined);
             }}
             className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4"
           >
             <ArrowLeft size={18} />
-            {t?.editor?.back || 'Şablonlara Dön'}
+            {t?.common?.back || 'Geri'}
           </button>
           <DocumentEditor 
             template={selectedTemplate}
@@ -361,9 +376,13 @@ const App = () => {
             companyName={user.companyName}
             preparedBy={user.name}
             onClose={() => {
-              setCurrentView('templates');
+              if (editingDocument || previewDocument) {
+                  setCurrentView('my-documents');
+              } else {
+                  setCurrentView('templates');
+              }
               setEditingDocument(undefined);
-              setPreviewDocument(undefined); // Reset preview
+              setPreviewDocument(undefined); 
             }}
             onDocumentGenerated={async (doc: GeneratedDocument) => {
               // Optimistic UI update
@@ -522,6 +541,7 @@ const App = () => {
       onLanguageChange={handleLanguageChange}
       theme={theme}
       onThemeChange={handleThemeChange}
+      documentsCount={savedDocuments.length}
       t={t}
     >
       {renderContent()}

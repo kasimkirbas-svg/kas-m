@@ -62,7 +62,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
       title: 'KÜÇÜK İŞLETME',
       subtitle: 'Esnaf ve KOBİ',
       icon: Store,
-      image: 'https://images.unsplash.com/photo-1556740758-90de2742e614?auto=format&fit=crop&q=80&w=400',
+      image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=400',
       color: 'bg-pink-600',
       items: ['Satış Takip', 'Stok Sayım', 'Cari Hesap', 'Teklif Hazırla', 'Tahsilat'],
       searchQuery: 'Esnaf'
@@ -81,16 +81,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTem
             <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 font-medium">
                Sektörel İş Analizi ve Doküman Takip Sistemi
             </p>
-         </div>
-         <div className="flex gap-4 text-xs md:text-sm font-bold">
-            <div className="flex items-center gap-2">
-               <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
-               <span className="text-emerald-700 dark:text-emerald-400">Aktif: {savedDocuments.length}</span>
-            </div>
-            <div className="flex items-center gap-2">
-               <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></span>
-               <span className="text-amber-700 dark:text-amber-400">Bekleyen: 0</span>
-            </div>
          </div>
       </div>
 

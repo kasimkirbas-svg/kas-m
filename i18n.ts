@@ -186,7 +186,14 @@ const tr = {
     pdfDate: 'Tarih',
     pdfPhotos: 'Fotoğraf Sayısı',
     pdfNotes: 'Ek Notlar',
-    pdfNone: 'Yok'
+    pdfNone: 'Yok',
+    firmLogo: 'Firma Logosu',
+    uploadLogo: 'Logo Yükle (Max 2MB)',
+    customFields: 'Özel Alanlar',
+    addField: 'Alan Ekle',
+    fieldName: 'Alan Adı (Örn: Proje No)',
+    fieldValue: 'Değer',
+    remove: 'Kaldır'
   },
   admin: {
     title: 'Admin Paneli',
@@ -449,7 +456,14 @@ const en = {
     pdfDate: 'Date',
     pdfPhotos: 'Number of Photos',
     pdfNotes: 'Additional Notes',
-    pdfNone: 'None'
+    pdfNone: 'None',
+    firmLogo: 'Company Logo',
+    uploadLogo: 'Upload Logo (Max 2MB)',
+    customFields: 'Custom Fields',
+    addField: 'Add Field',
+    fieldName: 'Field Name (e.g. Project No)',
+    fieldValue: 'Value',
+    remove: 'Remove'
   },
   admin: {
     title: 'Admin Panel',
@@ -693,7 +707,14 @@ const ar = {
     close: 'إغلاق',
     cancel: 'إلغاء',
     maxPhotoError: 'يمكنك إضافة {count} صورة كحد أقصى!',
-    maxPhotos: 'تم الوصول إلى السعة القصوى للصور',
+    maxPhotos: 'تم ال,
+    firmLogo: 'شعار الشركة',
+    uploadLogo: 'تحميل الشعار (حد أقصى 2 ميجابايت)',
+    customFields: 'حقول مخصصة',
+    addField: 'إضافة حقل',
+    fieldName: 'اسم الحقل',
+    fieldValue: 'القيمة',
+    remove: 'إزالة'وصول إلى السعة القصوى للصور',
     photoSuccess: 'تم إنشاء المستند بنجاح وجاهز للتنزيل!',
     pdfCompany: 'الشركة',
     pdfPreparedBy: 'جهز من قبل',

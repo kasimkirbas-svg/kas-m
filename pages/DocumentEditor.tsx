@@ -52,7 +52,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
   const [photos, setPhotos] = useState<DocumentPhoto[]>(initialData?.photos || []);
   const [additionalNotes, setAdditionalNotes] = useState(initialData?.additionalNotes || '');
-  
+  // New States for Logo and Custom Fields
+  const [logo, setLogo] = useState<string | null>(initialData?.data?.logo || null);
+  const [customFields, setCustomFields] = useState<{ id: string, label: string, value: string }[]>(initialData?.data?.customFields || []);
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [sendEmail, setSendEmail] = useState(false);
@@ -82,6 +85,31 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     }));
   };
 
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+          alert('Logo dosyası 2MB\'dan küçük olmalıdır.');
+          return;
+      }
+      const reader = new FileReader();
+      reader.onload = (ev) => setLogo(ev.target?.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const addCustomField = () => {
+    setCustomFields(prev => [...prev, { id: Date.now().toString(), label: '', value: '' }]);
+  };
+
+  const updateCustomField = (id: string, key: 'label' | 'value', val: string) => {
+    setCustomFields(prev => prev.map(f => f.id === id ? { ...f, [key]: val } : f));
+  };
+
+  const removeCustomField = (id: string) => {
+    setCustomFields(prev => prev.filter(f => f.id !== id));
+  };
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -109,31 +137,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setPhotos(prev => prev.filter(p => p.id !== id));
   };
 
-  const handleGenerateDocument = async () => {
-    
-    if (sendEmail) {
-        if (!userEmail) {
-             alert(_t('editor.emailMissing', 'E-posta adresi bulunamadı. Lütfen profilinizi güncelleyin.'));
-             setSendEmail(false);
-             return; 
-        }
-    }
-
-    setIsGenerating(true);
-    setGenerationSuccess(false);
-
-    try {
-      // Use Backend Generation for Professional PDF
-      const response = await fetch('/api/generate-pdf', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}` // Ensure auth
-          },
-          body: JSON.stringify({
-              templateId: template.id,
-              title: template.title,
-              data: { ...formData, date: formData.date }, // Flatten data for PDF
+                  ...formData, 
+                  date: formData.date,
+                  logo, // Pass logo
+                  customFields // Pass custom fields
+              }, 
               email: sendEmail ? userEmail : undefined
           })
       });
@@ -142,6 +150,31 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           throw new Error('Sunucu hatası: ' + response.statusText);
       }
 
+      const result = await response.json();
+      
+      if (!result.success) {
+          throw new Error(result.message || 'PDF oluşturulamadı');
+      }
+
+      // Download PDF
+      const link = document.createElement('a');
+      link.href = result.pdfBase64;
+      link.download = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      if (sendEmail) {
+          alert("Doküman oluşturuldu ve e-posta adresinize gönderildi!");
+      } else {
+          alert("Doküman başarıyla oluşturuldu ve indirildi.");
+      }
+      
+      const documentRecord: GeneratedDocument = {
+        id: initialData?.id || 'doc-' + Date.now(),
+        userId,
+        templateId: template.id,
+        data: { ...formData, logo, customFields }, // Save to record
       const result = await response.json();
       
       if (!result.success) {
@@ -257,6 +290,28 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     name="companyName"
                     value={formData.companyName}
                     onChange={handleInputChange}
+               {/* Logo Upload */}
+               <div className="col-span-1 md:col-span-2">
+                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{_t('editor.firmLogo', 'Firma Logosu')}</label>
+                  <div className="flex items-center gap-4">
+                      {logo && (
+                          <div className="w-16 h-16 rounded-lg border border-slate-200 p-1 bg-white flex items-center justify-center relative group">
+                              <img src={logo} alt="Logo" className="max-w-full max-h-full object-contain" />
+                              <button onClick={() => setLogo(null)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <Trash2 size={12} />
+                              </button>
+                          </div>
+                      )}
+                      <label className="flex items-center gap-2 px-4 py-3 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl cursor-pointer border-2 border-dashed border-slate-300 dark:border-slate-700 transition-colors">
+                          <Upload size={18} className="text-slate-500" />
+                          <span className="text-sm font-bold text-slate-600 dark:text-slate-400">
+                              {logo ? _t('editor.changeLogo', 'Logoyu Değiştir') : _t('editor.uploadLogo', 'Logo Yükle')}
+                          </span>
+                          <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+                      </label>
+                  </div>
+               </div>
+
                     placeholder={_t('editor.companyNamePlaceholder', 'Örn: ABC İnşaat Ltd. Şti.')}
                     className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none placeholder:text-slate-400"
                   />
@@ -327,6 +382,41 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     )}
                   </div>
                 ))}
+
+                {/* Custom Fields Section */}
+                <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div className="flex justify-between items-center">
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">{_t('editor.customFields', 'Özel Alanlar')}</label>
+                        <button type="button" onClick={addCustomField} className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 px-2 py-1 rounded-lg transition-colors flex items-center gap-1">
+                            <Plus size={14} /> {_t('editor.addField', 'Bölüm Ekle')}
+                        </button>
+                    </div>
+                    {customFields.map((field) => (
+                        <div key={field.id} className="grid grid-cols-12 gap-2 animate-fade-in">
+                            <div className="col-span-4">
+                                <input
+                                    type="text"
+                                    placeholder={_t('editor.fieldName', 'Başlık')}
+                                    value={field.label}
+                                    onChange={(e) => updateCustomField(field.id, 'label', e.target.value)}
+                                    className="w-full px-3 py-2 text-sm rounded-lg bg-slate-50 dark:bg-slate-800 border border-transparent focus:border-indigo-500 outline-none font-bold"
+                                />
+                            </div>
+                            <div className="col-span-7">
+                                <input
+                                    type="text"
+                                    placeholder={_t('editor.fieldValue', 'Değer')}
+                                    value={field.value}
+                                    onChange={(e) => updateCustomField(field.id, 'value', e.target.value)}
+                                    className="w-full px-3 py-2 text-sm rounded-lg bg-slate-50 dark:bg-slate-800 border border-transparent focus:border-indigo-500 outline-none"
+                                />
+                            </div>
+                            <div className="col-span-1 flex justify-center">
+                                <button onClick={() => removeCustomField(field.id)} className="text-red-400 hover:text-red-600 p-2"><Trash2 size={16} /></button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
 
                 <div className="space-y-2">
                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">{_t('editor.additionalNotes', 'Ek Notlar')}</label>

@@ -118,34 +118,6 @@ export const Settings: React.FC<SettingsProps> = ({ user, theme, language, t, on
     }, 1000);
   };
 
-  const handleDeleteAccount = async () => {
-    if (window.confirm('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
-      if (window.confirm('Lütfen onayladığınızı tekrar belirtin.')) {
-        setIsLoading(true);
-
-        try {
-          const response = await fetchApi('/api/auth/delete-account', {
-              method: 'DELETE',
-          });
-
-          if (response.ok) {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('currentUser');
-            window.location.href = '/';
-          } else {
-             const data = await response.json();
-             alert(data.message || 'Hata oluştu.');
-             setIsLoading(false);
-          }
-        } catch (error) {
-             console.error(error);
-             alert('Sunucu hatası.');
-             setIsLoading(false);
-        }
-      }
-    }
-  };
-
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in p-2">
       {/* Success Message */}
@@ -381,27 +353,6 @@ export const Settings: React.FC<SettingsProps> = ({ user, theme, language, t, on
                         </form>
                     </div>
                 )}
-            </div>
-            
-            {/* Danger Zone */}
-            <div className="rounded-3xl border-2 border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10 p-8">
-                <h2 className="text-xl font-black text-red-900 dark:text-red-400 mb-4 flex items-center gap-3">
-                    <AlertTriangle size={24} />
-                    Tehlikeli Alan
-                </h2>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <p className="text-sm font-medium text-red-700 dark:text-red-300/80 max-w-md">
-                        Hesabınızı sildiğinizde tüm verileriniz kalıcı olarak silinir ve bu işlem geri alınamaz.
-                    </p>
-                    <button
-                        onClick={handleDeleteAccount}
-                        disabled={isLoading}
-                        className="px-6 py-3 bg-white dark:bg-slate-900 text-red-600 dark:text-red-500 border border-red-200 dark:border-red-900/50 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 font-bold transition flex items-center gap-2 shadow-sm whitespace-nowrap"
-                    >
-                        <Trash2 size={18} />
-                        Hesabı Sil
-                    </button>
-                </div>
             </div>
 
         </div>

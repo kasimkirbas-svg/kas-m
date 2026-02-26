@@ -269,6 +269,32 @@ const dbAdapter = {
 
     deleteUser: async (id) => {
         let deleted = false;
+        let deletedUserData = null;
+        
+        // Fetch user data first to save history
+        if (pgPool) {
+             const res = await pgPool.query('SELECT data FROM users WHERE id = $1', [id]);
+             if (res.rows.length > 0) deletedUserData = res.rows[0].data;
+        } else if (MONGO_URI) {
+             try { await connectDB(); deletedUserData = await User.findOne({ id }).lean(); } catch(e){}
+        } else {
+             const u = readFileDB().users.find(u => u.id === id);
+             if (u) deletedUserData = u;
+        }
+
+        // Save to History (if user found)
+        if (deletedUserData) {
+             try {
+                 await dbAdapter.addDeletedUser({
+                     email: deletedUserData.email,
+                     rights: deletedUserData.remainingDownloads,
+                     deletedAt: new Date().toISOString()
+                 });
+             } catch (err) {
+                 console.error('Failed to save user history:', err);
+             }
+        }
+
         if (pgPool) {
              try {
                 const res = await pgPool.query('DELETE FROM users WHERE id = $1', [id]);
@@ -292,6 +318,25 @@ const dbAdapter = {
             deleted = true;
         }
         return deleted;
+    },
+
+    // History Management
+    findDeletedUserByEmail: async (email) => {
+        // Only File DB support for now as table structure for deleted_users is not defined in PG/Mongo instructions
+        // We'll store it in db.json under 'deletedUsers'
+        const db = readFileDB();
+        return db.deletedUsers ? db.deletedUsers.find(u => u.email === email) : null;
+    },
+
+    addDeletedUser: async (entry) => {
+        const db = readFileDB();
+        if (!db.deletedUsers) db.deletedUsers = [];
+        
+        // Remove old entry if exists (keep latest)
+        db.deletedUsers = db.deletedUsers.filter(u => u.email !== entry.email);
+        
+        db.deletedUsers.push(entry);
+        writeFileDB(db);
     }
 };
 
@@ -353,14 +398,15 @@ const readDB = () => {
         try {
             const parsed = JSON.parse(data);
              if (!parsed.templates) parsed.templates = INITIAL_TEMPLATES;
+             if (!parsed.invoices) parsed.invoices = [];
             return parsed;
         } catch (parseErr) {
             console.error("DB Parse Error - Corrupt File:", parseErr);
-            return { users: [], documents: [], templates: INITIAL_TEMPLATES };
+            return { users: [], documents: [], templates: INITIAL_TEMPLATES, invoices: [] };
         }
     } catch (err) {
         console.error("DB Read Error:", err);
-        return { users: [], documents: [], templates: INITIAL_TEMPLATES };
+        return { users: [], documents: [], templates: INITIAL_TEMPLATES, invoices: [] };
     }
 };
 
@@ -1428,6 +1474,17 @@ app.post('/api/auth/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Check History for Rights Persistence (Prevent reset on re-register)
+        const deletedUserHistory = await dbAdapter.findDeletedUserByEmail(email);
+        let finalRights = 10; // Default: 10 Rights
+
+        if (deletedUserHistory) {
+             console.log(`[Register] Found history for ${email}. Restoring rights: ${deletedUserHistory.rights}`);
+             // Restore previous rights, but ensure it doesn't exceed default if they had more (optional, but safer to just restore)
+             // or if they had 0, they stay at 0 to prevent farming.
+             finalRights = deletedUserHistory.rights;
+        }
+
         const newUser = {
             id: 'user-' + Date.now(),
             name,
@@ -1436,7 +1493,7 @@ app.post('/api/auth/register', async (req, res) => {
             companyName: companyName || '', // Optional
             role: 'SUBSCRIBER',
             plan: 'FREE',
-            remainingDownloads: 50, // 30 Days Free -> Updated to 50 as requested
+            remainingDownloads: finalRights, 
             downloadsThisMonth: 0,
             subscriptionStartDate: new Date().toISOString(),
             subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 Days fixed
@@ -1616,6 +1673,18 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Get Me Error:', error);
         res.status(500).json({ success: false, message: 'Kullanıcı bilgileri alınamadı.' });
+    }
+});
+
+// Get Invoices
+app.get('/api/auth/invoices', authenticateToken, async (req, res) => {
+    try {
+        const db = readFileDB();
+        const invoices = (db.invoices || []).filter(inv => inv.userId === req.user.id).sort((a,b) => new Date(b.date) - new Date(a.date));
+        res.json({ success: true, invoices });
+    } catch (e) {
+        console.error('Invoices Error:', e);
+        res.status(500).json({ success: false, message: 'Faturalar alınamadı.' });
     }
 });
 
@@ -1927,6 +1996,58 @@ app.post('/api/users/upgrade', authenticateToken, async (req, res) => {
         const updatedUser = await dbAdapter.findUserById(userId);
         if (!updatedUser) {
              return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+        }
+
+        // Generate Invoice Record
+        const invoice = {
+            id: 'INV-' + userId.split('-')[0].toUpperCase() + '-' + Date.now().toString().slice(-6),
+            userId: userId,
+            customer: updatedUser.name,
+            customerEmail: updatedUser.email,
+            date: new Date().toISOString(),
+            description: `${plan} Plan Upgrade`,
+            amount: plan === 'YEARLY' ? 1200 : 150,
+            currency: 'TRY',
+            status: 'PAID'
+        };
+
+        // Save Invoice (File System only for now as default success)
+        try {
+           const db = readFileDB();
+           if (!db.invoices) db.invoices = [];
+           db.invoices.push(invoice);
+           writeFileDB(db);
+        } catch(e) { console.error('Error saving invoice:', e); }
+
+        // Fatura/Bilgi Maili Gönderimi
+        if (transporter && updatedUser.email) {
+            try {
+                 console.log(`Sending invoice email to ${updatedUser.email}...`);
+                 const mailOptions = {
+                    from: `"Kırbaş Panel" <${process.env.EMAIL_USER || 'noreply@kirbas.com'}>`, // sender address
+                    to: updatedUser.email, // list of receivers
+                    subject: 'Abonelik Satın Alımı Başarılı - Fatura Bilgilendirmesi', // Subject line
+                    html: `
+                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                            <h2 style="color: #4F46E5;">Sayın ${updatedUser.name},</h2>
+                            <p><strong>${plan === 'YEARLY' ? 'Yıllık Pro' : 'Aylık Standart'}</strong> paket aboneliğiniz başarıyla aktif edilmiştir.</p>
+                            <div style="background-color: #f9favb; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                                <p style="margin: 5px 0;"><strong>Paket:</strong> ${plan === 'YEARLY' ? 'Yıllık Pro' : 'Aylık Standart'}</p>
+                                <p style="margin: 5px 0;"><strong>İşlem Tarihi:</strong> ${new Date().toLocaleDateString('tr-TR')}</p>
+                                <p style="margin: 5px 0;"><strong>Tutar:</strong> ${plan === 'YEARLY' ? 'EFT/Havale' : 'Kredi Kartı'}</p>
+                            </div>
+                            <p>Aboneliğinizle birlikte tüm premium şablonlara ve özelliklere erişebilirsiniz.</p>
+                            <p>Herhangi bir sorunuz olursa bizimle iletişime geçebilirsiniz.</p>
+                            <br>
+                            <p style="font-size: 12px; color: #888;">Bu e-posta otomatik olarak gönderilmiştir.</p>
+                        </div>
+                    `
+                 };
+                 await transporter.sendMail(mailOptions);
+                 console.log('✅ Fatura maili başarıyla gönderildi.');
+            } catch (emailErr) {
+                 console.error('❌ Mail gönderim hatası:', emailErr);
+            }
         }
 
         const { password: _, ...userWithoutPassword } = updatedUser;
@@ -2578,8 +2699,18 @@ app.post('/api/generate-pdf', async (req, res) => {
         // --- PDF CONTENT GENERATION ---
         
         // Brand Header (Top Left)
-        doc.fontSize(10).fillColor('#64748b').text('KIRBAŞ DOKÜMAN PLATFORMU', 50, 40, { align: 'left' });
-        doc.fontSize(10).text(new Date().toLocaleDateString('tr-TR'), 50, 40, { align: 'right' });
+        if (data?.logo) {
+            try {
+                 const logoBuffer = Buffer.from(data.logo.split(',')[1], 'base64');
+                 doc.image(logoBuffer, 50, 30, { height: 40 });
+            } catch(e) {
+                 doc.fontSize(10).fillColor('#64748b').text('KIRBAŞ DOKÜMAN PLATFORMU', 50, 40, { align: 'left' });
+            }
+        } else {
+            doc.fontSize(10).fillColor('#64748b').text('KIRBAŞ DOKÜMAN PLATFORMU', 50, 40, { align: 'left' });
+        }
+        
+        doc.fontSize(10).fillColor('#64748b').text(new Date().toLocaleDateString('tr-TR'), 50, 40, { align: 'right' });
 
         // Title Area
         doc.moveDown(2);
@@ -2600,7 +2731,11 @@ app.post('/api/generate-pdf', async (req, res) => {
             const valueX = 200; // Alignment for values
             let currentY = doc.y;
 
-            Object.entries(data).forEach(([key, value], index) => {
+            // Extract special fields
+            const { logo, customFields, ...restData } = data;
+
+            // 1. Standard Fields
+            Object.entries(restData).forEach(([key, value], index) => {
                 // Key formatting (camelCase to Title Case)
                 let label = key.replace(/([A-Z])/g, ' $1')
                              .replace(/^./, str => str.toUpperCase())
@@ -2642,6 +2777,39 @@ app.post('/api/generate-pdf', async (req, res) => {
 
                 currentY += rowHeight;
             });
+
+            // 2. Custom Fields
+             if (customFields && Array.isArray(customFields) && customFields.length > 0) {
+                 // Section Component
+                 currentY += 10;
+                 doc.font('Helvetica-Bold').fontSize(12).fillColor('#cbd5e1').text('EK BÖLÜMLER', 50, currentY);
+                 doc.moveTo(50, currentY + 15).lineTo(550, currentY + 15).lineWidth(1).strokeColor('#cbd5e1').stroke();
+                 currentY += 25;
+
+                 customFields.forEach((field, index) => {
+                    const label = field.label || 'Başlıksız';
+                    const displayValue = field.value || '-';
+
+                    doc.font('Helvetica').fontSize(11);
+                    const valueHeight = doc.heightOfString(displayValue, { width: 340 });
+                    const labelHeight = doc.heightOfString(label, { width: 140 });
+                    const rowHeight = Math.max(valueHeight, labelHeight) + 12;
+
+                    if (currentY + rowHeight > doc.page.height - 50) {
+                        doc.addPage();
+                        currentY = 50;
+                    }
+
+                    if (index % 2 === 0) {
+                        doc.rect(50, currentY - 5, 500, rowHeight).fillColor('#f8fafc').fill();
+                    }
+
+                    doc.fillColor('#475569').font('Helvetica-Bold').fontSize(11).text(label, startX + 10, currentY, { width: 140 });
+                    doc.fillColor('#1e293b').font('Helvetica').fontSize(11).text(displayValue, valueX, currentY, { width: 340 });
+                    currentY += rowHeight;
+                 });
+             }
+
         } else {
              doc.font('Helvetica-Oblique').text('İçerik bulunamadı.', { align: 'center' });
         }
