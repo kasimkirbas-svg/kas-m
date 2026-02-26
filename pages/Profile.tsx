@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Building2, Calendar, CreditCard, Download, Edit2, Check, X, Lock, FileText, AlertCircle, Trash2, LogOut } from 'lucide-react';
+import { User, Mail, Building2, Calendar, CreditCard, Download, Edit2, Check, X, Lock, FileText, AlertCircle, Trash2, LogOut, AlertTriangle, Loader2 } from 'lucide-react';
 import { Invoice, SubscriptionPlan } from '../types';
 import { fetchApi } from '../src/utils/api';
 
@@ -29,6 +29,19 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
   });
 
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+  // Account Deletion State
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteCountdown, setDeleteCountdown] = useState(3);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showDeleteConfirm && deleteCountdown > 0) {
+      timer = setTimeout(() => setDeleteCountdown(prev => prev - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [showDeleteConfirm, deleteCountdown]);
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -407,43 +420,77 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                 <div className="group p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all bg-slate-50 dark:bg-slate-800/50">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t?.profile?.fullName || 'Ad Soyad'}</p>
                     <p className="text-lg font-bold text-slate-900 dark:text-white">{user?.name}</p>
-                </div>
-
-                <div className="group p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all bg-slate-50 dark:bg-slate-800/50">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t?.profile?.email || 'E-posta'}</p>
-                    <p className="text-lg font-bold text-slate-900 dark:text-white">{user?.email}</p>
-                </div>
-
-                <div className="group p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all bg-slate-50 dark:bg-slate-800/50">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t?.profile?.companyName || 'Şirket Adı'}</p>
-                    <p className="text-lg font-bold text-slate-900 dark:text-white">{user?.companyName || '-'}</p>
-                </div>
-                
-                <div className="pt-8 mt-4">
-                     <button 
-                        onClick={async () => {
-                            if(window.confirm(t?.profile?.confirmDeleteAccount || 'Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
-                                    try {
-                                        const res = await fetchApi('/api/auth/delete-account', { 
-                                            method: 'DELETE',
-                                            headers: { 
-                                              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                </di{!showDeleteConfirm ? (
+                        <button 
+                            onClick={() => {
+                                setShowDeleteConfirm(true);
+                                setDeleteCountdown(3);
+                            }}
+                            className="text-red-500 hover:text-red-700 font-bold text-sm flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors w-full md:w-auto justify-center md:justify-start"
+                        >
+                            <Trash2 size={16} />
+                            {t?.profile?.deleteAccount || 'Hesabımı Sil'}
+                        </button>
+                    ) : (
+                        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 animate-in fade-in slide-in-from-top-2">
+                             <h4 className="font-bold text-red-700 dark:text-red-400 mb-2 flex items-center gap-2">
+                                <AlertTriangle size={18} />
+                                Hesabınızı silmek üzeresiniz!
+                             </h4>
+                             <p className="text-sm text-red-600 dark:text-red-300 mb-4">
+                                Bu işlem geri alınamaz. Tüm verileriniz kalıcı olarak silinecektir.
+                             </p>
+                             <div className="flex gap-3">
+                                 <button
+                                    onClick={async () => {
+                                        setIsDeleting(true);
+                                        try {
+                                            const res = await fetchApi('/api/auth/delete-account', { 
+                                                method: 'DELETE',
+                                                headers: { 
+                                                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                                                }
+                                            });
+                                            if (!res.ok) {
+                                                const errorData = await res.json();
+                                                throw new Error(errorData.message || 'Silme işlemi başarısız.');
                                             }
-                                        });
-                                        if (!res.ok) {
-                                            const errorData = await res.json();
-                                            throw new Error(errorData.message || 'Silme işlemi başarısız.');
-                                        }
 
-                                        const data = await res.json();
-                                    
-                                    if(data.success) {
-                                        localStorage.removeItem('authToken');
-                                        localStorage.removeItem('currentUser');
-                                        localStorage.clear();
-                                        window.location.href = '/auth?mode=login';
-                                        alert(data.message || 'Hesabınız silindi.');
-                                    } else {
+                                            const data = await res.json();
+                                        
+                                            if(data.success) {
+                                                localStorage.removeItem('authToken');
+                                                localStorage.removeItem('currentUser');
+                                                localStorage.clear();
+                                                window.location.href = '/auth?mode=login';
+                                            } else {
+                                                setNotification({ type: 'error', message: data.message || 'Hata oluştu.' });
+                                                setShowDeleteConfirm(false);
+                                            }
+                                        } catch (e) {
+                                            console.error(e);
+                                            setNotification({ type: 'error', message: 'Bir hata oluştu.' });
+                                            setShowDeleteConfirm(false);
+                                        } finally {
+                                            setIsDeleting(false);
+                                        }
+                                    }}
+                                    disabled={deleteCountdown > 0 || isDeleting}
+                                    className="px-4 py-2 bg-red-600 text-white rounded-lg font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
+                                 >
+                                    {isDeleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                                    {deleteCountdown > 0 ? `Bekleyiniz (${deleteCountdown})` : 'Evet, Hesabımı Sil'}
+                                 </button>
+                                 <button
+                                    onClick={() => setShowDeleteConfirm(false)}
+                                    disabled={isDeleting}
+                                    className="px-4 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+                                 >
+                                    İptal
+                                 </button>
+                             </div>
+                        </div>
+                    )}       } else {
                                         alert(data.message || 'Hata oluştu.');
                                     }
                                 } catch (e) {

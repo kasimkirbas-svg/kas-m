@@ -10,8 +10,10 @@ interface SubscriptionPageProps {
   onBack: () => void;
 }
 
+
 export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onUpgrade, onBack }) => {
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   
   // Payment Form State
@@ -26,6 +28,14 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
 
   const handleSelectPlan = (planId: SubscriptionPlan) => {
     setSelectedPlan(planId);
+    setSelectedPackage(null);
+    setShowPaymentModal(true);
+    setError('');
+  };
+
+  const handleSelectPackage = (packageId: string) => {
+    setSelectedPackage(packageId);
+    setSelectedPlan(null);
     setShowPaymentModal(true);
     setError('');
   };
@@ -67,11 +77,33 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
       return;
     }
 
+
     try {
         if (selectedPlan) {
             // Actual API call via App.tsx logic
             await onUpgrade(selectedPlan);
             setShowPaymentModal(false);
+        } else if (selectedPackage) {
+            // Buy Extra Package
+            const token = localStorage.getItem('token');
+            const response = await fetch('/api/buy-rights', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ packageId: selectedPackage })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(result.message || 'Paket başarıyla tanımlandı!');
+                setShowPaymentModal(false);
+                // Force Reload to update user context
+                window.location.reload(); 
+            } else {
+                throw new Error(result.message || 'Satın alma başarısız oldu.');
+            }
         }
     } catch (err: any) {
         console.error('Payment Error:', err);
@@ -84,8 +116,17 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
   const getPlanDetails = (planId: SubscriptionPlan) => {
     return PLANS.find(p => p.id === planId);
   };
+  
+  const getPackageDetails = (pkgId: string) => {
+      switch(pkgId) {
+          case '10_pack': return { name: '10 Ek PDF Hakkı', price: '₺150', period: 'Tek Seferlik' };
+          case '50_pack': return { name: '50 Ek PDF Hakkı', price: '₺600', period: 'Tek Seferlik' };
+          default: return null;
+      }
+  };
 
-  const selectedPlanDetails = selectedPlan ? getPlanDetails(selectedPlan) : null;
+  const selectedPlanDetails = selectedPlan ? getPlanDetails(selectedPlan) : (selectedPackage ? getPackageDetails(selectedPackage) : null);
+
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-12 transition-colors duration-300">
@@ -185,6 +226,54 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
                </div>
              );
            })}
+        </div>
+        
+
+        {/* Extra Packages */}
+        <div className="mt-20 mb-10 max-w-4xl mx-auto">
+            <div className="flex items-center justify-center gap-4 mb-8">
+                <div className="h-px bg-slate-200 dark:bg-slate-700 flex-1"></div>
+                <h2 className="text-2xl font-black text-center text-slate-900 dark:text-white tracking-tight uppercase">
+                    Ek İndirme Paketleri
+                </h2>
+                <div className="h-px bg-slate-200 dark:bg-slate-700 flex-1"></div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+                {/* 10 Pack */}
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center relative overflow-hidden group hover:border-indigo-500 transition-all hover:shadow-2xl hover:-translate-y-1">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-indigo-500"></div>
+                    <div className="mb-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-full text-indigo-600 dark:text-indigo-400">
+                        <Star size={24} />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">10 PDF Hakkı</h3>
+                    <p className="text-sm text-slate-500 mb-4">Aylık abonelik olmadan ekstra indirme hakkı.</p>
+                    <div className="text-3xl font-black text-slate-900 dark:text-white mb-6">₺150 <span className="text-sm font-medium text-slate-400">/ tek seferlik</span></div>
+                    <button 
+                        onClick={() => handleSelectPackage('10_pack')}
+                        className="w-full py-3 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50 rounded-xl font-bold transition-colors"
+                    >
+                        Hemen Al
+                    </button>
+                </div>
+
+                {/* 50 Pack */}
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl border border-slate-100 dark:border-slate-700 flex flex-col items-center text-center relative overflow-hidden group hover:border-purple-500 transition-all hover:shadow-2xl hover:-translate-y-1">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-purple-500"></div>
+                    <div className="mb-4 p-4 bg-purple-50 dark:bg-purple-900/30 rounded-full text-purple-600 dark:text-purple-400">
+                        <Star size={24} fill="currentColor" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">50 PDF Hakkı</h3>
+                    <p className="text-sm text-slate-500 mb-4">Yoğun kullanım için avantajlı paket.</p>
+                    <div className="text-3xl font-black text-slate-900 dark:text-white mb-6">₺600 <span className="text-sm font-medium text-slate-400">/ tek seferlik</span></div>
+                    <button 
+                        onClick={() => handleSelectPackage('50_pack')}
+                        className="w-full py-3 bg-purple-50 text-purple-600 hover:bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 dark:hover:bg-purple-900/50 rounded-xl font-bold transition-colors"
+                    >
+                        Hemen Al
+                    </button>
+                </div>
+            </div>
         </div>
         
         <div className="mt-20 text-center animate-fade-in">

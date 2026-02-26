@@ -2471,19 +2471,56 @@ app.post('/api/send-welcome-email', async (req, res) => {
 
 // --- GENERATE DOCUMENT (PDF) ---
 // Generates a PDF on the backend using data provided
-app.post('/api/generate-pdf', async (req, res) => {
+app.post('/api/generate-pdf', authenticateToken, async (req, res) => {
     const { templateId, data, title, email } = req.body;
+    
+    // --- Rights Check Start ---
+    let user = null;
+    try {
+        user = await dbAdapter.findUserById(req.user.id);
+    } catch (e) { console.error('User fetch error during PDF gen:', e); }
+    
+    if (!user) {
+         return res.status(401).json({ success: false, message: 'Kullanıcı doğrulanamadı.' });
+    }
+
+    // Check if user has rights
+    let hasRights = false;
+    let currentRights = typeof user.remainingDownloads === 'number' ? user.remainingDownloads : 0;
+
+    // ADMIN, UNLIMITED plan or positive remainingDownloads
+    if (user.role === 'ADMIN' || user.plan === 'UNLIMITED') {
+        hasRights = true;
+    } else {
+        if (currentRights > 0) {
+            hasRights = true;
+        }
+    }
+
+    if (!hasRights) {
+         return res.status(402).json({ 
+             success: false, 
+             message: 'İndirme hakkınız kalmadı. Devam etmek için lütfen ek paket satın alınız.',
+             paymentRequired: true 
+         });
+    }
+    // --- Rights Check End ---
     
     // Log generation request
      systemLogs.unshift({
             id: Date.now(),
             type: 'info',
             action: 'PDF Generation',
-            details: `Template: ${templateId} | Title: ${title}`,
+            details: `User: ${user.email} | Template: ${templateId} | Title: ${title}`,
             time: new Date().toISOString()
      });
 
     try {
+        // Decrement Rights (Optimistic)
+        if (user.role !== 'ADMIN' && user.plan !== 'UNLIMITED') {
+            await dbAdapter.updateUser(user.id, { remainingDownloads: Math.max(0, currentRights - 1) });
+        }
+
         const doc = new PDFDocument({ margin: 50, size: 'A4' });
         
         // Collect data chunks
@@ -2669,6 +2706,84 @@ app.post('/api/generate-pdf', async (req, res) => {
         res.status(500).json({ success: false, message: 'PDF oluşturulamadı', error: error.message });
     }
 });
+
+
+
+// --- MIGRATION UTILS ---
+const migrateUserRights = async () => {
+    console.log('🔄 Checking User Rights Migration...');
+    try {
+        const users = await dbAdapter.getUsers();
+        let updatedCount = 0;
+        for (const user of users) {
+             // Only if user plan is FREE/TRIAL and remainingDownloads is null/undefined
+             // Don't overwrite if they have 0 or any number
+             if (user.remainingDownloads === undefined || user.remainingDownloads === null) {
+                 // Set Default: 10
+                 await dbAdapter.updateUser(user.id, { remainingDownloads: 10 });
+                 updatedCount++;
+             }
+        }
+        if (updatedCount > 0) console.log(`✅ Migrated ${updatedCount} users to default rights.`);
+        else console.log('✅ No migration needed.');
+    } catch (e) {
+        console.error('Migration Failed:', e);
+    }
+};
+
+// --- BUY RIGHTS ENDPOINT ---
+app.post('/api/buy-rights', authenticateToken, async (req, res) => {
+    const { packageId } = req.body;
+    const userId = req.user.id; // From token
+
+    if (!packageId) return res.status(400).json({ success: false, message: 'Paket seçilmedi.' });
+
+    try {
+        const user = await dbAdapter.findUserById(userId);
+        if (!user) return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+
+        // Logic for different packages
+        let amount = 0;
+        let packageName = '';
+        
+        switch (packageId) {
+            case '10_pack':
+                amount = 10;
+                packageName = '10 Ek Hak';
+                break;
+            case '50_pack': // Example
+                amount = 50;
+                packageName = '50 Ek Hak';
+                break;
+            default:
+                return res.status(400).json({ success: false, message: 'Geçersiz paket ID.' });
+        }
+
+        // Add
+        const current = typeof user.remainingDownloads === 'number' ? user.remainingDownloads : 0;
+        const newTotal = current + amount;
+        
+        await dbAdapter.updateUser(userId, { remainingDownloads: newTotal });
+
+        // Log
+        systemLogs.unshift({
+            id: Date.now(),
+            type: 'success',
+            action: 'Purchase',
+            details: `${user.email} bought ${packageName}. New Total: ${newTotal}`,
+            time: new Date().toISOString()
+        });
+        
+        res.json({ success: true, message: `${packageName} başarıyla tanımlandı.`, newTotal });
+
+    } catch (err) {
+        console.error('Purchase Error:', err);
+        res.status(500).json({ success: false, message: 'Satın alma işlemi başarısız.' });
+    }
+});
+
+// Run Migration on Startup (Async)
+migrateUserRights();
 
 
 // Vercel Serverless Function Support

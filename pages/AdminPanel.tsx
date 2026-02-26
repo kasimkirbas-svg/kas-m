@@ -935,6 +935,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                     </div>
                 ))}
             </div>
+
+            {/* Extra Packages Section */}
+            <div className="pt-8 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Ek İndirme Paketleri</h3>
+                    <button className="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-sm font-bold hover:bg-indigo-100 transition">
+                        + Yeni Paket
+                    </button>
+                </div>
+                
+                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-8 border border-dashed border-slate-300 dark:border-slate-700 text-center">
+                    <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-slate-400">
+                        <Download size={24} />
+                    </div>
+                    <h4 className="font-bold text-slate-900 dark:text-white mb-2">Henüz Ek Paket Tanımlanmamış</h4>
+                    <p className="text-sm text-slate-500 max-w-md mx-auto mb-6">
+                        Kullanıcıların mevcut aboneliklerine ek olarak satın alabilecekleri tek seferlik indirme haklarını buradan yönetebilirsiniz.
+                    </p>
+                    <button className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/20">
+                        İlk Paketi Oluştur
+                    </button>
+                </div>
+            </div>
         </div>
       )}
 

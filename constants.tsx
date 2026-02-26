@@ -22,6 +22,11 @@ export const PLANS = [
   }
 ];
 
+export const EXTRA_PACKAGES = [
+    { id: 'pack_10', name: '10 Ek İndirme Hakkı', rights: 10, price: 50 }, 
+    { id: 'pack_50', name: '50 Ek İndirme Hakkı', rights: 50, price: 200 }
+];
+
 // 25-35 Document templates simulation
 export const MOCK_TEMPLATES: DocumentTemplate[] = [
   // --- ÜRETİM / FABRİKA ---

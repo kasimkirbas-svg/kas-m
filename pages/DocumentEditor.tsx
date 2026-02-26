@@ -58,6 +58,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
   const [sendEmail, setSendEmail] = useState(false);
   const [generationSuccess, setGenerationSuccess] = useState(false);
   const [previewMode, setPreviewMode] = useState(false); // Mobile toggle
@@ -188,8 +189,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
       // Download PDF
       if (result.pdfBase64) {
+          const pdfUrl = result.pdfBase64.startsWith('data:') ? result.pdfBase64 : `data:application/pdf;base64,${result.pdfBase64}`;
+          
+          // Set Preview
+          setPdfPreviewUrl(pdfUrl);
+
           const link = document.createElement('a');
-          link.href = result.pdfBase64.startsWith('data:') ? result.pdfBase64 : `data:application/pdf;base64,${result.pdfBase64}`;
+          link.href = pdfUrl;
           link.download = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
           document.body.appendChild(link);
           link.click();
@@ -542,8 +548,28 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       </div>
       )}
 
+
       {/* Preview Section */}
       <div className={`lg:flex-[4] bg-slate-100 dark:bg-slate-900/50 rounded-3xl overflow-hidden flex-col order-2 relative border border-slate-200 dark:border-slate-800 ${isReadOnly ? 'w-full flex-1 flex' : ''} ${previewMode ? 'flex' : 'hidden lg:flex'}`}>
+         
+         {/* Generated PDF Preview */}
+         {pdfPreviewUrl ? (
+            <div className="flex-1 w-full h-full relative bg-slate-200/50 flex flex-col items-center justify-center">
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-slate-800/90 backdrop-blur-md text-white px-6 py-2 rounded-full shadow-xl z-20 flex items-center gap-4">
+                  <span className="font-bold text-sm tracking-wide">PDF ÖNİZLEME</span>
+                </div>
+                
+                <iframe src={pdfPreviewUrl} className="w-full h-full border-0" title="PDF Preview" />
+                
+                <button 
+                  onClick={() => setPdfPreviewUrl(null)} 
+                  className="absolute top-6 right-6 z-30 px-4 py-2 bg-slate-900/80 hover:bg-slate-800 text-white text-sm font-bold rounded-xl shadow-lg backdrop-blur-md transition-all flex items-center gap-2"
+                >
+                  <ArrowLeft size={16} /> Editöre Dön
+                </button>
+            </div>
+         ) : (
+         <>
          {/* Preview Toolbar */}
          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-slate-800/90 backdrop-blur-md text-white px-6 py-2 rounded-full shadow-xl z-20 flex items-center gap-4">
             <span className="font-bold text-sm tracking-wide">{_t('common.preview', 'ÖNİZLEME')}</span>
@@ -734,6 +760,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                
             </div>
          </div>
+         </>
+         )}
       </div>
 
       {/* Photo Preview Modal */}
