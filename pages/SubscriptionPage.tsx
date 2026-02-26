@@ -250,7 +250,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
                     <p className="text-sm text-slate-500 mb-4">Aylık abonelik olmadan ekstra indirme hakkı.</p>
                     <div className="text-3xl font-black text-slate-900 dark:text-white mb-6">₺150 <span className="text-sm font-medium text-slate-400">/ tek seferlik</span></div>
                     <button 
-                        onClick={() => handleSelectPackage('10_pack')}
+                        onClick={() => handleSelectPackage('pack_10')}
                         className="w-full py-3 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50 rounded-xl font-bold transition-colors"
                     >
                         Hemen Al
@@ -267,7 +267,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
                     <p className="text-sm text-slate-500 mb-4">Yoğun kullanım için avantajlı paket.</p>
                     <div className="text-3xl font-black text-slate-900 dark:text-white mb-6">₺600 <span className="text-sm font-medium text-slate-400">/ tek seferlik</span></div>
                     <button 
-                        onClick={() => handleSelectPackage('50_pack')}
+                        onClick={() => handleSelectPackage('pack_50')}
                         className="w-full py-3 bg-purple-50 text-purple-600 hover:bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 dark:hover:bg-purple-900/50 rounded-xl font-bold transition-colors"
                     >
                         Hemen Al

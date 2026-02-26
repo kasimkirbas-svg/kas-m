@@ -189,7 +189,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
 
       // Download PDF
       if (result.pdfBase64) {
-          const pdfUrl = result.pdfBase64.startsWith('data:') ? result.pdfBase64 : `data:application/pdf;base64,${result.pdfBase64}`;
+          // Convert base64 to Blob for better preview/download handling
+          const base64Data = result.pdfBase64.replace(/^data:application\/pdf;base64,/, "");
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: 'application/pdf' });
+          const pdfUrl = URL.createObjectURL(blob);
           
           // Set Preview
           setPdfPreviewUrl(pdfUrl);

@@ -420,7 +420,9 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                 <div className="group p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all bg-slate-50 dark:bg-slate-800/50">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t?.profile?.fullName || 'Ad Soyad'}</p>
                     <p className="text-lg font-bold text-slate-900 dark:text-white">{user?.name}</p>
-                </di{!showDeleteConfirm ? (
+                </div>
+                
+                {!showDeleteConfirm ? (
                         <button 
                             onClick={() => {
                                 setShowDeleteConfirm(true);
