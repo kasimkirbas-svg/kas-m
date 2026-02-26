@@ -137,11 +137,41 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     setPhotos(prev => prev.filter(p => p.id !== id));
   };
 
+  const handleGenerateDocument = async () => {
+    /* 
+       Validate Required Fields 
+    */
+    const missingFields = template.fields
+      .filter(f => f.required && !formData[f.key])
+      .map(f => f.label);
+
+    if (missingFields.length > 0) {
+      alert(`${_t('common.error', 'Hata')}: ${_t('settings.allFieldsRequired', 'Lütfen zorunlu alanları doldurunuz')}:\n- ${missingFields.join('\n- ')}`);
+      return;
+    }
+
+    if (!formData.companyName) {
+        alert(_t('editor.companyNameRequired', 'Firma adı zorunludur.'));
+        return;
+    }
+
+    setIsGenerating(true);
+    setGenerationSuccess(false);
+
+    try {
+      // 1. Generate PDF on Backend
+      const response = await fetchApi('/api/generate-pdf', {
+          method: 'POST',
+          body: JSON.stringify({
+              templateId: template.id,
+              data: { 
                   ...formData, 
                   date: formData.date,
-                  logo, // Pass logo
-                  customFields // Pass custom fields
-              }, 
+                  logo, 
+                  customFields
+              },
+              photos: photos.map(p => p.base64),
+              additionalNotes,
               email: sendEmail ? userEmail : undefined
           })
       });
@@ -157,12 +187,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       }
 
       // Download PDF
-      const link = document.createElement('a');
-      link.href = result.pdfBase64;
-      link.download = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (result.pdfBase64) {
+          const link = document.createElement('a');
+          link.href = result.pdfBase64.startsWith('data:') ? result.pdfBase64 : `data:application/pdf;base64,${result.pdfBase64}`;
+          link.download = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      }
       
       if (sendEmail) {
           alert("Doküman oluşturuldu ve e-posta adresinize gönderildi!");
@@ -174,32 +206,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         id: initialData?.id || 'doc-' + Date.now(),
         userId,
         templateId: template.id,
-        data: { ...formData, logo, customFields }, // Save to record
-      const result = await response.json();
-      
-      if (!result.success) {
-          throw new Error(result.message || 'PDF oluşturulamadı');
-      }
-
-      // Download PDF
-      const link = document.createElement('a');
-      link.href = result.pdfBase64;
-      link.download = `${template.title.replace(/\s+/g, '_')}-${formData.date}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      if (sendEmail) {
-          alert("Doküman oluşturuldu ve e-posta adresinize gönderildi!");
-      } else {
-          alert("Doküman başarıyla oluşturuldu ve indirildi.");
-      }
-      
-      const documentRecord: GeneratedDocument = {
-        id: initialData?.id || 'doc-' + Date.now(),
-        userId,
-        templateId: template.id,
-        data: formData,
+        data: { ...formData, logo, customFields },
         photos: photos,
         createdAt: initialData?.createdAt || new Date().toISOString(),
         generatedAt: new Date().toISOString(),
@@ -290,6 +297,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     name="companyName"
                     value={formData.companyName}
                     onChange={handleInputChange}
+                    placeholder={_t('editor.companyNamePlaceholder', 'Örn: ABC İnşaat Ltd. Şti.')}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none placeholder:text-slate-400"
+                  />
+               </div>
+
                {/* Logo Upload */}
                <div className="col-span-1 md:col-span-2">
                   <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{_t('editor.firmLogo', 'Firma Logosu')}</label>
@@ -310,11 +322,6 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                           <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                       </label>
                   </div>
-               </div>
-
-                    placeholder={_t('editor.companyNamePlaceholder', 'Örn: ABC İnşaat Ltd. Şti.')}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none placeholder:text-slate-400"
-                  />
                </div>
 
                <div className="col-span-1 md:col-span-2">

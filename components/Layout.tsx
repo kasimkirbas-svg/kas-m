@@ -198,7 +198,12 @@ export const Layout: React.FC<LayoutProps> = ({
               <button 
                 onClick={() => setSidebarOpen(true)} 
                 className="p-2 -ml-2 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
-              >Spacer for Desktop (Since Search was here) */}
+              >
+                <Menu size={24} />
+              </button>
+            </div>
+
+            {/* Spacer for Desktop (Since Search was here) */}
             <div className="hidden md:block flex-1"></div>
 
             {/* Right Side Actions */}
