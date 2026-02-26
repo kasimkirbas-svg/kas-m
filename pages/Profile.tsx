@@ -492,21 +492,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                  </button>
                              </div>
                         </div>
-                    )}       } else {
-                                        alert(data.message || 'Hata oluştu.');
-                                    }
-                                } catch (e) {
-                                    console.error(e);
-                                    alert('Bir hata oluştu.');
-                                }
-                            }
-                        }}
-                        className="text-red-500 hover:text-red-700 font-bold text-sm flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors w-full md:w-auto justify-center md:justify-start"
-                    >
-                        <Trash2 size={16} />
-                        {t?.profile?.deleteAccount || 'Hesabımı Sil'}
-                    </button>
-                </div>
+                    )}
               </div>
             )}
           </div>
