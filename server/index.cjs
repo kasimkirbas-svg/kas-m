@@ -2747,11 +2747,11 @@ app.post('/api/buy-rights', authenticateToken, async (req, res) => {
         let packageName = '';
         
         switch (packageId) {
-            case '10_pack':
+            case 'pack_10':
                 amount = 10;
                 packageName = '10 Ek Hak';
                 break;
-            case '50_pack': // Example
+            case 'pack_50': // Example
                 amount = 50;
                 packageName = '50 Ek Hak';
                 break;
