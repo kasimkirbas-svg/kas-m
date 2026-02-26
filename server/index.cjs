@@ -1995,44 +1995,13 @@ app.post('/api/users/upgrade', authenticateToken, async (req, res) => {
 app.delete('/api/auth/delete-account', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.id;
-        const db = readDB();
-        
-        // Remove from DB (File System Logic) -- In postgres/mongo create a deleteUser adapter method
-        const userIndex = db.users.findIndex(u => u.id === userId);
-        if (userIndex !== -1) {
-            
-            // Log deletion
-            systemLogs.unshift({
-                id: Date.now(),
-                type: 'warning',
-                action: 'Account Deleted',
-                details: `${db.users[userIndex].email} deleted their account`,
-                time: new Date().toISOString()
-            });
+        const result = await dbAdapter.deleteUser(userId);
 
-            db.users.splice(userIndex, 1);
-            const writeDirectSuccess = writeDB(db);
-
-            // Double Check Persistence
-            const verifyDb = readDB();
-            const stillExists = verifyDb.users.find(u => u.id === userId);
-            
-            if (!writeDirectSuccess || stillExists) {
-                 console.error('CRITICAL: Delete failed despite write attempt!', { writeSuccess: writeDirectSuccess, userStillExists: !!stillExists });
-                 return res.status(500).json({ success: false, message: 'Silme işlemi diske yazılamadı.' });
-            }
-
-            // Also remove from Postgres/Mongo if connected (basic implementation)
-            if (pgPool) {
-                await pgPool.query('DELETE FROM users WHERE id = $1', [userId]);
-            } else if (MONGO_URI) {
-                await connectDB();
-                await User.deleteOne({ id: userId });
-            }
-
+        if (result) {
+            // Check if we need to remove from session/token blacklist (optional)
             return res.json({ success: true, message: 'Hesap başarıyla silindi.' });
         } else {
-            return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı.' });
+            return res.status(404).json({ success: false, message: 'Kullanıcı bulunamadı veya silinemedi.' });
         }
     } catch (e) {
         console.error('Delete Account Error:', e);
