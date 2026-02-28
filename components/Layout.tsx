@@ -48,10 +48,10 @@ export const Layout: React.FC<LayoutProps> = ({
 
   const menuItems = user.role === 'ADMIN'
       ? [
-          { label: _t('nav.admin', 'Yönetici'), view: 'admin', icon: Shield },
-          { label: _t('nav.users', 'Kullanıcılar'), view: 'users', icon: Users },
-          { label: _t('nav.templates', 'Şablonlar'), view: 'admin-templates', icon: FileText },
-          { label: _t('nav.dashboard', 'Ana Sayfa'), view: 'dashboard', icon: LayoutDashboard },
+          { label: _t('nav.admin', 'Yönetici Paneli'), view: 'admin', icon: Shield },
+          { label: _t('nav.users', 'Kullanıcı Yönetimi'), view: 'users', icon: Users },
+          { label: _t('nav.templates', 'Şablon Yönetimi'), view: 'admin-templates', icon: FileText },
+          { label: _t('nav.dashboard', 'Ana Sayfaya Dön'), view: 'dashboard', icon: LayoutDashboard },
         ]
       : [
           { label: _t('nav.dashboard', 'Ana Sayfa'), view: 'dashboard', icon: LayoutDashboard },
@@ -205,19 +205,19 @@ export const Layout: React.FC<LayoutProps> = ({
                         </div>
                         <div className="p-2 space-y-1">
                             <button onClick={() => { onNavigate('profile'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors group">
-                                <UserIcon size={16} className="group-hover:text-amber-500 transition-colors" /> {_t('nav.profile', 'Profilim')}
+                                <UserIcon size={16} className="group-hover:text-amber-500 transition-colors" /> {_t('nav.profile', 'Profil Bilgilerim')}
                             </button>
                             <button onClick={() => { onNavigate('settings'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors group">
-                                <Settings size={16} className="group-hover:text-indigo-500 transition-colors" /> {_t('nav.settings', 'Ayarlar')}
+                                <Settings size={16} className="group-hover:text-indigo-500 transition-colors" /> {_t('nav.settings', 'Genel Ayarlar')}
                             </button>
                             {user.role !== 'ADMIN' && (
                                 <button onClick={() => { onNavigate('subscription'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors group">
-                                    <CreditCard size={16} className="group-hover:text-emerald-500 transition-colors" /> Paketlerim
+                                    <CreditCard size={16} className="group-hover:text-emerald-500 transition-colors" /> {_t('nav.subscription', 'Abonelik Paketleri')}
                                 </button>
                             )}
                             <div className="h-px bg-slate-800 my-1 mx-2"></div>
                             <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
-                                <LogOut size={16} /> {_t('common.logout', 'Çıkış Yap')}
+                                <LogOut size={16} /> {_t('common.logout', 'Oturumu Kapat')}
                             </button>
                         </div>
                     </div>
