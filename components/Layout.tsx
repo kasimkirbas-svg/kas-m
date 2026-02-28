@@ -73,8 +73,8 @@ export const Layout: React.FC<LayoutProps> = ({
   // DASHBOARD SPECIAL LAYOUT: Full Screen, No Sidebar/Header
   if (currentView === 'dashboard') {
      return (
-        <div className={`min-h-screen w-full transition-colors duration-300 font-sans ${theme === 'dark' ? 'dark bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
-            <main className="w-full h-full min-h-screen relative p-0 overflow-hidden">
+        <div className="h-screen w-full font-sans bg-slate-950 text-slate-200 overflow-hidden">
+            <main className="w-full h-full relative p-0 overflow-hidden">
                 {children}
             </main>
         </div>
