@@ -435,24 +435,39 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       </div>
 
       {/* RIGHT SIDE - FORM CONTAINER */}
-      <div className="flex-1 w-full bg-slate-950 relative flex items-center justify-center p-6 border-l border-slate-800">
+      <div className="flex-1 w-full bg-slate-950 relative flex items-center justify-center p-4 sm:p-6 lg:border-l border-slate-800">
          
-         {/* Background Grid */}
-         <div className="absolute inset-0 bg-[linear-gradient(rgba(30,41,59,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(30,41,59,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+         {/* Mobile Background Image (Subtle) */}
+         <div className="absolute inset-0 lg:hidden overflow-hidden z-0">
+            <img 
+               src="https://images.unsplash.com/photo-1565514020176-db5b5501fb33?auto=format&fit=crop&q=80&w=1000" 
+               alt="Mobile Background" 
+               className="w-full h-full object-cover opacity-10 mix-blend-overlay"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/90 to-slate-900/90"></div>
+         </div>
 
-         <div className="w-full max-w-[400px] relative z-10 animate-in fade-in slide-in-from-right-8 duration-700">
+         {/* Background Grid */}
+         <div className="absolute inset-0 bg-[linear-gradient(rgba(30,41,59,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(30,41,59,0.05)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+
+         <div className="w-full max-w-[400px] relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
             
-            {/* Form Header */}
-            <div className="mb-10 text-center">
-                <div className="lg:hidden w-12 h-12 bg-amber-500 rounded-lg mx-auto mb-6 flex items-center justify-center shadow-lg shadow-amber-500/20">
-                     <Factory className="text-slate-950 w-7 h-7" />
+            {/* Form Header - Mobile Optimized */}
+            <div className="mb-8 lg:mb-10 text-center relative z-20">
+                <div className="lg:hidden w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-2xl shadow-amber-500/20 ring-1 ring-amber-500/50">
+                     <Factory className="text-slate-900 w-8 h-8 drop-shadow-sm transform group-hover:scale-110 transition-transform" />
                 </div>
-                <h2 className="text-3xl font-black text-white tracking-widest uppercase mb-2">
-                  {authView === 'login' ? 'Giriş Yap' : 
+                
+                <h2 className="text-2xl lg:text-3xl font-black text-white tracking-[0.2em] uppercase mb-2 drop-shadow-md">
+                  {authView === 'login' ? 'Giriş Paneli' : 
                    authView === 'signup' ? 'Kayıt Ol' : 
-                   authView === 'forgot-password' ? 'Sıfırlama' : 'Yeni Şifre'}
+                   authView === 'forgot-password' ? 'Şifre Yenile' : 'Yeni Şifre'}
                 </h2>
-                <div className="h-0.5 w-12 bg-amber-500 mx-auto rounded-full"></div>
+                <div className="h-1 w-16 bg-gradient-to-r from-amber-500 to-amber-600 mx-auto rounded-full shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+                
+                <p className="mt-4 text-xs font-medium text-slate-400 uppercase tracking-widest lg:hidden">
+                    Endüstriyel Belge Yönetim Sistemi
+                </p>
             </div>
 
              {/* Tab Switcher */}
@@ -677,8 +692,13 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
          </div>
 
          {/* Mobile Footer */}
-         <div className="lg:hidden absolute bottom-6 text-center w-full left-0">
-            <p className="text-[10px] text-slate-600 font-mono">© 2026 KIRBAŞ PANEL</p>
+         <div className="lg:hidden absolute bottom-4 text-center w-full left-0 flex flex-col gap-1 z-10">
+             <div className="flex items-center justify-center gap-2 mb-1">
+                 <div className="w-1 h-1 bg-amber-500 rounded-full animate-pulse"></div>
+                 <span className="text-[9px] text-slate-500 font-mono tracking-widest uppercase">Güvenli Bağlantı</span>
+                 <div className="w-1 h-1 bg-amber-500 rounded-full animate-pulse"></div>
+             </div>
+            <p className="text-[10px] text-slate-600 font-black tracking-widest">© 2026 KIRBAŞ PANEL</p>
          </div>
 
       </div>
