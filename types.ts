@@ -6,8 +6,9 @@ export enum UserRole {
 
 export enum SubscriptionPlan {
   FREE = 'FREE',
-  MONTHLY = 'MONTHLY',
-  YEARLY = 'YEARLY'
+  STANDART = 'STANDART',
+  GOLD = 'GOLD',
+  PREMIUM = 'PREMIUM'
 }
 
 export interface User {

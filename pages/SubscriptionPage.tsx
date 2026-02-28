@@ -166,37 +166,87 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-stretch">
            {PLANS.map((plan, index) => {
              const isCurrentPlan = user.plan === plan.id;
+             
+             // Dynamic styles based on plan.color
+             let cardStyle = "";
+             let badgeStyle = "";
+             let buttonStyle = "";
+             let iconColor = "";
+             
+             if (plan.color === 'slate') {
+                 cardStyle = "bg-slate-900 border border-slate-700 shadow-xl";
+                 badgeStyle = "bg-slate-700 text-white";
+                 buttonStyle = "bg-slate-700 hover:bg-slate-600 text-white";
+                 iconColor = "text-slate-400";
+             } else if (plan.color === 'amber') {
+                 cardStyle = "bg-gradient-to-b from-slate-900 via-amber-950/20 to-black border border-amber-600 shadow-2xl shadow-amber-900/20 transform md:-translate-y-4 z-10";
+                 badgeStyle = "bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-lg shadow-amber-900/40";
+                 buttonStyle = "bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black shadow-lg shadow-amber-900/30";
+                 iconColor = "text-amber-500";
+             } else if (plan.color === 'indigo') {
+                 cardStyle = "bg-slate-900 border border-indigo-500/50 shadow-xl shadow-indigo-900/10";
+                 badgeStyle = "bg-indigo-600 text-white";
+                 buttonStyle = "bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-900/20";
+                 iconColor = "text-indigo-400";
+             }
+
              return (
                <div 
                  key={plan.id}
-                 className={`group relative rounded-3xl p-8 transition-all duration-300 animate-fade-in-up hover:-translate-y-2
-                    ${plan.popular 
-                        ? 'bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl shadow-indigo-500/20 ring-4 ring-indigo-500/20 z-10 scale-105' 
-                        : 'bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 shadow-xl hover:shadow-2xl hover:border-indigo-200 dark:hover:border-indigo-800'
-                    }
-                 `}
+                 className={`group relative rounded-2xl p-8 transition-all duration-500 animate-fade-in-up flex flex-col ${cardStyle}`}
                  style={{ animationDelay: `${index * 100}ms` }}
                >
                  {plan.popular && (
-                   <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
-                     <Star size={12} fill="currentColor" /> EN POPÜLER
+                   <div className={`absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1 ${badgeStyle}`}>
+                     <Star size={12} fill="currentColor" /> {t?.subscription?.popular || 'EN ÇOK TERCİH EDİLEN'}
                    </div>
                  )}
+                 
+                 {plan.color === 'amber' && <div className="absolute inset-0 bg-amber-500/5 blur-xl group-hover:bg-amber-500/10 transition-colors pointer-events-none"></div>}
 
-                 <div className="mb-6">
-                    <h3 className={`text-xl font-black mb-2 ${plan.popular ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{plan.name}</h3>
-                    <p className={`text-sm font-medium ${plan.popular ? 'text-slate-400' : 'text-slate-500 dark:text-slate-400'}`}>Küçük işletmeler ve profesyoneller için ideal</p>
+                 <div className="mb-6 relative z-10 text-center">
+                    <h3 className={`text-2xl font-black mb-2 uppercase tracking-tight ${plan.color === 'amber' ? 'text-amber-500 drop-shadow-sm' : (plan.color === 'indigo' ? 'text-indigo-400' : 'text-slate-200')}`}>{plan.name}</h3>
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Özel İşletme ve Kurumlar İçin</p>
                  </div>
 
-                 <div className="mb-8 flex items-baseline gap-1">
-                   <span className={`text-5xl font-black tracking-tighter ${plan.popular ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{plan.price}</span>
-                   <span className={`font-bold ${plan.popular ? 'text-slate-400' : 'text-slate-500'}`}>{plan.period}</span>
+                 <div className="mb-8 flex items-baseline justify-center gap-1 relative z-10">
+                   <span className={`text-5xl font-black tracking-tighter ${plan.color === 'amber' ? 'text-amber-400 text-shadow-sm' : 'text-white'}`}>{plan.price.split(' ')[0]}</span>
+                   <span className="font-bold text-slate-500 text-lg">TL</span>
                  </div>
                  
-                 <div className={`h-px w-full mb-8 ${plan.popular ? 'bg-slate-700' : 'bg-slate-100 dark:bg-slate-700'}`}></div>
+                 <div className={`h-px w-full mb-8 ${plan.color === 'amber' ? 'bg-gradient-to-r from-transparent via-amber-800 to-transparent' : 'bg-slate-800'}`}></div>
+                 
+                 <ul className="flex-1 space-y-4 mb-8 relative z-10">
+                    {plan.features.map((feature, i) => (
+                        <li key={i} className="flex items-start gap-3 text-sm font-medium text-slate-300">
+                            <div className={`p-1 rounded-full mt-0.5 ${plan.color === 'amber' ? 'bg-amber-900/50 text-amber-500' : (plan.color === 'indigo' ? 'bg-indigo-900/50 text-indigo-400' : 'bg-slate-800 text-slate-500')}`}>
+                                <Check size={12} strokeWidth={4} />
+                            </div>
+                            <span>{feature}</span>
+                        </li>
+                    ))}
+                 </ul>
+                 
+                 <div className="relative z-10 mt-auto">
+                    <button
+                        onClick={() => handleSelectPlan(plan.id)}
+                        disabled={isCurrentPlan}
+                        className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-widest transition-all transform active:scale-95 ${buttonStyle} ${isCurrentPlan ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:scale-105'}`}
+                    >
+                        {isCurrentPlan ? (t?.subscription?.current || 'MEVCUT PLAN') : (t?.subscription?.select || 'SATIN AL')}
+                    </button>
+                    <div className="text-center mt-3 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                        Güvenli Ödeme SSL 256-Bit
+                    </div>
+                 </div>
+
+               </div>
+             );
+           })}
+        </div>
 
                  <ul className="space-y-4 mb-8">
                    {plan.features.map((feature, idx) => (

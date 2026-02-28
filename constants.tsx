@@ -4,21 +4,32 @@ export const APP_NAME = "Kırbaş Doküman";
 
 export const PLANS = [
   {
-    id: SubscriptionPlan.MONTHLY,
-    name: "Aylık Paket",
-    price: "499 TL",
+    id: SubscriptionPlan.STANDART,
+    name: "Standart Paket",
+    price: "100 TL",
     period: "/ay",
-    features: ["Aylık 30 Doküman", "PDF Çıktısı", "Temel Şablonlar", "E-posta Destek"],
-    limit: 30,
+    features: ["Standart Doküman Limiti", "PDF Çıktısı", "Temel Şablonlar"],
+    limit: 100,
+    color: "slate"
   },
   {
-    id: SubscriptionPlan.YEARLY,
-    name: "Yıllık Pro",
-    price: "4.999 TL",
-    period: "/yıl",
-    features: ["Sınırsız Doküman", "Tüm Premium Şablonlar", "Öncelikli Destek", "Fatura Entegrasyonu"],
-    limit: 'UNLIMITED',
+    id: SubscriptionPlan.GOLD,
+    name: "Gold Paket",
+    price: "175 TL",
+    period: "/ay",
+    features: ["2 Kat Doküman Limiti", "Tüm Şablonlar", "Öncelikli Destek"],
+    limit: 200,
     popular: true,
+    color: "amber"
+  },
+  {
+    id: SubscriptionPlan.PREMIUM,
+    name: "Premium Paket",
+    price: "250 TL",
+    period: "/ay",
+    features: ["3 Kat Doküman Limiti", "Tüm Premium Şablonlar", "VIP Destek", "Fatura Entegrasyonu"],
+    limit: 300,
+    color: "indigo"
   }
 ];
 
