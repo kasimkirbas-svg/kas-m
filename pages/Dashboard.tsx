@@ -214,7 +214,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             </button>
                             <button className="w-full bg-emerald-800 hover:bg-emerald-700 text-white p-3 rounded-lg flex items-center gap-4 shadow-md transition-all border-2 border-emerald-600 group hover:border-emerald-400">
                                 <Clock className="w-5 h-5 text-emerald-300 group-hover:rotate-12 transition-transform" />
-                                <span className="font-bold text-sm tracking-wide">GÜNLÜK RAPOR</span>
+                                <span className="font-bold text-sm tracking-wide">GÜNLÜK RAPOR TUT</span>
+                            </button>
+                             <button className="w-full bg-purple-900 hover:bg-purple-800 text-white p-3 rounded-lg flex items-center gap-4 shadow-md transition-all border-2 border-purple-600 group hover:border-purple-400">
+                                <FileText className="w-5 h-5 text-purple-300 group-hover:rotate-12 transition-transform" />
+                                <span className="font-bold text-sm tracking-wide">DOKÜMAN ARŞİVİ</span>
+                            </button>
+                             <button className="w-full bg-red-900 hover:bg-red-800 text-white p-3 rounded-lg flex items-center gap-4 shadow-md transition-all border-2 border-red-600 group hover:border-red-400">
+                                <Download className="w-5 h-5 text-red-300 group-hover:rotate-12 transition-transform" />
+                                <span className="font-bold text-sm tracking-wide">PDF İNDİR / YAZDIR</span>
                             </button>
                         </div>
                      </div>

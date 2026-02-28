@@ -54,8 +54,8 @@ export const Layout: React.FC<LayoutProps> = ({
           { label: _t('nav.dashboard', 'Ana Sayfaya Dön'), view: 'dashboard', icon: LayoutDashboard },
         ]
       : [
-          // "Ana Sayfa" and "Yeni Oluştur" removed as requested
-          { label: _t('nav.documents', 'Belgelerim'), view: 'my-documents', icon: FolderOpen },
+          // All top menu items removed as requested. 
+          // Navigation will be handled via the Dashboard interface.
         ];
 
   // Mock Notifications
