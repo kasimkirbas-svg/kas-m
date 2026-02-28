@@ -133,28 +133,31 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                     </div>
                   </div>
 
-                  {/* Actions Overlay (Visible on Hover/Focus) */}
-                  <div className="absolute inset-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                  {/* Actions Overlay (Desktop: Hover, Mobile: Always Visible but positioned differently) */}
+                  <div className="lg:absolute lg:inset-0 lg:bg-white/95 lg:dark:bg-slate-800/95 lg:backdrop-blur-sm lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 mt-4 lg:mt-0 p-4 lg:p-0 border-t lg:border-0 border-slate-100 dark:border-slate-700/50">
                      <button
-                        onClick={() => onPreviewDocument?.(doc)}
-                        className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-all shadow-sm hover:shadow-lg dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-600 dark:hover:text-white"
+                        onClick={(e) => { e.stopPropagation(); onPreviewDocument?.(doc); }}
+                        className="flex-1 lg:flex-none py-3 lg:py-0 lg:w-12 lg:h-12 rounded-xl lg:rounded-2xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-all shadow-sm hover:shadow-lg dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-600 dark:hover:text-white"
                         title={_t('common.preview', 'Önizle')}
                      >
-                        <Eye size={22} />
+                        <Eye size={20} />
+                        <span className="lg:hidden ml-2 text-sm font-bold">Önizle</span>
                      </button>
                      <button
-                        onClick={() => onEditDocument?.(doc)}
-                        className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white flex items-center justify-center transition-all shadow-sm hover:shadow-lg dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-600 dark:hover:text-white"
+                        onClick={(e) => { e.stopPropagation(); onEditDocument?.(doc); }}
+                        className="flex-1 lg:flex-none py-3 lg:py-0 lg:w-12 lg:h-12 rounded-xl lg:rounded-2xl bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white flex items-center justify-center transition-all shadow-sm hover:shadow-lg dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-600 dark:hover:text-white"
                         title={_t('common.edit', 'Düzenle')}
                      >
-                        <Edit size={22} />
+                        <Edit size={20} />
+                        <span className="lg:hidden ml-2 text-sm font-bold">Düzenle</span>
                      </button>
                      <button
-                        onClick={() => onDeleteDocument(doc.id)}
-                        className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-sm hover:shadow-lg dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-600 dark:hover:text-white"
+                        onClick={(e) => { e.stopPropagation(); onDeleteDocument(doc.id); }}
+                        className="flex-1 lg:flex-none py-3 lg:py-0 lg:w-12 lg:h-12 rounded-xl lg:rounded-2xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-sm hover:shadow-lg dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-600 dark:hover:text-white"
                         title={_t('common.delete', 'Sil')}
                      >
-                        <Trash2 size={22} />
+                        <Trash2 size={20} />
+                        <span className="lg:hidden ml-2 text-sm font-bold">Sil</span>
                      </button>
                   </div>
                 </div>

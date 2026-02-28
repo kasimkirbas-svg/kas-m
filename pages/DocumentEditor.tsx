@@ -300,7 +300,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     name="date"
                     value={formData.date}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none text-base md:text-sm"
                   />
                  </div>
                </div>
@@ -313,7 +313,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     value={formData.companyName}
                     onChange={handleInputChange}
                     placeholder={_t('editor.companyNamePlaceholder', 'Örn: ABC İnşaat Ltd. Şti.')}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none placeholder:text-slate-400"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none placeholder:text-slate-400 text-base md:text-sm"
                   />
                </div>
 
@@ -347,7 +347,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                     value={formData.preparedBy}
                     onChange={handleInputChange}
                     placeholder="Adınız Soyadınız"
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none placeholder:text-slate-400"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none placeholder:text-slate-400 text-base md:text-sm"
                   />
                </div>
              </div>
@@ -375,7 +375,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         onChange={handleInputChange}
                         rows={3}
                         placeholder={field.placeholder}
-                        className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none resize-none"
+                        className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none resize-none text-base md:text-sm"
                       />
                     ) : field.type === 'select' ? (
                        <div className="relative">
@@ -383,7 +383,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                              name={field.key}
                              value={formData[field.key] || ''}
                              onChange={(e) => setFormData(prev => ({ ...prev, [field.key]: e.target.value }))}
-                             className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none appearance-none"
+                             className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none appearance-none text-base md:text-sm"
                            >
                              <option value="">Seçiniz</option>
                              {field.options?.map((opt, i) => (
@@ -399,7 +399,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                         value={formData[field.key] || ''}
                         onChange={handleInputChange}
                         placeholder={field.placeholder}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none text-base md:text-sm"
                       />
                     )}
                   </div>
@@ -447,7 +447,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
                       onChange={(e) => setAdditionalNotes(e.target.value)}
                       rows={3}
                       placeholder={_t('editor.notesPlaceholder', 'Varsa eklemek istediğiniz notlar...')}
-                      className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none resize-none"
+                      className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white transition-all font-medium outline-none resize-none text-base md:text-sm"
                     />
                 </div>
              </div>

@@ -300,8 +300,8 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                     </div>
 
                     {invoices.length > 0 ? (
-                        <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
-                            <table className="w-full text-sm text-left">
+                        <div className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-x-auto custom-scrollbar">
+                            <table className="w-full text-sm text-left min-w-[600px]">
                                 <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 font-bold">
                                     <tr>
                                         <th className="px-6 py-4">Tarih</th>

@@ -343,7 +343,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
                               required
                               value={paymentData.cardName}
                               onChange={handleInputChange}
-                              className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all uppercase font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                              className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all uppercase font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600 text-base md:text-sm"
                             />
                             <div className="absolute left-4 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
                                <UserIcon />
@@ -364,7 +364,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
                                required
                                value={paymentData.cardNumber}
                                onChange={handleInputChange}
-                               className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                               className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600 text-base md:text-sm"
                              />
                              <div className="absolute left-4 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
                                 <CreditCard size={20} />
@@ -392,7 +392,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
                                   required
                                   value={paymentData.expiry}
                                   onChange={handleInputChange}
-                                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600 text-base md:text-sm"
                                 />
                                 <div className="absolute left-4 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
                                    <Calendar size={20} />
@@ -412,7 +412,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
                                   required
                                   value={paymentData.cvc}
                                   onChange={handleInputChange}
-                                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600"
+                                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-xl focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all font-mono font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600 text-base md:text-sm"
                                 />
                                 <div className="absolute left-4 top-3.5 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
                                    <Lock size={20} />
