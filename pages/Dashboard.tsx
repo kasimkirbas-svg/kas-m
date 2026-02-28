@@ -3,7 +3,7 @@ import {
   FileText, Shield, AlertTriangle, CheckCircle2, Award, 
   Download, History, Clock, FileInput, Activity, ClipboardList,
   Construction, Factory, Building2, Zap, Beaker, Store, Flame,
-  FileCheck
+  FileCheck, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 
@@ -20,11 +20,12 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({ 
   user, t, onNavigate 
 }) => {
+  const [isDocListExpanded, setIsDocListExpanded] = React.useState(false);
 
   const sectors = [
-    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1565514020176-dbf2277cc2c2?auto=format&fit=crop&q=80&w=400', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
+    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
     { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400', color: 'border-slate-500', gradient: 'from-slate-600', searchQuery: 'Kurumsal', icon: Building2 },
-    { id: 'mine', title: 'MADEN', image: 'https://plus.unsplash.com/premium_photo-1661962360528-766785532520?auto=format&fit=crop&q=80&w=400', color: 'border-orange-700', gradient: 'from-orange-700', searchQuery: 'Maden', icon: Construction },
+    { id: 'mine', title: 'MADEN', image: 'https://images.unsplash.com/photo-1579535984639-6503c2763327?auto=format&fit=crop&q=80&w=400', color: 'border-orange-700', gradient: 'from-orange-700', searchQuery: 'Maden', icon: Construction },
     { id: 'construction', title: 'İNŞAAT', image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=400', color: 'border-yellow-600', gradient: 'from-yellow-600', searchQuery: 'İnşaat', icon: Construction },
     { id: 'energy', title: 'ENERJİ', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&q=80&w=400', color: 'border-amber-500', gradient: 'from-amber-500', searchQuery: 'Enerji', icon: Zap },
     { id: 'chemistry', title: 'KİMYA', image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=400', color: 'border-emerald-600', gradient: 'from-emerald-600', searchQuery: 'Kimya', icon: Beaker },
@@ -137,7 +138,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
             {/* LEFT: Documents List - MAGNIFICENT UPDATE */}
-            <div className={`lg:col-span-9 bg-gradient-to-br from-slate-900 via-slate-900 to-black border border-slate-800/60 rounded-xl backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden h-full min-h-[500px] relative ring-1 ring-white/5`}>
+            <div className={`lg:col-span-9 bg-gradient-to-br from-slate-900 via-slate-900 to-black border border-slate-800/60 rounded-xl backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden h-full ${isDocListExpanded ? 'min-h-[500px]' : 'min-h-[300px]'} relative ring-1 ring-white/5 transition-all duration-500`}>
                 {/* Metallic shine effect */}
                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent"></div>
@@ -157,7 +158,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 
                 <div className="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-5 bg-black/20">
                     <div className="flex flex-col gap-3">
-                        {documentList.map((doc, idx) => (
+                        {documentList.slice(0, isDocListExpanded ? undefined : 3).map((doc, idx) => (
                         <div 
                             key={idx} 
                             onClick={() => onNavigate('templates', { search: doc.name.split(' ')[0] })}
@@ -186,6 +187,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         </div>
                         ))}
                     </div>
+                     <button 
+                        onClick={() => setIsDocListExpanded(!isDocListExpanded)}
+                        className="w-full mt-4 py-3 flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-amber-500 hover:bg-slate-900/50 rounded-lg transition-all duration-300 border border-transparent hover:border-slate-800 group/expand"
+                    >
+                        {isDocListExpanded ? (
+                            <>
+                                <ChevronUp className="w-4 h-4 group-hover/expand:-translate-y-1 transition-transform" />
+                                <span>LİSTEYİ DARALT</span>
+                            </>
+                        ) : (
+                            <>
+                                <ChevronDown className="w-4 h-4 group-hover/expand:translate-y-1 transition-transform" />
+                                <span>TÜM LİSTEYİ GÖSTER ({documentList.length - 3} DAHA FAZLA)</span>
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
 
