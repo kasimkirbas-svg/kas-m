@@ -2,7 +2,8 @@ import React from 'react';
 import { 
   FileText, Shield, AlertTriangle, CheckCircle2, Award, 
   Download, History, Clock, FileInput, Activity, ClipboardList,
-  Construction, Factory, Building2, Zap, Beaker, Store, Flame
+  Construction, Factory, Building2, Zap, Beaker, Store, Flame,
+  FileCheck
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 
