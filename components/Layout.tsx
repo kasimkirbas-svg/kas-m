@@ -71,10 +71,10 @@ export const Layout: React.FC<LayoutProps> = ({
   */
 
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-slate-950 text-slate-200 selection:bg-amber-500/30">
+    <div className={`flex flex-col font-sans bg-slate-950 text-slate-200 selection:bg-amber-500/30 ${currentView === 'dashboard' ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
       
       {/* INDUSTRIAL TOP NAVIGATION BAR */}
-      <header className="h-16 md:h-20 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 flex items-center justify-between px-4 md:px-8 shadow-2xl shadow-black/20">
+      <header className="h-14 md:h-16 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 flex items-center justify-between px-4 shadow-2xl shadow-black/20 shrink-0">
         
         {/* Left: Branding & Mobile Menu */}
         <div className="flex items-center gap-4">
@@ -219,8 +219,8 @@ export const Layout: React.FC<LayoutProps> = ({
       </header>
 
       {/* Main Content Area */}
-      <main className={`flex-1 w-full relative overflow-x-hidden ${currentView === 'dashboard' ? 'p-0' : 'p-4 md:p-6 lg:p-8'}`}>
-        <div className={`${currentView === 'dashboard' ? 'w-full h-full' : 'max-w-[1600px] mx-auto space-y-6 md:space-y-8'} animate-fade-in pb-20 md:pb-0`}>
+      <main className={`flex-1 w-full relative ${currentView === 'dashboard' ? 'p-0 overflow-hidden' : 'overflow-x-hidden p-4 md:p-6 lg:p-8'}`}>
+        <div className={`${currentView === 'dashboard' ? 'w-full h-full' : 'max-w-[1600px] mx-auto space-y-6 md:space-y-8 animate-fade-in pb-20 md:pb-0'}`}>
              {children}
         </div>
       </main>
