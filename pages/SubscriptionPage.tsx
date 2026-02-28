@@ -248,35 +248,8 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
            })}
         </div>
 
-                 <ul className="space-y-4 mb-8">
-                   {plan.features.map((feature, idx) => (
-                     <li key={idx} className="flex items-start gap-3">
-                       <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${plan.popular ? 'bg-indigo-500' : 'bg-indigo-100 dark:bg-indigo-900/50'}`}>
-                         <Check size={14} className={plan.popular ? 'text-white' : 'text-indigo-600 dark:text-indigo-400'} strokeWidth={3} />
-                       </div>
-                       <p className={`text-sm font-bold ${plan.popular ? 'text-slate-300' : 'text-slate-600 dark:text-slate-300'}`}>{feature}</p>
-                     </li>
-                   ))}
-                 </ul>
 
-                 <button
-                    onClick={() => handleSelectPlan(plan.id as SubscriptionPlan)}
-                    disabled={isCurrentPlan}
-                    className={`w-full py-4 px-6 rounded-2xl font-black text-center transition-all duration-300
-                      ${isCurrentPlan 
-                        ? 'bg-slate-100 dark:bg-slate-700 text-slate-400 cursor-not-allowed'
-                        : plan.popular 
-                            ? 'bg-white text-indigo-600 hover:bg-indigo-50 shadow-lg shadow-white/10 active:scale-95' 
-                            : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20 active:scale-95'
-                      }`}
-                 >
-                   {isCurrentPlan ? (t?.subscription?.currentPlan || 'Mevcut Plan') : (t?.subscription?.selectPlan || 'Hemen Başla')}
-                 </button>
-                 
-               </div>
-             );
-           })}
-        </div>
+
         
 
         {/* Extra Packages */}
