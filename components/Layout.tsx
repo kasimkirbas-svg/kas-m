@@ -314,8 +314,8 @@ export const Layout: React.FC<LayoutProps> = ({
         </header>
 
         {/* Dynamic Content */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-x-hidden w-full relative">
-          <div className="max-w-7xl mx-auto animate-fade-in space-y-6 md:space-y-8 pb-20 md:pb-0">
+        <main className={`flex-1 overflow-x-hidden w-full relative ${currentView === 'dashboard' ? 'p-0' : 'p-4 md:p-6 lg:p-8'}`}>
+          <div className={`${currentView === 'dashboard' ? 'w-full' : 'max-w-7xl mx-auto space-y-6 md:space-y-8'} animate-fade-in pb-20 md:pb-0`}>
              {children}
           </div>
         </main>
