@@ -70,6 +70,17 @@ export const Layout: React.FC<LayoutProps> = ({
     { id: 2, title: 'Yeni Özellik', message: 'Koyu mod artık kullanılabilir.', time: '1 saat önce' },
   ];
 
+  // DASHBOARD SPECIAL LAYOUT: Full Screen, No Sidebar/Header
+  if (currentView === 'dashboard') {
+     return (
+        <div className={`min-h-screen w-full transition-colors duration-300 font-sans ${theme === 'dark' ? 'dark bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
+            <main className="w-full h-full min-h-screen relative p-0 overflow-hidden">
+                {children}
+            </main>
+        </div>
+     );
+  }
+
   return (
     <div className={`min-h-screen flex transition-colors duration-300 font-sans ${theme === 'dark' ? 'dark bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-900'}`}>
       
