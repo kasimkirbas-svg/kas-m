@@ -64,7 +64,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const headerClass = "bg-gradient-to-r from-slate-900 to-slate-800 p-3 border-b border-slate-700/50 flex justify-between items-center";
 
   return (
-    <div className="h-screen w-full bg-slate-950 text-slate-200 font-sans flex flex-col overflow-hidden selection:bg-amber-500/30">
+    <div className="h-[calc(100dvh-5rem)] w-full bg-slate-950 text-slate-200 font-sans flex flex-col overflow-hidden selection:bg-amber-500/30">
       
       {/* 1. HEADER SECTION - Increased Sizes */}
       <div className="flex-none bg-slate-900 border-b border-slate-800 py-3 shadow-lg z-10 w-full px-4">

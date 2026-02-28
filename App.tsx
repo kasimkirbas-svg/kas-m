@@ -23,7 +23,7 @@ const App = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
   const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
   const [t, setT] = useState(getTranslation('tr'));
   const [savedDocuments, setSavedDocuments] = useState<GeneratedDocument[]>([]);
@@ -90,7 +90,10 @@ const App = () => {
       try {
         const parsedUser = JSON.parse(savedUser);
         setUser(parsedUser);
-        setCurrentView('dashboard');
+        // Only set view to dashboard if currently on auth (refresh case)
+        if (currentView === 'auth') {
+           setCurrentView('dashboard');
+        }
         
         // Security Check: Verify user still exists (invalidates deleted users on refresh)
         fetchApi('/api/auth/me')
@@ -125,6 +128,10 @@ const App = () => {
 
     if (savedTheme) {
       setTheme(savedTheme);
+      applyTheme(savedTheme);
+    } else {
+        setTheme('dark');
+        applyTheme('dark');
     }
     
     // Fetch Templates from Backend
@@ -152,8 +159,14 @@ const App = () => {
       document.documentElement.lang = savedLanguage;
     }
 
+
+    // Force dark theme as the default for the industrial design
+    applyTheme('dark');
+    setTheme('dark'); 
+
     // Apply theme
-    applyTheme(savedTheme || 'light');
+    applyTheme(savedTheme || 'dark');
+
 
     setIsLoading(false);
   }, []);
