@@ -54,9 +54,8 @@ export const Layout: React.FC<LayoutProps> = ({
           { label: _t('nav.dashboard', 'Ana Sayfaya Dön'), view: 'dashboard', icon: LayoutDashboard },
         ]
       : [
-          { label: _t('nav.dashboard', 'Ana Sayfa'), view: 'dashboard', icon: LayoutDashboard },
+          // "Ana Sayfa" and "Yeni Oluştur" removed as requested
           { label: _t('nav.documents', 'Belgelerim'), view: 'my-documents', icon: FolderOpen },
-          { label: _t('nav.create', 'Yeni Oluştur'), view: 'templates', icon: PlusSquare },
         ];
 
   // Mock Notifications
@@ -129,16 +128,8 @@ export const Layout: React.FC<LayoutProps> = ({
         {/* Right: Actions */}
         <div className="flex items-center gap-2 md:gap-4">
             
-            {/* Quick Actions (Settings shortcut) */}
-            <div className="hidden md:flex items-center gap-2 mr-2 border-r border-slate-800 pr-4">
-                 <button 
-                    onClick={() => onNavigate('settings')}
-                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-                    title={_t('nav.settings', 'Ayarlar')}
-                >
-                    <Settings size={20} />
-                </button>
-            </div>
+            {/* Quick Actions (Settings shortcut) - REMOVED */}
+
 
             {/* Notifications */}
             <div className="relative">
