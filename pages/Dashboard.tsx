@@ -22,13 +22,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 }) => {
 
   const sectors = [
-    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
-    { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400', color: 'border-slate-500', gradient: 'from-slate-600', searchQuery: 'Kurumsal', icon: Building2 },
-    { id: 'mine', title: 'MADEN', image: 'https://images.unsplash.com/photo-1518558900645-12154743c683?auto=format&fit=crop&q=80&w=400', color: 'border-orange-700', gradient: 'from-orange-700', searchQuery: 'Maden', icon: Construction },
-    { id: 'construction', title: 'İNŞAAT', image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400', color: 'border-yellow-600', gradient: 'from-yellow-600', searchQuery: 'İnşaat', icon: Construction },
-    { id: 'energy', title: 'ENERJİ', image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=400', color: 'border-amber-500', gradient: 'from-amber-500', searchQuery: 'Enerji', icon: Zap },
-    { id: 'chemistry', title: 'KİMYA', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=400', color: 'border-emerald-600', gradient: 'from-emerald-600', searchQuery: 'Kimya', icon: Beaker },
-    { id: 'small_business', title: 'KÜÇÜK İŞLETME', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=400', color: 'border-pink-500', gradient: 'from-pink-500', searchQuery: 'Esnaf', icon: Store }
+    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1565514020176-dbf2277cc2c2?auto=format&fit=crop&q=80&w=400', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
+    { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400', color: 'border-slate-500', gradient: 'from-slate-600', searchQuery: 'Kurumsal', icon: Building2 },
+    { id: 'mine', title: 'MADEN', image: 'https://plus.unsplash.com/premium_photo-1661962360528-766785532520?auto=format&fit=crop&q=80&w=400', color: 'border-orange-700', gradient: 'from-orange-700', searchQuery: 'Maden', icon: Construction },
+    { id: 'construction', title: 'İNŞAAT', image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=400', color: 'border-yellow-600', gradient: 'from-yellow-600', searchQuery: 'İnşaat', icon: Construction },
+    { id: 'energy', title: 'ENERJİ', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&q=80&w=400', color: 'border-amber-500', gradient: 'from-amber-500', searchQuery: 'Enerji', icon: Zap },
+    { id: 'chemistry', title: 'KİMYA', image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=400', color: 'border-emerald-600', gradient: 'from-emerald-600', searchQuery: 'Kimya', icon: Beaker },
+    { id: 'small_business', title: 'KÜÇÜK İŞLETME', image: 'https://images.unsplash.com/photo-1556740758-90de690fc122?auto=format&fit=crop&q=80&w=400', color: 'border-pink-500', gradient: 'from-pink-500', searchQuery: 'Esnaf', icon: Store }
   ];
 
   const Lightning = ({className}: {className?: string}) => (
@@ -107,16 +107,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${sector.gradient} to-transparent z-20 group-hover:h-full group-hover:opacity-20 transition-all duration-500`}></div>
                     <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-transparent transition-all duration-500 z-10 mix-blend-multiply"></div>
                     
-                    {/* ENHANCED GRAYSCALE & HOVER EFFECT */}
+                    {/* ENHANCED VISUALS - FULL COLOR & MAGNIFICENCE */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 transition-opacity duration-500 group-hover:opacity-60"></div>
+                    
                     <img 
                         src={sector.image} 
                         alt={sector.title} 
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100 filter grayscale contrast-125 brightness-75 group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100 group-hover:scale-110" 
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out opacity-90 group-hover:opacity-100 group-hover:scale-110 brightness-75 group-hover:brightness-110 saturate-150" 
                     />
                     
-                    {/* Floating Label */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-full text-center px-2">
-                        <span className="inline-block bg-slate-950/90 text-white px-3 py-1.5 text-xs md:text-sm font-black rounded backdrop-blur-md border border-white/10 uppercase tracking-widest shadow-2xl group-hover:text-amber-400 group-hover:border-amber-500/50 transition-all duration-300 transform group-hover:scale-110">
+                    {/* Floating Label - Enhanced Style */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-full text-center px-1">
+                        <span className="inline-block bg-black/60 text-white px-3 py-2 text-xs md:text-sm font-black rounded border-y border-amber-500/50 uppercase tracking-widest shadow-[0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-sm group-hover:text-amber-400 group-hover:border-amber-400 group-hover:bg-black/80 transition-all duration-300 transform group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]">
                         {sector.title}
                         </span>
                     </div>
@@ -134,42 +136,50 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {/* 3. MIDDLE SECTION - Responsive Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
-            {/* LEFT: Documents List */}
-            <div className={`lg:col-span-9 bg-slate-900/80 border border-slate-800 rounded-xl backdrop-blur-md shadow-2xl flex flex-col overflow-hidden h-full min-h-[500px] relative`}>
+            {/* LEFT: Documents List - MAGNIFICENT UPDATE */}
+            <div className={`lg:col-span-9 bg-gradient-to-br from-slate-900 via-slate-900 to-black border border-slate-800/60 rounded-xl backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden h-full min-h-[500px] relative ring-1 ring-white/5`}>
                 {/* Metallic shine effect */}
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent opacity-50"></div>
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent"></div>
                 
-                <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-4 border-b border-slate-800 flex justify-between items-center shadow-md z-10">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-slate-800 rounded-lg border border-slate-700 shadow-inner">
-                            <FileText className="w-5 h-5 text-amber-500" />
+                <div className="bg-slate-950/80 p-5 border-b border-slate-800/80 flex justify-between items-center shadow-lg z-10 backdrop-blur-md sticky top-0">
+                    <div className="flex items-center gap-4">
+                        <div className="p-2.5 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg border border-slate-700 shadow-[0_0_15px_rgba(0,0,0,0.5)] group">
+                            <FileText className="w-6 h-6 text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
                         </div>
-                        <h2 className="font-black text-slate-100 text-lg md:text-xl tracking-widest uppercase drop-shadow-md">DOKÜMAN LİSTESİ</h2>
+                        <div>
+                            <h2 className="font-black text-slate-100 text-xl tracking-widest uppercase drop-shadow-md">DOKÜMAN LİSTESİ</h2>
+                            <p className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">Profesyonel İş Belgeleri</p>
+                        </div>
                     </div>
-                    <span className="hidden md:block text-[10px] md:text-xs text-amber-400 font-bold tracking-widest bg-slate-950/80 px-3 py-1.5 rounded border border-amber-900/30 shadow-[0_0_10px_rgba(245,158,11,0.1)]">AYLIK VE SINIRSIZ</span>
+                    <span className="hidden md:block text-[10px] md:text-xs text-amber-500 font-black tracking-widest bg-black/40 px-4 py-2 rounded-lg border border-amber-900/40 shadow-[0_0_15px_rgba(245,158,11,0.1)]">AYLIK VE SINIRSIZ ERİŞİM</span>
                 </div>
                 
-                <div className="flex-1 overflow-y-auto custom-scrollbar p-2 md:p-3 bg-slate-950/50">
-                    <div className="flex flex-col gap-2">
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-5 bg-black/20">
+                    <div className="flex flex-col gap-3">
                         {documentList.map((doc, idx) => (
                         <div 
                             key={idx} 
                             onClick={() => onNavigate('templates', { search: doc.name.split(' ')[0] })}
-                            className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 md:p-4 hover:bg-slate-800/80 cursor-pointer transition-all duration-300 group rounded-xl border border-slate-800/50 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(0,0,0,0.5)] gap-3 sm:gap-0 relative overflow-hidden"
+                            className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 hover:bg-slate-800/60 cursor-pointer transition-all duration-300 group rounded-xl border border-slate-800/40 hover:border-amber-500/40 hover:shadow-[0_0_20px_rgba(0,0,0,0.6)] gap-4 sm:gap-0 relative overflow-hidden backdrop-blur-sm"
                         >
                             {/* Hover Highlight */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500/0 group-hover:bg-amber-500 transition-all duration-300"></div>
                             
-                            <div className="flex items-center gap-4 relative z-10">
-                                <div className={`p-2.5 rounded-lg bg-slate-900 border border-slate-700 group-hover:border-amber-500/50 group-hover:scale-110 transition-all duration-300 shadow-lg shrink-0 ${doc.color}`}>
-                                    <doc.icon className="w-5 h-5" />
+                            <div className="flex items-center gap-5 relative z-10 w-full sm:w-auto">
+                                <div className={`p-3 rounded-lg bg-slate-950/80 border border-slate-700/50 group-hover:border-amber-500/30 group-hover:scale-110 transition-all duration-300 shadow-lg shrink-0 ${doc.color}`}>
+                                    <doc.icon className="w-5 h-5 drop-shadow-[0_0_5px_currentColor]" />
                                 </div>
-                                <span className="text-sm md:text-base font-bold text-slate-300 group-hover:text-amber-50 transition-colors tracking-tight uppercase drop-shadow-sm">{doc.name}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-sm md:text-base font-bold text-slate-300 group-hover:text-amber-50 transition-colors tracking-tight uppercase drop-shadow-sm">{doc.name}</span>
+                                    <div className="h-0.5 w-0 group-hover:w-full bg-amber-500/50 transition-all duration-500 mt-1 max-w-[100px]"></div>
+                                </div>
                             </div>
                             
-                            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto pl-14 sm:pl-0 relative z-10">
-                                <span className="sm:hidden text-xs text-slate-500 font-bold uppercase">Limit:</span>
-                                <span className={`text-[10px] md:text-xs font-black tracking-wider px-3 py-1.5 rounded bg-slate-950/80 shadow-inner ${doc.limit.includes('SINIRSIZ') ? 'text-amber-500 border border-amber-900/30 shadow-[0_0_5px_rgba(245,158,11,0.2)]' : 'text-slate-500 border border-slate-800'}`}>
+                            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto pl-16 sm:pl-0 relative z-10 mt-2 sm:mt-0">
+                                <span className="sm:hidden text-[10px] text-slate-500 font-bold uppercase tracking-wider">LİMİT DURUMU:</span>
+                                <span className={`text-[10px] md:text-xs font-black tracking-wider px-3 py-1.5 rounded bg-black/40 shadow-inner border transition-all duration-300 ${doc.limit.includes('SINIRSIZ') ? 'text-amber-500 border-amber-900/30 shadow-[0_0_10px_rgba(245,158,11,0.1)] group-hover:shadow-[0_0_15px_rgba(245,158,11,0.2)]' : 'text-slate-500 border-slate-800 group-hover:text-slate-300 group-hover:border-slate-700'}`}>
                                 {doc.limit}
                                 </span>
                             </div>
@@ -223,34 +233,44 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     </div>
                 </div>
 
-                {/* Heavy Industrial Actions Panel */}
-                <div className="bg-slate-950 border-2 border-slate-800 p-1.5 rounded-xl shadow-2xl relative overflow-hidden group">
+                {/* Heavy Industrial Actions Panel - MAGNIFICENT */}
+                <div className="bg-gradient-to-br from-slate-950 to-black border-2 border-slate-800/80 p-1.5 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] relative overflow-hidden group hover:border-slate-700/80 transition-all duration-500">
                      {/* "Plate" effect */}
-                     <div className="absolute top-0 left-0 w-full h-full bg-[repeating-linear-gradient(45deg,rgba(0,0,0,0.2)_0px,rgba(0,0,0,0.2)_2px,transparent_2px,transparent_4px)] opacity-20 pointer-events-none"></div>
-                     <div className="absolute -inset-1 bg-gradient-to-br from-slate-800 via-transparent to-slate-800 opacity-20 blur-sm"></div>
+                     <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none mix-blend-overlay"></div>
+                     <div className="absolute -inset-1 bg-gradient-to-br from-amber-500/5 via-transparent to-slate-800/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-md"></div>
                      
-                     <div className="bg-slate-900/90 h-full w-full p-3 flex flex-col gap-3 rounded-lg relative z-10 border border-slate-800/50">
-                        <div className="flex justify-between items-center border-b border-slate-800 pb-2 mb-1">
-                            <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] group-hover:text-amber-500 transition-colors">HIZLI İŞLEMLER</span>
-                            <Activity className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+                     <div className="bg-black/40 h-full w-full p-4 flex flex-col gap-4 rounded-lg relative z-10 backdrop-blur-sm">
+                        <div className="flex justify-between items-center border-b border-slate-800/50 pb-3 mb-1">
+                            <span className="text-xs font-black text-slate-400 uppercase tracking-[0.25em] group-hover:text-amber-500 transition-colors drop-shadow-sm">HIZLI İŞLEMLER</span>
+                            <div className="relative">
+                                <Activity className="w-4 h-4 text-amber-500 animate-pulse relative z-10" />
+                                <div className="absolute inset-0 bg-amber-500 blur-sm animate-pulse opacity-50"></div>
+                            </div>
                         </div>
                         
-                        <div className="space-y-2.5">
-                            <button onClick={() => onNavigate('templates', { search: 'Tutanak' })} className="w-full bg-gradient-to-r from-slate-800 to-slate-800 hover:from-slate-700 hover:to-slate-600 text-slate-200 p-3 rounded border border-slate-700 border-l-4 border-l-amber-500 hover:border-l-amber-400 hover:text-white flex items-center gap-3 shadow-md hover:shadow-lg hover:shadow-amber-900/10 transition-all duration-300 group/btn">
-                                <History className="w-4 h-4 text-amber-500 group-hover/btn:scale-110 transition-transform" />
-                                <span className="font-bold text-xs md:text-sm tracking-wide uppercase">TUTANAK TUT</span>
+                        <div className="space-y-3">
+                            <button onClick={() => onNavigate('templates', { search: 'Tutanak' })} className="w-full bg-gradient-to-r from-slate-900 to-slate-800 hover:from-amber-950/30 hover:to-slate-900 text-slate-300 p-3.5 rounded-lg border border-slate-800 hover:border-amber-500/40 flex items-center gap-4 shadow-lg hover:shadow-[0_0_15px_rgba(245,158,11,0.1)] transition-all duration-300 group/btn relative overflow-hidden">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500"></div>
+                                <History className="w-5 h-5 text-amber-500 group-hover/btn:scale-110 transition-transform drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" />
+                                <span className="font-extrabold text-xs md:text-sm tracking-widest uppercase group-hover/btn:text-white transition-colors">TUTANAK TUT</span>
                             </button>
-                            <button onClick={() => onNavigate('templates', { search: 'Rapor' })} className="w-full bg-gradient-to-r from-slate-800 to-slate-800 hover:from-slate-700 hover:to-slate-600 text-slate-200 p-3 rounded border border-slate-700 border-l-4 border-l-emerald-500 hover:border-l-emerald-400 hover:text-white flex items-center gap-3 shadow-md hover:shadow-lg hover:shadow-emerald-900/10 transition-all duration-300 group/btn">
-                                <Clock className="w-4 h-4 text-emerald-500 group-hover/btn:scale-110 transition-transform" />
-                                <span className="font-bold text-xs md:text-sm tracking-wide uppercase">GÜNLÜK RAPOR TUT</span>
+                            
+                            <button onClick={() => onNavigate('templates', { search: 'Rapor' })} className="w-full bg-gradient-to-r from-slate-900 to-slate-800 hover:from-emerald-950/30 hover:to-slate-900 text-slate-300 p-3.5 rounded-lg border border-slate-800 hover:border-emerald-500/40 flex items-center gap-4 shadow-lg hover:shadow-[0_0_15px_rgba(16,185,129,0.1)] transition-all duration-300 group/btn relative overflow-hidden">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500"></div>
+                                <Clock className="w-5 h-5 text-emerald-500 group-hover/btn:scale-110 transition-transform drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
+                                <span className="font-extrabold text-xs md:text-sm tracking-widest uppercase group-hover/btn:text-white transition-colors">GÜNLÜK RAPOR TUT</span>
                             </button>
-                             <button onClick={() => onNavigate('templates')} className="w-full bg-gradient-to-r from-slate-800 to-slate-800 hover:from-slate-700 hover:to-slate-600 text-slate-200 p-3 rounded border border-slate-700 border-l-4 border-l-purple-500 hover:border-l-purple-400 hover:text-white flex items-center gap-3 shadow-md hover:shadow-lg hover:shadow-purple-900/10 transition-all duration-300 group/btn">
-                                <FileText className="w-4 h-4 text-purple-500 group-hover/btn:scale-110 transition-transform" />
-                                <span className="font-bold text-xs md:text-sm tracking-wide uppercase">DOKÜMAN ARŞİVİ</span>
+                            
+                             <button onClick={() => onNavigate('templates')} className="w-full bg-gradient-to-r from-slate-900 to-slate-800 hover:from-purple-950/30 hover:to-slate-900 text-slate-300 p-3.5 rounded-lg border border-slate-800 hover:border-purple-500/40 flex items-center gap-4 shadow-lg hover:shadow-[0_0_15px_rgba(168,85,247,0.1)] transition-all duration-300 group/btn relative overflow-hidden">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-purple-500"></div>
+                                <FileText className="w-5 h-5 text-purple-500 group-hover/btn:scale-110 transition-transform drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" />
+                                <span className="font-extrabold text-xs md:text-sm tracking-widest uppercase group-hover/btn:text-white transition-colors">DOKÜMAN ARŞİVİ</span>
                             </button>
-                             <button onClick={() => onNavigate('templates')} className="w-full bg-gradient-to-r from-slate-800 to-slate-800 hover:from-slate-700 hover:to-slate-600 text-slate-200 p-3 rounded border border-slate-700 border-l-4 border-l-rose-500 hover:border-l-rose-400 hover:text-white flex items-center gap-3 shadow-md hover:shadow-lg hover:shadow-rose-900/10 transition-all duration-300 group/btn">
-                                <Download className="w-4 h-4 text-rose-500 group-hover/btn:scale-110 transition-transform" />
-                                <span className="font-bold text-xs md:text-sm tracking-wide uppercase">PDF İNDİR / YAZDIR</span>
+                            
+                             <button onClick={() => onNavigate('templates')} className="w-full bg-gradient-to-r from-slate-900 to-slate-800 hover:from-rose-950/30 hover:to-slate-900 text-slate-300 p-3.5 rounded-lg border border-slate-800 hover:border-rose-500/40 flex items-center gap-4 shadow-lg hover:shadow-[0_0_15px_rgba(244,63,94,0.1)] transition-all duration-300 group/btn relative overflow-hidden">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-rose-500"></div>
+                                <Download className="w-5 h-5 text-rose-500 group-hover/btn:scale-110 transition-transform drop-shadow-[0_0_5px_rgba(244,63,94,0.5)]" />
+                                <span className="font-extrabold text-xs md:text-sm tracking-widest uppercase group-hover/btn:text-white transition-colors">PDF İNDİR / YAZDIR</span>
                             </button>
                         </div>
                      </div>
