@@ -112,19 +112,36 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   const [activeSector, setActiveSector] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0f1115] text-white p-4 md:p-6 font-sans overflow-x-hidden pb-32">
+    <div className="min-h-screen bg-[#0f1115] text-white p-4 md:p-6 font-sans overflow-x-hidden pb-32 pt-20 md:pt-24 relative">
       
-      {/* Header Section */}
-      <div className="text-center space-y-4 mb-8 pt-4 md:pt-8 animate-fade-in">
-        <h1 className="text-3xl md:text-4xl lg:text-6xl font-black text-white tracking-wider uppercase drop-shadow-[0_0_25px_rgba(255,255,255,0.15)] animate-slide-up leading-tight">
-          YILLIK DOKÜMANLAR <br className="md:hidden" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 animate-pulse">&</span> İŞ TAKİP PANELİ
+      {/* Background Decor - Industrial Grids/Lights */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-blue-500/5 blur-[100px] rounded-full"></div>
+          <div className="absolute top-20 right-0 w-96 h-96 bg-purple-500/5 blur-[120px] rounded-full"></div>
+      </div>
+
+      {/* Header Section - Now integrated into the top area space */}
+      <div className="text-center space-y-2 mb-10 animate-fade-in relative z-10 -mt-10 md:-mt-14">
+        <h1 className="text-xl md:text-3xl lg:text-4xl font-black text-white tracking-wider uppercase drop-shadow-[0_0_25px_rgba(255,255,255,0.15)] animate-slide-up leading-tight flex flex-col md:block items-center justify-center gap-2">
+          <span>YILLIK DOKÜMANLAR</span> <span className="hidden md:inline text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 animate-pulse text-2xl align-middle mx-2">&</span> <span className="md:hidden text-yellow-500">&</span> <span>İŞ TAKİP PANELİ</span>
         </h1>
-        <div className="flex flex-wrap justify-center gap-2 md:gap-4 text-[10px] md:text-[11px] lg:text-xs font-bold text-yellow-500/80 uppercase tracking-[0.2em] md:tracking-[0.3em] relative mt-4 md:mt-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent -z-10 hidden md:block"></div>
+        
+        {/* Sector Navigation Bar - The Industrial Strip */}
+        <div className="flex flex-wrap justify-center gap-1 md:gap-6 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest relative mt-6 md:mt-8 animate-slide-up border-y border-white/5 py-3 md:py-4 bg-white/[0.02] backdrop-blur-sm" style={{ animationDelay: '0.1s' }}>
           {SECTORS.map((s, i) => (
-            <React.Fragment key={s.id}>
-              <span className="bg-[#0f1115] px-2 md:px-3 py-1 rounded-full border border-white/5 hover:border-yellow-500/30 transition-colors cursor-default whitespace-nowrap">{s.name}</span>
-            </React.Fragment>
+            <div 
+               key={s.id} 
+               onClick={() => {
+                 const element = document.getElementById(`sector-${s.id}`);
+                 if(element) element.scrollIntoView({ behavior: 'smooth' });
+                 else setActiveSector(activeSector === s.id ? null : s.id);
+               }}
+               className="flex items-center group cursor-pointer hover:text-white transition-colors"
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${s.color.replace('bg-', 'bg-')} mr-2 group-hover:scale-150 transition-transform shadow-[0_0_8px_currentColor]`}></span>
+              <span>{s.name}</span>
+              {i !== SECTORS.length - 1 && <span className="mx-2 md:mx-6 text-slate-700 font-light">|</span>}
+            </div>
           ))}
         </div>
       </div>
