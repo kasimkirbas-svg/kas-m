@@ -21,13 +21,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
   user, t, onNavigate 
 }) => {
   const sectors = [
-    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
-    { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400', color: 'border-slate-500', gradient: 'from-slate-600', searchQuery: 'Kurumsal', icon: Building2 },
-    { id: 'mine', title: 'MADEN', image: 'https://images.unsplash.com/photo-1518709779341-56cf4535e94b?auto=format&fit=crop&q=80&w=400', color: 'border-orange-700', gradient: 'from-orange-700', searchQuery: 'Maden', icon: Construction },
-    { id: 'construction', title: 'İNŞAAT', image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=400', color: 'border-yellow-600', gradient: 'from-yellow-600', searchQuery: 'İnşaat', icon: Construction },
-    { id: 'energy', title: 'ENERJİ', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&q=80&w=400', color: 'border-amber-500', gradient: 'from-amber-500', searchQuery: 'Enerji', icon: Zap },
-    { id: 'chemistry', title: 'KİMYA', image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=400', color: 'border-emerald-600', gradient: 'from-emerald-600', searchQuery: 'Kimya', icon: Beaker },
-    { id: 'small_business', title: 'KÜÇÜK İŞLETME', image: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=400', color: 'border-pink-500', gradient: 'from-pink-500', searchQuery: 'Esnaf', icon: Store }
+    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1565514020176-adb1001e89ce?auto=format&fit=crop&q=80&w=800', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
+    { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800', color: 'border-slate-500', gradient: 'from-slate-600', searchQuery: 'Kurumsal', icon: Building2 },
+    { id: 'mine', title: 'MADEN', image: 'https://images.unsplash.com/photo-1515549832467-b39153a8d626?auto=format&fit=crop&q=80&w=800', color: 'border-orange-700', gradient: 'from-orange-700', searchQuery: 'Maden', icon: Construction },
+    { id: 'construction', title: 'İNŞAAT', image: 'https://images.unsplash.com/photo-1541976594385-e6dbc077970c?auto=format&fit=crop&q=80&w=800', color: 'border-yellow-600', gradient: 'from-yellow-600', searchQuery: 'İnşaat', icon: Construction },
+    { id: 'energy', title: 'ENERJİ', image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=800', color: 'border-amber-500', gradient: 'from-amber-500', searchQuery: 'Enerji', icon: Zap },
+    { id: 'chemistry', title: 'KİMYA', image: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&q=80&w=800', color: 'border-emerald-600', gradient: 'from-emerald-600', searchQuery: 'Kimya', icon: Beaker },
+    { id: 'small_business', title: 'KÜÇÜK İŞLETME', image: 'https://images.unsplash.com/photo-1541577977468-b7a6372d6148?auto=format&fit=crop&q=80&w=800', color: 'border-pink-500', gradient: 'from-pink-500', searchQuery: 'Esnaf', icon: Store }
   ];
 
   const Lightning = ({className}: {className?: string}) => (
@@ -70,24 +70,27 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* 1. Header with Industrial HUD Look */}
-      <div className="flex-none pt-6 pb-2 px-4 z-20 w-full relative shrink-0">
-        <div className="max-w-[1920px] mx-auto bg-slate-900/40 border-y border-slate-700/50 backdrop-blur-sm relative">
-            {/* Decorative Side Markers */}
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
-            <div className="absolute right-0 top-0 bottom-0 w-1 bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+      <div className="flex-none pt-8 pb-4 px-4 z-20 w-full relative shrink-0">
+        <div className="max-w-[1920px] mx-auto bg-slate-900/60 border border-slate-700/50 backdrop-blur-md relative rounded-lg overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
             
-            <div className="flex flex-col items-center justify-center py-4 relative overflow-hidden">
-                {/* Background Tech Lines */}
-                <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(255,255,255,0.05)_50%,transparent_51%)] bg-[length:20px_100%]"></div>
+            {/* Tech Decoration Lines */}
+            <div className="absolute top-0 left-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+            <div className="absolute top-0 right-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+            <div className="absolute bottom-0 right-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+
+            <div className="flex flex-col items-center justify-center py-6 relative">
+                {/* Background Grid Pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
                 
-                <h1 className="text-3xl md:text-4xl font-black text-center tracking-[0.15em] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] relative z-10 font-sans">
-                  YILLIK DOKÜMANLAR <span className="text-amber-500 mx-2">&</span> İŞ TAKİP PANELİ
+                <h1 className="text-3xl md:text-5xl font-black text-center tracking-[0.2em] text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] relative z-10 font-sans uppercase">
+                  YILLIK DOKÜMANLAR <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 mx-2">&</span> İŞ TAKİP PANELİ
                 </h1>
                 
-                <div className="flex items-center gap-4 mt-2 relative z-10">
-                    <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-slate-500"></div>
-                    <div className="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-[0.4em]">Integrated Management System V.3.0</div>
-                    <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-slate-500"></div>
+                <div className="flex items-center gap-6 mt-3 relative z-10 w-full justify-center opacity-80">
+                    <div className="h-[1px] w-16 md:w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
+                    <div className="text-[10px] md:text-xs text-amber-500 font-mono font-bold uppercase tracking-[0.4em] text-shadow-sm">INTEGRATED MANAGEMENT SYSTEM V.3.0</div>
+                    <div className="h-[1px] w-16 md:w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
                 </div>
             </div>
         </div>
@@ -95,51 +98,64 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       <div className="flex-1 p-3 md:p-5 gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 overflow-hidden relative">
         
-        {/* 2. Top Sectors Row - More Vivid & Stylized */}
-        <div className="flex-none h-44 w-full overflow-x-auto custom-scrollbar pb-3">
-            <div className="flex gap-4 h-full px-2 min-w-max">
+        {/* 2. Top Sectors Row - Highly Stylized Cards */}
+        <div className="flex-none h-48 w-full overflow-x-auto custom-scrollbar pb-4 pt-2 px-2">
+            <div className="flex gap-5 h-full min-w-max">
             {sectors.map((sector) => (
                 <div 
                     key={sector.id}
                     onClick={() => onNavigate('templates', { category: sector.searchQuery })}
-                    className={`group relative cursor-pointer overflow-hidden rounded-xl border border-slate-600 bg-slate-900 transition-all duration-300 w-36 md:w-56 h-full flex flex-col shrink-0 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] ring-1 ring-white/5`}
+                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-300 w-40 md:w-64 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-white/40 ring-1 ring-black/40 shadow-xl`}
                 >
-                    {/* Vivid Gradient Overlay */}
-                    <div className={`absolute inset-0 bg-gradient-to-b ${sector.gradient} to-slate-900 opacity-90 mix-blend-multiply transition-opacity duration-300 group-hover:opacity-100`}></div>
+                    {/* Background Image - Full Color but Darkened */}
+                    <div className="absolute inset-0">
+                         <img src={sector.image} alt={sector.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-[0.6] group-hover:brightness-[0.8]" />
+                         <div className={`absolute inset-0 bg-gradient-to-t ${sector.gradient} to-transparent opacity-60 mix-blend-overlay group-hover:opacity-80 transition-opacity`}></div>
+                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/90"></div>
+                    </div>
                     
-                    {/* Background Image */}
-                    <img src={sector.image} alt={sector.title} className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700" />
-                    
-                    {/* Top Stripe */}
-                    <div className="absolute top-0 left-0 w-full h-1 bg-white/50 shadow-[0_0_10px_rgba(255,255,255,0.5)] z-20"></div>
+                    {/* Top Status Indicators */}
+                    <div className="absolute top-3 right-3 flex gap-1 z-20">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_#10b981] animate-pulse"></div>
+                    </div>
 
-                    {/* Content Container */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 p-2">
-                        <div className="bg-black/40 backdrop-blur-sm p-3 rounded-full border border-white/20 mb-2 group-hover:scale-110 transition-transform shadow-lg">
-                            <sector.icon className="w-6 h-6 text-white" />
+                    {/* Content Container - Bottom Aligned */}
+                    <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col items-center z-20 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                        <div className={`p-3 rounded-xl border border-white/20 backdrop-blur-md mb-2 shadow-lg group-hover:scale-110 transition-transform duration-300 bg-white/10`}>
+                            <sector.icon className="w-6 h-6 text-white drop-shadow-md" />
                         </div>
-                        <h3 className="text-white font-black text-sm md:text-base tracking-[0.1em] uppercase drop-shadow-md text-center">{sector.title}</h3>
-                        <div className="h-[2px] w-8 bg-amber-500 mt-2"></div>
+                        
+                        <h3 className="text-white font-black text-lg tracking-widest uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center w-full border-b border-white/20 pb-2 mb-2 group-hover:border-amber-500/50 transition-colors">
+                            {sector.title}
+                        </h3>
+                        
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                             <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-black/60 px-2 py-1 rounded border border-amber-500/30">Hızlı İşlem</span>
+                        </div>
                     </div>
                 </div>
             ))}
              {/* Create Certificate Tile - Matching Style */}
              <div 
                 onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })}
-                className="group relative cursor-pointer overflow-hidden rounded-xl border border-blue-400 bg-blue-900 w-36 md:w-48 h-full flex flex-col shrink-0 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(59,130,246,0.4)] transition-all"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-blue-500/40 bg-slate-900 w-40 md:w-52 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(59,130,246,0.3)] transition-all duration-300 active:scale-95"
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-900 opacity-90"></div>
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-20"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-slate-900 to-black"></div>
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-20 group-hover:opacity-30 transition-opacity"></div>
                 
-                <div className="absolute top-0 right-0 p-2 z-20">
-                     <span className="bg-amber-500 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-lg uppercase tracking-wider animate-pulse">Yeni</span>
+                <div className="absolute top-0 right-0 p-3 z-20">
+                     <span className="bg-amber-500 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-[0_0_15px_rgba(245,158,11,0.6)] uppercase tracking-wider animate-pulse border border-amber-300">YENİ</span>
                 </div>
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center z-20 p-2">
-                    <div className="bg-blue-500/30 p-3 rounded-full border border-blue-300/50 mb-2 group-hover:bg-blue-400/50 transition-colors shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                        <Award className="w-8 h-8 text-white" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-20 p-4 group-hover:scale-105 transition-transform">
+                    <div className="bg-blue-600/20 p-4 rounded-full border border-blue-400/50 mb-3 group-hover:bg-blue-500/30 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.4)] relative">
+                        <div className="absolute inset-0 rounded-full border border-blue-400 opacity-50 animate-[ping_3s_infinite]"></div>
+                        <Award className="w-10 h-10 text-blue-300 drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
                     </div>
-                    <h3 className="text-white font-black text-sm tracking-wider uppercase text-center drop-shadow-md">SERTİFİKA<br/>OLUŞTUR</h3>
+                    <div className="text-center">
+                        <h3 className="text-white font-black text-sm tracking-[0.2em] uppercase drop-shadow-md leading-tight">SERTİFİKA</h3>
+                        <span className="text-blue-400 text-[10px] font-bold tracking-widest uppercase mt-1 block group-hover:text-blue-200 transition-colors">OLUŞTUR</span>
+                    </div>
                 </div>
             </div>
             </div>
