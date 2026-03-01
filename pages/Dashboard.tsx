@@ -155,15 +155,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="flex-1 p-3 md:p-5 gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 overflow-hidden relative">
         
         {/* 2. Top Sectors Row - Highly Stylized Cards */}
-        <div className="flex-none h-48 w-full overflow-x-auto no-scrollbar pb-4 pt-2 px-2">
-            <div className="flex gap-5 h-full min-w-max">
+        <div className="flex-none h-48 w-full pb-4 pt-2 px-2">
+            <div className="flex gap-5 h-full w-full justify-between">
             {sectors.map((sector) => (
                 <div 
                     key={sector.id}
                     onClick={() => onNavigate('templates', { category: sector.searchQuery })}
                     onMouseEnter={() => setHoveredSector(sector.id)}
                     onMouseLeave={() => setHoveredSector(null)}
-                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-500 ease-out w-40 md:w-64 hover:w-80 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-amber-500/40 ring-1 ring-black/40 shadow-xl`}
+                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-500 ease-out flex-1 hover:flex-[1.5] h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-amber-500/40 ring-1 ring-black/40 shadow-xl`}
                 >
                     {/* Background Image - Full Color but Darkened */}
                     <div className="absolute inset-0">
@@ -214,29 +214,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     </div>
                 </div>
             ))}
-             {/* Create Certificate Tile - Matching Style */}
-             <div 
-                onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-blue-500/40 bg-slate-900 w-40 md:w-52 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(59,130,246,0.3)] transition-all duration-300 active:scale-95"
-            >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-slate-900 to-black"></div>
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                
-                <div className="absolute top-0 right-0 p-3 z-20">
-                     <span className="bg-amber-500 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-[0_0_15px_rgba(245,158,11,0.6)] uppercase tracking-wider animate-pulse border border-amber-300">YENİ</span>
-                </div>
-
-                <div className="absolute inset-0 flex flex-col items-center justify-center z-20 p-4 group-hover:scale-105 transition-transform">
-                    <div className="bg-blue-600/20 p-4 rounded-full border border-blue-400/50 mb-3 group-hover:bg-blue-500/30 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.4)] relative">
-                        <div className="absolute inset-0 rounded-full border border-blue-400 opacity-50 animate-[ping_3s_infinite]"></div>
-                        <Award className="w-10 h-10 text-blue-300 drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
-                    </div>
-                    <div className="text-center">
-                        <h3 className="text-white font-black text-sm tracking-[0.2em] uppercase drop-shadow-md leading-tight">SERTİFİKA</h3>
-                        <span className="text-blue-400 text-[10px] font-bold tracking-widest uppercase mt-1 block group-hover:text-blue-200 transition-colors">OLUŞTUR</span>
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
 
@@ -343,6 +320,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
                              <div className="text-left leading-none">
                                 <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-rose-200/70">ÇIKTI AL</div>
                                 <div className="text-sm font-black text-slate-200 group-hover:text-white">PDF İNDİR/YAZDIR</div>
+                             </div>
+                        </button>
+                        
+                         <button onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-blue-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-blue-500/50 shadow-lg group transition-all relative overflow-hidden">
+                             <div className="bg-slate-950 p-2 rounded text-blue-500 border border-slate-700 group-hover:border-blue-500/50 relative">
+                                <div className="absolute inset-0 rounded border border-blue-400 opacity-50 animate-[ping_3s_infinite]"></div>
+                                 <Award className="w-5 h-5 group-hover:rotate-12 transition-transform drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+                             </div>
+                             <div className="text-left leading-none">
+                                <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-blue-200/70">YENİ</div>
+                                <div className="text-sm font-black text-slate-200 group-hover:text-white">SERTİFİKA OLUŞTUR</div>
                              </div>
                         </button>
 
