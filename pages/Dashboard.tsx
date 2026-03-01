@@ -117,8 +117,52 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="h-px w-full max-w-4xl mx-auto bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent mt-4"></div>
       </div>
 
+      {/* SECTORS GRID */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
+        {sectors.map((sector) => (
+          <div 
+            key={sector.id}
+            onClick={() => onNavigate('templates', { category: sector.searchQuery })}
+            className={`group relative h-28 md:h-32 rounded-xl overflow-hidden cursor-pointer border border-white/10 hover:border-yellow-500/50 transition-all hover:-translate-y-1 ${
+               sector.id === 'mine' ? 'border-yellow-500 ring-1 ring-yellow-500/20' : ''
+            }`}
+          >
+            {/* Background Image */}
+            <div className="absolute inset-0">
+              <img src={sector.image} alt={sector.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+            </div>
+            
+            {/* Content Container */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-2 text-center">
+              
+              {/* Icon & Title (Slide up on hover) */}
+              <div className="flex flex-col items-center justify-center transition-all duration-300 group-hover:-translate-y-2">
+                 <div className="mb-2 p-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/10 shadow-lg group-hover:bg-yellow-500 group-hover:text-black transition-colors">
+                    <sector.icon size={18} />
+                 </div>
+                 <span className="text-[10px] md:text-xs font-bold tracking-wider uppercase drop-shadow-md">{sector.title}</span>
+              </div>
+
+              {/* Scrollable List (Visible on hover) */}
+              <div className="absolute top-1/2 left-0 w-full h-1/2 pt-1 px-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 flex flex-col items-center">
+                  <div className="h-0.5 w-8 bg-yellow-500/50 mb-1 rounded-full"></div>
+                  <div className="w-full h-full overflow-y-auto scrollbar-thin scrollbar-thumb-yellow-500/50 scrollbar-track-transparent pr-1 space-y-1 text-left">
+                     {sector.items.map((item, idx) => (
+                        <div key={idx} className="text-[9px] text-slate-300 font-medium truncate pl-1 border-l-2 border-yellow-500/30 hover:border-yellow-500 hover:text-white hover:bg-white/5 transition-all">
+                           {item}
+                        </div>
+                     ))}
+                  </div>
+              </div>
+
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* PRICING SECTION */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
          {/* STANDART */}
          <div className="bg-gradient-to-b from-[#1a2030] to-[#0f1115] rounded-xl p-5 border border-blue-900/50 flex items-center justify-between group hover:border-blue-500 transition-colors">
             <div className="flex items-center gap-4">
@@ -179,52 +223,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                </button>
             </div>
          </div>
-      </div>
-
-      {/* SECTORS GRID (Updated Dimensions and Horizontal Scroll) */}
-      <div className="flex overflow-x-auto gap-4 pb-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent snap-x">
-        {sectors.map((sector) => (
-          <div 
-            key={sector.id}
-            onClick={() => onNavigate('templates', { category: sector.searchQuery })}
-            className={`min-w-[280px] md:min-w-[320px] snap-center group relative h-[400px] rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-yellow-500/50 transition-all hover:shadow-[0_0_25px_rgba(234,179,8,0.2)] ${
-               sector.id === 'mine' ? 'border-yellow-500 ring-1 ring-yellow-500/20' : ''
-            }`}
-          >
-            {/* Background Image */}
-            <div className="absolute inset-0">
-              <img src={sector.image} alt={sector.title} className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-            </div>
-            
-            {/* Default State Content (Icon & Title) */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center transition-all duration-300 group-hover:opacity-0 group-hover:-translate-y-4">
-              <div className="mb-3 p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 shadow-lg">
-                 <sector.icon size={20} className="text-white" />
-              </div>
-              <span className="text-xs md:text-sm font-black tracking-wider uppercase drop-shadow-lg">{sector.title}</span>
-            </div>
-
-            {/* Hover State Content (Document List) */}
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm p-4 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-center">
-                <div className="flex items-center gap-2 mb-3 border-b border-white/20 pb-2">
-                    <sector.icon size={14} className="text-yellow-500" />
-                    <span className="text-[10px] font-bold text-yellow-500 uppercase tracking-widest">{sector.title}</span>
-                </div>
-                <div className="space-y-1.5">
-                    {sector.items.slice(0, 4).map((item, idx) => (
-                        <div key={idx} className="flex items-center gap-2">
-                            <div className="w-1 h-1 rounded-full bg-yellow-500"></div>
-                            <span className="text-[10px] text-slate-300 font-medium truncate">{item}</span>
-                        </div>
-                    ))}
-                    {sector.items.length > 4 && (
-                        <div className="text-[9px] text-yellow-500/70 pl-3">ve {sector.items.length - 4} tane daha...</div>
-                    )}
-                </div>
-            </div>
-          </div>
-        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
@@ -335,7 +333,70 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      
+      {/* PRICING SECTION */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+         {/* STANDART */}
+         <div className="bg-gradient-to-b from-[#1a2030] to-[#0f1115] rounded-xl p-5 border border-blue-900/50 flex items-center justify-between group hover:border-blue-500 transition-colors">
+            <div className="flex items-center gap-4">
+               <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <Shield size={24} />
+               </div>
+               <div>
+                  <h3 className="font-black text-white text-lg tracking-wide">STANDART</h3>
+                  <p className="text-[10px] text-blue-300 font-medium uppercase">Standart Doküman Limiti</p>
+               </div>
+            </div>
+            <div className="text-right">
+               <div className="text-xl font-black text-white">100 TL</div>
+               <button className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest transition-colors mt-1">
+                  SATIN AL
+               </button>
+            </div>
+         </div>
+
+         {/* GOLD */}
+         <div className="relative bg-gradient-to-b from-[#2a1e0d] to-[#0f1115] rounded-xl p-5 border border-yellow-600/50 flex items-center justify-between group hover:border-yellow-500 transition-colors shadow-lg shadow-yellow-900/10 scale-[1.02]">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-3 py-0.5 rounded text-[10px] font-black uppercase tracking-widest">
+               ÖNERİLEN
+            </div>
+            <div className="flex items-center gap-4">
+               <div className="p-3 rounded-lg bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+                  <Award size={24} />
+               </div>
+               <div>
+                  <h3 className="font-black text-yellow-500 text-lg tracking-wide">GOLD</h3>
+                  <p className="text-[10px] text-yellow-300/80 font-medium uppercase">2 Kat Doküman Limiti</p>
+               </div>
+            </div>
+            <div className="text-right">
+               <div className="text-2xl font-black text-yellow-500">175 TL</div>
+               <button className="px-4 py-1.5 rounded bg-yellow-500 hover:bg-yellow-400 text-black text-[10px] font-black uppercase tracking-widest transition-colors mt-1">
+                  SATIN AL
+               </button>
+            </div>
+         </div>
+
+         {/* PREMIUM */}
+         <div className="bg-gradient-to-b from-[#251a30] to-[#0f1115] rounded-xl p-5 border border-purple-900/50 flex items-center justify-between group hover:border-purple-500 transition-colors">
+            <div className="flex items-center gap-4">
+               <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                  <CheckCircle2 size={24} />
+               </div>
+               <div>
+                  <h3 className="font-black text-white text-lg tracking-wide">PREMIUM</h3>
+                  <p className="text-[10px] text-purple-300 font-medium uppercase">3 Kat Doküman Limiti</p>
+               </div>
+            </div>
+            <div className="text-right relative">
+                <div className="text-[10px] line-through text-slate-500 absolute -top-3 right-0">350 TL</div>
+               <div className="text-xl font-black text-white">250 TL</div>
+               <button className="px-4 py-1.5 rounded bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold uppercase tracking-widest transition-colors mt-1">
+                  SATIN AL
+               </button>
+            </div>
+         </div>
+      </div>
+    
     </div>
   );
 };
