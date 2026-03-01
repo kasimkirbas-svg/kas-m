@@ -4,7 +4,7 @@ import {
   Star, Zap, Beaker, Hammer, 
   FilePlus, FileText, ClipboardList, PenTool, TrendingUp, User as UserIcon, 
   Settings, Calendar, ArrowRight, Download, Eye, Plus, ChevronRight, Target, 
-  Briefcase, Sparkles, PieChart, Activity, CheckCircle2, Shield 
+  Briefcase, Sparkles, PieChart, Activity, CheckCircle2, Shield, Award
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 
