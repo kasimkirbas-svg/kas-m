@@ -356,72 +356,75 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
       </div>
 
        {/* Footer / Pricing Section */}
-       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-up pb-8" style={{ animationDelay: '0.5s' }}>
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-up pb-12 mt-8 md:mt-12" style={{ animationDelay: '0.5s' }}>
             
             {/* Standard Plan */}
-            <div className="bg-[#161922] rounded-2xl p-4 md:p-6 border border-white/10 flex items-center justify-between group hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="bg-[#161922] rounded-2xl p-6 border border-white/10 flex flex-col items-center text-center gap-4 group hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
-                <div className="flex items-center gap-4 md:gap-5 relative z-10">
-                     <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20 group-hover:scale-110 transition-transform duration-300">
-                          <Shield size={24} className="md:w-7 md:h-7" />
-                     </div>
-                     <div>
-                        <h3 className="font-black text-white text-lg md:text-xl tracking-wide uppercase group-hover:text-blue-200 transition-colors">STANDART</h3>
-                        <p className="text-[9px] md:text-[10px] text-slate-400 font-bold tracking-widest mt-1">BAŞLANGIÇ PAKETİ</p>
-                     </div>
+                <div className="p-4 bg-blue-500/10 text-blue-400 rounded-2xl border border-blue-500/20 group-hover:scale-110 transition-transform duration-300 mb-2">
+                    <Shield size={32} />
                 </div>
-                <div className="text-right relative z-10">
-                    <div className="text-xl md:text-2xl font-black text-white mb-2 tracking-tight">100 ₺</div>
-                    <button className="px-3 py-1.5 md:px-5 md:py-2 rounded-lg bg-white/5 hover:bg-blue-600 hover:text-white text-slate-300 text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all border border-white/10 hover:border-blue-500 hover:shadow-lg">
+                
+                <div className="relative z-10 w-full">
+                    <h3 className="font-black text-white text-xl tracking-wide uppercase group-hover:text-blue-200 transition-colors">STANDART</h3>
+                    <p className="text-[10px] text-slate-400 font-bold tracking-widest mt-1 mb-4">BAŞLANGIÇ PAKETİ</p>
+                    
+                    <div className="w-full h-px bg-white/5 mb-4"></div>
+                    
+                    <div className="text-3xl font-black text-white mb-4 tracking-tight">100 ₺</div>
+                    <button className="w-full py-3 rounded-xl bg-white/5 hover:bg-blue-600 hover:text-white text-slate-300 text-[10px] font-black uppercase tracking-widest transition-all border border-white/10 hover:border-blue-500 hover:shadow-lg">
                         SATIN AL
                     </button>
                 </div>
             </div>
 
             {/* Gold Plan */}
-            <div className="relative bg-[#1a1608] rounded-2xl p-4 md:p-6 border border-yellow-500/30 flex items-center justify-between group hover:border-yellow-400 transition-all duration-300 shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:shadow-[0_0_50px_rgba(234,179,8,0.2)] md:scale-105 z-10 overflow-hidden ring-1 ring-yellow-500/20 md:ring-0">
+            <div className="relative bg-[#1a1608] rounded-2xl p-6 border border-yellow-500/30 flex flex-col items-center text-center gap-4 group hover:border-yellow-400 transition-all duration-300 shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:shadow-[0_0_50px_rgba(234,179,8,0.2)] md:scale-110 z-10 overflow-hidden ring-1 ring-yellow-500/20 md:ring-0">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
                 <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
                 
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-[0_0_20px_rgba(234,179,8,0.4)] flex items-center gap-1 md:gap-2 whitespace-nowrap">
-                   <Star size={10} className="fill-black" /> EN POPÜLER
+                <div className="absolute top-4 right-4 bg-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-yellow-500/30">
+                   EN POPÜLER
                 </div>
 
-                <div className="flex items-center gap-4 md:gap-5 relative z-10">
-                     <div className="p-3 bg-yellow-500/20 text-yellow-500 rounded-xl border border-yellow-500/30 group-hover:scale-110 transition-transform duration-300 shadow-[0_0_20px_rgba(234,179,8,0.2)]">
-                          <Shield size={24} className="fill-yellow-500/20 md:w-7 md:h-7" />
-                     </div>
-                     <div>
-                        <h3 className="font-black text-yellow-500 text-xl md:text-2xl tracking-wide uppercase drop-shadow-sm">GOLD</h3>
-                        <p className="text-[9px] md:text-[10px] text-yellow-200/60 font-bold tracking-widest mt-1">2 KAT LİMİT</p>
-                     </div>
+                <div className="p-4 bg-yellow-500/20 text-yellow-500 rounded-2xl border border-yellow-500/30 group-hover:scale-110 transition-transform duration-300 shadow-[0_0_20px_rgba(234,179,8,0.2)] mb-2 mt-4">
+                     <Star size={32} className="fill-yellow-500/20" />
                 </div>
-                <div className="text-right relative z-10">
-                    <div className="text-2xl md:text-3xl font-black text-yellow-500 mb-2 tracking-tight drop-shadow-sm">175 ₺</div>
-                    <button className="px-4 py-2 md:px-6 md:py-2.5 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-black text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] hover:-translate-y-0.5 transform">
+
+                <div className="relative z-10 w-full">
+                    <h3 className="font-black text-yellow-500 text-2xl tracking-wide uppercase drop-shadow-sm">GOLD</h3>
+                    <p className="text-[10px] text-yellow-200/60 font-bold tracking-widest mt-1 mb-4">2 KAT LİMİT</p>
+                    
+                    <div className="w-full h-px bg-yellow-500/20 mb-4"></div>
+
+                    <div className="text-4xl font-black text-yellow-500 mb-4 tracking-tight drop-shadow-sm">175 ₺</div>
+                    <button className="w-full py-3 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black text-[10px] font-black uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] hover:-translate-y-0.5 transform">
                         SATIN AL
                     </button>
                 </div>
             </div>
 
             {/* Premium Plan */}
-            <div className="bg-[#1a1025] rounded-2xl p-4 md:p-6 border border-purple-500/20 flex items-center justify-between group hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-l from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="bg-[#1a1025] rounded-2xl p-6 border border-purple-500/20 flex flex-col items-center text-center gap-4 group hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                <div className="flex items-center gap-4 md:gap-5 relative z-10">
-                     <div className="p-3 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/20 group-hover:scale-110 transition-transform duration-300">
-                          <CheckCircle2 size={24} className="md:w-7 md:h-7" />
-                     </div>
-                     <div>
-                        <h3 className="font-black text-white text-lg md:text-xl tracking-wide uppercase group-hover:text-purple-200 transition-colors">PREMIUM</h3>
-                        <p className="text-[9px] md:text-[10px] text-slate-400 font-bold tracking-widest mt-1">SINIRSIZ ERİŞİM</p>
-                     </div>
+                <div className="p-4 bg-purple-500/10 text-purple-400 rounded-2xl border border-purple-500/20 group-hover:scale-110 transition-transform duration-300 mb-2">
+                     <CheckCircle2 size={32} />
                 </div>
-                <div className="text-right relative z-10">
-                    <div className="text-[9px] md:text-[10px] line-through text-slate-600 absolute -top-3 md:-top-4 right-0 font-mono">350 ₺</div>
-                    <div className="text-xl md:text-2xl font-black text-white mb-2 tracking-tight">250 ₺</div>
-                    <button className="px-3 py-1.5 md:px-5 md:py-2 rounded-lg bg-purple-900/50 hover:bg-purple-600 text-purple-200 hover:text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all border border-purple-500/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+
+                <div className="relative z-10 w-full">
+                    <h3 className="font-black text-white text-xl tracking-wide uppercase group-hover:text-purple-200 transition-colors">PREMIUM</h3>
+                    <p className="text-[10px] text-slate-400 font-bold tracking-widest mt-1 mb-4">SINIRSIZ ERİŞİM</p>
+                    
+                    <div className="w-full h-px bg-white/5 mb-4"></div>
+
+                    <div className="relative inline-block mb-4">
+                        <div className="text-[10px] line-through text-slate-600 absolute -top-4 right-0 font-mono">350 ₺</div>
+                        <div className="text-3xl font-black text-white tracking-tight">250 ₺</div>
+                    </div>
+                    
+                    <button className="w-full py-3 rounded-xl bg-purple-900/50 hover:bg-purple-600 text-purple-200 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all border border-purple-500/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
                         SATIN AL
                     </button>
                 </div>
