@@ -343,8 +343,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
             </div>
 
+            </div>
+
         </div>
-3 md:gap-6 pt-0 md:pt-2 pb-6 md:pb-2">
+
+        {/* 4. Bottom Pricing Row - Bigger & bolder */}
+        <div className="flex-none grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 pt-0 md:pt-2 pb-6 md:pb-2">
             
             {/* STANDARD */}
             <div className="relative group overflow-hidden rounded-xl border border-slate-600 bg-gradient-to-r md:bg-gradient-to-b from-slate-900 via-slate-800 to-slate-950 p-4 shadow-xl hover:border-slate-400 transition-all cursor-pointer">
@@ -405,9 +409,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                      <div className="flex flex-col items-end">
                          <span className="text-[10px] md:text-xs text-slate-500 line-through decoration-red-500/50 font-bold">350 TL</span>
                         <span className="text-xl md:text-2xl font-black text-white drop-shadow-md">250 TL</span>
-                        <button onClick={() => onNavigate('subscription')} className="mt-1 bg-purple-900/60 hover:bg-purple-800/60 text-purple-100 text-[9px] md:
-                        <span className="text-2xl font-black text-white drop-shadow-md">250 TL</span>
-                        <button onClick={() => onNavigate('subscription')} className="mt-1 bg-purple-900/60 hover:bg-purple-800/60 text-purple-100 text-[10px] font-bold px-3 py-1 rounded shadow-lg border border-purple-500/30 uppercase tracking-widest transition-colors">SATIN AL</button>
+                        <button onClick={() => onNavigate('subscription')} className="mt-1 bg-purple-900/60 hover:bg-purple-800/60 text-purple-100 text-[9px] md:text-[10px] font-bold px-3 py-1 rounded shadow-lg border border-purple-500/30 uppercase tracking-widest transition-colors">SATIN AL</button>
                     </div>
                 </div>
             </div>
