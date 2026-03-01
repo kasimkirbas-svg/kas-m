@@ -74,18 +74,10 @@ export const Layout: React.FC<LayoutProps> = ({
     <div className={`flex flex-col font-sans bg-slate-950 text-slate-200 selection:bg-amber-500/30 min-h-screen`}>
       
       {/* INDUSTRIAL TOP NAVIGATION BAR - Now Transparent/Minimal */}
-      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-transparent shrink-0 pointer-events-none">
+      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-4 bg-transparent shrink-0 pointer-events-none">
         
-        {/* Left: Branding & Mobile Menu */}
+        {/* Left: Branding */}
         <div className="flex items-center gap-4 pointer-events-auto">
-            {/* Mobile Toggle */}
-            <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-                className="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors active:scale-95 bg-black/20 backdrop-blur-sm"
-            >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-
             {/* Logo */}
             <div 
                 className="flex items-center gap-3 cursor-pointer group select-none"
@@ -94,7 +86,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-700 rounded-lg flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform border border-amber-400/20">
                     K
                 </div>
-                {/* Text hidden on mobile to save space, visible on tablet+ */}
+                {/* Text visible on tablet+ */}
                 <div className="hidden md:flex flex-col drop-shadow-md">
                     <span className="font-bold text-lg leading-none text-slate-100 tracking-wide group-hover:text-amber-500 transition-colors">KIRBAŞ</span>
                     <span className="text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase">Panel Yönetimi</span>
@@ -127,11 +119,8 @@ export const Layout: React.FC<LayoutProps> = ({
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-4 pointer-events-auto">
             
-            {/* Quick Actions (Settings shortcut) - REMOVED */}
-
-
             {/* Notifications */}
             <div className="relative">
                 <button 

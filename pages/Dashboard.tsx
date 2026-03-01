@@ -45,7 +45,7 @@ const SECTORS = [
     id: 'factory', 
     name: 'FABRİKA', 
     icon: Factory, 
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600',
+    image: '/sectors/factory.jpg',
     color: 'bg-rose-600', 
     docs: [
       'Üretim Takip Formu', 'Günlük Kalite Raporu', 'Makine Bakım Kartı', 'Vardiya Teslim Tutanağı',
@@ -57,7 +57,7 @@ const SECTORS = [
     id: 'company', 
     name: 'ŞİRKET', 
     icon: Building2, 
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
+    image: '/sectors/company.jpg',
     color: 'bg-blue-600', 
     docs: [
       'Personel Özlük Dosyası', 'Yıllık İzin Planı', 'Satın Alma Talep Formu', 'Masraf Bildirim Formu',
@@ -69,7 +69,7 @@ const SECTORS = [
     id: 'mine', 
     name: 'MADEN', 
     icon: Pickaxe, 
-    image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=600',
+    image: '/sectors/mine.jpg',
     color: 'bg-amber-500', 
     docs: [
       'Günlük Ocak Raporu', 'Patlatma Tutanağı', 'Gaz Ölçüm Kayıtları', 'Havalandırma Raporu',
@@ -81,7 +81,7 @@ const SECTORS = [
     id: 'construction', 
     name: 'İNŞAAT', 
     icon: HardHat, 
-    image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=600',
+    image: '/sectors/construction.jpg',
     color: 'bg-orange-600', 
     docs: [
       'Şantiye Günlük Defteri', 'İş İskelesi Kontrol', 'Beton Döküm Tutanağı', 'Hakediş İcmal Tablosu',
@@ -93,7 +93,7 @@ const SECTORS = [
     id: 'energy', 
     name: 'ENERJİ', 
     icon: Zap, 
-    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=600',
+    image: '/sectors/energy.jpg',
     color: 'bg-yellow-600', 
     docs: [
       'Trafo Bakım Formu', 'Sayaç Okuma Listesi', 'Kesinti Bildirim Formu', 'İletim Hattı Kontrol',
@@ -105,7 +105,7 @@ const SECTORS = [
     id: 'chemistry', 
     name: 'KİMYA', 
     icon: Beaker, 
-    image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=600',
+    image: '/sectors/chemistry.jpg',
     color: 'bg-emerald-600', 
     docs: [
       'Laboratuvar Analiz Raporu', 'Kimyasal Stok Takip', 'MSDS Kontrol Formu', 'Atık Bertaraf Kaydı',
@@ -117,7 +117,7 @@ const SECTORS = [
     id: 'small_business', 
     name: 'KÜÇÜK İŞLETME', 
     icon: Wallet, 
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&q=80&w=600',
+    image: '/sectors/small_business.jpg',
     color: 'bg-purple-600', 
     docs: [
       'Günlük Kasa Raporu', 'Veresiye Defteri', 'Müşteri Sipariş Formu', 'Fiyat Teklif Şablonu',
