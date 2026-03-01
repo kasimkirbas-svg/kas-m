@@ -115,10 +115,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
   ];
 
   return (
-    <div className="h-[calc(100vh-64px)] w-full bg-[#0f1115] text-slate-200 font-sans flex flex-col selection:bg-amber-500/30 overflow-hidden relative">
+    <div className="h-full md:h-[calc(100vh-64px)] w-full bg-[#0f1115] text-slate-200 font-sans flex flex-col selection:bg-amber-500/30 overflow-y-auto md:overflow-hidden relative custom-scrollbar">
       
       {/* Background Ambience */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="fixed inset-0 z-0 pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-transparent"></div>
           <div className="absolute top-[-100px] left-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl mix-blend-screen"></div>
           <div className="absolute top-[-100px] right-1/4 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-3xl mix-blend-screen"></div>
@@ -126,24 +126,24 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* 1. Header with Industrial HUD Look */}
-      <div className="flex-none pt-8 pb-4 px-4 z-20 w-full relative shrink-0">
+      <div className="flex-none pt-4 md:pt-8 pb-4 px-2 md:px-4 z-20 w-full relative shrink-0">
         <div className="max-w-[1920px] mx-auto bg-slate-900/60 border border-slate-700/50 backdrop-blur-md relative rounded-lg overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
             
-            {/* Tech Decoration Lines */}
-            <div className="absolute top-0 left-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
-            <div className="absolute top-0 right-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
-            <div className="absolute bottom-0 right-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+            {/* Tech Decoration Lines - Hidden on Mobile */}
+            <div className="hidden md:block absolute top-0 left-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+            <div className="hidden md:block absolute top-0 right-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+            <div className="hidden md:block absolute bottom-0 left-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+            <div className="hidden md:block absolute bottom-0 right-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
 
-            <div className="flex flex-col items-center justify-center py-6 relative">
+            <div className="flex flex-col items-center justify-center py-4 md:py-6 relative">
                 {/* Background Grid Pattern */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
                 
-                <h1 className="text-3xl md:text-5xl font-black text-center tracking-[0.2em] text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] relative z-10 font-sans uppercase">
-                  YILLIK DOKÜMANLAR <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 mx-2">&</span> İŞ TAKİP PANELİ
+                <h1 className="text-xl md:text-5xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] relative z-10 font-sans uppercase px-2">
+                  YILLIK DOKÜMANLAR <span className="block md:inline text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 mx-0 md:mx-2">&</span> İŞ TAKİP PANELİ
                 </h1>
                 
-                <div className="flex items-center gap-6 mt-3 relative z-10 w-full justify-center opacity-80">
+                <div className="hidden md:flex items-center gap-6 mt-3 relative z-10 w-full justify-center opacity-80">
                     <div className="h-[1px] w-16 md:w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
                     <div className="text-[10px] md:text-xs text-amber-500 font-mono font-bold uppercase tracking-[0.4em] text-shadow-sm flex gap-4">
                         <span>FABRİKA</span>
@@ -152,7 +152,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         <span>İNŞAAT</span>
                         <span>ENERJİ</span>
                         <span>KİMYA</span>
-                        <span>KÜÇÜK İŞLETME</span>
+                        <span>ESNAF</span>
                     </div>
                     <div className="h-[1px] w-16 md:w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
                 </div>
@@ -160,18 +160,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      <div className="flex-1 p-3 md:p-5 gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 overflow-hidden relative">
+      <div className="flex-1 p-2 md:p-5 gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 md:overflow-hidden relative">
         
         {/* 2. Top Sectors Row - Highly Stylized Cards */}
-        <div className="flex-none h-48 w-full pb-4 pt-2 px-2">
-            <div className="flex gap-5 h-full w-full justify-between">
+        <div className="flex-none h-auto md:h-48 w-full pb-4 pt-2 px-0 md:px-2 overflow-x-auto md:overflow-visible no-scrollbar">
+            <div className="flex gap-3 md:gap-5 h-40 md:h-full w-max md:w-full px-2 md:px-0">
             {sectors.map((sector) => (
                 <div 
                     key={sector.id}
                     onClick={() => onNavigate('templates', { category: sector.searchQuery })}
                     onMouseEnter={() => setHoveredSector(sector.id)}
                     onMouseLeave={() => setHoveredSector(null)}
-                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-500 ease-out flex-1 hover:flex-[1.5] h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-amber-500/40 ring-1 ring-black/40 shadow-xl`}
+                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-500 ease-out flex-col shrink-0 w-32 md:w-auto md:flex-1 md:hover:flex-[1.5] h-full flex hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-amber-500/40 ring-1 ring-black/40 shadow-xl`}
                 >
                     {/* Background Image - Full Color but Darkened */}
                     <div className="absolute inset-0">
@@ -226,10 +226,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
 
         {/* 3. Middle Section: Documents & Sidebar */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4 md:overflow-hidden h-auto md:h-full">
             
             {/* Documents Table - 9/12 Columns */}
-            <div className="lg:col-span-9 bg-slate-900/60 border border-slate-700/50 rounded-lg shadow-2xl flex flex-col overflow-hidden h-full backdrop-blur-sm relative">
+            <div className="lg:col-span-9 bg-slate-900/60 border border-slate-700/50 rounded-lg shadow-2xl flex flex-col md:overflow-hidden h-[400px] md:h-full backdrop-blur-sm relative order-2 md:order-1">
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-500/20 to-transparent"></div>
                 
                 <div className="bg-slate-900/90 p-2 border-b border-slate-700/80 flex justify-between items-center shadow-md z-10 shrink-0">
@@ -240,9 +240,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         <h2 className="font-bold text-slate-200 text-sm tracking-widest uppercase text-shadow-sm">DOKÜMANLAR LİSTESİ</h2>
                     </div>
                      <div className="flex items-center gap-4 bg-black/20 px-3 py-1 rounded border border-white/5">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">LİMİT DURUMU</span>
-                        <span className="w-[1px] h-3 bg-slate-700"></span>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ADET / AY</span>
+                        <span className="hidden md:inline text-[10px] text-slate-400 font-bold uppercase tracking-wider">LİMİT DURUMU</span>
+                        <span className="hidden md:inline w-[1px] h-3 bg-slate-700"></span>
+                        <span className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-wider">ADET / AY</span>
                      </div>
                 </div>
                 
@@ -280,7 +280,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
 
             {/* Right Sidebar - 3/12 Columns */}
-            <div className="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
+            <div className="lg:col-span-3 flex flex-col gap-3 h-auto md:h-full overflow-hidden order-1 md:order-2">
                 {/* Big Action Buttons - Enhanced */}
                 <div className="flex flex-col gap-2 h-full">
                     <div className="flex items-center gap-2 justify-center mb-1">
@@ -289,9 +289,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         <div className="h-[1px] w-8 bg-amber-500/50"></div>
                     </div>
                     
-                    <div className="grid grid-cols-1 gap-2 flex-1">
+                    <div className="grid grid-cols-2 md:grid-cols-1 gap-2 flex-1">
 
-                        <button onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-blue-900/40 hover:to-slate-900 p-4 rounded-lg border border-slate-600 hover:border-blue-500/50 shadow-lg group transition-all relative overflow-hidden ring-1 ring-blue-500/20 h-full max-h-[140px]">
+                        <button onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })} className="col-span-2 md:col-span-1 flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-blue-900/40 hover:to-slate-900 p-4 rounded-lg border border-slate-600 hover:border-blue-500/50 shadow-lg group transition-all relative overflow-hidden ring-1 ring-blue-500/20 h-full max-h-[140px]">
                              <div className="bg-slate-950 p-3 rounded text-blue-500 border border-slate-700 group-hover:border-blue-500/50 relative">
                                 <div className="absolute inset-0 rounded border border-blue-400 opacity-50 animate-[ping_3s_infinite]"></div>
                                  <Award className="w-8 h-8 group-hover:rotate-12 transition-transform drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
@@ -302,7 +302,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                              </div>
                         </button>
                         
-                        <div className="flex-1 grid grid-cols-1 gap-2">
+                        <div className="col-span-2 md:col-span-1 grid grid-cols-1 gap-2">
                         <button onClick={() => onNavigate('templates', { search: 'Tutanak' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-amber-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-amber-500/50 shadow-lg group transition-all relative overflow-hidden flex-1">
                              <div className="bg-slate-950 p-2 rounded text-amber-500 border border-slate-700 group-hover:border-amber-500/50">
                                  <History className="w-5 h-5 group-hover:rotate-12 transition-transform" />
