@@ -47,7 +47,11 @@ const SECTORS = [
     icon: Factory, 
     image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600',
     color: 'bg-rose-600', 
-    docs: ['Üretim Takip', 'Kalite Kontrol', 'Vardiya Listesi', 'Bakım Formu']
+    docs: [
+      'Üretim Takip Formu', 'Günlük Kalite Raporu', 'Makine Bakım Kartı', 'Vardiya Teslim Tutanağı',
+      'Hammadde Giriş Formu', 'Sevkiyat Kontrol Listesi', 'Personel İzin Formu', 'İş Kazası Tutanağı',
+      'Atık Takip Çizelgesi', 'Stok Sayım Raporu'
+    ]
   },
   { 
     id: 'company', 
@@ -55,7 +59,11 @@ const SECTORS = [
     icon: Building2, 
     image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
     color: 'bg-blue-600', 
-    docs: ['Gelir Gider', 'Personel Listesi', 'Toplantı Tutanağı', 'Fatura Kayıt']
+    docs: [
+      'Personel Özlük Dosyası', 'Yıllık İzin Planı', 'Satın Alma Talep Formu', 'Masraf Bildirim Formu',
+      'Toplantı Gündem Tutanağı', 'Ziyaretçi Kayıt Formu', 'Demirbaş Zimmet Formu', 'Performans Değerlendirme',
+      'Eğitim Katılım Formu', 'Görevlendirme Yazısı'
+    ]
   },
   { 
     id: 'mine', 
@@ -63,7 +71,11 @@ const SECTORS = [
     icon: Pickaxe, 
     image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=600',
     color: 'bg-amber-500', 
-    docs: ['Patlatma Raporu', 'Gaz Ölçüm', 'Vardiya Çizelgesi', 'Risk Analizi']
+    docs: [
+      'Günlük Ocak Raporu', 'Patlatma Tutanağı', 'Gaz Ölçüm Kayıtları', 'Havalandırma Raporu',
+      'Tahkimat Kontrol Formu', 'Kişisel Koruyucu Zimmet', 'Acil Durum Tatbikatı', 'Vardiya Mühendis Raporu',
+      'Dinamit Depo Kayıt', 'Nakliye Sefer Fişi'
+    ]
   },
   { 
     id: 'construction', 
@@ -71,7 +83,11 @@ const SECTORS = [
     icon: HardHat, 
     image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=600',
     color: 'bg-orange-600', 
-    docs: ['Şantiye Günlüğü', 'Hakediş Raporu', 'İş Güvenliği', 'Malzeme Talep']
+    docs: [
+      'Şantiye Günlük Defteri', 'İş İskelesi Kontrol', 'Beton Döküm Tutanağı', 'Hakediş İcmal Tablosu',
+      'Taşeron Sözleşme Eki', 'Malzeme Talep Fişi', 'Elektrik Tesisat Kontrol', 'Vinç Periyodik Kontrol',
+      'İSG Kurul Tutanağı', 'Kazı İzni Formu'
+    ]
   },
   { 
     id: 'energy', 
@@ -79,7 +95,11 @@ const SECTORS = [
     icon: Zap, 
     image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=600',
     color: 'bg-yellow-600', 
-    docs: ['Sayaç Okuma', 'Arıza Kayıt', 'Trafo Bakım', 'Enerji Tüketim']
+    docs: [
+      'Trafo Bakım Formu', 'Sayaç Okuma Listesi', 'Kesinti Bildirim Formu', 'İletim Hattı Kontrol',
+      'Termal Kamera Raporu', 'Topraklama Ölçüm Raporu', 'Jeneratör Test Formu', 'Panel Temizlik Kaydı',
+      'Yüksek Gerilim İzni', 'Arıza Müdahale Raporu'
+    ]
   },
   { 
     id: 'chemistry', 
@@ -87,7 +107,11 @@ const SECTORS = [
     icon: Beaker, 
     image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=600',
     color: 'bg-emerald-600', 
-    docs: ['Laboratuvar', 'MSDS Formu', 'Atık Takip', 'Numune Kayıt']
+    docs: [
+      'Laboratuvar Analiz Raporu', 'Kimyasal Stok Takip', 'MSDS Kontrol Formu', 'Atık Bertaraf Kaydı',
+      'Kalibrasyon Takip Formu', 'Soğutma Suyu Analizi', 'Reaktör Temizlik Formu', 'Numune Etiketleme',
+      'Biyolojik Risk Analizi', 'Dökülme Müdahale Planı'
+    ]
   },
   { 
     id: 'small_business', 
@@ -95,24 +119,30 @@ const SECTORS = [
     icon: Wallet, 
     image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&q=80&w=600',
     color: 'bg-purple-600', 
-    docs: ['Cari Hesap', 'Müşteri Kayıt', 'Satış Fişi', 'Stok Takip']
+    docs: [
+      'Günlük Kasa Raporu', 'Veresiye Defteri', 'Müşteri Sipariş Formu', 'Fiyat Teklif Şablonu',
+      'Stok Sayım Listesi', 'Personel Maaş Pusulası', 'Gider Pusulası', 'Tahsilat Makbuzu',
+      'İade Tutanağı', 'Garanti Belgesi Takip'
+    ]
   }
 ];
 
 const RECENT_DOCS = [
   { id: 1, title: 'Risk Analiz Raporu', icon: FileText, color: 'text-blue-400', count: 10, total: 10, used: 2 },
-  { id: 2, title: 'Patlayıcıdan Korunma Dök.', icon: AlertTriangle, color: 'text-orange-400', count: 10, total: 10, used: 4 },
-  { id: 3, title: 'Yangından Korunma Dök.', icon: Activity, color: 'text-red-400', count: 10, total: 10, used: 1 },
-  { id: 4, title: 'Yüksekte Çalışma Dök.', icon: HardHat, color: 'text-blue-300', count: 10, total: 10, used: 0 },
-  { id: 5, title: 'Elektrik İşlerinde Dök.', icon: Zap, color: 'text-yellow-400', count: 200, total: 200, used: 15 },
-  { id: 6, title: 'İşe Başlama Eğitim Dök.', icon: CheckCircle2, color: 'text-green-400', count: 200, total: 200, used: 45 },
+  { id: 2, title: 'Patlatma Tutanağı', icon: AlertTriangle, color: 'text-orange-400', count: 15, total: 20, used: 8 },
+  { id: 3, title: 'Yangın Tatbikat Raporu', icon: Activity, color: 'text-red-400', count: 10, total: 12, used: 3 },
+  { id: 4, title: 'İş İskelesi Kontrol Formu', icon: HardHat, color: 'text-blue-300', count: 25, total: 50, used: 12 },
+  { id: 5, title: 'Trafo Bakım Çizelgesi', icon: Zap, color: 'text-yellow-400', count: 5, total: 5, used: 1 },
+  { id: 6, title: 'Kimyasal Stok Listesi', icon: Beaker, color: 'text-emerald-400', count: 30, total: 30, used: 28 },
+  { id: 7, title: 'Günlük Kasa Raporu', icon: Wallet, color: 'text-purple-400', count: 30, total: 30, used: 15 },
+  { id: 8, title: 'İşe Başlama Eğitim Dök.', icon: CheckCircle2, color: 'text-green-400', count: 200, total: 200, used: 45 },
 ];
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   const [activeSector, setActiveSector] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0f1115] text-white font-sans overflow-x-hidden flex flex-col relative w-full pt-16 md:pt-20 pb-12">
+    <div className="min-h-screen bg-[#0f1115] text-white font-sans overflow-x-hidden flex flex-col relative w-full pt-14 md:pt-16 pb-8">
       
       {/* Background Decor */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -124,14 +154,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
       <div className="flex-1 flex flex-col px-4 md:px-8 w-full max-w-[1920px] mx-auto z-10 h-full">
         
         {/* Header - Compact */}
-        <div className="text-center mb-8 shrink-0 -mt-2">
+        <div className="text-center mb-6 shrink-0 -mt-4">
             <h1 className="text-xl md:text-3xl lg:text-4xl font-black text-white tracking-wider uppercase drop-shadow-[0_0_25px_rgba(255,255,255,0.15)] leading-tight flex flex-col md:flex-row items-center justify-center gap-2">
             <span>YILLIK DOKÜMANLAR</span> <span className="text-yellow-500 mx-2 hidden md:inline">&</span> <span className="md:hidden text-yellow-500">&</span> <span>İŞ TAKİP PANELİ</span>
             </h1>
         </div>
 
         {/* Sectors Row - Compact & Important */}
-        <div className="shrink-0 mb-8">
+        <div className="shrink-0 mb-6">
             <div className="grid grid-cols-2 lg:grid-cols-7 gap-3">
                 {SECTORS.map((sector, index) => (
                 <div 
@@ -172,14 +202,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                             <sector.icon size={14} className="text-yellow-500" />
                             <span className="text-[10px] font-black text-white uppercase tracking-widest">{sector.name}</span>
                         </div>
-                        <ul className="space-y-1.5">
-                            {sector.docs.slice(0, 4).map((doc, idx) => (
+                        <ul className="space-y-1.5 overflow-y-auto max-h-[80px] custom-scrollbar pr-1">
+                            {sector.docs.map((doc, idx) => (
                             <li 
                                 key={idx} 
                                 onClick={(e) => { e.stopPropagation(); onNavigate('templates', { search: doc }); }}
                                 className="flex items-center gap-2 cursor-pointer hover:bg-white/5 p-1 rounded group/item" 
                             >
-                                <div className="w-1 h-1 rounded-full bg-yellow-500 group-hover/item:scale-150 transition-transform"></div>
+                                <div className="w-1 h-1 rounded-full bg-yellow-500 group-hover/item:scale-150 transition-transform shrink-0"></div>
                                 <span className="text-[10px] text-slate-300 group-hover/item:text-white font-bold uppercase truncate">{doc}</span>
                             </li>
                             ))}
@@ -191,7 +221,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
         </div>
 
         {/* Content Area - Filling remaining height */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
             
             {/* Left: Documents List (Scrollable) */}
             <div className="lg:col-span-3 flex flex-col bg-[#161922]/50 backdrop-blur-sm rounded-2xl border border-white/5 overflow-hidden h-[500px]">
