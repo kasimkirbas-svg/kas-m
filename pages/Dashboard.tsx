@@ -163,26 +163,24 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
 
             {/* Hover State Content - "Sektör Detay Yeri" */}
             <div className={`
-              absolute inset-0 bg-[#161922]/95 backdrop-blur-md flex flex-col transition-all duration-300 p-3
+              absolute inset-0 bg-[#0f1115]/95 backdrop-blur-md flex flex-col justify-center transition-all duration-300 p-4
               ${activeSector === sector.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}
             `}>
-              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-white/10">
-                <sector.icon size={14} className="text-yellow-500" />
-                <span className="text-[10px] font-bold text-yellow-500 uppercase tracking-wide truncate">{sector.name}</span>
+              <div className="flex items-center justify-center gap-2 mb-3 pb-2 border-b border-white/10">
+                <sector.icon size={16} className="text-yellow-500" />
+                <span className="text-[11px] font-black text-white uppercase tracking-wider">{sector.name}</span>
               </div>
               
-              <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent pr-1">
-                <ul className="space-y-1">
-                  {sector.docs.map((doc, idx) => (
-                    <li key={idx} className="flex items-center gap-2 group/item cursor-pointer">
-                      <div className="w-1 h-1 rounded-full bg-slate-500 group-hover/item:bg-yellow-500 transition-colors"></div>
-                      <span className="text-[9px] text-slate-300 hover:text-white font-medium truncate transition-colors">
-                        {doc}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="space-y-2">
+                {sector.docs.map((doc, idx) => (
+                  <li key={idx} className="flex items-center gap-2 group/item cursor-pointer">
+                    <ChevronRight size={12} className="text-yellow-500 opacity-0 group-hover/item:opacity-100 transition-all -ml-3 group-hover/item:ml-0" />
+                    <span className="text-[10px] text-slate-400 group-hover/item:text-white font-bold uppercase tracking-tight transition-colors">
+                      {doc}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         ))}
@@ -246,14 +244,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
 
             <button 
                 onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                className="w-full p-4 rounded-xl bg-gradient-to-r from-blue-900/40 to-blue-800/20 border border-blue-500/30 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all group text-left flex items-center gap-4"
+                className="w-full p-8 rounded-xl bg-gradient-to-r from-blue-900/40 to-blue-800/20 border border-blue-500/50 hover:border-blue-400 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all group text-left flex items-center gap-6 relative overflow-hidden"
             >
-              <div className="p-3 bg-blue-500/20 rounded-lg text-blue-400 group-hover:scale-110 transition-transform">
-                <Award size={24} />
+              <div className="absolute top-0 right-0 p-2 opacity-50">
+                <Star size={80} className="text-blue-500/10 -rotate-12 translate-x-4 -translate-y-4" />
               </div>
-              <div>
-                <div className="text-[9px] text-blue-400 font-bold mb-0.5 opacity-80 uppercase">YENİ ÖZELLİK</div>
-                <div className="font-black text-white text-sm tracking-wide">SERTİFİKA OLUŞTUR</div>
+              
+              <div className="relative p-4 bg-blue-500/20 rounded-xl text-blue-400 group-hover:text-white group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.6)] transition-all duration-300 animate-pulse">
+                <Award size={32} />
+              </div>
+              
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="text-[10px] text-blue-400 font-black bg-blue-950/50 px-2 py-0.5 rounded border border-blue-500/30 uppercase tracking-widest">YENİ ÖZELLİK</div>
+                </div>
+                <div className="font-black text-white text-xl tracking-wide drop-shadow-md group-hover:text-blue-200 transition-colors">SERTİFİKA OLUŞTUR</div>
+                <div className="text-[10px] text-blue-300/60 font-medium mt-1">Personel yetkinlik belgeleri</div>
               </div>
             </button>
 
