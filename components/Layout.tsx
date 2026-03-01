@@ -71,7 +71,7 @@ export const Layout: React.FC<LayoutProps> = ({
   */
 
   return (
-    <div className={`flex flex-col font-sans bg-slate-950 text-slate-200 selection:bg-amber-500/30 ${currentView === 'dashboard' ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
+    <div className={`flex flex-col font-sans bg-slate-950 text-slate-200 selection:bg-amber-500/30 min-h-screen`}>
       
       {/* INDUSTRIAL TOP NAVIGATION BAR */}
       <header className="h-14 md:h-16 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 flex items-center justify-between px-4 shadow-2xl shadow-black/20 shrink-0">
@@ -219,7 +219,7 @@ export const Layout: React.FC<LayoutProps> = ({
       </header>
 
       {/* Main Content Area */}
-      <main className={`flex-1 w-full relative ${currentView === 'dashboard' ? 'p-0 overflow-hidden' : 'overflow-x-hidden p-4 md:p-6 lg:p-8'}`}>
+      <main className={`flex-1 w-full relative ${currentView === 'dashboard' ? 'p-0 overflow-x-hidden' : 'overflow-x-hidden p-4 md:p-6 lg:p-8'}`}>
         <div className={`${currentView === 'dashboard' ? 'w-full h-full' : 'max-w-[1600px] mx-auto space-y-6 md:space-y-8 animate-fade-in pb-20 md:pb-0'}`}>
              {children}
         </div>
