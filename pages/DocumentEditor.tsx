@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { DocumentTemplate, GeneratedDocument, DocumentPhoto } from '../types';
+import { fetchApi } from '../src/utils/api';
 import { Upload, Trash2, Plus, Download, CheckCircle, Mail, AlertTriangle, ZoomIn, ArrowLeft, Edit2, FileText, Calendar, LucideIcon } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
