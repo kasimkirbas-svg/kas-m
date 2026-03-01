@@ -61,33 +61,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
   return (
     <div className="h-[calc(100vh-64px)] w-full bg-[#0f1115] text-slate-200 font-sans flex flex-col selection:bg-amber-500/30 overflow-hidden relative">
       
-      {/* Background Ambience & Atmospheric Effects */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          {/* Base Gradients */}
-          <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-transparent"></div>
-          
-          {/* Main Glow Orbs */}
-          <div className="absolute top-[-200px] left-1/4 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-[4s]"></div>
-          <div className="absolute top-[-200px] right-1/4 w-[800px] h-[800px] bg-amber-600/5 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-[7s]"></div>
-          
-          {/* Carbon Fiber Texture Overlay */}
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 mix-blend-overlay"></div>
-
-          {/* Floating Particles / Sparkles - "Arkada parıltılar" */}
-          <div className="absolute top-20 left-[10%] w-1 h-1 bg-white rounded-full blur-[1px] animate-[ping_3s_ease-in-out_infinite]"></div>
-          <div className="absolute top-40 right-[20%] w-1.5 h-1.5 bg-amber-400 rounded-full blur-[1px] animate-[pulse_4s_ease-in-out_infinite]"></div>
-          <div className="absolute bottom-1/3 left-[15%] w-1 h-1 bg-blue-400 rounded-full blur-[0.5px] animate-[bounce_5s_infinite]"></div>
-          <div className="absolute top-1/2 right-[5%] w-2 h-2 bg-white/20 rounded-full blur-[2px] animate-[ping_6s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
-          <div className="absolute top-[15%] left-[50%] w-0.5 h-0.5 bg-white rounded-full animate-[pulse_2s_infinite]"></div>
-
-          {/* Glowing Side Bars - "Yanlarda parıldayan çubuklar" */}
-          {/* Left Bar */}
-          <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-blue-500/50 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
-          <div className="absolute left-0 top-1/4 h-1/2 w-[2px] bg-gradient-to-b from-transparent via-blue-400 to-transparent blur-[2px] opacity-70"></div>
-          
-          {/* Right Bar */}
-          <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-amber-500/50 to-transparent shadow-[0_0_20px_rgba(245,158,11,0.5)]"></div>
-          <div className="absolute right-0 top-1/4 h-1/2 w-[2px] bg-gradient-to-b from-transparent via-amber-400 to-transparent blur-[2px] opacity-70"></div>
+      {/* Background Ambience */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-slate-900/80 via-slate-900/40 to-transparent"></div>
+          <div className="absolute top-[-100px] left-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl mix-blend-screen"></div>
+          <div className="absolute top-[-100px] right-1/4 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-3xl mix-blend-screen"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
       </div>
 
       {/* 1. Header with Cinematic Glow */}
@@ -106,33 +85,30 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="flex-1 p-3 md:p-5 gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 overflow-hidden relative">
         
         {/* 2. Top Sectors Row - Taller & More Immersive */}
-        <div className="flex-none h-44 w-full overflow-x-auto custom-scrollbar pb-4 pt-2">
-            <div className="flex gap-4 h-full px-2 min-w-max">
+        <div className="flex-none h-40 w-full overflow-x-auto custom-scrollbar pb-2">
+            <div className="flex gap-3 h-full px-1 min-w-max">
             {sectors.map((sector) => (
                 <div 
                     key={sector.id}
                     onClick={() => onNavigate('templates', { category: sector.searchQuery })}
-                    className={`group relative cursor-pointer overflow-hidden rounded-xl border border-slate-700/80 bg-slate-900 transition-all duration-500 w-36 md:w-60 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_0_25px_rgba(255,255,255,0.1)] hover:border-amber-400/60 ring-1 ring-white/5 active:scale-95`}
+                    className={`group relative cursor-pointer overflow-hidden rounded-lg border border-slate-700 bg-slate-900 transition-all duration-300 w-32 md:w-56 h-full flex flex-col shrink-0 hover:scale-[1.02] shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:border-amber-500/50 ring-1 ring-white/5`}
                 >
-                    {/* Animated shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shine_1.5s_ease-in-out_infinite] z-30 pointer-events-none"></div>
-
                     <div className="absolute inset-0 w-full h-full">
-                         <div className={`absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r ${sector.gradient} to-transparent z-20 shadow-[0_0_10px_currentColor]`}></div>
-                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/40 to-slate-950/95 z-10 group-hover:via-slate-950/10 transition-all duration-500"></div>
-                         <img src={sector.image} alt={sector.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 filter saturate-[0.5] group-hover:saturate-100" />
+                         <div className={`absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r ${sector.gradient} to-transparent z-20`}></div>
+                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/20 to-slate-950/90 z-10 group-hover:via-slate-950/0 transition-all duration-500"></div>
+                         <img src={sector.image} alt={sector.title} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 filter saturate-[0.8] group-hover:saturate-100" />
                     </div>
                     
                     <div className="absolute top-0 left-0 w-full p-0 z-20">
-                         <div className="bg-slate-950/80 backdrop-blur-md text-slate-100 text-[11px] uppercase font-black px-3 py-2 w-full text-center border-b border-white/10 tracking-[0.2em] shadow-lg group-hover:text-amber-400 transition-colors">
+                         <div className="bg-slate-950/80 backdrop-blur-md text-slate-100 text-[10px] uppercase font-black px-3 py-1.5 w-full text-center border-b border-white/5 tracking-widest shadow-lg">
                             {sector.title}
                         </div>
                     </div>
                     
-                    <div className="absolute bottom-0 left-0 w-full p-3 z-20 flex items-center justify-center translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-300 bg-black/60 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur-md group-hover:border-amber-500/60 group-hover:text-amber-400 transition-all shadow-black/50 shadow-lg">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                            <span className="truncate tracking-wide">İş Analizi</span>
+                    <div className="absolute bottom-0 left-0 w-full p-2.5 z-20 flex items-center justify-center">
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-300 bg-black/40 px-2 py-1 rounded-full border border-white/10 backdrop-blur-sm group-hover:border-amber-500/40 group-hover:text-amber-500 transition-colors">
+                            <CheckCircle2 className="w-3 h-3 text-green-500" />
+                            <span className="truncate">İş Analizi Dokümanı</span>
                         </div>
                     </div>
                 </div>
@@ -140,19 +116,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
              {/* Create Certificate Tile - Styled to match */}
              <div 
                 onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })}
-                className="group relative cursor-pointer overflow-hidden rounded-xl border border-blue-500/30 bg-gradient-to-b from-blue-900/30 to-slate-900/90 w-36 md:w-40 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] items-center justify-center p-2 ring-1 ring-blue-400/10 active:scale-95 transition-all duration-300"
+                className="group relative cursor-pointer overflow-hidden rounded-lg border border-blue-500/50 bg-gradient-to-b from-blue-900/40 to-slate-900/90 w-32 md:w-36 h-full flex flex-col shrink-0 hover:scale-[1.02] shadow-2xl items-center justify-center p-2 ring-1 ring-blue-400/20"
             >
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
-
-                <span className="absolute top-2 right-2 z-10 bg-amber-500 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-[0_0_10px_rgba(245,158,11,0.5)] animate-pulse">YENİ</span>
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10"></div>
                 
-                <div className="relative z-10 text-center flex flex-col items-center gap-3">
-                    <div className="bg-blue-500/10 p-3.5 rounded-full border border-blue-400/40 group-hover:border-blue-400/80 group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-500 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
-                        <Award className="w-9 h-9 text-blue-400 group-hover:text-blue-200" />
+                <span className="absolute top-2 right-2 z-10 bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded shadow-lg shadow-amber-500/20 animate-pulse">YENİ</span>
+                
+                <div className="relative z-10 text-center flex flex-col items-center gap-2">
+                    <div className="bg-blue-500/20 p-3 rounded-full border border-blue-400/30 group-hover:border-blue-400/60 group-hover:scale-110 transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                        <Award className="w-8 h-8 text-blue-400 group-hover:text-white" />
                     </div>
-                    <div className="text-blue-100 font-black text-xs leading-none uppercase drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] tracking-wider">SERTİFİKA<br/><span className="text-blue-300 text-[10px]">OLUŞTUR</span></div>
+                    <div className="text-blue-100 font-black text-xs leading-tight uppercase drop-shadow-md">SERTİFİKA<br/>OLUŞTUR</div>
                 </div>
             </div>
             </div>
@@ -162,77 +136,49 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
             
             {/* Documents Table - 9/12 Columns */}
-            <div className="lg:col-span-9 bg-slate-900/80 border border-slate-700/60 rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden h-full backdrop-blur-md relative group">
-                {/* Tech Accents - Corners */}
-                <div className="absolute top-0 left-0 w-8 h-[1px] bg-amber-500/50"></div>
-                <div className="absolute top-0 left-0 w-[1px] h-8 bg-amber-500/50"></div>
-                <div className="absolute top-0 right-0 w-8 h-[1px] bg-amber-500/50"></div>
-                <div className="absolute top-0 right-0 w-[1px] h-8 bg-amber-500/50"></div>
-                <div className="absolute bottom-0 left-0 w-8 h-[1px] bg-amber-500/50"></div>
-                <div className="absolute bottom-0 left-0 w-[1px] h-8 bg-amber-500/50"></div>
-                <div className="absolute bottom-0 right-0 w-8 h-[1px] bg-amber-500/50"></div>
-                <div className="absolute bottom-0 right-0 w-[1px] h-8 bg-amber-500/50"></div>
+            <div className="lg:col-span-9 bg-slate-900/60 border border-slate-700/50 rounded-lg shadow-2xl flex flex-col overflow-hidden h-full backdrop-blur-sm relative">
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-500/20 to-transparent"></div>
                 
-                {/* Tech Grid Background */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
-
-                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-400/20 to-transparent"></div>
-                
-                <div className="bg-slate-950/80 p-3 border-b border-slate-700/80 flex justify-between items-center shadow-lg z-10 shrink-0 relative">
-                    <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-amber-500/20 to-transparent"></div>
-                    <div className="flex items-center gap-4 px-2">
-                         <div className="bg-slate-900 p-2 rounded-lg border border-slate-600/50 shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-                            <FileText className="w-5 h-5 text-amber-500" />
+                <div className="bg-slate-900/90 p-2 border-b border-slate-700/80 flex justify-between items-center shadow-md z-10 shrink-0">
+                    <div className="flex items-center gap-3 px-2">
+                         <div className="bg-slate-800 p-1.5 rounded border border-slate-600/50">
+                            <FileText className="w-4 h-4 text-slate-300" />
                          </div>
-                         <div className="flex flex-col">
-                            <h2 className="font-black text-slate-100 text-sm tracking-[0.2em] uppercase drop-shadow-md">DOKÜMANLAR LİSTESİ</h2>
-                            <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Resmi Evrak Durumu</span>
-                         </div>
+                        <h2 className="font-bold text-slate-200 text-sm tracking-widest uppercase text-shadow-sm">DOKÜMANLAR LİSTESİ</h2>
                     </div>
-                     <div className="flex items-center gap-4 bg-black/40 px-4 py-1.5 rounded-full border border-white/5 shadow-inner">
-                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">LİMİT DURUMU</span>
+                     <div className="flex items-center gap-4 bg-black/20 px-3 py-1 rounded border border-white/5">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">LİMİT DURUMU</span>
                         <span className="w-[1px] h-3 bg-slate-700"></span>
-                        <div className="flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span className="text-[9px] text-emerald-500 font-bold uppercase tracking-widest">AKTİF</span>
-                        </div>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ADET / AY</span>
                      </div>
                 </div>
                 
-                <div className="flex-1 overflow-y-auto custom-scrollbar bg-slate-950/20 p-0 relative">
-                    <div className="flex flex-col gap-[2px]">
+                <div className="flex-1 overflow-y-auto custom-scrollbar bg-slate-950/30 p-0 relative">
+                    <div className="flex flex-col gap-[1px]">
                         {documentList.map((doc, idx) => (
                         <div 
                             key={idx} 
                             onClick={() => onNavigate('templates', { search: doc.name.split(' ')[0] })}
-                            className="flex items-center px-4 py-3 cursor-pointer transition-all duration-300 group/item hover:bg-slate-800/90 relative overflow-hidden bg-slate-900/30 border-b border-slate-800/50 hover:border-amber-500/20"
+                            className="flex items-center px-4 py-3 cursor-pointer transition-all group hover:bg-slate-800/80 hover:pl-5 relative overflow-hidden bg-slate-900/40"
                         >
-                            <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-800 group-hover/item:bg-amber-500 transition-all duration-300 group-hover/item:shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
-                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/5 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                            <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-transparent group-hover:bg-amber-500 transition-colors"></div>
                             
-                            <div className="flex items-center gap-5 flex-1 relative z-10">
-                                <div className={`p-2 rounded-lg bg-slate-950 border border-slate-700/50 shadow-lg shrink-0 group-hover/item:scale-110 transition-transform duration-300 ${doc.color} group-hover/item:ring-1 ring-white/10`}>
+                            <div className="flex items-center gap-4 flex-1">
+                                <div className={`p-1.5 rounded bg-slate-900 border border-slate-700 shadow-sm shrink-0 group-hover:scale-110 transition-transform ${doc.color}`}>
                                     <doc.icon className="w-4 h-4" />
                                 </div>
-                                <div>
-                                    <span className="text-sm font-bold text-slate-300 group-hover/item:text-white transition-colors tracking-wide block">{doc.name}</span>
-                                    <span className="text-[9px] text-slate-500 font-mono tracking-widest uppercase group-hover/item:text-slate-400">VER. 2.4.1</span>
-                                </div>
+                                <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">{doc.name}</span>
                             </div>
                             
                             {/* Visual Bar for Limit */}
-                            <div className="hidden md:flex flex-1 mx-8 items-center gap-3 opacity-40 group-hover/item:opacity-100 transition-all">
-                                 <span className="text-[9px] font-mono text-slate-600 w-8 text-right">0%</span>
-                                 <div className="h-1.5 flex-1 bg-slate-950 rounded-full overflow-hidden border border-slate-800/50">
-                                    <div className="h-full bg-gradient-to-r from-slate-700 to-slate-500 w-1/3 group-hover/item:from-amber-600 group-hover/item:to-amber-400 transition-all duration-500 relative">
-                                        <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-white/50"></div>
-                                    </div>
+                            <div className="hidden md:flex flex-1 mx-4 items-center gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
+                                 <div className="h-1 flex-1 bg-slate-800 rounded-full overflow-hidden">
+                                    <div className="h-full bg-slate-600 w-1/3 group-hover:bg-amber-500/50 transition-colors"></div>
                                  </div>
-                                 <span className="text-[9px] font-mono text-slate-600 w-8">33%</span>
                             </div>
 
-                            <div className="text-right shrink-0 min-w-[100px] relative z-10">
-                                <span className="text-xs font-black text-slate-500 group-hover/item:text-amber-500 transition-colors bg-black/20 px-2 py-1 rounded border border-transparent group-hover/item:border-amber-500/20">{doc.limit}</span>
+                            <div className="text-right shrink-0 min-w-[100px]">
+                                <span className="text-xs font-black text-slate-500 group-hover:text-amber-500 transition-colors">{doc.limit}</span>
                             </div>
                         </div>
                         ))}
@@ -241,84 +187,65 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
 
             {/* Right Sidebar - 3/12 Columns */}
-            <div className="lg:col-span-3 flex flex-col gap-4 h-full overflow-hidden">
+            <div className="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
                 {/* Visual Menu List */}
-                <div className="bg-slate-900/80 rounded-xl overflow-hidden flex flex-col shadow-lg border border-slate-700/60 backdrop-blur-md relative h-1/2">
-                     <div className="absolute top-0 right-0 w-8 h-[1px] bg-slate-500/30"></div>
-                     <div className="absolute top-0 right-0 w-[1px] h-8 bg-slate-500/30"></div>
-                     <div className="absolute bottom-0 left-0 w-8 h-[1px] bg-slate-500/30"></div>
-                     <div className="absolute bottom-0 left-0 w-[1px] h-8 bg-slate-500/30"></div>
-
-                     <div className="py-2 px-3 bg-slate-950/50 border-b border-slate-800 flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></div>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">HIZLI MENÜ</span>
-                     </div>
-
+                <div className="bg-slate-900/80 rounded-lg overflow-hidden flex flex-col shadow-lg border border-slate-700/50 backdrop-blur-sm">
                     {rightSideMenu.map((item, i) => (
-                        <button key={i} onClick={() => onNavigate('templates', { category: item.label.split(' ')[1] || item.label })} className="flex items-center gap-4 px-4 py-3.5 bg-transparent hover:bg-slate-800/80 border-b border-slate-700/40 last:border-0 transition-all group text-left relative overflow-hidden">
-                             <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-slate-800 group-hover:bg-amber-500 transition-all duration-300"></div>
-                             <div className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
-                             
-                            <div className="p-1.5 rounded bg-slate-950 border border-slate-800 group-hover:border-amber-500/30 transition-colors shadow-sm">
-                                <item.icon className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
-                            </div>
-                            <span className="text-xs font-bold text-slate-400 group-hover:text-amber-100 uppercase tracking-wider transition-colors">{item.label}</span>
-                            <ChevronDown className="w-3 h-3 ml-auto text-slate-700 group-hover:text-amber-500/50 -rotate-90 group-hover:rotate-0 transition-transform" />
+                        <button key={i} onClick={() => onNavigate('templates', { category: item.label.split(' ')[1] || item.label })} className="flex items-center gap-3 px-4 py-3 bg-transparent hover:bg-slate-800 border-b border-slate-700/50 last:border-0 transition-all group text-left relative overflow-hidden">
+                             <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-700 group-hover:bg-amber-500 transition-colors"></div>
+                            <item.icon className="w-4 h-4 text-slate-500 group-hover:text-amber-500 transition-colors" />
+                            <span className="text-xs font-bold text-slate-400 group-hover:text-slate-100 uppercase tracking-tight">{item.label}</span>
                         </button>
                     ))}
                 </div>
 
                 {/* Big Action Buttons - Enhanced */}
-                <div className="flex flex-col gap-2 mt-auto h-1/2 justify-end">
-                    <div className="flex items-center gap-2 justify-center mb-1 opacity-70">
-                        <div className="h-[1px] w-8 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
-                        <div className="text-amber-500/80 text-[9px] font-black uppercase tracking-[0.3em] text-shadow-sm">İŞLEM MERKEZİ</div>
-                        <div className="h-[1px] w-8 bg-gradient-to-l from-transparent via-amber-500/50 to-transparent"></div>
+                <div className="flex flex-col gap-2 mt-auto">
+                    <div className="flex items-center gap-2 justify-center mb-1">
+                        <div className="h-[1px] w-8 bg-amber-500/50"></div>
+                        <div className="text-amber-500 text-[10px] font-black uppercase tracking-widest text-shadow-sm">HIZLI İŞLEMLER</div>
+                        <div className="h-[1px] w-8 bg-amber-500/50"></div>
                     </div>
                     
-                    <div className="grid grid-cols-1 gap-2.5">
+                    <div className="grid grid-cols-1 gap-2">
                         
-                        <button onClick={() => onNavigate('templates', { search: 'Tutanak' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:from-amber-950/30 hover:via-amber-900/20 hover:to-slate-900 p-3 rounded-lg border border-slate-700/60 hover:border-amber-500/40 shadow-lg group transition-all relative overflow-hidden group hover:shadow-[0_0_15px_rgba(245,158,11,0.1)]">
-                             <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-amber-600/0 group-hover:bg-amber-500 h-0 group-hover:h-full transition-all duration-500"></div>
-                             <div className="bg-slate-950 p-2.5 rounded border border-slate-700 group-hover:border-amber-500/30 group-hover:bg-amber-500/10 transition-colors">
-                                 <History className="w-5 h-5 text-amber-600 group-hover:text-amber-400 group-hover:rotate-12 transition-transform" />
+                        <button onClick={() => onNavigate('templates', { search: 'Tutanak' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-amber-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-amber-500/50 shadow-lg group transition-all relative overflow-hidden">
+                             <div className="bg-slate-950 p-2 rounded text-amber-500 border border-slate-700 group-hover:border-amber-500/50">
+                                 <History className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                              </div>
                              <div className="text-left leading-none">
-                                <div className="text-[9px] text-slate-500 font-bold tracking-widest uppercase group-hover:text-amber-400/80 transition-colors">YENİ KAYIT</div>
-                                <div className="text-sm font-black text-slate-200 group-hover:text-white mt-0.5 tracking-wide">TUTANAK TUT</div>
+                                <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-amber-200/70">YENİ KAYIT</div>
+                                <div className="text-sm font-black text-slate-200 group-hover:text-white">TUTANAK TUT</div>
                              </div>
                         </button>
                         
-                         <button onClick={() => onNavigate('templates', { search: 'Rapor' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:from-emerald-950/30 hover:via-emerald-900/20 hover:to-slate-900 p-3 rounded-lg border border-slate-700/60 hover:border-emerald-500/40 shadow-lg group transition-all relative overflow-hidden group hover:shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-                              <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-emerald-600/0 group-hover:bg-emerald-500 h-0 group-hover:h-full transition-all duration-500"></div>
-                              <div className="bg-slate-950 p-2.5 rounded border border-slate-700 group-hover:border-emerald-500/30 group-hover:bg-emerald-500/10 transition-colors">
-                                 <Clock className="w-5 h-5 text-emerald-600 group-hover:text-emerald-400 group-hover:rotate-12 transition-transform" />
+                         <button onClick={() => onNavigate('templates', { search: 'Rapor' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-emerald-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-emerald-500/50 shadow-lg group transition-all">
+                              <div className="bg-slate-950 p-2 rounded text-emerald-500 border border-slate-700 group-hover:border-emerald-500/50">
+                                 <Clock className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                              </div>
                              <div className="text-left leading-none">
-                                <div className="text-[9px] text-slate-500 font-bold tracking-widest uppercase group-hover:text-emerald-400/80 transition-colors">GÜNLÜK</div>
-                                <div className="text-sm font-black text-slate-200 group-hover:text-white mt-0.5 tracking-wide">RAPOR TUT</div>
+                                <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-emerald-200/70">GÜNLÜK</div>
+                                <div className="text-sm font-black text-slate-200 group-hover:text-white">RAPOR TUT</div>
                              </div>
                         </button>
 
-                         <button onClick={() => onNavigate('templates')} className="flex items-center gap-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:from-purple-950/30 hover:via-purple-900/20 hover:to-slate-900 p-3 rounded-lg border border-slate-700/60 hover:border-purple-500/40 shadow-lg group transition-all relative overflow-hidden group hover:shadow-[0_0_15px_rgba(168,85,247,0.1)]">
-                             <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-purple-600/0 group-hover:bg-purple-500 h-0 group-hover:h-full transition-all duration-500"></div>
-                             <div className="bg-slate-950 p-2.5 rounded border border-slate-700 group-hover:border-purple-500/30 group-hover:bg-purple-500/10 transition-colors">
-                                 <FileText className="w-5 h-5 text-purple-600 group-hover:text-purple-400 group-hover:rotate-12 transition-transform" />
+                         <button onClick={() => onNavigate('templates')} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-purple-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-purple-500/50 shadow-lg group transition-all">
+                             <div className="bg-slate-950 p-2 rounded text-purple-500 border border-slate-700 group-hover:border-purple-500/50">
+                                 <FileText className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                              </div>
                              <div className="text-left leading-none">
-                                <div className="text-[9px] text-slate-500 font-bold tracking-widest uppercase group-hover:text-purple-400/80 transition-colors">ARŞİV</div>
-                                <div className="text-sm font-black text-slate-200 group-hover:text-white mt-0.5 tracking-wide">DOKÜMANLAR</div>
+                                <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-purple-200/70">ARŞİV</div>
+                                <div className="text-sm font-black text-slate-200 group-hover:text-white">DOKÜMANLAR</div>
                              </div>
                         </button>
                         
-                         <button onClick={() => onNavigate('templates')} className="flex items-center gap-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:from-rose-950/30 hover:via-rose-900/20 hover:to-slate-900 p-3 rounded-lg border border-slate-700/60 hover:border-rose-500/40 shadow-lg group transition-all relative overflow-hidden group hover:shadow-[0_0_15px_rgba(244,63,94,0.1)]">
-                              <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-rose-600/0 group-hover:bg-rose-500 h-0 group-hover:h-full transition-all duration-500"></div>
-                              <div className="bg-slate-950 p-2.5 rounded border border-slate-700 group-hover:border-rose-500/30 group-hover:bg-rose-500/10 transition-colors">
-                                 <Download className="w-5 h-5 text-rose-600 group-hover:text-rose-400 group-hover:rotate-12 transition-transform" />
+                         <button onClick={() => onNavigate('templates')} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-rose-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-rose-500/50 shadow-lg group transition-all">
+                              <div className="bg-slate-950 p-2 rounded text-rose-500 border border-slate-700 group-hover:border-rose-500/50">
+                                 <Download className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                              </div>
                              <div className="text-left leading-none">
-                                <div className="text-[9px] text-slate-500 font-bold tracking-widest uppercase group-hover:text-rose-400/80 transition-colors">ÇIKTI AL</div>
-                                <div className="text-sm font-black text-slate-200 group-hover:text-white mt-0.5 tracking-wide">PDF İNDİR/YAZDIR</div>
+                                <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-rose-200/70">ÇIKTI AL</div>
+                                <div className="text-sm font-black text-slate-200 group-hover:text-white">PDF İNDİR/YAZDIR</div>
                              </div>
                         </button>
 
