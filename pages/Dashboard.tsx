@@ -290,7 +290,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
             </button>
 
              <button 
-                onClick={() => onNavigate('mydocuments')}
+                onClick={() => onNavigate('my-documents')}
                 className="w-full p-4 rounded-xl bg-gradient-to-r from-purple-900/40 to-purple-800/20 border border-purple-500/30 hover:border-purple-500 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all group text-left flex items-center gap-4"
             >
               <div className="p-3 bg-purple-500/20 rounded-lg text-purple-400 group-hover:scale-110 transition-transform">
@@ -298,7 +298,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
               </div>
               <div>
                 <div className="text-[9px] text-purple-400 font-bold mb-0.5 opacity-80 uppercase">ARŞİV</div>
-                <div className="font-black text-white text-sm tracking-wide">DOKÜMANLAR</div>
+                <div className="font-black text-white text-sm tracking-wide">DOKÜMANLARIM</div>
               </div>
             </button>
         </div>
