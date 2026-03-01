@@ -43,7 +43,7 @@ const SECTORS = [
     id: 'factory', 
     name: 'FABRİKA', 
     icon: Factory, 
-    image: 'https://images.unsplash.com/photo-1565514020176-db792f4b6805?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600',
     color: 'bg-rose-600', 
     docs: ['Üretim Takip', 'Kalite Kontrol', 'Vardiya Listesi', 'Bakım Formu']
   },
@@ -51,15 +51,15 @@ const SECTORS = [
     id: 'company', 
     name: 'ŞİRKET', 
     icon: Building2, 
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600',
     color: 'bg-blue-600', 
     docs: ['Gelir Gider', 'Personel Listesi', 'Toplantı Tutanağı', 'Fatura Kayıt']
   },
   { 
     id: 'mine', 
-    name: 'MADEN İŞLEMLERİ', 
+    name: 'MADEN', 
     icon: Hammer, 
-    image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=600',
     color: 'bg-amber-500', 
     docs: ['Patlatma Raporu', 'Gaz Ölçüm', 'Vardiya Çizelgesi', 'Risk Analizi']
   },
@@ -67,7 +67,7 @@ const SECTORS = [
     id: 'construction', 
     name: 'İNŞAAT', 
     icon: HardHat, 
-    image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=600',
     color: 'bg-orange-600', 
     docs: ['Şantiye Günlüğü', 'Hakediş Raporu', 'İş Güvenliği', 'Malzeme Talep']
   },
@@ -75,7 +75,7 @@ const SECTORS = [
     id: 'energy', 
     name: 'ENERJİ', 
     icon: Zap, 
-    image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=600',
     color: 'bg-yellow-600', 
     docs: ['Sayaç Okuma', 'Arıza Kayıt', 'Trafo Bakım', 'Enerji Tüketim']
   },
@@ -83,7 +83,7 @@ const SECTORS = [
     id: 'chemistry', 
     name: 'KİMYA', 
     icon: Beaker, 
-    image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=600',
     color: 'bg-emerald-600', 
     docs: ['Laboratuvar', 'MSDS Formu', 'Atık Takip', 'Numune Kayıt']
   },
@@ -91,7 +91,7 @@ const SECTORS = [
     id: 'small_business', 
     name: 'KÜÇÜK İŞLETME', 
     icon: Store, 
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=600',
     color: 'bg-purple-600', 
     docs: ['Cari Hesap', 'Müşteri Kayıt', 'Satış Fişi', 'Stok Takip']
   }
@@ -110,7 +110,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   const [activeSector, setActiveSector] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0f1115] text-white p-4 md:p-6 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#0f1115] text-white p-4 md:p-6 font-sans overflow-x-hidden pb-32">
       
       {/* Header Section */}
       <div className="text-center space-y-4 mb-8 pt-4 md:pt-8 animate-fade-in">
