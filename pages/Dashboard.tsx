@@ -110,18 +110,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   const [activeSector, setActiveSector] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0f1115] text-white p-6 font-sans overflow-hidden">
+    <div className="min-h-screen bg-[#0f1115] text-white p-4 md:p-6 font-sans overflow-x-hidden">
       
       {/* Header Section */}
-      <div className="text-center space-y-4 mb-8 pt-8 animate-fade-in">
-        <h1 className="text-4xl md:text-6xl font-black text-white tracking-wider uppercase drop-shadow-[0_0_25px_rgba(255,255,255,0.15)] animate-slide-up">
-          YILLIK DOKÜMANLAR <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 animate-pulse">&</span> İŞ TAKİP PANELİ
+      <div className="text-center space-y-4 mb-8 pt-4 md:pt-8 animate-fade-in">
+        <h1 className="text-3xl md:text-4xl lg:text-6xl font-black text-white tracking-wider uppercase drop-shadow-[0_0_25px_rgba(255,255,255,0.15)] animate-slide-up leading-tight">
+          YILLIK DOKÜMANLAR <br className="md:hidden" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 animate-pulse">&</span> İŞ TAKİP PANELİ
         </h1>
-        <div className="flex flex-wrap justify-center gap-4 text-[11px] md:text-xs font-bold text-yellow-500/80 uppercase tracking-[0.3em] relative mt-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent -z-10"></div>
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 text-[10px] md:text-[11px] lg:text-xs font-bold text-yellow-500/80 uppercase tracking-[0.2em] md:tracking-[0.3em] relative mt-4 md:mt-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent -z-10 hidden md:block"></div>
           {SECTORS.map((s, i) => (
             <React.Fragment key={s.id}>
-              <span className="bg-[#0f1115] px-3 py-1 rounded-full border border-white/5 hover:border-yellow-500/30 transition-colors cursor-default">{s.name}</span>
+              <span className="bg-[#0f1115] px-2 md:px-3 py-1 rounded-full border border-white/5 hover:border-yellow-500/30 transition-colors cursor-default whitespace-nowrap">{s.name}</span>
             </React.Fragment>
           ))}
         </div>
@@ -277,34 +277,40 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
 
             <button 
                 onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                className="w-full p-6 h-40 rounded-2xl bg-gradient-to-br from-blue-900/40 via-blue-950/30 to-[#0f1115] border border-blue-500/20 hover:border-blue-400 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all duration-300 group text-left flex flex-col justify-between relative overflow-hidden ring-1 ring-inset ring-white/5"
+                className="w-full p-5 md:p-6 h-auto md:h-40 rounded-2xl bg-gradient-to-br from-blue-900/40 via-blue-950/30 to-[#0f1115] border border-blue-500/20 hover:border-blue-400 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all duration-300 group text-left flex flex-row md:flex-col items-center md:items-start justify-between relative overflow-hidden ring-1 ring-inset ring-white/5 gap-4"
             >
-              <div className="absolute top-0 right-0 p-4 opacity-30 group-hover:opacity-50 transition-opacity duration-500">
+              <div className="absolute top-0 right-0 p-4 opacity-30 group-hover:opacity-50 transition-opacity duration-500 hidden md:block">
                 <Star size={100} className="text-blue-500/10 -rotate-12 translate-x-8 -translate-y-8" />
               </div>
               
-              <div className="flex justify-between items-start relative z-10">
-                  <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400 border border-blue-500/20 group-hover:scale-110 group-hover:bg-blue-500/20 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
-                    <Award size={28} />
+              <div className="flex justify-between items-start relative z-10 w-full md:w-auto">
+                  <div className="flex items-center gap-3 md:block">
+                      <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400 border border-blue-500/20 group-hover:scale-110 group-hover:bg-blue-500/20 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+                        <Award size={24} className="md:w-7 md:h-7" />
+                      </div>
+                      <div className="md:hidden">
+                        <div className="font-black text-white text-lg tracking-tight group-hover:text-blue-200 transition-colors drop-shadow-md">SERTİFİKA</div>
+                        <div className="text-[10px] text-blue-300/60 font-medium">Personel yetkinlik belgesi</div>
+                      </div>
                   </div>
-                  <div className="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-black text-blue-300 uppercase tracking-widest animate-pulse">YENİ</div>
+                  <div className="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-black text-blue-300 uppercase tracking-widest animate-pulse self-center md:self-start">YENİ</div>
               </div>
               
-              <div className="relative z-10">
+              <div className="relative z-10 hidden md:block">
                 <div className="font-black text-white text-xl tracking-tight group-hover:text-blue-200 transition-colors drop-shadow-md">SERTİFİKA</div>
                 <div className="text-[10px] text-blue-300/60 font-medium leading-relaxed max-w-[80%]">Personel yetkinlik ve başarı belgeleri oluştur</div>
               </div>
             </button>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <button 
                     onClick={() => onNavigate('templates', { search: 'Tutanak' })}
-                    className="p-4 h-32 rounded-2xl bg-gradient-to-br from-orange-900/30 via-orange-950/20 to-[#0f1115] border border-orange-500/20 hover:border-orange-500 hover:shadow-[0_0_20px_rgba(249,115,22,0.15)] transition-all duration-300 group flex flex-col justify-between"
+                    className="p-4 h-auto md:h-32 rounded-2xl bg-gradient-to-br from-orange-900/30 via-orange-950/20 to-[#0f1115] border border-orange-500/20 hover:border-orange-500 hover:shadow-[0_0_20px_rgba(249,115,22,0.15)] transition-all duration-300 group flex items-center md:flex-col justify-between gap-4"
                 >
                   <div className="self-start p-2.5 bg-orange-500/10 rounded-lg text-orange-400 border border-orange-500/20 group-hover:scale-110 transition-transform">
                     <ClipboardList size={22} />
                   </div>
-                  <div>
+                  <div className="text-right md:text-left flex-1 md:flex-none">
                     <div className="text-[9px] text-orange-500 font-bold mb-0.5 opacity-80 uppercase tracking-wider">KAYIT</div>
                     <div className="font-black text-white text-sm tracking-wide">TUTANAK</div>
                   </div>
@@ -312,12 +318,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
 
                  <button 
                     onClick={() => onNavigate('templates', { search: 'Rapor' })}
-                    className="p-4 h-32 rounded-2xl bg-gradient-to-br from-emerald-900/30 via-emerald-950/20 to-[#0f1115] border border-emerald-500/20 hover:border-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group flex flex-col justify-between"
+                    className="p-4 h-auto md:h-32 rounded-2xl bg-gradient-to-br from-emerald-900/30 via-emerald-950/20 to-[#0f1115] border border-emerald-500/20 hover:border-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300 group flex items-center md:flex-col justify-between gap-4"
                 >
                   <div className="self-start p-2.5 bg-emerald-500/10 rounded-lg text-emerald-400 border border-emerald-500/20 group-hover:scale-110 transition-transform">
                     <Activity size={22} />
                   </div>
-                  <div>
+                  <div className="text-right md:text-left flex-1 md:flex-none">
                     <div className="text-[9px] text-emerald-500 font-bold mb-0.5 opacity-80 uppercase tracking-wider">GÜNLÜK</div>
                     <div className="font-black text-white text-sm tracking-wide">RAPOR</div>
                   </div>
@@ -352,72 +358,72 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
       </div>
 
        {/* Footer / Pricing Section */}
-       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-up" style={{ animationDelay: '0.5s' }}>
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-up pb-8" style={{ animationDelay: '0.5s' }}>
             
             {/* Standard Plan */}
-            <div className="bg-[#161922] rounded-2xl p-6 border border-white/10 flex items-center justify-between group hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] relative overflow-hidden">
+            <div className="bg-[#161922] rounded-2xl p-4 md:p-6 border border-white/10 flex items-center justify-between group hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
-                <div className="flex items-center gap-5 relative z-10">
-                     <div className="p-3.5 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20 group-hover:scale-110 transition-transform duration-300">
-                          <Shield size={28} />
+                <div className="flex items-center gap-4 md:gap-5 relative z-10">
+                     <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20 group-hover:scale-110 transition-transform duration-300">
+                          <Shield size={24} className="md:w-7 md:h-7" />
                      </div>
                      <div>
-                        <h3 className="font-black text-white text-xl tracking-wide uppercase group-hover:text-blue-200 transition-colors">STANDART</h3>
-                        <p className="text-[10px] text-slate-400 font-bold tracking-widest mt-1">BAŞLANGIÇ PAKETİ</p>
+                        <h3 className="font-black text-white text-lg md:text-xl tracking-wide uppercase group-hover:text-blue-200 transition-colors">STANDART</h3>
+                        <p className="text-[9px] md:text-[10px] text-slate-400 font-bold tracking-widest mt-1">BAŞLANGIÇ PAKETİ</p>
                      </div>
                 </div>
                 <div className="text-right relative z-10">
-                    <div className="text-2xl font-black text-white mb-2 tracking-tight">100 ₺</div>
-                    <button className="px-5 py-2 rounded-lg bg-white/5 hover:bg-blue-600 hover:text-white text-slate-300 text-[10px] font-black uppercase tracking-widest transition-all border border-white/10 hover:border-blue-500 hover:shadow-lg">
+                    <div className="text-xl md:text-2xl font-black text-white mb-2 tracking-tight">100 ₺</div>
+                    <button className="px-3 py-1.5 md:px-5 md:py-2 rounded-lg bg-white/5 hover:bg-blue-600 hover:text-white text-slate-300 text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all border border-white/10 hover:border-blue-500 hover:shadow-lg">
                         SATIN AL
                     </button>
                 </div>
             </div>
 
             {/* Gold Plan */}
-            <div className="relative bg-[#1a1608] rounded-2xl p-6 border border-yellow-500/30 flex items-center justify-between group hover:border-yellow-400 transition-all duration-300 shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:shadow-[0_0_50px_rgba(234,179,8,0.2)] scale-105 z-10 overflow-hidden">
+            <div className="relative bg-[#1a1608] rounded-2xl p-4 md:p-6 border border-yellow-500/30 flex items-center justify-between group hover:border-yellow-400 transition-all duration-300 shadow-[0_0_30px_rgba(234,179,8,0.1)] hover:shadow-[0_0_50px_rgba(234,179,8,0.2)] md:scale-105 z-10 overflow-hidden ring-1 ring-yellow-500/20 md:ring-0">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
                 <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
                 
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-[0_0_20px_rgba(234,179,8,0.4)] md:flex hidden items-center gap-2">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-[0_0_20px_rgba(234,179,8,0.4)] flex items-center gap-1 md:gap-2 whitespace-nowrap">
                    <Star size={10} className="fill-black" /> EN POPÜLER
                 </div>
 
-                <div className="flex items-center gap-5 relative z-10">
-                     <div className="p-3.5 bg-yellow-500/20 text-yellow-500 rounded-xl border border-yellow-500/30 group-hover:scale-110 transition-transform duration-300 shadow-[0_0_20px_rgba(234,179,8,0.2)]">
-                          <Shield size={28} className="fill-yellow-500/20" />
+                <div className="flex items-center gap-4 md:gap-5 relative z-10">
+                     <div className="p-3 bg-yellow-500/20 text-yellow-500 rounded-xl border border-yellow-500/30 group-hover:scale-110 transition-transform duration-300 shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+                          <Shield size={24} className="fill-yellow-500/20 md:w-7 md:h-7" />
                      </div>
                      <div>
-                        <h3 className="font-black text-yellow-500 text-2xl tracking-wide uppercase drop-shadow-sm">GOLD</h3>
-                        <p className="text-[10px] text-yellow-200/60 font-bold tracking-widest mt-1">2 KAT LİMİT</p>
+                        <h3 className="font-black text-yellow-500 text-xl md:text-2xl tracking-wide uppercase drop-shadow-sm">GOLD</h3>
+                        <p className="text-[9px] md:text-[10px] text-yellow-200/60 font-bold tracking-widest mt-1">2 KAT LİMİT</p>
                      </div>
                 </div>
                 <div className="text-right relative z-10">
-                    <div className="text-3xl font-black text-yellow-500 mb-2 tracking-tight drop-shadow-sm">175 ₺</div>
-                    <button className="px-6 py-2.5 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-black text-[10px] font-black uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] hover:-translate-y-0.5 transform">
+                    <div className="text-2xl md:text-3xl font-black text-yellow-500 mb-2 tracking-tight drop-shadow-sm">175 ₺</div>
+                    <button className="px-4 py-2 md:px-6 md:py-2.5 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-black text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] hover:-translate-y-0.5 transform">
                         SATIN AL
                     </button>
                 </div>
             </div>
 
             {/* Premium Plan */}
-            <div className="bg-[#1a1025] rounded-2xl p-6 border border-purple-500/20 flex items-center justify-between group hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] relative overflow-hidden">
+            <div className="bg-[#1a1025] rounded-2xl p-4 md:p-6 border border-purple-500/20 flex items-center justify-between group hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-l from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                <div className="flex items-center gap-5 relative z-10">
-                     <div className="p-3.5 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/20 group-hover:scale-110 transition-transform duration-300">
-                          <CheckCircle2 size={28} />
+                <div className="flex items-center gap-4 md:gap-5 relative z-10">
+                     <div className="p-3 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/20 group-hover:scale-110 transition-transform duration-300">
+                          <CheckCircle2 size={24} className="md:w-7 md:h-7" />
                      </div>
                      <div>
-                        <h3 className="font-black text-white text-xl tracking-wide uppercase group-hover:text-purple-200 transition-colors">PREMIUM</h3>
-                        <p className="text-[10px] text-slate-400 font-bold tracking-widest mt-1">SINIRSIZ ERİŞİM</p>
+                        <h3 className="font-black text-white text-lg md:text-xl tracking-wide uppercase group-hover:text-purple-200 transition-colors">PREMIUM</h3>
+                        <p className="text-[9px] md:text-[10px] text-slate-400 font-bold tracking-widest mt-1">SINIRSIZ ERİŞİM</p>
                      </div>
                 </div>
                 <div className="text-right relative z-10">
-                    <div className="text-[10px] line-through text-slate-600 absolute -top-4 right-0 font-mono">350 ₺</div>
-                    <div className="text-2xl font-black text-white mb-2 tracking-tight">250 ₺</div>
-                    <button className="px-5 py-2 rounded-lg bg-purple-900/50 hover:bg-purple-600 text-purple-200 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all border border-purple-500/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                    <div className="text-[9px] md:text-[10px] line-through text-slate-600 absolute -top-3 md:-top-4 right-0 font-mono">350 ₺</div>
+                    <div className="text-xl md:text-2xl font-black text-white mb-2 tracking-tight">250 ₺</div>
+                    <button className="px-3 py-1.5 md:px-5 md:py-2 rounded-lg bg-purple-900/50 hover:bg-purple-600 text-purple-200 hover:text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all border border-purple-500/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
                         SATIN AL
                     </button>
                 </div>
