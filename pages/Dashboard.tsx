@@ -23,13 +23,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const [hoveredSector, setHoveredSector] = React.useState<string | null>(null);
 
   const sectors = [
-    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1531297461136-82lwDe41e42a?auto=format&fit=crop&q=80&w=800', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
-    { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800', color: 'border-slate-500', gradient: 'from-slate-600', searchQuery: 'Kurumsal', icon: Building2 },
-    { id: 'mine', title: 'MADEN', image: 'https://images.unsplash.com/photo-1599834271871-36c1e1493630?auto=format&fit=crop&q=80&w=800', color: 'border-orange-700', gradient: 'from-orange-700', searchQuery: 'Maden', icon: Construction },
-    { id: 'construction', title: 'İNŞAAT', image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800', color: 'border-yellow-600', gradient: 'from-yellow-600', searchQuery: 'İnşaat', icon: Construction },
-    { id: 'energy', title: 'ENERJİ', image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&q=80&w=800', color: 'border-amber-500', gradient: 'from-amber-500', searchQuery: 'Enerji', icon: Zap },
-    { id: 'chemistry', title: 'KİMYA', image: 'https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?auto=format&fit=crop&q=80&w=800', color: 'border-emerald-600', gradient: 'from-emerald-600', searchQuery: 'Kimya', icon: Beaker },
-    { id: 'small_business', title: 'KÜÇÜK İŞLETME', image: 'https://images.unsplash.com/photo-1472851294608-41531b665086?auto=format&fit=crop&q=80&w=800', color: 'border-pink-500', gradient: 'from-pink-500', searchQuery: 'Esnaf', icon: Store }
+    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1565514020176-adb1001e89ce?auto=format&fit=crop&q=80&w=800', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
+    { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800', color: 'border-slate-500', gradient: 'from-slate-600', searchQuery: 'Kurumsal', icon: Building2 },
+    { id: 'mine', title: 'MADEN', image: 'https://images.unsplash.com/photo-1579566346927-c68383817a25?auto=format&fit=crop&q=80&w=800', color: 'border-orange-700', gradient: 'from-orange-700', searchQuery: 'Maden', icon: Construction },
+    { id: 'construction', title: 'İNŞAAT', image: 'https://images.unsplash.com/photo-1541976594385-e6dbc077970c?auto=format&fit=crop&q=80&w=800', color: 'border-yellow-600', gradient: 'from-yellow-600', searchQuery: 'İnşaat', icon: Construction },
+    { id: 'energy', title: 'ENERJİ', image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=800', color: 'border-amber-500', gradient: 'from-amber-500', searchQuery: 'Enerji', icon: Zap },
+    { id: 'chemistry', title: 'KİMYA', image: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&q=80&w=800', color: 'border-emerald-600', gradient: 'from-emerald-600', searchQuery: 'Kimya', icon: Beaker },
+    { id: 'small_business', title: 'KÜÇÜK İŞLETME', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800', color: 'border-pink-500', gradient: 'from-pink-500', searchQuery: 'Esnaf', icon: Store }
   ];
 
   const Lightning = ({className}: {className?: string}) => (
@@ -145,7 +145,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 
                 <div className="flex items-center gap-6 mt-3 relative z-10 w-full justify-center opacity-80">
                     <div className="h-[1px] w-16 md:w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
-                    <div className="text-[10px] md:text-xs text-amber-500 font-mono font-bold uppercase tracking-[0.4em] text-shadow-sm">INTEGRATED MANAGEMENT SYSTEM V.3.0</div>
+                    <div className="text-[10px] md:text-xs text-amber-500 font-mono font-bold uppercase tracking-[0.4em] text-shadow-sm flex gap-4">
+                        <span>FABRİKA</span>
+                        <span>ŞİRKET</span>
+                        <span>MADEN</span>
+                        <span>İNŞAAT</span>
+                        <span>ENERJİ</span>
+                        <span>KİMYA</span>
+                        <span>KÜÇÜK İŞLETME</span>
+                    </div>
                     <div className="h-[1px] w-16 md:w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
                 </div>
             </div>
@@ -282,6 +290,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     </div>
                     
                     <div className="grid grid-cols-1 gap-2">
+
+                        <button onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-blue-900/40 hover:to-slate-900 p-4 rounded-lg border border-slate-600 hover:border-blue-500/50 shadow-lg group transition-all relative overflow-hidden ring-1 ring-blue-500/20">
+                             <div className="bg-slate-950 p-3 rounded text-blue-500 border border-slate-700 group-hover:border-blue-500/50 relative">
+                                <div className="absolute inset-0 rounded border border-blue-400 opacity-50 animate-[ping_3s_infinite]"></div>
+                                 <Award className="w-8 h-8 group-hover:rotate-12 transition-transform drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+                             </div>
+                             <div className="text-left leading-none flex-1">
+                                <div className="text-[10px] text-blue-400 font-bold tracking-widest uppercase mb-1">YENİ ÖZELLİK</div>
+                                <div className="text-xl font-black text-white group-hover:text-blue-200 tracking-wide drop-shadow-md">SERTİFİKA OLUŞTUR</div>
+                             </div>
+                        </button>
                         
                         <button onClick={() => onNavigate('templates', { search: 'Tutanak' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-amber-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-amber-500/50 shadow-lg group transition-all relative overflow-hidden">
                              <div className="bg-slate-950 p-2 rounded text-amber-500 border border-slate-700 group-hover:border-amber-500/50">
@@ -310,27 +329,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                              <div className="text-left leading-none">
                                 <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-purple-200/70">ARŞİV</div>
                                 <div className="text-sm font-black text-slate-200 group-hover:text-white">DOKÜMANLAR</div>
-                             </div>
-                        </button>
-                        
-                         <button onClick={() => onNavigate('templates')} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-rose-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-rose-500/50 shadow-lg group transition-all">
-                              <div className="bg-slate-950 p-2 rounded text-rose-500 border border-slate-700 group-hover:border-rose-500/50">
-                                 <Download className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                             </div>
-                             <div className="text-left leading-none">
-                                <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-rose-200/70">ÇIKTI AL</div>
-                                <div className="text-sm font-black text-slate-200 group-hover:text-white">PDF İNDİR/YAZDIR</div>
-                             </div>
-                        </button>
-                        
-                         <button onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })} className="flex items-center gap-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-blue-900/40 hover:to-slate-900 p-3 rounded border border-slate-600 hover:border-blue-500/50 shadow-lg group transition-all relative overflow-hidden">
-                             <div className="bg-slate-950 p-2 rounded text-blue-500 border border-slate-700 group-hover:border-blue-500/50 relative">
-                                <div className="absolute inset-0 rounded border border-blue-400 opacity-50 animate-[ping_3s_infinite]"></div>
-                                 <Award className="w-5 h-5 group-hover:rotate-12 transition-transform drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
-                             </div>
-                             <div className="text-left leading-none">
-                                <div className="text-[9px] text-slate-400 font-bold tracking-wider group-hover:text-blue-200/70">YENİ</div>
-                                <div className="text-sm font-black text-slate-200 group-hover:text-white">SERTİFİKA OLUŞTUR</div>
                              </div>
                         </button>
 
