@@ -69,64 +69,77 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
       </div>
 
-      {/* 1. Header with Cinematic Glow */}
-      <div className="flex-none bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800 py-5 shadow-2xl z-20 w-full px-4 relative overflow-hidden shrink-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent blur-sm"></div>
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-500/30 to-transparent"></div>
-        
-        <h1 className="text-2xl md:text-3xl font-black text-center tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-400 drop-shadow-lg relative z-10 truncate font-mono">
-          YILLIK DOKÜMANLAR <span className="text-amber-500 glow-text">&</span> İŞ TAKİP PANELİ
-        </h1>
-        <div className="flex justify-center gap-6 mt-2 relative z-10">
-             <div className="text-[10px] md:text-[11px] text-amber-500/80 uppercase tracking-[0.3em] font-bold text-shadow-sm">Fabrika • Şirket • Maden • İnşaat • Enerji • Kimya • Küçük İşletme</div>
+      {/* 1. Header with Industrial HUD Look */}
+      <div className="flex-none pt-6 pb-2 px-4 z-20 w-full relative shrink-0">
+        <div className="max-w-[1920px] mx-auto bg-slate-900/40 border-y border-slate-700/50 backdrop-blur-sm relative">
+            {/* Decorative Side Markers */}
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-1 bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+            
+            <div className="flex flex-col items-center justify-center py-4 relative overflow-hidden">
+                {/* Background Tech Lines */}
+                <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(255,255,255,0.05)_50%,transparent_51%)] bg-[length:20px_100%]"></div>
+                
+                <h1 className="text-3xl md:text-4xl font-black text-center tracking-[0.15em] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] relative z-10 font-sans">
+                  YILLIK DOKÜMANLAR <span className="text-amber-500 mx-2">&</span> İŞ TAKİP PANELİ
+                </h1>
+                
+                <div className="flex items-center gap-4 mt-2 relative z-10">
+                    <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-slate-500"></div>
+                    <div className="text-[10px] md:text-xs text-slate-400 font-bold uppercase tracking-[0.4em]">Integrated Management System V.3.0</div>
+                    <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-slate-500"></div>
+                </div>
+            </div>
         </div>
       </div>
 
       <div className="flex-1 p-3 md:p-5 gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 overflow-hidden relative">
         
-        {/* 2. Top Sectors Row - Taller & More Immersive */}
-        <div className="flex-none h-40 w-full overflow-x-auto custom-scrollbar pb-2">
-            <div className="flex gap-3 h-full px-1 min-w-max">
+        {/* 2. Top Sectors Row - More Vivid & Stylized */}
+        <div className="flex-none h-44 w-full overflow-x-auto custom-scrollbar pb-3">
+            <div className="flex gap-4 h-full px-2 min-w-max">
             {sectors.map((sector) => (
                 <div 
                     key={sector.id}
                     onClick={() => onNavigate('templates', { category: sector.searchQuery })}
-                    className={`group relative cursor-pointer overflow-hidden rounded-lg border border-slate-700 bg-slate-900 transition-all duration-300 w-32 md:w-56 h-full flex flex-col shrink-0 hover:scale-[1.02] shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:border-amber-500/50 ring-1 ring-white/5`}
+                    className={`group relative cursor-pointer overflow-hidden rounded-xl border border-slate-600 bg-slate-900 transition-all duration-300 w-36 md:w-56 h-full flex flex-col shrink-0 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] ring-1 ring-white/5`}
                 >
-                    <div className="absolute inset-0 w-full h-full">
-                         <div className={`absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r ${sector.gradient} to-transparent z-20`}></div>
-                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/20 to-slate-950/90 z-10 group-hover:via-slate-950/0 transition-all duration-500"></div>
-                         <img src={sector.image} alt={sector.title} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 filter saturate-[0.8] group-hover:saturate-100" />
-                    </div>
+                    {/* Vivid Gradient Overlay */}
+                    <div className={`absolute inset-0 bg-gradient-to-b ${sector.gradient} to-slate-900 opacity-90 mix-blend-multiply transition-opacity duration-300 group-hover:opacity-100`}></div>
                     
-                    <div className="absolute top-0 left-0 w-full p-0 z-20">
-                         <div className="bg-slate-950/80 backdrop-blur-md text-slate-100 text-[10px] uppercase font-black px-3 py-1.5 w-full text-center border-b border-white/5 tracking-widest shadow-lg">
-                            {sector.title}
-                        </div>
-                    </div>
+                    {/* Background Image */}
+                    <img src={sector.image} alt={sector.title} className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 group-hover:scale-110 transition-transform duration-700" />
                     
-                    <div className="absolute bottom-0 left-0 w-full p-2.5 z-20 flex items-center justify-center">
-                        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-300 bg-black/40 px-2 py-1 rounded-full border border-white/10 backdrop-blur-sm group-hover:border-amber-500/40 group-hover:text-amber-500 transition-colors">
-                            <CheckCircle2 className="w-3 h-3 text-green-500" />
-                            <span className="truncate">İş Analizi Dokümanı</span>
+                    {/* Top Stripe */}
+                    <div className="absolute top-0 left-0 w-full h-1 bg-white/50 shadow-[0_0_10px_rgba(255,255,255,0.5)] z-20"></div>
+
+                    {/* Content Container */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 p-2">
+                        <div className="bg-black/40 backdrop-blur-sm p-3 rounded-full border border-white/20 mb-2 group-hover:scale-110 transition-transform shadow-lg">
+                            <sector.icon className="w-6 h-6 text-white" />
                         </div>
+                        <h3 className="text-white font-black text-sm md:text-base tracking-[0.1em] uppercase drop-shadow-md text-center">{sector.title}</h3>
+                        <div className="h-[2px] w-8 bg-amber-500 mt-2"></div>
                     </div>
                 </div>
             ))}
-             {/* Create Certificate Tile - Styled to match */}
+             {/* Create Certificate Tile - Matching Style */}
              <div 
                 onClick={() => onNavigate('templates', { category: 'Sertifika', search: 'Sertifika' })}
-                className="group relative cursor-pointer overflow-hidden rounded-lg border border-blue-500/50 bg-gradient-to-b from-blue-900/40 to-slate-900/90 w-32 md:w-36 h-full flex flex-col shrink-0 hover:scale-[1.02] shadow-2xl items-center justify-center p-2 ring-1 ring-blue-400/20"
+                className="group relative cursor-pointer overflow-hidden rounded-xl border border-blue-400 bg-blue-900 w-36 md:w-48 h-full flex flex-col shrink-0 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(59,130,246,0.4)] transition-all"
             >
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-900 opacity-90"></div>
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-20"></div>
                 
-                <span className="absolute top-2 right-2 z-10 bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded shadow-lg shadow-amber-500/20 animate-pulse">YENİ</span>
-                
-                <div className="relative z-10 text-center flex flex-col items-center gap-2">
-                    <div className="bg-blue-500/20 p-3 rounded-full border border-blue-400/30 group-hover:border-blue-400/60 group-hover:scale-110 transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                        <Award className="w-8 h-8 text-blue-400 group-hover:text-white" />
+                <div className="absolute top-0 right-0 p-2 z-20">
+                     <span className="bg-amber-500 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-lg uppercase tracking-wider animate-pulse">Yeni</span>
+                </div>
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-20 p-2">
+                    <div className="bg-blue-500/30 p-3 rounded-full border border-blue-300/50 mb-2 group-hover:bg-blue-400/50 transition-colors shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                        <Award className="w-8 h-8 text-white" />
                     </div>
-                    <div className="text-blue-100 font-black text-xs leading-tight uppercase drop-shadow-md">SERTİFİKA<br/>OLUŞTUR</div>
+                    <h3 className="text-white font-black text-sm tracking-wider uppercase text-center drop-shadow-md">SERTİFİKA<br/>OLUŞTUR</h3>
                 </div>
             </div>
             </div>
