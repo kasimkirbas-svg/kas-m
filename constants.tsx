@@ -332,7 +332,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     isPremium: false,
     fields: [
        { key: 'employee', label: 'Personel', type: 'text', required: true },
-       { key: 'ppeList', label: 'Teslim Edilen KKD'ler', type: 'textarea', placeholder: 'Baret, Çizme, Maske...' },
+       { key: 'ppeList', label: 'Teslim Edilen KKD\'ler', type: 'textarea', placeholder: 'Baret, Çizme, Maske...' },
        { key: 'date', label: 'Tarih', type: 'date', required: true },
        { key: 'signature', label: 'Teslim Alan İmza', type: 'checkbox' }
     ]
