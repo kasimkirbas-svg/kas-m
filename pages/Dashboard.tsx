@@ -212,17 +212,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                        <p className="text-[10px] text-slate-400 font-medium">Sık kullanılan belge şablonları ve kullanım oranları</p>
                    </div>
                 </div>
-                
-                <div className="hidden md:flex items-center gap-6 px-4 py-2 rounded-full bg-white/5 border border-white/5 text-[10px] font-bold text-slate-400 font-mono">
-                    <div className="flex items-center gap-2">
-                         <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
-                         <span>YÜKSEK KULLANIM</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                         <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></div>
-                         <span>ORTA KULLANIM</span>
-                    </div>
-                </div>
             </div>
 
             <div className="bg-[#161922]/80 backdrop-blur-xl rounded-2xl border border-white/10 divide-y divide-white/5 shadow-2xl overflow-hidden relative group">
