@@ -3,7 +3,7 @@ import {
   FileText, Shield, AlertTriangle, CheckCircle2, Award, 
   Download, History, Clock, FileInput, Activity, ClipboardList,
   Construction, Factory, Building2, Zap, Beaker, Store, Flame,
-  FileCheck, ChevronDown
+  FileCheck, ChevronDown, Calendar, Users, Stethoscope, Briefcase, Hammer
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 
@@ -20,6 +20,8 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({ 
   user, t, onNavigate 
 }) => {
+  const [hoveredSector, setHoveredSector] = React.useState<string | null>(null);
+
   const sectors = [
     { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1565514020176-adb1001e89ce?auto=format&fit=crop&q=80&w=800', color: 'border-blue-500', gradient: 'from-blue-600', searchQuery: 'Üretim', icon: Factory },
     { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800', color: 'border-slate-500', gradient: 'from-slate-600', searchQuery: 'Kurumsal', icon: Building2 },
@@ -38,6 +40,68 @@ export const Dashboard: React.FC<DashboardProps> = ({
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 12h20"/><path d="M7 21a2 2 0 0 0 2-2v-4.5"/><path d="M15 21a2 2 0 0 0 2-2v-4.5"/><path d="M12 2v4"/><path d="M12 2A9.97 9.97 0 0 0 2 12"/><path d="M22 12a9.97 9.97 0 0 0-10-10"/></svg>
   );
 
+  const defaultRightSideMenu = [
+    { label: 'İş Eğitimleri', icon: FileCheck },
+    { label: 'İş Belgeleri', icon: FileText },
+    { label: 'İş Formları', icon: ClipboardList },
+    { label: 'İş Evrakları', icon: FileInput },
+    { label: 'İş Sertifikaları', icon: Award },
+  ];
+
+  const sectorMenus: Record<string, typeof defaultRightSideMenu> = {
+    factory: [
+      { label: 'Makine Bakım', icon: Construction },
+      { label: 'Üretim Raporu', icon: ClipboardList },
+      { label: 'Vardiya Listesi', icon: Clock },
+      { label: 'Kalite Kontrol', icon: CheckCircle2 },
+      { label: 'İSG Talimatları', icon: Shield },
+    ],
+    company: [
+      { label: 'Personel Listesi', icon: Users },
+      { label: 'Maaş Bordrosu', icon: FileText },
+      { label: 'İzin Formları', icon: Calendar },
+      { label: 'SGK Girişleri', icon: FileInput },
+      { label: 'Duyurular', icon: AlertTriangle },
+    ],
+    mine: [
+        { label: 'Patlatma Raporu', icon: Flame },
+        { label: 'Gaz Ölçüm', icon: Activity },
+        { label: 'Ocak Planı', icon: FileText },
+        { label: 'Ekipman Takip', icon: Construction },
+        { label: 'Acil Durum', icon: AlertTriangle },
+    ],
+    construction: [
+        { label: 'Şantiye Defteri', icon: ClipboardList },
+        { label: 'Hakediş Raporu', icon: FileText },
+        { label: 'İş Güvenliği', icon: Helmet },
+        { label: 'Malzeme Takip', icon: Store },
+        { label: 'Proje Planı', icon: Calendar },
+    ],
+    energy: [
+        { label: 'Trafo Bakım', icon: Zap },
+        { label: 'Sayaç Okuma', icon: Activity },
+        { label: 'Kesinti Raporu', icon: AlertTriangle },
+        { label: 'Hat Kontrol', icon: Construction },
+        { label: 'Enerji Analizi', icon: FileText },
+    ],
+    chemistry: [
+        { label: 'MSDS Formları', icon: FileText },
+        { label: 'Laboratuvar', icon: Beaker },
+        { label: 'Atık Yönetimi', icon: AlertTriangle },
+        { label: 'Stok Takip', icon: ClipboardList },
+        { label: 'Kalite Analiz', icon: Activity },
+    ],
+    small_business: [
+        { label: 'Cari Hesap', icon: FileText },
+        { label: 'Stok Durumu', icon: Store },
+        { label: 'Fatura Kes', icon: FileInput },
+        { label: 'Personel', icon: Users },
+        { label: 'Vergi Takip', icon: Calendar },
+    ]
+  };
+
+  const currentRightSideMenu = hoveredSector ? (sectorMenus[hoveredSector] || defaultRightSideMenu) : defaultRightSideMenu;
+
   const documentList = [
     { icon: FileCheck, name: 'Risk Analiz Raporu', limit: '10 ADET / AY', color: 'text-blue-400', bg: 'bg-blue-900/20', border: 'border-blue-500/30' },
     { icon: AlertTriangle, name: 'Patlayıcıdan Korunma Dök.', limit: '10 ADET / AY', color: 'text-orange-400', bg: 'bg-orange-900/20', border: 'border-orange-500/30' },
@@ -48,14 +112,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
     { icon: Award, name: 'Sertifika Oluşturma', limit: '100 SINIRSIZ', color: 'text-purple-400', bg: 'bg-purple-900/20', border: 'border-purple-500/30' },
     { icon: FileInput, name: 'Personel Sağlık Formu', limit: '100 SINIRSIZ', color: 'text-rose-400', bg: 'bg-rose-900/20', border: 'border-rose-500/30' },
     { icon: Activity, name: 'Matrix Puanlama Risk Analizi', limit: '100 SINIRSIZ', color: 'text-cyan-400', bg: 'bg-cyan-900/20', border: 'border-cyan-500/30' },
-  ];
-
-  const rightSideMenu = [
-    { label: 'İş Eğitimleri', icon: FileCheck },
-    { label: 'İş Belgeleri', icon: FileText },
-    { label: 'İş Ercrumlar', icon: ClipboardList },
-    { label: 'İş Evrakları', icon: FileInput },
-    { label: 'İş Sertifikaları', icon: Award },
   ];
 
   return (
@@ -105,6 +161,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <div 
                     key={sector.id}
                     onClick={() => onNavigate('templates', { category: sector.searchQuery })}
+                    onMouseEnter={() => setHoveredSector(sector.id)}
+                    onMouseLeave={() => setHoveredSector(null)}
                     className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-300 w-40 md:w-64 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-white/40 ring-1 ring-black/40 shadow-xl`}
                 >
                     {/* Background Image - Full Color but Darkened */}
@@ -219,11 +277,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div className="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
                 {/* Visual Menu List */}
                 <div className="bg-slate-900/80 rounded-lg overflow-hidden flex flex-col shadow-lg border border-slate-700/50 backdrop-blur-sm">
-                    {rightSideMenu.map((item, i) => (
+                    {currentRightSideMenu.map((item, i) => (
                         <button key={i} onClick={() => onNavigate('templates', { category: item.label.split(' ')[1] || item.label })} className="flex items-center gap-3 px-4 py-3 bg-transparent hover:bg-slate-800 border-b border-slate-700/50 last:border-0 transition-all group text-left relative overflow-hidden">
-                             <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-700 group-hover:bg-amber-500 transition-colors"></div>
-                            <item.icon className="w-4 h-4 text-slate-500 group-hover:text-amber-500 transition-colors" />
-                            <span className="text-xs font-bold text-slate-400 group-hover:text-slate-100 uppercase tracking-tight">{item.label}</span>
+                             <div className={`absolute left-0 top-0 bottom-0 w-[3px] transition-colors ${hoveredSector ? 'bg-amber-500' : 'bg-slate-700 group-hover:bg-amber-500'}`}></div>
+                            <item.icon className={`w-4 h-4 transition-colors ${hoveredSector ? 'text-amber-500' : 'text-slate-500 group-hover:text-amber-500'}`} />
+                            <span className={`text-xs font-bold uppercase tracking-tight transition-colors ${hoveredSector ? 'text-white' : 'text-slate-400 group-hover:text-slate-100'}`}>{item.label}</span>
                         </button>
                     ))}
                 </div>
