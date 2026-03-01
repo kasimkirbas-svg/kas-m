@@ -126,7 +126,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* 1. Header with Industrial HUD Look */}
-      <div className="flex-none pt-4 md:pt-8 pb-4 px-2 md:px-4 z-20 w-full relative shrink-0">
+      <div className="flex-none pt-2 md:pt-8 pb-2 md:pb-4 px-2 md:px-4 z-20 w-full relative shrink-0">
         <div className="max-w-[1920px] mx-auto bg-slate-900/60 border border-slate-700/50 backdrop-blur-md relative rounded-lg overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
             
             {/* Tech Decoration Lines - Hidden on Mobile */}
@@ -135,12 +135,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div className="hidden md:block absolute bottom-0 left-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
             <div className="hidden md:block absolute bottom-0 right-0 w-24 h-[1px] bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
 
-            <div className="flex flex-col items-center justify-center py-4 md:py-6 relative">
+            <div className="flex flex-col items-center justify-center py-3 md:py-6 relative">
                 {/* Background Grid Pattern */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
                 
-                <h1 className="text-xl md:text-5xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] relative z-10 font-sans uppercase px-2">
-                  YILLIK DOKÜMANLAR <span className="block md:inline text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 mx-0 md:mx-2">&</span> İŞ TAKİP PANELİ
+                <h1 className="text-lg md:text-5xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] relative z-10 font-sans uppercase px-2 leading-tight">
+                  <span className="block text-amber-500 text-xs md:text-xl tracking-[0.3em] mb-1 md:mb-2 opacity-80">PANEL YÖNETİMİ</span>
+                  YILLIK DOKÜMANLAR <span className="hidden md:inline text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 mx-2">&</span> 
+                  <span className="block md:inline text-slate-300 md:text-white mt-1 md:mt-0">İŞ TAKİP SİSTEMİ</span>
                 </h1>
                 
                 <div className="hidden md:flex items-center gap-6 mt-3 relative z-10 w-full justify-center opacity-80">
@@ -160,18 +162,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      <div className="flex-1 p-2 md:p-5 gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 md:overflow-hidden relative">
+      <div className="flex-1 p-2 md:p-5 gap-3 md:gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 md:overflow-hidden relative">
         
         {/* 2. Top Sectors Row - Highly Stylized Cards */}
-        <div className="flex-none h-auto md:h-48 w-full pb-4 pt-2 px-0 md:px-2 overflow-x-auto md:overflow-visible no-scrollbar">
-            <div className="flex gap-3 md:gap-5 h-40 md:h-full w-max md:w-full px-2 md:px-0">
+        <div className="flex-none h-auto md:h-48 w-full pb-2 md:pb-4 pt-0 md:pt-2 px-0 md:px-2 overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory scroll-pl-2">
+            <div className="flex gap-3 md:gap-5 h-36 md:h-full w-max md:w-full px-2 md:px-0">
             {sectors.map((sector) => (
                 <div 
                     key={sector.id}
                     onClick={() => onNavigate('templates', { category: sector.searchQuery })}
                     onMouseEnter={() => setHoveredSector(sector.id)}
                     onMouseLeave={() => setHoveredSector(null)}
-                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-500 ease-out flex-col shrink-0 w-32 md:w-auto md:flex-1 md:hover:flex-[1.5] h-full flex hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-amber-500/40 ring-1 ring-black/40 shadow-xl`}
+                    className={`snap-center group relative cursor-pointer overflow-hidden rounded-xl md:rounded-2xl border border-slate-700/80 md:border-2 md:border-slate-700 bg-slate-900 transition-all duration-500 ease-out flex-col shrink-0 w-36 md:w-auto md:flex-1 md:hover:flex-[1.5] h-full flex hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-amber-500/40 ring-1 ring-black/40 shadow-xl`}
                 >
                     {/* Background Image - Full Color but Darkened */}
                     <div className="absolute inset-0">
@@ -191,16 +193,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             <sector.icon className="w-6 h-6 text-white drop-shadow-md" />
                         </div>
                         
-                        <h3 className="text-white font-black text-lg tracking-widest uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center w-full pb-2 mb-2 transition-colors">
+                        <h3 className="text-white font-black text-sm md:text-lg tracking-widest uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center w-full pb-2 mb-2 transition-colors">
                             {sector.title}
                         </h3>
                     </div>
 
                     {/* Hover Content - Fades In */}
-                    <div className="absolute inset-0 z-30 p-4 flex flex-col opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-500 delay-100 translate-y-4 group-hover:translate-y-0">
-                        <div className="flex items-center gap-2 mb-3 border-b border-white/20 pb-2">
+                    <div className="absolute inset-0 z-30 p-3 md:p-4 flex flex-col opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-500 delay-100 translate-y-4 group-hover:translate-y-0">
+                        <div className="flex items-center gap-2 mb-2 md:mb-3 border-b border-white/20 pb-2">
                              <sector.icon className="w-4 h-4 text-amber-500" />
-                             <h3 className="text-white font-black text-sm tracking-wider uppercase">{sector.title} İŞLEMLERİ</h3>
+                             <h3 className="text-white font-black text-xs md:text-sm tracking-wider uppercase">{sector.title} İŞLEMLERİ</h3>
                         </div>
                         <div className="flex flex-col gap-1 overflow-y-auto custom-scrollbar">
                            {(sectorMenus[sector.id] || defaultRightSideMenu).map((item, idx) => (
@@ -210,7 +212,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                                        e.stopPropagation();
                                        onNavigate('templates', { category: item.label.split(' ')[1] || item.label });
                                    }}
-                                   className="flex items-center gap-2 p-2 rounded hover:bg-white/10 transition-colors text-left group/item"
+                                   className="flex items-center gap-2 p-1.5 md:p-2 rounded hover:bg-white/10 transition-colors text-left group/item"
                                >
                                    <div className="p-1 rounded bg-slate-800/50 group-hover/item:bg-amber-500/20 transition-colors">
                                        <item.icon className="w-3 h-3 text-slate-300 group-hover/item:text-amber-500" />
@@ -226,23 +228,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
 
         {/* 3. Middle Section: Documents & Sidebar */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4 md:overflow-hidden h-auto md:h-full">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4 md:overflow-hidden h-auto md:h-full">
             
             {/* Documents Table - 9/12 Columns */}
-            <div className="lg:col-span-9 bg-slate-900/60 border border-slate-700/50 rounded-lg shadow-2xl flex flex-col md:overflow-hidden h-[400px] md:h-full backdrop-blur-sm relative order-2 md:order-1">
+            <div className="lg:col-span-9 bg-slate-900/60 border border-slate-700/50 rounded-lg shadow-2xl flex flex-col md:overflow-hidden h-[360px] md:h-full backdrop-blur-sm relative order-2 md:order-1">
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-500/20 to-transparent"></div>
                 
-                <div className="bg-slate-900/90 p-2 border-b border-slate-700/80 flex justify-between items-center shadow-md z-10 shrink-0">
-                    <div className="flex items-center gap-3 px-2">
+                <div className="bg-slate-900/90 p-3 md:p-2 border-b border-slate-700/80 flex justify-between items-center shadow-md z-10 shrink-0">
+                    <div className="flex items-center gap-3 px-1 md:px-2">
                          <div className="bg-slate-800 p-1.5 rounded border border-slate-600/50">
                             <FileText className="w-4 h-4 text-slate-300" />
                          </div>
-                        <h2 className="font-bold text-slate-200 text-sm tracking-widest uppercase text-shadow-sm">DOKÜMANLAR LİSTESİ</h2>
+                        <h2 className="font-bold text-slate-200 text-xs md:text-sm tracking-widest uppercase text-shadow-sm">DOKÜMANLAR</h2>
                     </div>
                      <div className="flex items-center gap-4 bg-black/20 px-3 py-1 rounded border border-white/5">
-                        <span className="hidden md:inline text-[10px] text-slate-400 font-bold uppercase tracking-wider">LİMİT DURUMU</span>
-                        <span className="hidden md:inline w-[1px] h-3 bg-slate-700"></span>
-                        <span className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-wider">ADET / AY</span>
+                        <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider animate-pulse">CANLI SİSTEM</span>
                      </div>
                 </div>
                 
@@ -252,15 +252,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         <div 
                             key={idx} 
                             onClick={() => onNavigate('templates', { search: doc.name.split(' ')[0] })}
-                            className="flex items-center px-4 py-3 cursor-pointer transition-all group hover:bg-slate-800/80 hover:pl-5 relative overflow-hidden bg-slate-900/40"
+                            className="flex items-center px-4 py-3.5 md:py-3 cursor-pointer transition-all group hover:bg-slate-800/80 hover:pl-5 relative overflow-hidden bg-slate-900/40 active:bg-slate-800"
                         >
-                            <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-transparent group-hover:bg-amber-500 transition-colors"></div>
+                            <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-amber-500 transition-colors"></div>
                             
-                            <div className="flex items-center gap-4 flex-1">
-                                <div className={`p-1.5 rounded bg-slate-900 border border-slate-700 shadow-sm shrink-0 group-hover:scale-110 transition-transform ${doc.color}`}>
-                                    <doc.icon className="w-4 h-4" />
+                            <div className="flex items-center gap-3 md:gap-4 flex-1">
+                                <div className={`p-1.5 md:p-1.5 rounded-lg md:rounded bg-slate-900 border border-slate-700 shadow-sm shrink-0 group-hover:scale-110 transition-transform ${doc.color}`}>
+                                    <doc.icon className="w-4 h-4 md:w-4 md:h-4" />
                                 </div>
-                                <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">{doc.name}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors leading-tight">{doc.name}</span>
+                                    <span className="text-[10px] text-slate-500 md:hidden mt-0.5">{doc.limit}</span>
+                                </div>
                             </div>
                             
                             {/* Visual Bar for Limit */}
@@ -270,8 +273,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
                                  </div>
                             </div>
 
-                            <div className="text-right shrink-0 min-w-[100px]">
-                                <span className="text-xs font-black text-slate-500 group-hover:text-amber-500 transition-colors">{doc.limit}</span>
+                            <div className="text-right shrink-0 min-w-[30px] md:min-w-[100px] flex items-center justify-end">
+                                <span className="hidden md:inline text-xs font-black text-slate-500 group-hover:text-amber-500 transition-colors">{doc.limit}</span>
+                                <ChevronDown className="w-4 h-4 text-slate-600 md:hidden -rotate-90 opacity-50" />
                             </div>
                         </div>
                         ))}
@@ -340,68 +344,68 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
 
         </div>
-
-        {/* 4. Bottom Pricing Row - Bigger & bolder */}
-        <div className="flex-none grid grid-cols-1 md:grid-cols-3 gap-6 pt-2 pb-2">
+3 md:gap-6 pt-0 md:pt-2 pb-6 md:pb-2">
             
             {/* STANDARD */}
-            <div className="relative group overflow-hidden rounded-xl border border-slate-600 bg-gradient-to-b from-slate-800 to-slate-950 p-4 shadow-xl hover:border-slate-400 transition-all cursor-pointer">
+            <div className="relative group overflow-hidden rounded-xl border border-slate-600 bg-gradient-to-r md:bg-gradient-to-b from-slate-900 via-slate-800 to-slate-950 p-4 shadow-xl hover:border-slate-400 transition-all cursor-pointer">
                 <div className="absolute inset-0 bg-blue-500/5 group-hover:bg-blue-500/10 transition-colors"></div>
-                <div className="flex items-center justify-between relative z-10">
-                     <div className="flex items-center gap-4">
-                        <div className="bg-slate-700/50 p-2.5 rounded-lg border border-slate-500/50">
-                            <Shield className="w-6 h-6 text-slate-300" />
+                <div className="flex items-center justify-between relative z-10 w-full">
+                     <div className="flex items-center gap-3 md:gap-4">
+                        <div className="bg-slate-700/50 p-2 md:p-2.5 rounded-lg border border-slate-500/50">
+                            <Shield className="w-5 h-5 md:w-6 md:h-6 text-slate-300" />
                         </div>
                         <div>
-                            <div className="font-black text-lg text-slate-200 tracking-wide">STANDART</div>
-                            <div className="text-[10px] text-slate-400 font-black uppercase tracking-wider">Standart Doküman Limiti</div>
+                            <div className="font-black text-base md:text-lg text-slate-200 tracking-wide">STANDART</div>
+                            <div className="text-[9px] md:text-[10px] text-slate-400 font-black uppercase tracking-wider">Standart Limit</div>
                         </div>
                     </div>
                      <div className="flex flex-col items-end">
-                        <span className="text-2xl font-black text-white drop-shadow-md">100 TL</span>
-                        <button onClick={() => onNavigate('subscription')} className="mt-1 bg-slate-700 hover:bg-slate-600 text-white text-[10px] font-bold px-3 py-1 rounded shadow-lg border border-slate-500 uppercase tracking-widest transition-colors">SATIN AL</button>
+                        <span className="text-xl md:text-2xl font-black text-white drop-shadow-md">100 TL</span>
+                        <button onClick={() => onNavigate('subscription')} className="mt-1 bg-slate-700 hover:bg-slate-600 text-white text-[9px] md:text-[10px] font-bold px-3 py-1 rounded shadow-lg border border-slate-500 uppercase tracking-widest transition-colors">SATIN AL</button>
                     </div>
                 </div>
             </div>
 
              {/* GOLD - The Hero Card */}
-            <div className="relative group overflow-hidden rounded-xl border-2 border-amber-500/70 bg-gradient-to-b from-amber-950/40 to-black p-4 shadow-[0_0_30px_rgba(245,158,11,0.15)] hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] transition-all cursor-pointer transform md:-translate-y-4 z-20">
-                 <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-[10px] font-black px-4 py-0.5 rounded-b shadow z-20 tracking-widest uppercase">Önerilen</div>
+            <div className="relative group overflow-hidden rounded-xl border-2 border-amber-500/70 bg-gradient-to-r md:bg-gradient-to-b from-amber-950/40 via-amber-900/20 to-black p-4 shadow-[0_0_30px_rgba(245,158,11,0.15)] hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] transition-all cursor-pointer transform md:-translate-y-4 z-20 md:order-none -order-1">
+                 <div className="absolute top-0 right-0 md:left-1/2 md:-translate-x-1/2 md:right-auto bg-amber-500 text-black text-[9px] md:text-[10px] font-black px-3 md:px-4 py-0.5 rounded-bl-lg md:rounded-b shadow z-20 tracking-widest uppercase">Önerilen</div>
                  {/* Internal Glow */}
                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 to-transparent opacity-50"></div>
                  
-                 <div className="flex items-center justify-between relative z-10 mt-1">
-                     <div className="flex items-center gap-4">
-                        <div className="bg-amber-500/20 p-2.5 rounded-lg border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-                            <Shield className="w-8 h-8 text-amber-500" />
+                 <div className="flex items-center justify-between relative z-10 mt-1 w-full">
+                     <div className="flex items-center gap-3 md:gap-4">
+                        <div className="bg-amber-500/20 p-2 md:p-2.5 rounded-lg border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                            <Shield className="w-6 h-6 md:w-8 md:h-8 text-amber-500" />
                         </div>
                         <div>
-                            <div className="font-black text-2xl text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 tracking-wide drop-shadow-sm">GOLD</div>
-                            <div className="text-[10px] text-amber-200/70 font-black uppercase tracking-wider">2 Kat Doküman Limiti</div>
+                            <div className="font-black text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 tracking-wide drop-shadow-sm">GOLD</div>
+                            <div className="text-[9px] md:text-[10px] text-amber-200/70 font-black uppercase tracking-wider">2 Kat Limit</div>
                         </div>
                     </div>
                      <div className="flex flex-col items-end">
-                        <span className="text-3xl font-black text-amber-500 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">175 TL</span>
-                        <button onClick={() => onNavigate('subscription')} className="mt-1 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black text-xs font-black px-6 py-1.5 rounded shadow-lg shadow-amber-900/20 border border-amber-400 uppercase tracking-widest transition-all hover:scale-105">SATIN AL</button>
+                        <span className="text-2xl md:text-3xl font-black text-amber-500 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">175 TL</span>
+                        <button onClick={() => onNavigate('subscription')} className="mt-1 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black text-[10px] md:text-xs font-black px-4 md:px-6 py-1.5 rounded shadow-lg shadow-amber-900/20 border border-amber-400 uppercase tracking-widest transition-all hover:scale-105">SATIN AL</button>
                     </div>
                 </div>
             </div>
 
             {/* PREMIUM */}
-            <div className="relative group overflow-hidden rounded-xl border border-purple-500/50 bg-gradient-to-b from-purple-950/40 to-slate-950 p-4 shadow-xl hover:border-purple-400/70 transition-all cursor-pointer">
+            <div className="relative group overflow-hidden rounded-xl border border-purple-500/50 bg-gradient-to-r md:bg-gradient-to-b from-purple-950/40 via-purple-900/20 to-slate-950 p-4 shadow-xl hover:border-purple-400/70 transition-all cursor-pointer">
                 <div className="absolute inset-0 bg-purple-500/5 group-hover:bg-purple-500/10 transition-colors"></div>
-                <div className="flex items-center justify-between relative z-10">
-                     <div className="flex items-center gap-4">
-                        <div className="bg-purple-900/40 p-2.5 rounded-lg border border-purple-500/40">
-                            <CheckCircle2 className="w-6 h-6 text-purple-400" />
+                <div className="flex items-center justify-between relative z-10 w-full">
+                     <div className="flex items-center gap-3 md:gap-4">
+                        <div className="bg-purple-900/40 p-2 md:p-2.5 rounded-lg border border-purple-500/40">
+                            <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
                         </div>
                         <div>
-                            <div className="font-black text-lg text-purple-300 tracking-wide">PREMİUM</div>
-                            <div className="text-[10px] text-purple-200/50 font-black uppercase tracking-wider">3 Kat Doküman Limiti</div>
+                            <div className="font-black text-base md:text-lg text-purple-300 tracking-wide">PREMİUM</div>
+                            <div className="text-[9px] md:text-[10px] text-purple-200/50 font-black uppercase tracking-wider">3 Kat Limit</div>
                         </div>
                     </div>
                      <div className="flex flex-col items-end">
-                         <span className="text-xs text-slate-500 line-through decoration-red-500/50 font-bold">350 TL</span>
+                         <span className="text-[10px] md:text-xs text-slate-500 line-through decoration-red-500/50 font-bold">350 TL</span>
+                        <span className="text-xl md:text-2xl font-black text-white drop-shadow-md">250 TL</span>
+                        <button onClick={() => onNavigate('subscription')} className="mt-1 bg-purple-900/60 hover:bg-purple-800/60 text-purple-100 text-[9px] md:
                         <span className="text-2xl font-black text-white drop-shadow-md">250 TL</span>
                         <button onClick={() => onNavigate('subscription')} className="mt-1 bg-purple-900/60 hover:bg-purple-800/60 text-purple-100 text-[10px] font-bold px-3 py-1 rounded shadow-lg border border-purple-500/30 uppercase tracking-widest transition-colors">SATIN AL</button>
                     </div>
