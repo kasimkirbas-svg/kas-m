@@ -155,7 +155,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="flex-1 p-3 md:p-5 gap-4 flex flex-col w-full max-w-[1920px] mx-auto z-10 overflow-hidden relative">
         
         {/* 2. Top Sectors Row - Highly Stylized Cards */}
-        <div className="flex-none h-48 w-full overflow-x-auto custom-scrollbar pb-4 pt-2 px-2">
+        <div className="flex-none h-48 w-full overflow-x-auto no-scrollbar pb-4 pt-2 px-2">
             <div className="flex gap-5 h-full min-w-max">
             {sectors.map((sector) => (
                 <div 
