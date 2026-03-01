@@ -25,7 +25,8 @@ import {
   Hammer,
   Beaker,
   ShoppingBag,
-  Store
+  Store,
+  Wallet
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 
@@ -60,7 +61,7 @@ const SECTORS = [
     id: 'mine', 
     name: 'MADEN', 
     icon: Pickaxe, 
-    image: 'https://images.unsplash.com/photo-1579567953683-125032890533?auto=format&fit=crop&q=80&w=600',
+    image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=600',
     color: 'bg-amber-500', 
     docs: ['Patlatma Raporu', 'Gaz Ölçüm', 'Vardiya Çizelgesi', 'Risk Analizi']
   },
@@ -91,8 +92,8 @@ const SECTORS = [
   { 
     id: 'small_business', 
     name: 'KÜÇÜK İŞLETME', 
-    icon: Store, 
-    image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=600',
+    icon: Wallet, 
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&q=80&w=600',
     color: 'bg-purple-600', 
     docs: ['Cari Hesap', 'Müşteri Kayıt', 'Satış Fişi', 'Stok Takip']
   }
@@ -129,7 +130,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
       </div>
 
       {/* Sectors Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-12 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+      <div className="grid grid-cols-2 lg:grid-cols-7 gap-3 mb-12 animate-slide-up" style={{ animationDelay: '0.2s' }}>
         {SECTORS.map((sector, index) => (
           <div 
             key={sector.id}
@@ -137,8 +138,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
             onMouseLeave={() => setActiveSector(null)}
             onClick={() => setActiveSector(activeSector === sector.id ? null : sector.id)}
             className={`
-              relative h-40 rounded-2xl border border-white/10 shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer group select-none
-              ${index === SECTORS.length - 1 ? 'col-span-2 md:col-span-2 lg:col-span-1' : ''}
+              relative h-32 md:h-40 rounded-2xl border border-white/10 shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer group select-none
+              ${index === SECTORS.length - 1 ? 'col-span-2 lg:col-span-1' : ''}
               ${activeSector === sector.id ? 'ring-2 ring-yellow-500/50 shadow-[0_0_30px_rgba(234,179,8,0.2)] -translate-y-2 scale-105 z-10' : 'hover:border-white/30 hover:shadow-lg hover:-translate-y-1'}
             `}
           >
