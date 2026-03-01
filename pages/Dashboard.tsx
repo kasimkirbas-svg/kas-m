@@ -23,13 +23,62 @@ export const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   
   const sectors = [
-    { id: 'factory', title: 'FABRİKA', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400', searchQuery: 'Üretim', icon: Factory },
-    { id: 'company', title: 'ŞİRKET', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400', searchQuery: 'Kurumsal', icon: Building2 },
-    { id: 'mine', title: 'MADEN', image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=400', searchQuery: 'Maden', icon: Hammer }, // Hammer is closest to pickaxe/helmet
-    { id: 'construction', title: 'İNŞAAT', image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400', searchQuery: 'İnşaat', icon: HardHat },
-    { id: 'energy', title: 'ENERJİ', image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=400', searchQuery: 'Enerji', icon: Zap },
-    { id: 'chemistry', title: 'KİMYA', image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=400', searchQuery: 'Kimya', icon: Beaker },
-    { id: 'small_business', title: 'KÜÇÜK İŞLETME', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=400', searchQuery: 'Esnaf', icon: Store }
+    { 
+        id: 'factory', 
+        title: 'FABRİKA', 
+        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400', 
+        searchQuery: 'Üretim', 
+        icon: Factory,
+        items: ['Üretim Takip', 'Makine Bakım', 'Vardiya Listesi', 'Kalite Kontrol', 'Stok Sayım'] 
+    },
+    { 
+        id: 'company', 
+        title: 'ŞİRKET', 
+        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400', 
+        searchQuery: 'Kurumsal', 
+        icon: Building2,
+        items: ['Personel Özlük', 'İzin Formları', 'Toplantı Tutanak', 'Zimmet Formu', 'Masraf Formu']
+    },
+    { 
+        id: 'mine', 
+        title: 'MADEN İŞLEMLERİ', 
+        image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=400', 
+        searchQuery: 'Maden', 
+        icon: Hammer,
+        items: ['Patlatma Raporu', 'Gaz Ölçüm', 'Ocak Planı', 'Ekipman Takip', 'Acil Durum']
+    },
+    { 
+        id: 'construction', 
+        title: 'İNŞAAT', 
+        image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400', 
+        searchQuery: 'İnşaat', 
+        icon: HardHat,
+        items: ['Şantiye Defteri', 'Hakediş Raporu', 'İş Güvenliği', 'Malzeme Takip', 'Proje Planı']
+    },
+    { 
+        id: 'energy', 
+        title: 'ENERJİ', 
+        image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=400', 
+        searchQuery: 'Enerji', 
+        icon: Zap,
+        items: ['Trafo Bakım', 'Sayaç Okuma', 'Kesinti Raporu', 'Hat Kontrol', 'Enerji Analizi']
+    },
+    { 
+        id: 'chemistry', 
+        title: 'KİMYA', 
+        image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=400', 
+        searchQuery: 'Kimya', 
+        icon: Beaker,
+        items: ['MSDS Formları', 'Laboratuvar', 'Atık Yönetimi', 'Stok Takip', 'Kalite Analiz']
+    },
+    { 
+        id: 'small_business', 
+        title: 'KÜÇÜK İŞLETME', 
+        image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=400', 
+        searchQuery: 'Esnaf', 
+        icon: Store,
+        items: ['Cari Hesap', 'Stok Durumu', 'Fatura Kes', 'Personel', 'Vergi Takip']
+    }
   ];
 
   const documents = [
@@ -68,26 +117,47 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="h-px w-full max-w-4xl mx-auto bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent mt-4"></div>
       </div>
 
-      {/* SECTORS GRID */}
+      {/* SECTORS GRID (Updated Dimensions and Hover Interactivity) */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
         {sectors.map((sector) => (
           <div 
             key={sector.id}
             onClick={() => onNavigate('templates', { category: sector.searchQuery })}
-            className={`group relative h-28 rounded-xl overflow-hidden cursor-pointer border border-white/10 hover:border-yellow-500/50 transition-all hover:-translate-y-1 ${
+            className={`group relative h-40 md:h-48 rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-yellow-500/50 transition-all hover:shadow-[0_0_25px_rgba(234,179,8,0.2)] ${
                sector.id === 'mine' ? 'border-yellow-500 ring-1 ring-yellow-500/20' : ''
             }`}
           >
+            {/* Background Image */}
             <div className="absolute inset-0">
-              <img src={sector.image} alt={sector.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+              <img src={sector.image} alt={sector.title} className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
             </div>
             
-            <div className="absolute inset-0 flex flex-col items-center justify-end p-3 text-center">
-              <div className="mb-1 p-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/10 group-hover:bg-yellow-500 group-hover:text-black transition-colors">
-                 <sector.icon size={16} />
+            {/* Default State Content (Icon & Title) */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center transition-all duration-300 group-hover:opacity-0 group-hover:-translate-y-4">
+              <div className="mb-3 p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 shadow-lg">
+                 <sector.icon size={20} className="text-white" />
               </div>
-              <span className="text-[10px] md:text-xs font-bold tracking-wider uppercase">{sector.title}</span>
+              <span className="text-xs md:text-sm font-black tracking-wider uppercase drop-shadow-lg">{sector.title}</span>
+            </div>
+
+            {/* Hover State Content (Document List) */}
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm p-4 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-center">
+                <div className="flex items-center gap-2 mb-3 border-b border-white/20 pb-2">
+                    <sector.icon size={14} className="text-yellow-500" />
+                    <span className="text-[10px] font-bold text-yellow-500 uppercase tracking-widest">{sector.title}</span>
+                </div>
+                <div className="space-y-1.5">
+                    {sector.items.slice(0, 4).map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                            <div className="w-1 h-1 rounded-full bg-yellow-500"></div>
+                            <span className="text-[10px] text-slate-300 font-medium truncate">{item}</span>
+                        </div>
+                    ))}
+                    {sector.items.length > 4 && (
+                        <div className="text-[9px] text-yellow-500/70 pl-3">ve {sector.items.length - 4} tane daha...</div>
+                    )}
+                </div>
             </div>
           </div>
         ))}
