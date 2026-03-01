@@ -100,7 +100,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     ]
   };
 
-  const currentRightSideMenu = hoveredSector ? (sectorMenus[hoveredSector] || defaultRightSideMenu) : defaultRightSideMenu;
+  const currentRightSideMenu = defaultRightSideMenu;
 
   const documentList = [
     { icon: FileCheck, name: 'Risk Analiz Raporu', limit: '10 ADET / AY', color: 'text-blue-400', bg: 'bg-blue-900/20', border: 'border-blue-500/30' },
@@ -163,32 +163,53 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     onClick={() => onNavigate('templates', { category: sector.searchQuery })}
                     onMouseEnter={() => setHoveredSector(sector.id)}
                     onMouseLeave={() => setHoveredSector(null)}
-                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-300 w-40 md:w-64 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-white/40 ring-1 ring-black/40 shadow-xl`}
+                    className={`group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-slate-700 bg-slate-900 transition-all duration-500 ease-out w-40 md:w-64 hover:w-80 h-full flex flex-col shrink-0 hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] hover:border-amber-500/40 ring-1 ring-black/40 shadow-xl`}
                 >
                     {/* Background Image - Full Color but Darkened */}
                     <div className="absolute inset-0">
-                         <img src={sector.image} alt={sector.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-[0.6] group-hover:brightness-[0.8]" />
-                         <div className={`absolute inset-0 bg-gradient-to-t ${sector.gradient} to-transparent opacity-60 mix-blend-overlay group-hover:opacity-80 transition-opacity`}></div>
-                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/90"></div>
+                         <img src={sector.image} alt={sector.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter brightness-[0.6] group-hover:brightness-[0.4] group-hover:blur-sm" />
+                         <div className={`absolute inset-0 bg-gradient-to-t ${sector.gradient} to-transparent opacity-60 mix-blend-overlay group-hover:opacity-90 transition-opacity`}></div>
+                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/90 group-hover:via-black/60 group-hover:to-black"></div>
                     </div>
                     
                     {/* Top Status Indicators */}
-                    <div className="absolute top-3 right-3 flex gap-1 z-20">
+                    <div className="absolute top-3 right-3 flex gap-1 z-20 group-hover:opacity-0 transition-opacity">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_#10b981] animate-pulse"></div>
                     </div>
 
-                    {/* Content Container - Bottom Aligned */}
-                    <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col items-center z-20 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <div className={`p-3 rounded-xl border border-white/20 backdrop-blur-md mb-2 shadow-lg group-hover:scale-110 transition-transform duration-300 bg-white/10`}>
+                    {/* Default Content - Fades Out on Hover */}
+                    <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col items-center z-20 transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-4">
+                        <div className={`p-3 rounded-xl border border-white/20 backdrop-blur-md mb-2 shadow-lg bg-white/10`}>
                             <sector.icon className="w-6 h-6 text-white drop-shadow-md" />
                         </div>
                         
                         <h3 className="text-white font-black text-lg tracking-widest uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-center w-full pb-2 mb-2 transition-colors">
                             {sector.title}
                         </h3>
-                        
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                             <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider bg-black/60 px-2 py-1 rounded border border-amber-500/30">Hızlı İşlem</span>
+                    </div>
+
+                    {/* Hover Content - Fades In */}
+                    <div className="absolute inset-0 z-30 p-4 flex flex-col opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-500 delay-100 translate-y-4 group-hover:translate-y-0">
+                        <div className="flex items-center gap-2 mb-3 border-b border-white/20 pb-2">
+                             <sector.icon className="w-4 h-4 text-amber-500" />
+                             <h3 className="text-white font-black text-sm tracking-wider uppercase">{sector.title} İŞLEMLERİ</h3>
+                        </div>
+                        <div className="flex flex-col gap-1 overflow-y-auto custom-scrollbar">
+                           {(sectorMenus[sector.id] || defaultRightSideMenu).map((item, idx) => (
+                               <button 
+                                   key={idx}
+                                   onClick={(e) => {
+                                       e.stopPropagation();
+                                       onNavigate('templates', { category: item.label.split(' ')[1] || item.label });
+                                   }}
+                                   className="flex items-center gap-2 p-2 rounded hover:bg-white/10 transition-colors text-left group/item"
+                               >
+                                   <div className="p-1 rounded bg-slate-800/50 group-hover/item:bg-amber-500/20 transition-colors">
+                                       <item.icon className="w-3 h-3 text-slate-300 group-hover/item:text-amber-500" />
+                                   </div>
+                                   <span className="text-[10px] font-bold text-slate-300 group-hover/item:text-white uppercase tracking-tight">{item.label}</span>
+                               </button>
+                           ))}
                         </div>
                     </div>
                 </div>
@@ -279,9 +300,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <div className="bg-slate-900/80 rounded-lg overflow-hidden flex flex-col shadow-lg border border-slate-700/50 backdrop-blur-sm">
                     {currentRightSideMenu.map((item, i) => (
                         <button key={i} onClick={() => onNavigate('templates', { category: item.label.split(' ')[1] || item.label })} className="flex items-center gap-3 px-4 py-3 bg-transparent hover:bg-slate-800 border-b border-slate-700/50 last:border-0 transition-all group text-left relative overflow-hidden">
-                             <div className={`absolute left-0 top-0 bottom-0 w-[3px] transition-colors ${hoveredSector ? 'bg-amber-500' : 'bg-slate-700 group-hover:bg-amber-500'}`}></div>
-                            <item.icon className={`w-4 h-4 transition-colors ${hoveredSector ? 'text-amber-500' : 'text-slate-500 group-hover:text-amber-500'}`} />
-                            <span className={`text-xs font-bold uppercase tracking-tight transition-colors ${hoveredSector ? 'text-white' : 'text-slate-400 group-hover:text-slate-100'}`}>{item.label}</span>
+                             <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-700 group-hover:bg-amber-500 transition-colors"></div>
+                            <item.icon className="w-4 h-4 text-slate-500 group-hover:text-amber-500 transition-colors" />
+                            <span className="text-xs font-bold text-slate-400 group-hover:text-slate-100 uppercase tracking-tight">{item.label}</span>
                         </button>
                     ))}
                 </div>
