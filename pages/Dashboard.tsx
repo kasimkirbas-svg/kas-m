@@ -296,17 +296,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
             {/* Right Sidebar - 3/12 Columns */}
             <div className="lg:col-span-3 flex flex-col gap-3 h-full overflow-hidden">
-                {/* Visual Menu List */}
-                <div className="bg-slate-900/80 rounded-lg overflow-hidden flex flex-col shadow-lg border border-slate-700/50 backdrop-blur-sm">
-                    {currentRightSideMenu.map((item, i) => (
-                        <button key={i} onClick={() => onNavigate('templates', { category: item.label.split(' ')[1] || item.label })} className="flex items-center gap-3 px-4 py-3 bg-transparent hover:bg-slate-800 border-b border-slate-700/50 last:border-0 transition-all group text-left relative overflow-hidden">
-                             <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-700 group-hover:bg-amber-500 transition-colors"></div>
-                            <item.icon className="w-4 h-4 text-slate-500 group-hover:text-amber-500 transition-colors" />
-                            <span className="text-xs font-bold text-slate-400 group-hover:text-slate-100 uppercase tracking-tight">{item.label}</span>
-                        </button>
-                    ))}
-                </div>
-
                 {/* Big Action Buttons - Enhanced */}
                 <div className="flex flex-col gap-2 mt-auto">
                     <div className="flex items-center gap-2 justify-center mb-1">
