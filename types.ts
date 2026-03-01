@@ -8,7 +8,9 @@ export enum SubscriptionPlan {
   FREE = 'FREE',
   STANDART = 'STANDART',
   GOLD = 'GOLD',
-  PREMIUM = 'PREMIUM'
+  PREMIUM = 'PREMIUM',
+  YEARLY = 'YEARLY',
+  MONTHLY = 'MONTHLY'
 }
 
 export interface User {
@@ -59,7 +61,7 @@ export interface DocumentTemplate {
 export interface DocumentField {
   key: string;
   label: string;
-  type: 'text' | 'date' | 'textarea' | 'list' | 'number' | 'email' | 'select' | 'checkbox';
+  type: 'text' | 'date' | 'datetime-local' | 'textarea' | 'list' | 'number' | 'email' | 'select' | 'checkbox';
   placeholder?: string;
   required?: boolean;
   options?: string[]; // For select/list types

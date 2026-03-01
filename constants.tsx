@@ -1,4 +1,4 @@
-import { DocumentTemplate, SubscriptionPlan } from './types';
+import { DocumentTemplate, SubscriptionPlan, UserRole } from './types';
 
 export const APP_NAME = "Kırbaş Doküman";
 
@@ -958,9 +958,9 @@ export const ADMIN_USER = {
   email: 'admin@kirbas.com',
   password: 'Admin123456',
   companyName: 'Kırbaş Doküman Yazılımları',
-  role: 'ADMIN',
-  plan: 'YEARLY',
-  remainingDownloads: 'UNLIMITED',
+  role: UserRole.ADMIN,
+  plan: SubscriptionPlan.YEARLY,
+  remainingDownloads: 'UNLIMITED' as const,
   subscriptionStartDate: new Date().toISOString(),
   isActive: true
 };
