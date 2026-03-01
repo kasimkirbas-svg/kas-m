@@ -1,12 +1,12 @@
 import React from 'react';
 import { 
-  Factory, Building2, Store, Zap, Beaker, HardHat, 
-  FileText, Shield, AlertTriangle, Flame, Activity, 
-  CheckCircle2, Clock, History, Award, ChevronRight,
-  Plus, ClipboardList, Archive, MousePointer2, Hammer
+  Factory, Building2, Hotel, HardHat, Store, 
+  Star, Zap, Beaker, Hammer, 
+  FilePlus, FileText, ClipboardList, PenTool, TrendingUp, User as UserIcon, 
+  Settings, Calendar, ArrowRight, Download, Eye, Plus, ChevronRight, Target, 
+  Briefcase, Sparkles, PieChart, Activity, CheckCircle2, Shield 
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
-import { PLANS } from '../constants';
 
 interface DashboardProps {
   user: User;
@@ -18,259 +18,195 @@ interface DashboardProps {
   savedDocuments?: GeneratedDocument[];
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ 
-  user, t, onNavigate 
-}) => {
+export const Dashboard: React.FC<DashboardProps> = ({ user, t, onNavigate, onTemplateSelect, templates, recentDocuments = [], savedDocuments = [] }) => {
+  const companyName = user.companyName || 'Şirket Adı Yok';
   
+  // Sector Columns Configuration (Restored V2 Style with New Categories)
   const sectors = [
-    { 
-        id: 'factory', 
-        title: 'FABRİKA', 
-        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400', 
-        searchQuery: 'Üretim', 
-        icon: Factory,
-        items: ['Üretim Takip', 'Makine Bakım', 'Vardiya Listesi', 'Kalite Kontrol', 'Stok Sayım'] 
+    {
+      id: 'factory',
+      title: 'FABRİKA',
+      subtitle: 'Üretim ve İmalat',
+      icon: Factory,
+      image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400', 
+      color: 'bg-rose-600',
+      items: ['İş Güvenliği', 'İş Takibi', 'Puantaj', 'İş Sırası', 'İş Emri'],
+      searchQuery: 'Üretim'
+    },
+    {
+      id: 'corporate',
+      title: 'OFİS / ŞİRKET',
+      subtitle: 'Kurumsal Çözümler',
+      icon: Building2,
+      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400',
+      color: 'bg-emerald-600',
+      items: ['Toplantı Tutanak', 'İnsan Kaynakları', 'Zimmet Formu', 'İzin Formu', 'Masraf Formu'],
+      searchQuery: 'Kurumsal'
+    },
+    {
+       id: 'mine', 
+       title: 'MADEN', 
+       subtitle: 'Maden İşlemleri',
+       image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=400', 
+       searchQuery: 'Maden', 
+       icon: Hammer,
+       color: 'bg-orange-600',
+       items: ['Patlatma Raporu', 'Gaz Ölçüm', 'Ocak Planı', 'Ekipman Takip', 'Acil Durum']
+    },
+    {
+      id: 'construction',
+      title: 'İNŞAAT',
+      subtitle: 'Şantiye Yönetimi',
+      icon: HardHat,
+      image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=400',
+      color: 'bg-violet-600',
+      items: ['Saha Kontrol', 'Hakediş', 'İş Makineleri', 'Taşeron Takip', 'Günlük Rapor'],
+      searchQuery: 'İnşaat'
     },
     { 
-        id: 'company', 
-        title: 'ŞİRKET', 
-        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400', 
-        searchQuery: 'Kurumsal', 
-        icon: Building2,
-        items: ['Personel Özlük', 'İzin Formları', 'Toplantı Tutanak', 'Zimmet Formu', 'Masraf Formu']
+       id: 'energy', 
+       title: 'ENERJİ', 
+       subtitle: 'Enerji Yönetimi',
+       image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=400', 
+       searchQuery: 'Enerji', 
+       icon: Zap,
+       color: 'bg-blue-600',
+       items: ['Trafo Bakım', 'Sayaç Okuma', 'Kesinti Raporu', 'Hat Kontrol', 'Enerji Analizi']
     },
     { 
-        id: 'mine', 
-        title: 'MADEN İŞLEMLERİ', 
-        image: 'https://images.unsplash.com/photo-1516937941344-00b4ec0c9038?auto=format&fit=crop&q=80&w=400', 
-        searchQuery: 'Maden', 
-        icon: Hammer,
-        items: ['Patlatma Raporu', 'Gaz Ölçüm', 'Ocak Planı', 'Ekipman Takip', 'Acil Durum']
+       id: 'chemistry', 
+       title: 'KİMYA', 
+       subtitle: 'Kimyasal Süreçler',
+       image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=400', 
+       searchQuery: 'Kimya', 
+       icon: Beaker,
+       color: 'bg-teal-500',
+       items: ['MSDS Formları', 'Laboratuvar', 'Atık Yönetimi', 'Stok Takip', 'Kalite Analiz']
     },
-    { 
-        id: 'construction', 
-        title: 'İNŞAAT', 
-        image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=400', 
-        searchQuery: 'İnşaat', 
-        icon: HardHat,
-        items: ['Şantiye Defteri', 'Hakediş Raporu', 'İş Güvenliği', 'Malzeme Takip', 'Proje Planı']
-    },
-    { 
-        id: 'energy', 
-        title: 'ENERJİ', 
-        image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=400', 
-        searchQuery: 'Enerji', 
-        icon: Zap,
-        items: ['Trafo Bakım', 'Sayaç Okuma', 'Kesinti Raporu', 'Hat Kontrol', 'Enerji Analizi']
-    },
-    { 
-        id: 'chemistry', 
-        title: 'KİMYA', 
-        image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=400', 
-        searchQuery: 'Kimya', 
-        icon: Beaker,
-        items: ['MSDS Formları', 'Laboratuvar', 'Atık Yönetimi', 'Stok Takip', 'Kalite Analiz']
-    },
-    { 
-        id: 'small_business', 
-        title: 'KÜÇÜK İŞLETME', 
-        image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=400', 
-        searchQuery: 'Esnaf', 
-        icon: Store,
-        items: ['Cari Hesap', 'Stok Durumu', 'Fatura Kes', 'Personel', 'Vergi Takip']
+    {
+      id: 'smallres',
+      title: 'KÜÇÜK İŞLETME',
+      subtitle: 'Esnaf ve KOBİ',
+      icon: Store,
+      image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=400',
+      color: 'bg-pink-600',
+      items: ['Satış Takip', 'Stok Sayım', 'Cari Hesap', 'Teklif Hazırla', 'Tahsilat'],
+      searchQuery: 'Esnaf'
     }
   ];
 
-  const documents = [
-    { name: 'Risk Analiz Raporu', icon: FileText, color: 'text-blue-400', limit: 10, used: 2 },
-    { name: 'Patlayıcıdan Korunma Dök.', icon: AlertTriangle, color: 'text-orange-400', limit: 10, used: 4 },
-    { name: 'Yangından Korunma Dök.', icon: Flame, color: 'text-red-400', limit: 10, used: 1 },
-    { name: 'Yüksekte Çalışma Dök.', icon: HardHat, color: 'text-blue-300', limit: 10, used: 0 },
-    { name: 'Elektrik İşlerinde Dök.', icon: Zap, color: 'text-yellow-400', limit: 200, used: 15 },
-    { name: 'İşe Başlama Eğitim Dök.', icon: CheckCircle2, color: 'text-green-400', limit: 200, used: 45 },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#0f1115] text-white p-6 font-sans">
+    <div className="space-y-8 animate-fade-in pb-12 relative min-h-screen flex flex-col p-6 bg-[#0f1115]">
       
       {/* HEADER */}
-      <div className="text-center mb-8 pt-4">
-        <h1 className="text-3xl md:text-4xl font-black tracking-wider text-white mb-2 uppercase" 
-            style={{ textShadow: '0 0 20px rgba(255,255,255,0.1)' }}>
-          YILLIK DOKÜMANLAR <span className="text-yellow-500">&</span> İŞ TAKİP PANELİ
-        </h1>
-        <div className="flex items-center justify-center gap-4 text-xs md:text-sm font-bold text-yellow-500/80 tracking-widest uppercase">
-          <span>FABRİKA</span>
-          <span>•</span>
-          <span>ŞİRKET</span>
-          <span>•</span>
-          <span>MADEN</span>
-          <span>•</span>
-          <span>İNŞAAT</span>
-          <span>•</span>
-          <span>ENERJİ</span>
-          <span>•</span>
-          <span>KİMYA</span>
-          <span>•</span>
-          <span>KÜÇÜK İŞLETME</span>
-        </div>
-        <div className="h-px w-full max-w-4xl mx-auto bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent mt-4"></div>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
+         <div>
+            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+              YILLIK DOKÜMAN YÖNETİM PANELİ
+            </h1>
+            <p className="text-sm md:text-base text-slate-400 font-medium">
+               Sektörel İş Analizi ve Doküman Takip Sistemi
+            </p>
+         </div>
       </div>
 
-      {/* SECTORS GRID */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
-        {sectors.map((sector) => (
-          <div 
-            key={sector.id}
-            onClick={() => onNavigate('templates', { category: sector.searchQuery })}
-            className={`group relative h-24 md:h-28 rounded-xl overflow-hidden cursor-pointer border border-white/10 hover:border-yellow-500/50 transition-all hover:-translate-y-1 ${
-               sector.id === 'mine' ? 'border-yellow-500 ring-1 ring-yellow-500/20' : ''
-            }`}
-          >
-            {/* Background Image */}
-            <div className="absolute inset-0">
-              <img src={sector.image} alt={sector.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-            </div>
-            
-            {/* Content Container */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-2 text-center">
-              
-              {/* Icon & Title (Slide up on hover) */}
-              <div className="flex flex-col items-center justify-center transition-all duration-300 group-hover:-translate-y-2">
-                 <div className="mb-2 p-1.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/10 shadow-lg group-hover:bg-yellow-500 group-hover:text-black transition-colors">
-                    <sector.icon size={18} />
-                 </div>
-                 <span className="text-[10px] md:text-xs font-bold tracking-wider uppercase drop-shadow-md">{sector.title}</span>
-              </div>
-
-              {/* Scrollable List (Visible on hover) */}
-              <div className="absolute top-1/2 left-0 w-full h-1/2 pt-1 px-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 flex flex-col items-center">
-                  <div className="h-0.5 w-8 bg-yellow-500/50 mb-1 rounded-full"></div>
-                  <div className="w-full h-full overflow-y-auto scrollbar-thin scrollbar-thumb-yellow-500/50 scrollbar-track-transparent pr-1 space-y-1 text-left">
-                     {sector.items.map((item, idx) => (
-                        <div key={idx} className="text-[9px] text-slate-300 font-medium truncate pl-1 border-l-2 border-yellow-500/30 hover:border-yellow-500 hover:text-white hover:bg-white/5 transition-all">
-                           {item}
-                        </div>
-                     ))}
-                  </div>
-              </div>
-
-            </div>
-          </div>
-        ))}
-      </div>
-
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-        {/* DOCUMENT LIST (Left Column) */}
-        <div className="lg:col-span-3">
-            <div className="flex items-center justify-between mb-4 px-2">
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                    <FileText size={16} className="text-blue-500" />
-                    DOKÜMANLAR LİSTESİ
-                </h3>
-                <div className="text-[10px] font-mono text-slate-500 flex gap-4">
-                    <span>LİMİT DURUMU</span>
-                    <span>|</span>
-                    <span>ADET / AY</span>
+      {/* MAIN SECTOR COLUMNS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 gap-4 flex-1">
+          {sectors.map((sector) => (
+             <div 
+               key={sector.id}
+               onClick={() => onNavigate('templates', { category: sector.searchQuery })}
+               className="group relative h-[400px] rounded-2xl overflow-hidden cursor-pointer transition-transform hover:-translate-y-2 hover:shadow-2xl border border-slate-800 bg-slate-900"
+             >
+                {/* Background Image with Gradient Overlay */}
+                <div className="absolute inset-0">
+                   <img 
+                      src={sector.image} 
+                      alt={sector.title} 
+                      className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
+                   />
+                   <div className="absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/50 transition-colors"></div>
+                   <div className={`absolute top-0 left-0 w-full h-1 ${sector.color}`}></div>
                 </div>
-            </div>
 
-            <div className="bg-[#161922] rounded-xl border border-white/5 divide-y divide-white/5">
-                {documents.map((doc, idx) => (
-                    <div key={idx} className="p-4 flex items-center gap-4 hover:bg-white/[0.02] transition-colors group">
-                        <div className={`p-2 rounded-lg bg-white/5 ${doc.color}`}>
-                            <doc.icon size={18} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">{doc.name}</h4>
-                        </div>
-                        
-                        {/* Progress Bar Container */}
-                        <div className="flex-[2] hidden md:block px-4">
-                            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                                <div 
-                                    className={`h-full rounded-full ${doc.color.replace('text-', 'bg-')}`} 
-                                    style={{ width: `${(doc.used / doc.limit) * 100}%` }}
-                                ></div>
-                            </div>
-                        </div>
+                {/* Content */}
+                <div className="relative h-full flex flex-col p-6 z-10 text-center">
+                    
+                    {/* Icon Circle */}
+                    <div className={`mx-auto w-20 h-20 rounded-full ${sector.color} flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 transition-transform`}>
+                        <sector.icon size={32} className="text-white" />
+                    </div>
 
-                        <div className="text-xs font-mono text-slate-400 whitespace-nowrap min-w-[100px] text-right">
-                            <span className="text-white">{doc.limit}</span> ADET / AY
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
+                    <h3 className="text-xl font-black text-white tracking-wider mb-1">
+                       {sector.title}
+                    </h3>
+                    <p className="text-xs text-white/70 font-medium uppercase tracking-widest mb-8 border-b border-white/10 pb-4">
+                       {sector.subtitle}
+                    </p>
 
-        {/* QUICK ACTIONS (Right Column) */}
-        <div className="lg:col-span-1">
-            <div className="flex items-center justify-center mb-4 relative">
-                <div className="h-px bg-white/10 w-full absolute top-1/2"></div>
-                <span className="bg-[#0f1115] px-2 text-[10px] font-bold text-yellow-500 uppercase tracking-widest relative z-10">
-                    HIZLI İŞLEMLER
-                </span>
-            </div>
+                    {/* Feature List */}
+                    <div className="space-y-3 text-left pl-2">
+                       {sector.items.map((item, idx) => (
+                          <div key={idx} className="flex items-center gap-3 group/item">
+                             <div className={`w-2 h-2 rounded-full ${sector.color} group-hover/item:scale-150 transition-transform`}></div>
+                             <span className="text-sm font-medium text-slate-200 group-hover/item:text-white transition-colors">{item}</span>
+                          </div>
+                       ))}
+                    </div>
 
-            <div className="space-y-3">
-                <button 
-                  onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                  className="w-full p-4 rounded-xl bg-gradient-to-r from-blue-900/40 to-blue-800/20 border border-blue-500/30 hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)] transition-all group text-left flex items-center gap-4"
-                >
-                    <div className="p-2.5 rounded-lg bg-blue-500/20 text-blue-400 group-hover:scale-110 transition-transform">
-                        <Award size={24} />
+                    {/* Hover Action */}
+                    <div className="mt-auto pt-6 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
+                       <button className="w-full py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-xl text-white font-bold text-sm transition-all flex items-center justify-center gap-2">
+                          İncele <ChevronRight size={16} />
+                       </button>
                     </div>
-                    <div>
-                        <div className="text-[10px] text-blue-400 font-bold mb-0.5 opacity-70">YENİ ÖZELLİK</div>
-                        <div className="font-black text-sm tracking-wide">SERTİFİKA OLUŞTUR</div>
-                    </div>
-                </button>
-
-                <button 
-                  onClick={() => onNavigate('templates', { search: 'Tutanak' })}
-                  className="w-full p-4 rounded-xl bg-gradient-to-r from-orange-900/40 to-orange-800/20 border border-orange-500/30 hover:border-orange-500 hover:shadow-[0_0_20px_rgba(249,115,22,0.2)] transition-all group text-left flex items-center gap-4"
-                >
-                    <div className="p-2.5 rounded-lg bg-orange-500/20 text-orange-400 group-hover:scale-110 transition-transform">
-                        <History size={24} />
-                    </div>
-                    <div>
-                        <div className="text-[10px] text-orange-400 font-bold mb-0.5 opacity-70">YENİ KAYIT</div>
-                        <div className="font-black text-sm tracking-wide">TUTANAK TUT</div>
-                    </div>
-                </button>
-
-                <button 
-                   onClick={() => onNavigate('templates', { search: 'Rapor' })}
-                   className="w-full p-4 rounded-xl bg-gradient-to-r from-emerald-900/40 to-emerald-800/20 border border-emerald-500/30 hover:border-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)] transition-all group text-left flex items-center gap-4"
-                >
-                    <div className="p-2.5 rounded-lg bg-emerald-500/20 text-emerald-400 group-hover:scale-110 transition-transform">
-                        <Clock size={24} />
-                    </div>
-                    <div>
-                        <div className="text-[10px] text-emerald-400 font-bold mb-0.5 opacity-70">GÜNLÜK</div>
-                        <div className="font-black text-sm tracking-wide">RAPOR TUT</div>
-                    </div>
-                </button>
- 
-                <button 
-                   onClick={() => onNavigate('mydocuments')}
-                   className="w-full p-4 rounded-xl bg-gradient-to-r from-purple-900/40 to-purple-800/20 border border-purple-500/30 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)] transition-all group text-left flex items-center gap-4"
-                >
-                    <div className="p-2.5 rounded-lg bg-purple-500/20 text-purple-400 group-hover:scale-110 transition-transform">
-                        <Archive size={24} />
-                    </div>
-                    <div>
-                        <div className="text-[10px] text-purple-400 font-bold mb-0.5 opacity-70">ARŞİV</div>
-                        <div className="font-black text-sm tracking-wide">DOKÜMANLAR</div>
-                    </div>
-                </button>
-            </div>
-        </div>
+                </div>
+             </div>
+          ))}
       </div>
 
-      {/* PRICING SECTION */}
+      {/* BOTTOM QUICK ACTIONS (HIZLI İŞLEMLER) */}
+      <div className="bg-slate-900 dark:bg-slate-800 rounded-3xl p-8 border border-slate-700 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:24px_24px] opacity-20"></div>
+          
+          <h2 className="text-center text-xl font-bold text-white mb-8 tracking-widest uppercase relative z-10">
+              HIZLI İŞLEMLER
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+              <button 
+                 onClick={() => onNavigate('templates', { search: 'Sertifika' })}
+                 className="h-32 bg-rose-600 rounded-xl flex items-center justify-center gap-4 hover:bg-rose-500 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-rose-900/50 group"
+              >
+                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-rose-600 font-black text-xl group-hover:rotate-12 transition-transform">
+                    <Plus size={24} />
+                 </div>
+                 <span className="text-lg font-bold text-white tracking-wide">SERTİFİKA OLUŞTUR</span>
+              </button>
+
+              <button 
+                 onClick={() => onNavigate('templates', { search: 'Tutanak' })}
+                 className="h-32 bg-blue-600 rounded-xl flex items-center justify-center gap-4 hover:bg-blue-500 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-blue-900/50 group"
+              >
+                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold group-hover:rotate-12 transition-transform">
+                    <FileText size={24} />
+                 </div>
+                 <span className="text-lg font-bold text-white tracking-wide">TUTANAK TUT</span>
+              </button>
+
+              <button 
+                 onClick={() => onNavigate('templates', { search: 'Rapor' })}
+                 className="h-32 bg-emerald-600 rounded-xl flex items-center justify-center gap-4 hover:bg-emerald-500 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-emerald-900/50 group"
+              >
+                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-emerald-600 font-bold group-hover:rotate-12 transition-transform">
+                    <ClipboardList size={24} />
+                 </div>
+                 <span className="text-lg font-bold text-white tracking-wide">GÜNLÜK RAPOR</span>
+              </button>
+          </div>
+      </div>
+
+       {/* PRICING SECTION - Kept per request */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
          {/* STANDART */}
          <div className="bg-gradient-to-b from-[#1a2030] to-[#0f1115] rounded-xl p-3 border border-blue-900/50 flex items-center justify-between group hover:border-blue-500 transition-colors">
@@ -333,7 +269,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
          </div>
       </div>
-    
+
     </div>
   );
 };
