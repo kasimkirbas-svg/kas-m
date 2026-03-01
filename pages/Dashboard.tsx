@@ -117,13 +117,77 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="h-px w-full max-w-4xl mx-auto bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent mt-4"></div>
       </div>
 
-      {/* SECTORS GRID (Updated Dimensions and Hover Interactivity) */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
+      {/* PRICING SECTION */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+         {/* STANDART */}
+         <div className="bg-gradient-to-b from-[#1a2030] to-[#0f1115] rounded-xl p-5 border border-blue-900/50 flex items-center justify-between group hover:border-blue-500 transition-colors">
+            <div className="flex items-center gap-4">
+               <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <Shield size={24} />
+               </div>
+               <div>
+                  <h3 className="font-black text-white text-lg tracking-wide">STANDART</h3>
+                  <p className="text-[10px] text-blue-300 font-medium uppercase">Standart Doküman Limiti</p>
+               </div>
+            </div>
+            <div className="text-right">
+               <div className="text-xl font-black text-white">100 TL</div>
+               <button className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest transition-colors mt-1">
+                  SATIN AL
+               </button>
+            </div>
+         </div>
+
+         {/* GOLD */}
+         <div className="relative bg-gradient-to-b from-[#2a1e0d] to-[#0f1115] rounded-xl p-5 border border-yellow-600/50 flex items-center justify-between group hover:border-yellow-500 transition-colors shadow-lg shadow-yellow-900/10 scale-[1.02]">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-3 py-0.5 rounded text-[10px] font-black uppercase tracking-widest">
+               ÖNERİLEN
+            </div>
+            <div className="flex items-center gap-4">
+               <div className="p-3 rounded-lg bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+                  <Award size={24} />
+               </div>
+               <div>
+                  <h3 className="font-black text-yellow-500 text-lg tracking-wide">GOLD</h3>
+                  <p className="text-[10px] text-yellow-300/80 font-medium uppercase">2 Kat Doküman Limiti</p>
+               </div>
+            </div>
+            <div className="text-right">
+               <div className="text-2xl font-black text-yellow-500">175 TL</div>
+               <button className="px-4 py-1.5 rounded bg-yellow-500 hover:bg-yellow-400 text-black text-[10px] font-black uppercase tracking-widest transition-colors mt-1">
+                  SATIN AL
+               </button>
+            </div>
+         </div>
+
+         {/* PREMIUM */}
+         <div className="bg-gradient-to-b from-[#251a30] to-[#0f1115] rounded-xl p-5 border border-purple-900/50 flex items-center justify-between group hover:border-purple-500 transition-colors">
+            <div className="flex items-center gap-4">
+               <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                  <CheckCircle2 size={24} />
+               </div>
+               <div>
+                  <h3 className="font-black text-white text-lg tracking-wide">PREMIUM</h3>
+                  <p className="text-[10px] text-purple-300 font-medium uppercase">3 Kat Doküman Limiti</p>
+               </div>
+            </div>
+            <div className="text-right relative">
+                <div className="text-[10px] line-through text-slate-500 absolute -top-3 right-0">350 TL</div>
+               <div className="text-xl font-black text-white">250 TL</div>
+               <button className="px-4 py-1.5 rounded bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold uppercase tracking-widest transition-colors mt-1">
+                  SATIN AL
+               </button>
+            </div>
+         </div>
+      </div>
+
+      {/* SECTORS GRID (Updated Dimensions and Horizontal Scroll) */}
+      <div className="flex overflow-x-auto gap-4 pb-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent snap-x">
         {sectors.map((sector) => (
           <div 
             key={sector.id}
             onClick={() => onNavigate('templates', { category: sector.searchQuery })}
-            className={`group relative h-40 md:h-48 rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-yellow-500/50 transition-all hover:shadow-[0_0_25px_rgba(234,179,8,0.2)] ${
+            className={`min-w-[280px] md:min-w-[320px] snap-center group relative h-[400px] rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-yellow-500/50 transition-all hover:shadow-[0_0_25px_rgba(234,179,8,0.2)] ${
                sector.id === 'mine' ? 'border-yellow-500 ring-1 ring-yellow-500/20' : ''
             }`}
           >
@@ -271,69 +335,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* PRICING SECTION */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-         {/* STANDART */}
-         <div className="bg-gradient-to-b from-[#1a2030] to-[#0f1115] rounded-xl p-5 border border-blue-900/50 flex items-center justify-between group hover:border-blue-500 transition-colors">
-            <div className="flex items-center gap-4">
-               <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  <Shield size={24} />
-               </div>
-               <div>
-                  <h3 className="font-black text-white text-lg tracking-wide">STANDART</h3>
-                  <p className="text-[10px] text-blue-300 font-medium uppercase">Standart Doküman Limiti</p>
-               </div>
-            </div>
-            <div className="text-right">
-               <div className="text-xl font-black text-white">100 TL</div>
-               <button className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest transition-colors mt-1">
-                  SATIN AL
-               </button>
-            </div>
-         </div>
-
-         {/* GOLD */}
-         <div className="relative bg-gradient-to-b from-[#2a1e0d] to-[#0f1115] rounded-xl p-5 border border-yellow-600/50 flex items-center justify-between group hover:border-yellow-500 transition-colors shadow-lg shadow-yellow-900/10 scale-[1.02]">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-3 py-0.5 rounded text-[10px] font-black uppercase tracking-widest">
-               ÖNERİLEN
-            </div>
-            <div className="flex items-center gap-4">
-               <div className="p-3 rounded-lg bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                  <Award size={24} />
-               </div>
-               <div>
-                  <h3 className="font-black text-yellow-500 text-lg tracking-wide">GOLD</h3>
-                  <p className="text-[10px] text-yellow-300/80 font-medium uppercase">2 Kat Doküman Limiti</p>
-               </div>
-            </div>
-            <div className="text-right">
-               <div className="text-2xl font-black text-yellow-500">175 TL</div>
-               <button className="px-4 py-1.5 rounded bg-yellow-500 hover:bg-yellow-400 text-black text-[10px] font-black uppercase tracking-widest transition-colors mt-1">
-                  SATIN AL
-               </button>
-            </div>
-         </div>
-
-         {/* PREMIUM */}
-         <div className="bg-gradient-to-b from-[#251a30] to-[#0f1115] rounded-xl p-5 border border-purple-900/50 flex items-center justify-between group hover:border-purple-500 transition-colors">
-            <div className="flex items-center gap-4">
-               <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                  <CheckCircle2 size={24} />
-               </div>
-               <div>
-                  <h3 className="font-black text-white text-lg tracking-wide">PREMIUM</h3>
-                  <p className="text-[10px] text-purple-300 font-medium uppercase">3 Kat Doküman Limiti</p>
-               </div>
-            </div>
-            <div className="text-right relative">
-                <div className="text-[10px] line-through text-slate-500 absolute -top-3 right-0">350 TL</div>
-               <div className="text-xl font-black text-white">250 TL</div>
-               <button className="px-4 py-1.5 rounded bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold uppercase tracking-widest transition-colors mt-1">
-                  SATIN AL
-               </button>
-            </div>
-         </div>
-      </div>
+      
     </div>
   );
 };
