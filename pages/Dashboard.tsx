@@ -563,10 +563,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 </div>
             </div>
 
-            {/* RIGHT: Quick Actions & Archive (Sidebar) - Restored Old Style */}
+            {/* RIGHT: Quick Actions & Archive (Sidebar) - Updated Layout */}
             <div className='lg:col-span-1 flex flex-col gap-3 overflow-hidden'>
                 
-                {/* 1. SERTİFİKA OLUŞTUR (Blue Button) */}
+                {/* 1. SERTİFİKA OLUŞTUR (Blue Button) - Main Action */}
                 <button 
                     onClick={() => onNavigate('templates', { search: 'Sertifika' })}
                     className='group shrink-0 h-24 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 border border-blue-400/30 relative overflow-hidden shadow-lg shadow-blue-900/50 hover:brightness-110 transition-all flex items-center px-4 justify-between'
@@ -581,7 +581,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     </div>
                 </button>
 
-                {/* 2. HIZLI İŞLEMLER LİSTESİ (Yellow Header) */}
+                {/* 2. DÖKÜMAN ARŞİVİ (Moved separate, smaller) */}
+                <button className='shrink-0 py-3 rounded-xl bg-indigo-900/80 hover:bg-indigo-800 border border-indigo-700/50 text-indigo-100 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg'>
+                    <Archive size={16} />
+                    DÖKÜMAN ARŞİVİ
+                </button>
+
+                {/* 3. HIZLI İŞLEMLER LİSTESİ (Yellow Header) */}
                 <div className='flex-1 bg-[#15171e]/90 backdrop-blur rounded-xl border border-white/5 flex flex-col overflow-hidden shadow-2xl'>
                     
                     {/* Header */}
@@ -605,18 +611,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                     <ClipboardList size={16} />
                                 </div>
                                 <span className='tracking-wide'>GÜNLÜK RAPOR TUT</span>
-                            </button>
-                        </div>
-
-                        {/* Bottom Buttons */}
-                        <div className='flex flex-col gap-2 mt-2 pt-2 border-t border-white/5'>
-                            <button className='w-full py-3 rounded-lg bg-indigo-900/80 hover:bg-indigo-800 border border-indigo-700/50 text-indigo-100 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg'>
-                                <Archive size={14} />
-                                DÖKÜMAN ARŞİVİ
-                            </button>
-                             <button className='w-full py-3 rounded-lg bg-red-900/80 hover:bg-red-800 border border-red-700/50 text-red-100 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg'>
-                                <Download size={14} />
-                                PDF İNDİR / YAZDIR
                             </button>
                         </div>
 
