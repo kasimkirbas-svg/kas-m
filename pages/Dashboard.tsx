@@ -335,80 +335,96 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
                 </div>
             </div>
 
-            {/* Right Panel: Marble & Parchment Special */}
-            <div className="lg:col-span-1 flex flex-col gap-4 h-full">
+            {/* Right Panel: 3D Quick Actions */}
+            <div className="lg:col-span-1 flex flex-col gap-6 h-full text-center">
                  
-                 {/* 1. New Document (Marble Button) */}
-                <button 
-                  onClick={() => onNavigate('document-editor')}
-                  className="w-full py-5 rounded-2xl relative overflow-hidden group shadow-[0_10px_20px_rgba(0,0,0,0.5)] border border-white/10 btn-marble flex flex-col items-center justify-center gap-2"
-                >
-                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div className="relative z-10 flex items-center justify-center gap-4 w-full px-6">
-                        <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-[0_4px_10px_rgba(99,102,241,0.5)] border border-white/20 group-hover:scale-110 transition-transform duration-300">
-                             <Plus size={24} className="text-white drop-shadow-md" />
-                        </div>
-                        <div className="text-left flex-1">
-                             <div className="text-lg font-black text-slate-200 tracking-wide drop-shadow-sm group-hover:text-white transition-colors">YENİ OLUŞTUR</div>
-                             <div className="text-[10px] uppercase font-bold text-slate-500 tracking-widest group-hover:text-indigo-300 transition-colors">Belge Sihirbazı</div>
-                        </div>
-                    </div>
-                </button>
+                 {/* 3D Certificate Banner */}
+                 <button 
+                    onClick={() => onNavigate('templates', { search: 'Sertifika' })}
+                    className="h-44 relative rounded-2xl overflow-hidden group perspective-1000 transform transition-transform card-hover-3d border-metal active:scale-95"
+                 >
+                     <div className="absolute inset-0 bg-[#0f1015] z-0"></div>
+                     <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-blue-900/10 to-black z-0"></div>
+                     {/* Shine Sweep Effect */}
+                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shine-sweep z-10 pointer-events-none"></div>
 
-                 {/* 2. Certificate / Stats Card (Parchment & Wax Seal) */}
-                <div className="flex-1 rounded-2xl relative overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.6)] group border border-amber-900/20 bg-[#e8e4d9] min-h-[220px]">
-                    {/* Parchment Texture */}
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-paper.png')] opacity-60 mix-blend-multiply"></div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-amber-100/50 via-transparent to-amber-900/10 pointer-events-none"></div>
+                     <div className="absolute top-2 right-2 z-30">
+                         <span className="bg-yellow-500 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-[0_0_10px_rgba(234,179,8,0.5)] animate-pulse">YENİ</span>
+                     </div>
 
-                    {/* Wax Seal */}
-                     <div className="absolute -top-6 -right-6 w-24 h-24 bg-red-900 rounded-full border-4 border-red-800/80 shadow-[0_4px_10px_rgba(0,0,0,0.5)] flex items-center justify-center z-20 wax-seal transform rotate-12 group-hover:rotate-0 transition-transform duration-500">
-                        <div className="w-16 h-16 rounded-full border border-red-950/30 flex items-center justify-center bg-red-800 inset-shadow">
-                             <Shield size={32} className="text-red-950/60 drop-shadow-sm" />
-                        </div>
-                    </div>
-
-                    <div className="p-6 relative z-10 h-full flex flex-col justify-between">
+                     <div className="absolute top-0 right-0 p-4 opacity-30 group-hover:opacity-60 transition-opacity z-10 duration-500">
+                        <Award size={100} className="text-blue-500 -rotate-12 drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]" />
+                     </div>
+                     
+                     <div className="relative z-20 flex flex-col justify-between h-full p-5 text-left">
                          <div>
-                            <h3 className="text-amber-950 font-black text-2xl font-serif tracking-tight drop-shadow-sm mb-1">Sertifika</h3>
-                            <p className="text-amber-900/60 font-medium text-xs uppercase tracking-widest border-b-2 border-amber-900/10 pb-4 mb-4">Üyelik Durumu</p>
-                            
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-amber-900/80 font-bold text-sm font-serif">Kalan Hak</span>
-                                    <span className="text-2xl font-black text-amber-950 drop-shadow-sm font-serif">8 <span className="text-sm text-amber-900/50">/ 10</span></span>
-                                </div>
-                                 <div className="w-full bg-amber-900/10 rounded-full h-2 overflow-hidden border border-amber-900/5">
-                                    <div className="h-full bg-gradient-to-r from-amber-700 to-amber-900 w-[80%] shadow-[0_0_10px_rgba(146,64,14,0.3)]"></div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-[10px] font-bold text-amber-800/60 uppercase tracking-wider">Yenilenme: 14 Gün</p>
-                                </div>
+                            <div className="p-2.5 w-fit rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-[0_5px_15px_rgba(37,99,235,0.4)] border border-blue-400/30 mb-3">
+                                <Award className="text-white drop-shadow-md" size={24} />
                             </div>
+                            <h3 className="text-xl font-black text-white leading-tight mb-1 drop-shadow-md text-emboss">SERTİFİKA<br/>OLUŞTUR</h3>
                          </div>
 
-                        <div className="mt-6 pt-6 border-t border-amber-900/10 flex items-center justify-between">
-                            <div className="flex flex-col">
-                                <span className="text-[10px] font-bold text-amber-900/40 uppercase tracking-widest">Plan</span>
-                                <span className="text-lg font-black text-amber-950 font-serif">PREMIUM</span>
-                            </div>
-                             <div className="w-10 h-10 rounded-full bg-amber-900/5 border border-amber-900/10 flex items-center justify-center">
-                                <Crown size={20} className="text-amber-900/60" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                 {/* 3. Secondary Action (Dark Marble Settings) */}
-                 <button 
-                    onClick={() => onNavigate('settings')}
-                    className="py-4 px-6 rounded-2xl bg-[#0f0f12] border border-white/5 flex items-center justify-between group hover:bg-white/5 transition-colors shadow-lg relative overflow-hidden"
-                 >
-                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                     <span className="text-slate-400 font-bold text-sm tracking-wide group-hover:text-slate-200 transition-colors">Ayarlar & Faturalandırma</span>
-                     <Settings size={18} className="text-slate-600 group-hover:text-slate-300 transition-colors" />
+                         <div className="flex items-center gap-2 group-hover:gap-4 transition-all">
+                             <div className="h-8 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 text-white text-[10px] font-bold flex items-center gap-2 shadow-[0_4px_10px_rgba(37,99,235,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] border border-blue-400/20 btn-pressable">
+                                 <span className="text-shadow-sm">OLUŞTUR</span>
+                                 <ChevronRight size={14} />
+                             </div>
+                         </div>
+                     </div>
                  </button>
+
+                 <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent w-full my-1"></div>
+
+                 {/* 3D Action Buttons */}
+                 <div className="flex-1 flex flex-col gap-4">
+                    <button 
+                        onClick={() => onNavigate('templates', { search: 'Tutanak' })}
+                        className="flex-1 p-4 rounded-xl bg-[#131318] border border-white/5 hover:border-orange-500/30 relative group transition-all btn-pressable overflow-hidden flex items-center gap-4"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div className="p-3 bg-gradient-to-br from-[#2a1b12] to-[#1a110d] rounded-xl border border-orange-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform z-10">
+                            <ClipboardList size={22} className="text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
+                        </div>
+                        <div className="text-left relative z-10">
+                            <div className="text-[9px] font-black text-stone-500 uppercase tracking-widest mb-0.5 group-hover:text-orange-500/70 transition-colors">HIZLI İŞLEM</div>
+                            <div className="text-sm font-black text-slate-200 group-hover:text-white tracking-tight drop-shadow-md">TUTANAK TUT</div>
+                        </div>
+                         <ChevronRight className="ml-auto text-white/20 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" size={16} />
+                    </button>
+                    
+                    <button 
+                        onClick={() => onNavigate('templates', { search: 'Rapor' })}
+                        className="flex-1 p-4 rounded-xl bg-[#131318] border border-white/5 hover:border-emerald-500/30 relative group transition-all btn-pressable overflow-hidden flex items-center gap-4"
+                    >
+                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                        <div className="p-3 bg-gradient-to-br from-[#0e231b] to-[#081510] rounded-xl border border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform z-10">
+                            <Activity size={22} className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                        </div>
+                        <div className="text-left relative z-10">
+                            <div className="text-[9px] font-black text-stone-500 uppercase tracking-widest mb-0.5 group-hover:text-emerald-500/70 transition-colors">GÜNLÜK</div>
+                            <div className="text-sm font-black text-slate-200 group-hover:text-white tracking-tight drop-shadow-md">RAPOR OLUŞTUR</div>
+                        </div>
+                        <ChevronRight className="ml-auto text-white/20 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" size={16} />
+                    </button>
+                    
+                     <button 
+                        onClick={() => onNavigate('my-documents')}
+                        className="flex-1 p-4 rounded-xl bg-[#131318] border border-white/5 hover:border-purple-500/30 relative group transition-all btn-pressable overflow-hidden flex items-center gap-4"
+                    >
+                         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                        <div className="p-3 bg-gradient-to-br from-[#1e1029] to-[#120a1a] rounded-xl border border-purple-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform z-10">
+                            <Archive size={22} className="text-purple-500 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
+                        </div>
+                        <div className="text-left relative z-10">
+                             <div className="text-[9px] font-black text-stone-500 uppercase tracking-widest mb-0.5 group-hover:text-purple-500/70 transition-colors">ARŞİV</div>
+                             <div className="text-sm font-black text-slate-200 group-hover:text-white tracking-tight drop-shadow-md">DOKÜMANLARIM</div>
+                        </div>
+                        <ChevronRight className="ml-auto text-white/20 group-hover:text-purple-500 group-hover:translate-x-1 transition-all" size={16} />
+                    </button>
+                 </div>
             </div>
         </div>
 
