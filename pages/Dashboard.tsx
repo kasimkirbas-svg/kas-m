@@ -178,9 +178,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
                 >
                     {/* Background Image with Noise/Texture */}
                     <div className="absolute inset-0 z-0">
-                        <img src={sector.image} alt={sector.name} className="w-full h-full object-cover opacity-40 group-hover:opacity-30 transition-all duration-500 grayscale group-hover:grayscale-0" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0e] via-[#0c0c0e]/60 to-transparent"></div>
-                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity bg-gradient-to-br ${sector.color} to-transparent mix-blend-overlay`}></div>
+                        <img src={sector.image} alt={sector.name} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-all duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0e] via-[#0c0c0e]/40 to-transparent"></div>
+                        <div className={`absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity bg-gradient-to-br ${sector.color} to-transparent mix-blend-overlay`}></div>
                     </div>
                     
                     {/* Metallic Shine Effect on Hover */}
@@ -224,10 +224,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
         </div>
 
         {/* Content Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
             
             {/* Left: Documents List (Zebra Striped & Metallic) */}
-            <div className="lg:col-span-3 flex flex-col bg-[#111115] rounded-3xl border border-white/5 overflow-hidden h-[550px] shadow-[0_20px_40px_rgba(0,0,0,0.6)] relative z-10">
+            <div className="lg:col-span-3 flex flex-col bg-[#111115] rounded-3xl border border-white/5 overflow-hidden h-[400px] shadow-[0_20px_40px_rgba(0,0,0,0.6)] relative z-10">
                  {/* Top Metallic Bar */}
                 <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between shrink-0 bg-gradient-to-r from-[#1a1a20] to-[#121215] shadow-lg relative overflow-hidden">
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
@@ -237,8 +237,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
                             <FileText size={22} className="text-blue-400 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-400 uppercase tracking-widest font-sans drop-shadow-sm">DÖKÜMANLARIM</h3>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-70">Canlı İşlem Akışı</p>
+                            <h3 className="text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-400 uppercase tracking-widest font-sans drop-shadow-sm">DÖKÜMANLAR</h3>
+                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-70">Doküman Listesi</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -415,160 +415,99 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
             </div>
         </div>
 
-        {/* Metal Pricing Section */}
-        <div className="mt-8 mb-8">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h2 className="text-3xl font-black text-white tracking-widest drop-shadow-md text-emboss">ABONELİK<span className="text-stone-500">_</span>PAKETLERİ</h2>
-                    <p className="text-sm text-stone-400 font-bold tracking-tight">EN UYGUN PAKETLE BAŞLA</p>
-                </div>
-                <div className="hidden md:flex items-center gap-2 text-[10px] font-black text-stone-500 bg-[#15151a] px-3 py-2 rounded border border-white/5 shadow-inner">
-                    <Shield size={12} className="text-emerald-500" />
-                    <span>GÜVENLİ ÖDEME</span>
-                    <span className="w-1 h-1 rounded-full bg-stone-700"></span>
-                    <span>ANINDA AKTİVASYON</span>
-                </div>
+        {/* Metal Pricing Section - Horizontal & Compact */}
+        <div className="mt-4 mb-8">
+            <div className="hidden md:flex items-center justify-between mb-2">
+                 {/* Optional Header - kept minimal */}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 
-                {/* Standard Plan - Metal Plate */}
+                {/* Standard Plan - Horizontal Bar */}
                 <motion.div 
-                    whileHover={{ y: -5 }}
-                    className="relative bg-[#18181b] rounded-xl p-1 shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-white/5"
+                    whileHover={{ y: -2 }}
+                    className="relative bg-[#18181b] rounded-xl p-0.5 shadow-lg border border-white/5 active:scale-95 transition-transform"
                 >   
-                    {/* Metal Texture */}
-                    <div className="absolute inset-0 bg-metal-pattern opacity-50 z-0 rounded-xl pointer-events-none"></div>
-                    
-                    {/* Bolts */}
-                    <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-stone-700 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-stone-700 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-stone-700 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-stone-700 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-
-                    <div className="relative h-full bg-[#1c1c22] rounded-lg border-2 border-[#2a2a30] p-6 flex flex-col items-center text-center z-10 hover:border-blue-500/30 transition-colors group">
-                        <div className="w-16 h-16 rounded-full bg-[#15151a] border-2 border-[#25252b] flex items-center justify-center mb-4 shadow-[inset_0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform">
-                             <Shield className="text-stone-500 group-hover:text-blue-500 transition-colors" size={28} />
-                        </div>
-                        <h3 className="text-xl font-black text-stone-300 mb-2 tracking-widest">BAŞLANGIÇ</h3>
-                        <div className="h-px w-12 bg-stone-700 mb-4"></div>
-                        <div className="text-3xl font-black text-white mb-6 drop-shadow-md">100 ₺ <span className="text-sm text-stone-500 font-bold">/AY</span></div>
+                    <div className="relative h-full bg-[#1c1c22] rounded-lg p-3 flex items-center justify-between group overflow-hidden">
+                        {/* Metal Texture */}
+                        <div className="absolute inset-0 bg-metal-pattern opacity-30 pointer-events-none"></div>
                         
-                        <div className="w-full space-y-3 mb-8 text-left pl-4">
-                            <div className="flex items-center gap-3 text-xs font-bold text-stone-400">
-                                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_5px_rgba(59,130,246,0.8)]"></div>
-                                <span>Aylık 100 Belge</span>
+                        <div className="flex items-center gap-3 relative z-10">
+                            <div className="w-10 h-10 rounded-lg bg-[#15151a] border border-[#25252b] flex items-center justify-center shadow-inner">
+                                <Shield className="text-stone-500 group-hover:text-blue-500 transition-colors" size={20} />
                             </div>
-                            <div className="flex items-center gap-3 text-xs font-bold text-stone-400">
-                                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_5px_rgba(59,130,246,0.8)]"></div>
-                                <span>Temel Şablonlar</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-xs font-bold text-stone-400">
-                                <div className="w-1.5 h-1.5 bg-stone-700 rounded-full"></div>
-                                <span className="opacity-50">PDF Çıktı</span>
+                            <div className="flex flex-col">
+                                <h3 className="text-sm font-black text-stone-300 tracking-wider">STANDART</h3>
+                                <div className="text-[10px] text-stone-500 font-bold">100 Belge / Ay</div>
                             </div>
                         </div>
 
-                        <button className="w-full mt-auto py-3 rounded bg-[#25252b] border-2 border-[#1a1a20] text-stone-400 font-black text-xs hover:text-white hover:border-blue-500/50 hover:bg-blue-600/10 transition-all shadow-md active:scale-95">
-                            PAKETİ SEÇ
-                        </button>
+                        <div className="flex items-center gap-4 relative z-10">
+                             <div className="text-xl font-black text-white drop-shadow-md">100 ₺</div>
+                             <button className="px-4 py-2 rounded bg-[#25252b] border border-[#3a3a45] text-stone-400 font-bold text-[10px] hover:text-white hover:bg-blue-600/20 hover:border-blue-500/50 transition-all shadow-md">
+                                SATIN AL
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
 
-                {/* Pro Plan - Metal Plate */}
+                {/* Pro Plan - Horizontal Bar (Highlighted) */}
                  <motion.div 
-                    whileHover={{ y: -8 }}
-                    className="relative bg-[#18181b] rounded-xl p-1 shadow-[0_20px_40px_rgba(0,0,0,0.6)] border border-white/5 z-10"
+                    whileHover={{ y: -2 }}
+                    className="relative bg-[#18181b] rounded-xl p-0.5 shadow-[0_0_20px_rgba(249,115,22,0.15)] border border-orange-500/30 z-10 active:scale-95 transition-transform"
                 >   
-                     <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent z-30 opacity-70"></div>
+                     <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent z-30 opacity-70"></div>
+                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-600 text-[9px] text-black font-black px-2 py-0.5 rounded shadow z-40">ÖNERİLEN</div>
 
-                    {/* Bolts */}
-                    <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-stone-600 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-stone-600 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-stone-600 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-stone-600 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
+                    <div className="relative h-full bg-[#1f1f25] rounded-lg p-3 flex items-center justify-between group overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-orange-900/10 to-transparent pointer-events-none"></div>
 
-                    <div className="relative h-full bg-[#1f1f25] rounded-lg border-2 border-orange-500/20 p-6 flex flex-col items-center text-center z-10 group">
-                        <div className="absolute top-2 right-2">
-                            <span className="text-[9px] font-black bg-orange-500 text-black px-2 py-0.5 rounded shadow-[0_0_10px_rgba(249,115,22,0.5)]">POPÜLER</span>
-                        </div>
-                        
-                        <div className="w-16 h-16 rounded-full bg-[#2a1b15] border-2 border-orange-500/30 flex items-center justify-center mb-4 shadow-[inset_0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform">
-                             <Star className="text-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.6)]" size={28} />
-                        </div>
-                        <h3 className="text-xl font-black text-white mb-2 tracking-widest drop-shadow-md">PROFESYONEL</h3>
-                        <div className="h-px w-12 bg-orange-500 mb-4 shadow-[0_0_10px_orange]"></div>
-                        <div className="text-3xl font-black text-orange-400 mb-6 drop-shadow-md">175 ₺ <span className="text-sm text-stone-500 font-bold">/AY</span></div>
-                        
-                        <div className="w-full space-y-3 mb-8 text-left pl-4">
-                            <div className="flex items-center gap-3 text-xs font-bold text-stone-300">
-                                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-[0_0_5px_rgba(249,115,22,0.8)]"></div>
-                                <span>Aylık 500 Belge</span>
+                        <div className="flex items-center gap-3 relative z-10">
+                            <div className="w-10 h-10 rounded-lg bg-[#2a1b15] border border-orange-500/30 flex items-center justify-center shadow-inner">
+                                <Star className="text-orange-500 drop-shadow-[0_0_5px_rgba(249,115,22,0.8)]" size={20} />
                             </div>
-                            <div className="flex items-center gap-3 text-xs font-bold text-stone-300">
-                                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-[0_0_5px_rgba(249,115,22,0.8)]"></div>
-                                <span>Tüm Sektörel Şablonlar</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-xs font-bold text-stone-300">
-                                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-[0_0_5px_rgba(249,115,22,0.8)]"></div>
-                                <span>Logo Ekleme</span>
+                             <div className="flex flex-col">
+                                <h3 className="text-sm font-black text-white tracking-wider">GOLD</h3>
+                                <div className="text-[10px] text-orange-400 font-bold">2 Kat Limit</div>
                             </div>
                         </div>
 
-                         <button className="w-full mt-auto py-3 rounded bg-gradient-to-br from-orange-600 to-orange-700 text-white font-black text-xs btn-3d transition-all hover:brightness-110 active:scale-95 shadow-[0_4px_10px_rgba(249,115,22,0.3)]">
-                            SATIN AL
-                        </button>
+                         <div className="flex items-center gap-4 relative z-10">
+                             <div className="text-xl font-black text-orange-400 drop-shadow-md">175 ₺</div>
+                             <button className="px-4 py-2 rounded bg-gradient-to-b from-orange-500 to-orange-700 text-white font-bold text-[10px] shadow-lg hover:brightness-110 border border-orange-400/50">
+                                SATIN AL
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
 
-                {/* Premium Plan - Gold Neon Plate */}
+                {/* Premium Plan - Horizontal Bar */}
                  <motion.div 
-                    whileHover={{ y: -8 }}
-                    className="relative bg-[#15151a] rounded-xl p-1 shadow-[0_0_30px_rgba(234,179,8,0.15)] z-10"
+                    whileHover={{ y: -2 }}
+                    className="relative bg-[#18181b] rounded-xl p-0.5 shadow-[0_0_20px_rgba(168,85,247,0.15)] border border-purple-500/30 z-10 active:scale-95 transition-transform"
                 >   
-                    {/* Neon Gold Border Animation */}
-                    <div className="absolute -inset-[2px] rounded-xl bg-gradient-to-r from-yellow-600 via-yellow-300 to-yellow-600 animate-gradient-xy opacity-70 blur-sm"></div>
-                    <div className="absolute inset-0 bg-[#15151a] rounded-xl z-0"></div>
+                    <div className="relative h-full bg-[#18181c] rounded-lg p-3 flex items-center justify-between group overflow-hidden">
+                         <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 to-transparent pointer-events-none"></div>
 
-                    {/* Bolts */}
-                    <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-yellow-600 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.4),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-yellow-600 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.4),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-yellow-600 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.4),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-                    <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-yellow-600 shadow-[inset_1px_1px_1px_rgba(255,255,255,0.4),0_1px_2px_rgba(0,0,0,0.8)] border border-black/50 z-20"></div>
-
-                    <div className="relative h-full bg-[#18181c] rounded-lg border border-yellow-500/30 p-6 flex flex-col items-center text-center z-10 group">
-                         <div className="absolute top-0 inset-x-0 h-[100px] bg-gradient-to-b from-yellow-500/10 to-transparent pointer-events-none"></div>
-
-                        <div className="w-16 h-16 rounded-full bg-[#292010] border-2 border-yellow-500 flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(234,179,8,0.4)] group-hover:scale-110 transition-transform">
-                             <Zap className="text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]" size={32} />
-                        </div>
-                        <h3 className="text-xl font-black text-yellow-100 mb-2 tracking-widest drop-shadow-md text-emboss">PREMIUM</h3>
-                         <div className="h-px w-12 bg-yellow-400 mb-4 shadow-[0_0_15px_yellow]"></div>
-                        
-                        <div className="flex items-end gap-2 mb-6">
-                            <span className="text-xs line-through text-stone-600 font-bold mb-1.5">350 ₺</span>
-                            <span className="text-3xl font-black text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]">250 ₺</span>
-                            <span className="text-xs text-yellow-600 font-bold mb-1.5">/AY</span>
-                        </div>
-                        
-                        <div className="w-full space-y-3 mb-8 text-left pl-4">
-                            <div className="flex items-center gap-3 text-xs font-bold text-yellow-100">
-                                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full shadow-[0_0_8px_rgba(234,179,8,1)] animate-pulse"></div>
-                                <span className="text-yellow-200">SINIRSIZ Belge</span>
+                        <div className="flex items-center gap-3 relative z-10">
+                            <div className="w-10 h-10 rounded-lg bg-[#1e1029] border border-purple-500/30 flex items-center justify-center shadow-inner">
+                                <Zap className="text-purple-400 drop-shadow-[0_0_5px_rgba(168,85,247,0.8)]" size={20} />
                             </div>
-                            <div className="flex items-center gap-3 text-xs font-bold text-stone-300">
-                                <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
-                                <span>Tüm Özellikler +</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-xs font-bold text-stone-300">
-                                <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
-                                <span>7/24 Canlı Destek</span>
+                             <div className="flex flex-col">
+                                <h3 className="text-sm font-black text-purple-100 tracking-wider">PREMIUM</h3>
+                                <div className="text-[10px] text-purple-400 font-bold">3 Kat Limit</div>
                             </div>
                         </div>
 
-                         <button className="w-full mt-auto py-4 rounded bg-gradient-to-br from-yellow-500 to-yellow-700 text-black font-black text-sm btn-3d transition-all hover:brightness-110 active:scale-95 shadow-[0_0_20px_rgba(234,179,8,0.4)]">
-                            PREMIUM'A GEÇ
-                        </button>
+                        <div className="flex items-center gap-4 relative z-10">
+                            <div className="flex flex-col items-end leading-none">
+                                <span className="text-[10px] line-through text-stone-500 font-bold">350 ₺</span>
+                                <span className="text-xl font-black text-purple-300 drop-shadow-md">250 ₺</span>
+                            </div>
+                             <button className="px-4 py-2 rounded bg-gradient-to-b from-purple-600 to-purple-800 text-white font-bold text-[10px] shadow-lg hover:brightness-110 border border-purple-400/50">
+                                SATIN AL
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
             </div>
