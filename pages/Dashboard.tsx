@@ -314,35 +314,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         {/* 1. Header: LOGO ONLY (Left) & CENTER TITLE */}
         <header className='shrink-0 flex items-center justify-between py-2'>
             
-            {/* Left: LOGO ONLY (Redesigned) */}
-            <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className='w-1/4 flex items-center gap-4 select-none group'
-            >
-                 {/* Icon: 'K' Square with Glass/Sheen */}
-                 <div className='relative w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 overflow-hidden shrink-0 ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300'>
-                    {/* Glass Sheen */}
-                    <div className='absolute top-0 right-0 w-[150%] h-[150%] bg-gradient-to-b from-white/20 to-transparent -rotate-45 pointer-events-none transform origin-top-left'></div>
-                    
-                    <span className='font-black text-slate-900 text-3xl drop-shadow-sm relative z-10 font-sans'>K</span>
-                 </div>
-                 
-                 {/* Text Block */}
-                 <div className='flex flex-col justify-center gap-0.5'>
-                    <div className="relative overflow-hidden">
-                        <span className='text-2xl font-black text-amber-500 tracking-tight leading-none drop-shadow-sm block'>KIRBAŞ</span>
-                        {/* Text Shine Effect */}
-                        <motion.div 
-                            animate={{ x: ["-150%", "200%"] }}
-                            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", repeatDelay: 3 }}
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -skew-x-12 w-1/2"
-                        />
-                    </div>
-                    <span className='text-[10px] font-bold text-slate-400 tracking-[0.25em] leading-none opacity-80'>PANEL YÖNETİMİ</span>
-                 </div>
-            </motion.div>
+            {/* Left: LOGO REMOVED */}
+            <div className='w-1/4'></div>
 
             {/* Center: Title */}
             <div className='flex-1 flex flex-col items-center justify-center text-center'>
@@ -643,53 +616,53 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <span className='text-black font-black text-sm tracking-widest uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
                     </div>
 
-                    <div className='flex-1 p-3 grid grid-cols-2 gap-3 z-10'>
+                    <div className='flex-1 p-3 grid grid-cols-2 grid-rows-2 gap-3 z-10'>
                         {/* Button 1 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
                             whileTap={{ scale: 0.95 }}
-                            className='aspect-square rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-amber-500/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] transition-all'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-amber-500/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] transition-all'
                         >
-                            <div className='w-10 h-10 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300'>
-                                <FileText size={20} />
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0'>
+                                <FileText size={18} />
                             </div>
-                            <span className='text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>TUTANAK<br/>TUT</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>TUTANAK<br/>TUT</span>
                         </motion.button>
 
                         {/* Button 2 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
                             whileTap={{ scale: 0.95 }}
-                            className='aspect-square rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all'
                         >
-                            <div className='w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300'>
-                                <ClipboardList size={20} />
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0'>
+                                <ClipboardList size={18} />
                             </div>
-                            <span className='text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>GÜNLÜK<br/>RAPOR</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>GÜNLÜK<br/>RAPOR</span>
                         </motion.button>
 
                         {/* Button 3 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
                             whileTap={{ scale: 0.95 }}
-                            className='aspect-square rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all'
                         >
-                            <div className='w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300'>
-                                <UserPlus size={20} />
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-500/20 text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0'>
+                                <UserPlus size={18} />
                             </div>
-                            <span className='text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>PERSONEL<br/>EKLE</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>PERSONEL<br/>EKLE</span>
                         </motion.button>
 
                         {/* Button 4 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
                             whileTap={{ scale: 0.95 }}
-                            className='aspect-square rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] transition-all'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] transition-all'
                         >
-                            <div className='w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300'>
-                                <Megaphone size={20} />
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-500/20 text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0'>
+                                <Megaphone size={18} />
                             </div>
-                            <span className='text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>DUYURU<br/>YAP</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>DUYURU<br/>YAP</span>
                         </motion.button>
                     </div>
 
