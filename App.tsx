@@ -400,76 +400,145 @@ const App = () => {
     // 3. Template List (Documents)
     if (user && currentView === 'templates') {
       return (
-        <div>
-          <button 
-            onClick={() => setCurrentView('dashboard')}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-6"
-          >
-            <ArrowLeft size={18} />
-            {t?.common?.back || 'Ana Sayfaya Dön'}
-          </button>
-          <DocumentsList 
-            templates={templates}
-            initialCategory={navParams.category}
-            initialSearchQuery={navParams.search}
-            userIsPremium={user.plan === SubscriptionPlan.YEARLY}
-            onSelectTemplate={(template) => {
-              setSelectedTemplate(template);
-              setCurrentView('editor');
-            }}
-            t={t}
-          />
-        </div>
+        <Layout 
+          user={user} 
+          currentView={currentView} 
+          onNavigate={handleNavigate} 
+          onLogout={handleLogout}
+          language={language}
+          onLanguageChange={handleLanguageChange}
+          theme={theme}
+          documentsCount={savedDocuments.length}
+          t={t}
+        >
+          <div>
+            <button 
+              onClick={() => setCurrentView('dashboard')}
+              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-6"
+            >
+              <ArrowLeft size={18} />
+              {t?.common?.back || 'Ana Sayfaya Dön'}
+            </button>
+            <DocumentsList 
+              templates={templates}
+              initialCategory={navParams.category}
+              initialSearchQuery={navParams.search}
+              userIsPremium={user.plan === 'YEARLY'}
+              onSelectTemplate={(template) => {
+                setSelectedTemplate(template);
+                setCurrentView('editor');
+              }}
+              t={t}
+            />
+          </div>
+        </Layout>
       );
     }
 
-    // 3. Dashboard (Home)
+    // 4. Dashboard (Home)
     if (user && currentView === 'dashboard') {
       return (
-        <Dashboard
-          user={user}
-          t={t}
-          onNavigate={handleNavigate}
-          onTemplateSelect={(tpl) => {
-            setSelectedTemplate(tpl);
-            setCurrentView('editor');
-          }}
-          onPurchase={(plan) => handleUpgrade(plan as SubscriptionPlan)}
-          templates={templates}
-          recentDocuments={savedDocuments.slice(0, 5)}
-          savedDocuments={savedDocuments}
-        />
-      );
-    }
-
-    // 4. Profile Page
-    if (user && currentView === 'profile') {
-      return <Profile user={user} t={t} onNavigate={setCurrentView} />
-    }
-
-    // 5. Settings Page
-    if (user && currentView === 'settings') {
-      return (
-        <Settings 
-          user={user}
-          theme={theme}
+        <Layout 
+          user={user} 
+          currentView={currentView} 
+          onNavigate={handleNavigate} 
+          onLogout={handleLogout}
           language={language}
-          t={t}
-          // Theme is locked
           onLanguageChange={handleLanguageChange}
-        />
-      );
-    }
-
-    // 6. Subscription Page
-    if (user && currentView === 'subscription') {
-      return (
-         <SubscriptionPage 
+          theme={theme}
+          documentsCount={savedDocuments.length}
+          t={t}
+        >
+          <Dashboard
             user={user}
             t={t}
-            onUpgrade={handleUpgrade}
-            onBack={() => setCurrentView('profile')}
-         />
+            onNavigate={handleNavigate}
+            onTemplateSelect={(tag) => {
+              if (tag) {
+                  // If tag is a string (category), navigate to templates with category
+                  if (typeof tag === 'string') {
+                      handleNavigate('templates', { category: tag });
+                  } else {
+                      // If it's a template object
+                      setSelectedTemplate(tag as any);
+                      setCurrentView('editor');
+                  }
+              }
+            }}
+            onPurchase={(plan) => handleUpgrade(plan as any)}
+            templates={templates}
+            recentDocuments={savedDocuments}
+            savedDocuments={savedDocuments}
+          />
+        </Layout>
+      );
+    }
+
+    // 5. Profile Page
+    if (user && currentView === 'profile') {
+      return (
+        <Layout 
+          user={user} 
+          currentView={currentView} 
+          onNavigate={handleNavigate} 
+          onLogout={handleLogout}
+          language={language}
+          onLanguageChange={handleLanguageChange}
+          theme={theme}
+          documentsCount={savedDocuments.length}
+          t={t}
+        >
+          <Profile user={user} t={t} onNavigate={setCurrentView} />
+        </Layout>
+      );
+    }
+
+    // 6. Settings Page
+    if (user && currentView === 'settings') {
+      return (
+        <Layout 
+          user={user} 
+          currentView={currentView} 
+          onNavigate={handleNavigate} 
+          onLogout={handleLogout}
+          language={language}
+          onLanguageChange={handleLanguageChange}
+          theme={theme}
+          documentsCount={savedDocuments.length}
+          t={t}
+        >
+          <Settings 
+            user={user}
+            theme={theme}
+            language={language}
+            t={t}
+            onLanguageChange={handleLanguageChange}
+          />
+        </Layout>
+      );
+    }
+
+    // 7. Subscription Page
+    if (user && currentView === 'subscription') {
+      return (
+         <Layout 
+            user={user} 
+            currentView={currentView} 
+            onNavigate={handleNavigate} 
+            onLogout={handleLogout}
+            language={language}
+            onLanguageChange={handleLanguageChange}
+            theme={theme}
+            documentsCount={savedDocuments.length}
+            t={t}
+          >
+           <SubscriptionPage 
+              user={user}
+              t={t}
+              onUpgrade={handleUpgrade}
+              onBack={() => setCurrentView('profile')}
+           />
+         </Layout>
       );
     }
     
