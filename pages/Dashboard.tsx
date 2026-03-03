@@ -313,13 +313,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <header className='shrink-0 flex items-center justify-between py-2'>
             
             {/* Left: LOGO ONLY */}
-            <div className='w-1/4 flex items-center gap-4'>
-                 <div className='w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 group cursor-pointer hover:scale-105 transition-transform'>
+            <div className='w-1/4 flex items-center gap-3 select-none'>
+                 <div className='w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 hover:scale-105 transition-transform cursor-pointer'>
                     <Shield className='text-slate-900 w-7 h-7' strokeWidth={2.5} />
                  </div>
-                 <div className='flex flex-col gap-0.5 mt-1'>
-                    <span className='text-2xl font-black text-slate-100 tracking-[-0.05em] leading-none'>KIRBAŞ</span>
-                    <span className='text-[10px] bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent font-bold tracking-[0.25em] leading-none'>PANEL YÖNETİMİ</span>
+                 <div className='flex flex-col justify-center translate-y-[1px]'>
+                    <span className='text-2xl font-black text-slate-100 tracking-tighter leading-none'>KIRBAŞ</span>
+                    <span className='text-[10px] bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent font-bold tracking-[0.2em]'>PANEL YÖNETİMİ</span>
                  </div>
             </div>
 
