@@ -314,16 +314,35 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         {/* 1. Header: LOGO ONLY (Left) & CENTER TITLE */}
         <header className='shrink-0 flex items-center justify-between py-2'>
             
-            {/* Left: LOGO ONLY */}
-            <div className='w-1/4 flex items-center gap-3 select-none'>
-                 <div className='w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 hover:scale-105 transition-transform cursor-pointer'>
-                    <Shield className='text-slate-900 w-7 h-7' strokeWidth={2.5} />
+            {/* Left: LOGO ONLY (Redesigned) */}
+            <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className='w-1/4 flex items-center gap-4 select-none group'
+            >
+                 {/* Icon: 'K' Square with Glass/Sheen */}
+                 <div className='relative w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 overflow-hidden shrink-0 ring-1 ring-white/10 group-hover:scale-105 transition-transform duration-300'>
+                    {/* Glass Sheen */}
+                    <div className='absolute top-0 right-0 w-[150%] h-[150%] bg-gradient-to-b from-white/20 to-transparent -rotate-45 pointer-events-none transform origin-top-left'></div>
+                    
+                    <span className='font-black text-slate-900 text-3xl drop-shadow-sm relative z-10 font-sans'>K</span>
                  </div>
-                 <div className='flex flex-col justify-center translate-y-[1px]'>
-                    <span className='text-2xl font-black text-slate-100 tracking-tighter leading-none'>KIRBAŞ</span>
-                    <span className='text-[10px] bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent font-bold tracking-[0.2em]'>PANEL YÖNETİMİ</span>
+                 
+                 {/* Text Block */}
+                 <div className='flex flex-col justify-center gap-0.5'>
+                    <div className="relative overflow-hidden">
+                        <span className='text-2xl font-black text-amber-500 tracking-tight leading-none drop-shadow-sm block'>KIRBAŞ</span>
+                        {/* Text Shine Effect */}
+                        <motion.div 
+                            animate={{ x: ["-150%", "200%"] }}
+                            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", repeatDelay: 3 }}
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -skew-x-12 w-1/2"
+                        />
+                    </div>
+                    <span className='text-[10px] font-bold text-slate-400 tracking-[0.25em] leading-none opacity-80'>PANEL YÖNETİMİ</span>
                  </div>
-            </div>
+            </motion.div>
 
             {/* Center: Title */}
             <div className='flex-1 flex flex-col items-center justify-center text-center'>
