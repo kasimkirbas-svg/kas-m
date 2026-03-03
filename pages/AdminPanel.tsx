@@ -1,1459 +1,753 @@
-import React, { useState, useEffect } from 'react';
-import { Users, FileText, Building2, DollarSign, Shield, TrendingUp, Search, MoreHorizontal, Plus, Trash2, Edit2, Download, Activity, X, Check, CheckCircle, AlertCircle, Mail, Send, Loader2, Server, Globe, Cpu, Database, PlayCircle, CreditCard, Save, List } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Users, FileText, ShoppingBag, Settings, Activity, 
+  Search, Plus, Trash2, Edit2, Save, X, Check, 
+  AlertTriangle, Server, Database, TrendingUp, 
+  Shield, CreditCard, ChevronRight, LogOut, 
+  Download, MoreVertical, RefreshCw, Lock, Unlock,
+  Mail, MessageSquare
+} from 'lucide-react';
 import { User, UserRole, SubscriptionPlan, DocumentTemplate } from '../types';
-import { PLANS as DEFAULT_PLANS, MOCK_TEMPLATES as DEFAULT_TEMPLATES } from '../constants';
+import { PLANS as DEFAULT_PLANS, MOCK_TEMPLATES } from '../constants';
+import { fetchApi } from '../src/utils/api';
+import { VisualTemplateBuilder } from '../components/VisualTemplateBuilder';
+
+// --- Types & Interfaces ---
 
 interface AdminPanelProps {
-  user?: any;
-  t?: any;
-  currentView?: string;
+  user?: User;
+  onLogout?: () => void;
 }
 
-import { VisualTemplateBuilder } from '../components/VisualTemplateBuilder';
-import { fetchApi } from '../src/utils/api';
+interface LogEntry {
+  id: string;
+  timestamp: string;
+  level: 'info' | 'warn' | 'error';
+  message: string;
+  source: string;
+}
 
-export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) => {
-  // Map global currentView to internal tab
-  const getInitialTab = () => {
-    switch(currentView) {
-      case 'users': return 'subscribers';
-      case 'admin-templates': return 'templates'; // Explicit admin templates
-      case 'templates': return 'templates';
-      case 'admin-packages': return 'packages'; // Explicit admin packages
-      case 'packages': return 'packages';
-      case 'admin': return 'overview';
-      case 'dashboard': return 'overview';
-      default: return 'overview';
-    }
-  };
+interface ServerStats {
+  uptime: number;
+  cpu: number;
+  memory: number;
+  activeConnections: number;
+  status: 'online' | 'offline' | 'degraded';
+}
 
-  const [activeTab, setActiveTab] = useState(getInitialTab());
+// --- Components ---
 
-  // Email Notification State
-  const [emailSending, setEmailSending] = useState<{ [key: string]: boolean }>({});
-  const [emailNotification, setEmailNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+const SidebarItem = ({ 
+  icon: Icon, 
+  label, 
+  active, 
+  onClick 
+}: { 
+  icon: any, 
+  label: string, 
+  active: boolean, 
+  onClick: () => void 
+}) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+      active 
+        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20' 
+        : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+    }`}
+  >
+    <Icon size={20} className={`transition-transform duration-200 ${active ? 'scale-110' : 'group-hover:scale-110'}`} />
+    <span className="font-medium text-sm">{label}</span>
+    {active && <ChevronRight size={16} className="ml-auto opacity-50" />}
+  </button>
+);
 
-  // Server Monitoring State
-  const [serverStatus, setServerStatus] = useState<any>(null);
-  const [serverLogs, setServerLogs] = useState<any[]>([]);
-  const [isServerOnline, setIsServerOnline] = useState(false);
+const StatCard = ({ icon: Icon, label, value, trend, color }: any) => (
+  <div className="bg-[#1e293b] border border-slate-700/50 rounded-2xl p-5 relative overflow-hidden group hover:border-slate-600 transition-all duration-300">
+    <div className={`absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-${color}-500`}>
+      <Icon size={64} />
+    </div>
+    <div className="relative z-10">
+      <div className={`w-12 h-12 rounded-xl bg-${color}-500/10 flex items-center justify-center text-${color}-500 mb-4 group-hover:scale-110 transition-transform`}>
+        <Icon size={24} />
+      </div>
+      <h3 className="text-slate-400 text-sm font-medium mb-1">{label}</h3>
+      <div className="flex items-baseline gap-2">
+        <span className="text-2xl font-bold text-white">{value}</span>
+        {trend && (
+          <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${trend > 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
+            {trend > 0 ? '+' : ''}{trend}%
+          </span>
+        )}
+      </div>
+    </div>
+  </div>
+);
 
-  // Poll server data
+// --- Main Admin Panel ---
+
+export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'documents' | 'packages' | 'system'>('dashboard');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Data State
+  const [users, setUsers] = useState<User[]>([]);
+  const [plans, setPlans] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [stats, setStats] = useState<ServerStats | null>(null);
+
+  // Modals & Editing
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingPlan, setEditingPlan] = useState<any | null>(null);
+  const [isTemplateBuilderOpen, setIsTemplateBuilderOpen] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState<DocumentTemplate | null>(null);
+
+  // Initial Load
   useEffect(() => {
-     const fetchServerData = async () => {
-        try {
-            const statusRes = await fetchApi('/api/status');
-            if (statusRes.ok) {
-                const statusData = await statusRes.json();
-                setServerStatus(statusData);
-                setIsServerOnline(true);
-            } else {
-                setIsServerOnline(false);
-            }
-            
-            const logsRes = await fetchApi('/api/logs');
-            if (logsRes.ok) {
-                 const logsData = await logsRes.json();
-                 setServerLogs(logsData);
-            }
-        } catch (err) {
-            setIsServerOnline(false);
-        }
-    };
-
-    fetchServerData();
-    const interval = setInterval(fetchServerData, 2500); // 2.5s poll
+    loadAllData();
+    // Simulate server stats stream
+    const interval = setInterval(updateMockStats, 3000);
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (emailNotification) {
-      const timer = setTimeout(() => setEmailNotification(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [emailNotification]);
-
-  const handleSendWelcomeEmail = async (targetUser: User) => {
-    // Start loading for specific user
-    setEmailSending(prev => ({ ...prev, [targetUser.id]: true }));
-
+  const loadAllData = async () => {
+    setIsLoading(true);
     try {
-        const response = await fetchApi('/api/send-welcome-email', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                recipientEmail: targetUser.email,
-                recipientName: targetUser.name,
-                companyName: targetUser.companyName,
-                plan: targetUser.plan
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-             setEmailNotification({
-                type: 'success',
-                message: `Mail başarıyla gönderildi: ${targetUser.email}`
-            });
-        } else {
-             // Fallback to mailto if server is down or returns error
-             console.error("Backend error, falling back:", data.message);
-             setEmailNotification({
-                type: 'error',
-                message: `Sunucu hatası: ${data.message || 'Mail gönderilemedi'}.`
-            });
-        }
-    } catch (error) {
-        // Backend çalışmıyorsa kullanıcıya bilgi ver
-        setEmailNotification({
-            type: 'error',
-            message: 'Backend sunucusu çalışmıyor (localhost:3001). Node sunucusunu başlattınız mı?'
-        });
-    } finally {
-        setEmailSending(prev => ({ ...prev, [targetUser.id]: false }));
-    }
-  };
-
-  // Sync tab when currentView changes externally
-  useEffect(() => {
-    setActiveTab(getInitialTab());
-  }, [currentView]);
-  const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [stats, setStats] = useState({
-    activeUsers: 0,
-    totalDocs: 0, 
-    revenue: 0,
-    activeTemplates: 0 
-  });
-  
-  // Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-
-  const loadData = async () => {
-    // Templates
-    try {
-        const res = await fetchApi('/api/templates');
-        if (res.ok) {
-            const data = await res.json();
-            setTemplates(data || DEFAULT_TEMPLATES);
-        } else {
-            console.error('Failed to fetch templates');
-            setTemplates(DEFAULT_TEMPLATES);
-        }
-    } catch (e) {
-        console.error(e);
-        // setTemplates(DEFAULT_TEMPLATES); // Fallback removed as per 'Real Mode' request
-        setEmailNotification({ type: 'error', message: 'Şablonlar sunucudan yüklenemedi.' });
-    }
-
-    // Plans (Still LocalStorage for now)
-    const storedPlans = localStorage.getItem('subscriptionPlans');
-    if (storedPlans) {
-      setSubscriptionPlans(JSON.parse(storedPlans));
-    } else {
-      // Default initialization
-      setSubscriptionPlans(DEFAULT_PLANS);
-      localStorage.setItem('subscriptionPlans', JSON.stringify(DEFAULT_PLANS));
-    }
-  };
-
-  const loadUsers = async () => {
-    try {
-      const token = localStorage.getItem('authToken');
-      if (!token) return;
+      // 1. Users
+      const usersRes = await fetchApi('/api/users');
+      if (usersRes.ok) setUsers(await usersRes.json());
       
-      const response = await fetchApi('/api/users', {
-          headers: { Authorization: `Bearer ${token}` }
+      // 2. Templates
+      const tplRes = await fetchApi('/api/templates');
+      if (tplRes.ok) setTemplates(await tplRes.json());
+      
+      // 3. Plans (Check local storage first for overrides)
+      const storedPlans = localStorage.getItem('subscriptionPlans');
+      if (storedPlans) {
+        setPlans(JSON.parse(storedPlans));
+      } else {
+        setPlans(DEFAULT_PLANS);
+      }
+
+      // 4. Mock Logs
+      setLogs([
+        { id: '1', timestamp: new Date().toISOString(), level: 'info', message: 'System started successfully', source: 'System' },
+        { id: '2', timestamp: new Date(Date.now() - 100000).toISOString(), level: 'warn', message: 'High memory usage detected', source: 'Monitor' },
+        { id: '3', timestamp: new Date(Date.now() - 500000).toISOString(), level: 'info', message: 'User database synced', source: 'DB' },
+      ]);
+
+    } catch (err) {
+      console.error("Failed to load admin data", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateMockStats = () => {
+    setStats({
+      uptime: Math.floor(performance.now() / 1000),
+      cpu: Math.floor(Math.random() * 30) + 10, // 10-40%
+      memory: Math.floor(Math.random() * 40) + 20, // 20-60%
+      activeConnections: Math.floor(Math.random() * 100) + 50,
+      status: 'online'
+    });
+  };
+
+  // --- Actions ---
+
+  const handleUpdateUser = async (updatedUser: User) => {
+    try {
+      // Optimistic update
+      setUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
+      
+      const res = await fetchApi(`/api/users/${updatedUser.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(updatedUser)
       });
       
-      if (response.ok) {
-        const users = await response.json();
-        setAllUsers(users);
-        
-        const activeCount = users.filter((u: any) => u.isActive).length;
-        const revenue = users.reduce((acc: number, curr: any) => {
-          if (curr.plan === 'YEARLY') return acc + 4999;
-          if (curr.plan === 'MONTHLY') return acc + 499;
-          return acc;
-        }, 0);
-
-        setStats(prev => ({ ...prev, activeUsers: activeCount, revenue }));
-      }
-    } catch (error) { console.error("Failed to load users", error); }
-  };
-
-  useEffect(() => {
-    loadData();
-    loadUsers();
-  }, []);
-
-
-  // --- BAN SYSTEM ---
-  const [banModal, setBanModal] = useState<{ isOpen: boolean; userId: string; userName: string }>({ 
-    isOpen: false, userId: '', userName: '' 
-  });
-  const [banForm, setBanForm] = useState({ reason: '', duration: 'permanent' });
-
-  const handleBanSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!banModal.userId) return;
-    
-    try {
-        const payload = {
-            banReason: banForm.reason,
-            durationMinutes: banForm.duration === 'permanent' ? null : parseInt(banForm.duration)
-        };
-        
-        const res = await fetchApi(`/api/users/${banModal.userId}/ban`, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-            const data = await res.json();
-            throw new Error(data.message || 'Yasaklama başarısız.');
-        } 
-        
-        loadUsers();
-        setBanModal({ isOpen: false, userId: '', userName: '' });
-        setBanForm({ reason: '', duration: 'permanent' });
-    } catch(err) {
-        alert(err instanceof Error ? err.message : 'İşlem başarısız.');
+      if (!res.ok) throw new Error('Update failed');
+      setEditingUser(null);
+    } catch (err) {
+      alert('Kullanıcı güncellenemedi' + err);
+      loadAllData(); // Revert
     }
-  };
-
-  const handleUnbanUser = async (user: User) => {
-      if(window.confirm(`${user.name} kullanıcısının yasağını kaldırmak istiyor musunuz?`)) {
-        try {
-            const res = await fetchApi(`/api/users/${user.id}/unban`, { method: 'POST' });
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.message || 'İşlem başarısız');
-            }
-            loadUsers();
-        } catch(e) { 
-            console.error(e);
-            alert(e instanceof Error ? e.message : 'İşlem başarısız.'); 
-        }
-      }
-  };
-
-
-  // --- TEMPLATE HANDLERS ---
-  const handleEditTemplate = (tpl: DocumentTemplate) => {
-    setEditingTemplate(tpl);
-    setIsTemplateModalOpen(true);
-  };
-
-  const handleCreateTemplate = () => {
-    setEditingTemplate({
-      id: Date.now().toString(),
-      title: '',
-      category: 'ISG',
-      description: '',
-      isPremium: false,
-      fields: [],
-      content: '<div class="print-page">\n  <h1>{{companyName}}</h1>\n  <p>Tarih: {{date}}</p>\n</div>'
-    });
-    setIsTemplateModalOpen(true);
-  };
-
-  const handleDeleteTemplate = async (id: string) => {
-     if(window.confirm(t?.admin?.confirmDelete || 'Bu şablonu silmek istediğinize emin misiniz?')) {
-        try {
-            const res = await fetchApi(`/api/templates/${id}`, { method: 'DELETE' });
-            if (res.ok) {
-                setTemplates(prev => prev.filter(t => t.id !== id));
-            } else {
-                alert('Silme işlemi başarısız.');
-            }
-        } catch (e) {
-            console.error(e);
-            alert('Silme işlemi başarısız.');
-        }
-     }
-  };
-
-  const handleSaveTemplate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingTemplate.id) return;
-
-    try {
-        const exists = templates.find(t => t.id === editingTemplate.id);
-        if (exists) {
-            // Update
-            const res = await fetchApi(`/api/templates/${editingTemplate.id}`, {
-                method: 'PUT',
-                body: JSON.stringify(editingTemplate)
-            });
-            if (res.ok) {
-                const updated = await res.json();
-                setTemplates(prev => prev.map(t => t.id === updated.id ? updated : t));
-                setIsTemplateModalOpen(false);
-            }
-        } else {
-            // Create
-            const res = await fetchApi('/api/templates', {
-                method: 'POST',
-                body: JSON.stringify(editingTemplate)
-            });
-             if (res.ok) {
-                const newTpl = await res.json();
-                setTemplates(prev => [...prev, newTpl]);
-                setIsTemplateModalOpen(false);
-            }
-        }
-    } catch (e) {
-        console.error('Template save error:', e);
-        alert('Kaydetme başarısız: ' + e);
-    }
-  };
-
-  // --- PLAN HANDLERS ---
-  const handleEditPlan = (plan: any) => {
-    setEditingPlan({ ...plan });
-    setIsPlanModalOpen(true);
-  };
-
-  const handleSavePlan = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingPlan) return;
-    
-    const updated = subscriptionPlans.map(p => p.id === editingPlan.id ? editingPlan : p);
-    setSubscriptionPlans(updated);
-    localStorage.setItem('subscriptionPlans', JSON.stringify(updated));
-    setIsPlanModalOpen(false);
   };
 
   const handleDeleteUser = async (userId: string) => {
-    if (window.confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
-      try {
-        const res = await fetchApi(`/api/users/${userId}`, { method: 'DELETE' });
-        if (!res.ok) {
-           const json = await res.json();
-           throw new Error(json.message || 'Silme işlemi başarısız');
-        }
-        
-        // Refresh list
-        loadUsers();
-      } catch(e) {
-        console.error(e);
-        alert(e instanceof Error ? e.message : 'Silme işlemi başarısız');
-      }
+    if (!confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) return;
+    try {
+      setUsers(prev => prev.filter(u => u.id !== userId));
+      await fetchApi(`/api/users/${userId}`, { method: 'DELETE' });
+    } catch (err) {
+      loadAllData();
     }
   };
 
-  const handleEditUser = (user: User) => {
-    setEditingUser({...user});
-    setIsModalOpen(true);
+  const handleUpdatePlan = (updatedPlan: any) => {
+    const newPlans = plans.map(p => p.id === updatedPlan.id ? updatedPlan : p);
+    setPlans(newPlans);
+    localStorage.setItem('subscriptionPlans', JSON.stringify(newPlans));
+    setEditingPlan(null);
+    // Real-world: Should also update all users on this plan if required, 
+    // or just new subscriptions. For now, it updates the "offering".
   };
 
-  const handleSaveUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingUser) return;
-
+  const handleTemplateSave = async (template: DocumentTemplate) => {
+    // Logic to save template to backend
     try {
-        // Send only editable fields to backend
-        const payload = {
-            name: editingUser.name,
-            email: editingUser.email,
-            companyName: editingUser.companyName,
-            plan: editingUser.plan,
-            role: editingUser.role,
-            isActive: editingUser.isActive
-        };
+        const method = template.id && templates.find(t => t.id === template.id) ? 'PUT' : 'POST';
+        const url = method === 'PUT' ? `/api/templates/${template.id}` : '/api/templates';
+        
+        // Mock ID for new templates if needed
+        const payload = method === 'POST' ? { ...template, id: `tpl-${Date.now()}` } : template;
 
-        const res = await fetchApi(`/api/users/${editingUser.id}`, {
-            method: 'PUT',
-            headers: { 
-                'Content-Type': 'application/json',
-            },
+        const res = await fetchApi(url, {
+            method,
             body: JSON.stringify(payload)
         });
-        
-        if (!res.ok) {
-            const data = await res.json();
-            throw new Error(data.message || 'Güncelleme başarısız');
+
+        if (res.ok) {
+            loadAllData();
+            setIsTemplateBuilderOpen(false);
+            setEditingTemplate(null);
         }
-        
-        loadUsers(); // Refresh
-        setIsModalOpen(false);
-        setEditingUser(null);
-        // alert(t?.common?.success || 'Kullanıcı güncellendi');
-    } catch(e) {
-        console.error(e);
-        alert(e instanceof Error ? e.message : 'Güncelleme başarısız');
+    } catch (error) {
+        console.error(error);
+        alert('Şablon kaydedilemedi.');
     }
   };
 
-  const [recentLogs, setRecentLogs] = useState<any[]>([]);
-  const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
-  const [subscriptionPlans, setSubscriptionPlans] = useState<any[]>([]);
-  const [invoices, setInvoices] = useState<any[]>([]);
+  // --- Views ---
 
-  // Modal State for Templates & Plans
-  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
-  const [templateEditorMode, setTemplateEditorMode] = useState<'html' | 'visual'>('html');
-  const [editingTemplate, setEditingTemplate] = useState<Partial<DocumentTemplate>>({});
-  
-  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
-  const [editingPlan, setEditingPlan] = useState<any>(null);
+  const DashboardView = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard icon={Users} label="Toplam Kullanıcı" value={users.length} trend={12} color="blue" />
+        <StatCard icon={CreditCard} label="Aktif Abonelik" value={users.filter(u => u.plan !== 'FREE').length} trend={8} color="indigo" />
+        <StatCard icon={FileText} label="Toplam Şablon" value={templates.length} color="amber" />
+        <StatCard icon={Server} label="Sunucu Durumu" value={stats?.status === 'online' ? '%100' : '%0'} color="emerald" />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-[#1e293b] border border-slate-700/50 rounded-2xl p-6">
+          <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <Activity size={20} className="text-blue-500" />
+            Canlı Sistem İzleme
+          </h3>
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700">
+               <div className="text-2xl font-bold text-emerald-400">{stats?.cpu}%</div>
+               <div className="text-xs text-slate-400 uppercase tracking-widest mt-1">CPU Kullanımı</div>
+            </div>
+            <div className="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700">
+               <div className="text-2xl font-bold text-blue-400">{stats?.memory}%</div>
+               <div className="text-xs text-slate-400 uppercase tracking-widest mt-1">RAM Kullanımı</div>
+            </div>
+            <div className="bg-slate-800/50 rounded-xl p-4 text-center border border-slate-700">
+               <div className="text-2xl font-bold text-amber-400">{stats?.activeConnections}</div>
+               <div className="text-xs text-slate-400 uppercase tracking-widest mt-1">Anlık Bağlantı</div>
+            </div>
+          </div>
+          <div className="h-48 bg-slate-900/50 rounded-xl border border-slate-800 relative overflow-hidden flex items-end px-2">
+             {/* Fake Chart Bars */}
+             {Array.from({ length: 20 }).map((_, i) => (
+                 <div 
+                    key={i} 
+                    className="flex-1 bg-blue-500/20 mx-1 rounded-t transition-all duration-500 hover:bg-blue-500/40"
+                    style={{ height: `${Math.random() * 80 + 10}%` }}
+                 ></div>
+             ))}
+          </div>
+        </div>
+
+        <div className="bg-[#1e293b] border border-slate-700/50 rounded-2xl p-6 flex flex-col">
+           <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+             <AlertTriangle size={20} className="text-amber-500" />
+             Son Aktiviteler & Hatalar
+           </h3>
+           <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2 max-h-[300px]">
+              {logs.map(log => (
+                  <div key={log.id} className="text-sm p-3 rounded-lg bg-slate-900/50 border border-slate-800 flex flex-col gap-1">
+                      <div className="flex items-center justify-between">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                              log.level === 'error' ? 'bg-red-500/20 text-red-500' : 
+                              log.level === 'warn' ? 'bg-amber-500/20 text-amber-500' : 'bg-blue-500/20 text-blue-500'
+                          }`}>{log.level}</span>
+                          <span className="text-slate-500 text-xs">{new Date(log.timestamp).toLocaleTimeString()}</span>
+                      </div>
+                      <span className="text-slate-300">{log.message}</span>
+                      <span className="text-[10px] text-slate-600">{log.source}</span>
+                  </div>
+              ))}
+           </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const UsersView = () => (
+    <div className="space-y-6">
+        <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-white">Kullanıcı Yönetimi</h2>
+            <div className="flex items-center gap-3">
+                 <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                    <input 
+                        type="text" 
+                        placeholder="Kullanıcı ara..." 
+                        className="bg-[#1e293b] border border-slate-700 text-sm text-white pl-10 pr-4 py-2.5 rounded-xl focus:outline-none focus:border-blue-500 w-64"
+                    />
+                 </div>
+                 <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition-colors">
+                     <Plus size={18} /> Yeni Kullanıcı
+                 </button>
+            </div>
+        </div>
+
+        <div className="bg-[#1e293b] border border-slate-700/50 rounded-2xl overflow-hidden shadow-xl">
+            <table className="w-full text-left text-sm text-slate-400">
+                <thead className="bg-slate-900/50 text-slate-200 font-medium border-b border-slate-700">
+                    <tr>
+                        <th className="px-6 py-4">Kullanıcı / Şirket</th>
+                        <th className="px-6 py-4">Paket Durumu</th>
+                        <th className="px-6 py-4">İndirme Hakkı</th>
+                        <th className="px-6 py-4">Rol / Yetki</th>
+                        <th className="px-6 py-4">Durum</th>
+                        <th className="px-6 py-4 text-right">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                    {users.map(u => (
+                        <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
+                            <td className="px-6 py-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-white font-bold border border-slate-600">
+                                        {u.name.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-white">{u.name}</div>
+                                        <div className="text-xs text-slate-500">{u.email}</div>
+                                        {u.companyName && <div className="text-[10px] text-blue-400 mt-0.5">{u.companyName}</div>}
+                                    </div>
+                                </div>
+                            </td>
+                            <td className="px-6 py-4">
+                                <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${
+                                    u.plan === 'PREMIUM' || u.plan === 'YEARLY' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                                    u.plan === 'GOLD' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                                    'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                                }`}>
+                                    {plans.find(p => p.id === u.plan)?.name || u.plan}
+                                </span>
+                            </td>
+                            <td className="px-6 py-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-full max-w-[80px] h-2 bg-slate-800 rounded-full overflow-hidden">
+                                        <div 
+                                            className={`h-full ${u.remainingDownloads === 'UNLIMITED' ? 'bg-emerald-500 w-full' : 'bg-blue-500'}`}
+                                            style={{ width: typeof u.remainingDownloads === 'number' ? `${Math.min(u.remainingDownloads, 100)}%` : '100%' }}
+                                        />
+                                    </div>
+                                    <span className="text-white font-mono font-bold">
+                                        {u.remainingDownloads === 'UNLIMITED' ? '∞' : u.remainingDownloads}
+                                    </span>
+                                </div>
+                            </td>
+                            <td className="px-6 py-4">
+                                <span className="font-bold text-white">{u.role}</span>
+                            </td>
+                            <td className="px-6 py-4">
+                                {u.isBanned ? (
+                                    <span className="flex items-center gap-1 text-red-400 text-xs font-bold px-2 py-1 bg-red-500/10 rounded">
+                                        <Lock size={12} /> Yasaklı
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center gap-1 text-emerald-400 text-xs font-bold px-2 py-1 bg-emerald-500/10 rounded">
+                                        <Check size={12} /> Aktif
+                                    </span>
+                                )}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                    <button 
+                                        onClick={() => setEditingUser(u)}
+                                        className="p-2 bg-slate-800 hover:bg-blue-600 text-slate-400 hover:text-white rounded-lg transition-colors border border-slate-700" title="Düzenle">
+                                        <Edit2 size={16} />
+                                    </button>
+                                    <button 
+                                        onClick={() => handleDeleteUser(u.id)}
+                                        className="p-2 bg-slate-800 hover:bg-red-600 text-slate-400 hover:text-white rounded-lg transition-colors border border-slate-700" title="Sil">
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+  );
+
+  const PackagesView = () => (
+    <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+            <ShoppingBag className="text-indigo-400" /> 
+            Paket ve Abonelik Ayarları
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {plans.map((plan, idx) => (
+                <div key={idx} className="bg-[#1e293b] border border-slate-700 rounded-2xl p-6 relative group hover:border-indigo-500/50 transition-all duration-300">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl bg-${plan.color || 'slate'}-600`}>
+                            {plan.name.charAt(0)}
+                        </div>
+                        <button 
+                            onClick={() => setEditingPlan(plan)}
+                            className="p-2 bg-slate-800 hover:bg-indigo-600 rounded-lg text-slate-400 hover:text-white transition-colors">
+                            <Edit2 size={18} />
+                        </button>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
+                    <div className="text-2xl font-bold text-indigo-400 mb-4">{plan.price} <span className="text-sm text-slate-500 font-normal">{plan.period}</span></div>
+                    
+                    <div className="space-y-3 mb-6">
+                        <div className="flex items-center justify-between text-sm p-3 bg-slate-900/50 rounded-lg border border-slate-800/50">
+                            <span className="text-slate-400">İndirme Hakkı</span>
+                            <span className="text-white font-bold">{plan.limit === 'UNLIMITED' ? 'Sınırsız' : plan.limit}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm p-3 bg-slate-900/50 rounded-lg border border-slate-800/50">
+                            <span className="text-slate-400">Özellik Sayısı</span>
+                            <span className="text-white font-bold">{plan.features?.length || 0}</span>
+                        </div>
+                    </div>
+
+                    <ul className="space-y-2">
+                        {plan.features?.slice(0, 3).map((f: string, i: number) => (
+                            <li key={i} className="flex items-center gap-2 text-xs text-slate-400">
+                                <Check size={14} className="text-emerald-500 shrink-0" /> {f}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+            
+            <button className="border-2 border-dashed border-slate-700 hover:border-indigo-500/50 hover:bg-slate-800/30 rounded-2xl flex flex-col items-center justify-center text-slate-500 hover:text-indigo-400 transition-all gap-3 min-h-[350px]">
+                <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-2">
+                    <Plus size={32} />
+                </div>
+                <span className="font-medium">Yeni Paket Oluştur</span>
+            </button>
+        </div>
+    </div>
+  );
+
+  const TemplatesView = () => (
+      <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-white">Döküman Şablonları</h2>
+            <button 
+                onClick={() => {
+                    setEditingTemplate({ id: '', title: '', category: 'Genel', description: '', isPremium: false, fields: [] });
+                    setIsTemplateBuilderOpen(true);
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition-colors">
+                <Plus size={18} /> Yeni Şablon
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {templates.map(tpl => (
+                  <div key={tpl.id} className="bg-[#1e293b] border border-slate-700 p-4 rounded-xl flex items-start gap-4 group hover:border-slate-500 transition-colors">
+                      <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
+                          <FileText className="text-slate-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-white truncate">{tpl.title}</h4>
+                          <span className="text-xs text-slate-500 bg-slate-900 px-2 py-0.5 rounded border border-slate-800 inline-block mb-1">{tpl.category}</span>
+                          <p className="text-xs text-slate-400 line-clamp-2">{tpl.description}</p>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                          <button 
+                             onClick={() => {
+                                 setEditingTemplate(tpl);
+                                 setIsTemplateBuilderOpen(true);
+                             }}
+                             className="p-1.5 hover:bg-blue-600 hover:text-white rounded text-slate-500 transition-colors">
+                             <Edit2 size={16} />
+                          </button>
+                          <button className="p-1.5 hover:bg-red-600 hover:text-white rounded text-slate-500 transition-colors">
+                             <Trash2 size={16} />
+                          </button>
+                      </div>
+                  </div>
+              ))}
+          </div>
+      </div>
+  );
+
+  const SystemView = () => (
+      <div className="h-[600px] bg-black rounded-xl border border-slate-800 font-mono text-sm p-4 overflow-hidden flex flex-col shadow-2xl">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+              <span className="text-green-500 font-bold flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                  SYSTEM.LOG
+              </span>
+              <div className="flex gap-2">
+                  <button className="text-slate-500 hover:text-white"><Download size={16} /></button>
+                  <button className="text-slate-500 hover:text-white"><RefreshCw size={16} /></button>
+              </div>
+          </div>
+          <div className="flex-1 overflow-y-auto space-y-1 custom-scrollbar">
+              {logs.map((log) => (
+                  <div key={log.id} className="flex gap-3 hover:bg-white/5 p-0.5 rounded">
+                      <span className="text-slate-500 shrink-0">[{new Date(log.timestamp).toLocaleTimeString()}]</span>
+                      <span className={`uppercase font-bold shrink-0 w-16 ${
+                          log.level === 'error' ? 'text-red-500' : 
+                          log.level === 'warn' ? 'text-yellow-500' : 'text-blue-500'
+                      }`}>{log.level}</span>
+                      <span className="text-slate-300">{log.message}</span>
+                  </div>
+              ))}
+              <div className="animate-pulse text-green-500/50">_</div>
+          </div>
+      </div>
+  );
+
+  // --- Modals ---
 
   return (
-    <div className="space-y-8 relative font-sans text-slate-900 dark:text-slate-100">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-        <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400">
-            {t?.admin?.title || 'Yönetici Paneli'}
-          </h1>
-          <div className="flex items-center gap-3 mt-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
-             <span className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border ${isServerOnline ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800'}`}>
-                <span className={`w-2 h-2 rounded-full ${isServerOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
-                {isServerOnline ? 'SYSTEM ONLINE' : 'SYSTEM OFFLINE'}
-             </span>
-             <span>•</span>
-             <span>v2.4.0 Stable</span>
-          </div>
-        </div>
-        <div className="flex gap-3">
-            <button 
-                onClick={() => setActiveTab('subscribers')}
-                className="px-5 py-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:hover:bg-indigo-900/50 rounded-xl font-semibold transition-all flex items-center gap-2 group"
-            >
-                <Users size={18} className="group-hover:scale-110 transition-transform" />
-                <span>{t?.admin?.subscribers || 'Aboneleri Yönet'}</span>
-            </button>
-            <button 
-                onClick={() => window.open('http://localhost:3001/api/status', '_blank')}
-                className="px-5 py-2.5 bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl font-semibold transition-all flex items-center gap-2 shadow-lg shadow-slate-900/20"
-            >
-                <Activity size={18} />
-                <span className="hidden sm:inline">Monitor</span>
-            </button>
-        </div>
-      </div>
-
-       {/* Enhanced Notification Toast */}
-      {emailNotification && (
-        <div className={`fixed top-6 right-6 p-4 pr-10 rounded-2xl shadow-2xl glass-panel border z-[100] flex items-start gap-4 animate-in slide-in-from-right-4 duration-300 ${
-          emailNotification.type === 'success' ? 'bg-green-50/90 border-green-200 text-green-800 dark:bg-green-900/90 dark:border-green-800 dark:text-green-100' : 'bg-red-50/90 border-red-200 text-red-800 dark:bg-red-900/90 dark:border-red-800 dark:text-red-100'
-        }`}>
-          <div className={`p-2 rounded-full shrink-0 ${emailNotification.type === 'success' ? 'bg-green-100 dark:bg-green-800' : 'bg-red-100 dark:bg-red-800'}`}>
-            {emailNotification.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
-          </div>
-          <div>
-             <h4 className="font-bold text-sm tracking-wide">{emailNotification.type === 'success' ? 'BAŞARILI' : 'HATA'}</h4>
-             <p className="text-sm opacity-90">{emailNotification.message}</p>
-          </div>
-          <button onClick={() => setEmailNotification(null)} className="absolute top-4 right-4 text-current opacity-50 hover:opacity-100 transition-opacity">
-            <X size={16} />
-          </button>
-        </div>
-      )}
-
-      {/* Modern Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-            { 
-              title: t?.admin?.activeSubscribers || 'Aktif Abone', 
-              value: stats.activeUsers, 
-              icon: Users, 
-              color: 'blue',
-              trend: '+12% bu hafta'
-            },
-            { 
-              title: t?.admin?.totalDocuments || 'Üretilen Doküman', 
-              value: stats.totalDocs, 
-              icon: FileText, 
-              color: 'purple',
-              trend: '43 bugün'
-            },
-            { 
-              title: t?.admin?.revenue || 'Tahmini Ciro', 
-              value: `₺${stats.revenue.toLocaleString()}`, 
-              icon: DollarSign, 
-              color: 'green',
-              trend: 'Hedefin %85\'i'
-            },
-            {
-               title: 'Sistem Uptime',
-               value: serverStatus ? `${Math.floor(serverStatus.uptime / 3600)}h ${(serverStatus.uptime % 3600 / 60).toFixed(0)}m` : '--',
-               icon: Server,
-               color: isServerOnline ? 'indigo' : 'red',
-               trend: serverStatus?.platform || 'Unknown'
-            }
-        ].map((stat, i) => (
-             <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
-                <div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500 text-${stat.color}-600 dark:text-${stat.color}-400`}>
-                   <stat.icon size={80} />
-                </div>
-                
-                <div className="relative z-10">
-                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-${stat.color}-50 text-${stat.color}-600 dark:bg-${stat.color}-900/30 dark:text-${stat.color}-400`}>
-                      <stat.icon size={24} />
-                   </div>
-                   <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-1 tracking-tight">{stat.value}</h3>
-                   <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{stat.title}</p>
-                   
-                   <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700/50 flex items-center gap-2 text-xs font-semibold">
-                      <TrendingUp size={14} className="text-green-500" />
-                      <span className="text-green-600 dark:text-green-400">{stat.trend}</span>
-                   </div>
-                </div>
-             </div>
-        ))}
-      </div>
-
-      {/* Modern Tabs */}
-      <div className="bg-white dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 inline-flex flex-wrap gap-1 shadow-sm overflow-x-auto max-w-full">
-        {['overview', 'subscribers', 'templates', 'packages', 'logs'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all flex items-center gap-2 ${
-              activeTab === tab
-                ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 shadow-sm ring-1 ring-indigo-500/10'
-                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-700/50'
-            }`}
-          >
-            {tab === 'overview' && <Activity size={16} />}
-            {tab === 'subscribers' && <Users size={16} />}
-            {tab === 'templates' && <FileText size={16} />}
-            {tab === 'packages' && <CreditCard size={16} />}
-            {tab === 'logs' && <List size={16} />}
-            
-            <span className="whitespace-nowrap">
-                {tab === 'overview' && (t?.admin?.overview || 'Genel Bakış')}
-                {tab === 'subscribers' && (t?.admin?.subscribers || 'Aboneler')}
-                {tab === 'templates' && (t?.admin?.templates || 'Şablonlar')}
-                {tab === 'packages' && (t?.admin?.packagesAndPrice || 'Paketler')}
-                {tab === 'logs' && (t?.admin?.logs || 'Loglar')}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Overview Tab */}
-      {activeTab === 'overview' && (
-        <div className="grid lg:grid-cols-3 gap-8 animate-fade-in-up">
-          {/* Users Table */}
-          <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50 backdrop-blur-sm">
-              <div className="flex items-center gap-3">
-                 <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
-                    <Users size={18} />
-                 </div>
-                 <h3 className="font-bold text-slate-900 dark:text-white text-lg">{t?.admin?.recentMembers || 'Son Üyelikler'}</h3>
-              </div>
-              
-              <div className="relativehidden md:block">
-                <Search className="absolute left-3 top-2.5 text-slate-400 dark:text-slate-500" size={16} />
-                <input
-                  type="text"
-                  placeholder={t?.admin?.search || 'Kullanıcı Ara...'}
-                  className="pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all w-64 placeholder:text-slate-400 dark:placeholder:text-slate-600 dark:text-slate-200"
-                />
-              </div>
-            </div>
-            
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-sm text-left">
-                <thead className="text-xs text-slate-500 dark:text-slate-400 uppercase bg-slate-50/80 dark:bg-slate-700/30 border-b border-slate-100 dark:border-slate-700">
-                  <tr>
-                    <th className="px-6 py-4 font-semibold">{t?.admin?.user || 'Kullanıcı'}</th>
-                    <th className="px-6 py-4 font-semibold">{t?.admin?.plan || 'Paket'}</th>
-                    <th className="px-6 py-4 font-semibold">{t?.admin?.status || 'Durum'}</th>
-                    <th className="px-6 py-4 text-right font-semibold">{t?.admin?.action || 'İşlem'}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
-                  {allUsers.slice(0, 5).map((u, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-indigo-500/20">
-                                {u.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div>
-                                <div className="font-semibold text-slate-900 dark:text-slate-200">{u.name}</div>
-                                <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                                    <Building2 size={10} />
-                                    {u.companyName || 'Bireysel'}
-                                </div>
-                            </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium border ${
-                             u.plan === SubscriptionPlan.YEARLY 
-                             ? 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800/50' 
-                             : u.plan === SubscriptionPlan.MONTHLY 
-                             ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50' 
-                             : 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
-                        }`}>
-                           {u.plan === SubscriptionPlan.YEARLY ? 'Pro Yıllık' : u.plan === SubscriptionPlan.MONTHLY ? 'Pro Aylık' : 'Ücretsiz'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                         <div className="flex items-center gap-2">
-                            <span className={`w-2 h-2 rounded-full ${u.isActive ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600'}`}></span>
-                            <span className={`text-sm font-medium ${u.isActive ? 'text-green-700 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
-                                {u.isActive ? (t?.common?.active || 'Aktif') : 'Pasif'}
-                            </span>
-                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button 
-                                onClick={() => handleSendWelcomeEmail(u)}
-                                disabled={emailSending[u.id]}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shadow-sm ${
-                                    emailSending[u.id] 
-                                    ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed dark:bg-indigo-900/20 dark:text-indigo-500' 
-                                    : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/30'
-                                }`}
-                                title="Hoş Geldin Maili Gönder"
-                            >
-                               {emailSending[u.id] ? <Loader2 size={12} className="animate-spin"/> : <Send size={12} />}
-                               {emailSending[u.id] ? '' : 'Mail'}
-                            </button>
-                            <button onClick={() => handleEditUser(u)} className="p-1.5 text-slate-400 hover:text-blue-600 dark:text-slate-500 dark:hover:text-blue-400 transition-colors">
-                              <Edit2 size={16} />
-                            </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {allUsers.length === 0 && (
-                    <tr>
-                      <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center">
-                        <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
-                            <Users size={24} className="text-slate-400" />
-                        </div>
-                        <p>Henüz kayıtlı kullanıcı bulunamadı.</p>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Real System Status Widget */}
-          <div className="bg-[#0f172a] text-slate-300 rounded-2xl border border-slate-800 shadow-xl overflow-hidden flex flex-col h-full relative group">
-             {/* Decorative Background */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-            
-            <div className="p-6 border-b border-slate-800 bg-slate-900/50 backdrop-blur flex justify-between items-center relative z-10">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-indigo-500/20 text-indigo-400 rounded-lg border border-indigo-500/30">
-                        <Activity size={18} />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-white text-lg">Sistem Durumu</h3>
-                        <p className="text-xs text-slate-500 font-mono">live_monitor_v1.0</p>
-                    </div>
-                </div>
-                <div className={`w-3 h-3 rounded-full ${isServerOnline ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)] animate-pulse' : 'bg-red-500'}`}></div>
-            </div>
-            
-            {isServerOnline && serverStatus ? (
-              <div className="p-6 space-y-8 flex-1 relative z-10">
-                 {/* Memory Gauge */}
-                 <div>
-                    <div className="flex justify-between text-sm mb-2">
-                        <span className="text-slate-400 font-medium">Bellek Kullanımı</span>
-                        <span className="font-mono text-white ml-auto">{serverStatus.memoryUsage}</span>
-                    </div>
-                    <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700/50">
-                        <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-1000 ease-out" style={{ width: '42%' }}></div>
-                    </div>
-                    <p className="text-[10px] text-right text-slate-500 mt-1.5 font-mono">Total: {serverStatus.totalMemory}</p>
-                 </div>
-
-                 <div className="grid grid-cols-2 gap-4">
-                     <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
-                         <div className="flex items-center gap-2 text-indigo-400 mb-2">
-                             <Globe size={16} />
-                             <span className="text-xs font-bold uppercase tracking-wider">Platform</span>
-                         </div>
-                         <p className="text-sm font-bold text-white capitalizing font-mono">{serverStatus.platform}</p>
-                     </div>
-                     <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
-                         <div className="flex items-center gap-2 text-pink-400 mb-2">
-                             <Cpu size={16} />
-                             <span className="text-xs font-bold uppercase tracking-wider">CPU Load</span>
-                         </div>
-                         <p className="text-sm font-bold text-white font-mono">{serverStatus.cpuLoad ? serverStatus.cpuLoad[0].toFixed(2) : '0.00'}%</p>
-                     </div>
-                 </div>
-
-                 {/* Terminal Logs */}
-                 <div className="flex-1 mt-2">
-                     <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <List size={10} />
-                        Console Logs
-                     </h4>
-                     <div className="font-mono text-xs space-y-2 max-h-32 overflow-y-auto custom-scrollbar pr-2">
-                        {serverLogs.slice(0, 4).map((log, idx) => (
-                            <div key={idx} className="flex gap-3 text-slate-400 hover:text-slate-200 transition-colors py-0.5">
-                                <span className={`shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full ${
-                                    log.type === 'error' ? 'bg-red-500 shadow-red-500/50' : 
-                                    log.type === 'success' ? 'bg-green-500 shadow-green-500/50' : 'bg-blue-500 shadow-blue-500/50'
-                                } shadow-sm`}></span>
-                                <span className="truncate flex-1 opacity-80">
-                                   <span className="text-slate-500 mr-2">[{new Date().toLocaleTimeString()}]</span>
-                                   {log.action}: {log.details || ''}
-                                </span>
-                            </div>
-                        ))}
-                        {serverLogs.length === 0 && <p className="text-xs text-slate-600 italic">Reading stream...</p>}
-                     </div>
-                 </div>
-              </div>
-            ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4 animate-pulse">
-                        <AlertCircle size={32} className="text-red-500" />
-                    </div>
-                    <p className="text-white font-bold text-lg">Bağlantı Kesildi</p>
-                    <p className="text-sm text-slate-500 mt-2 max-w-[200px]">Backend servisine erişilemiyor. Lütfen sunucuyu kontrol edin.</p>
-                </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Subscribers Tab (Active Management) */}
-      {activeTab === 'subscribers' && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-             <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t?.admin?.allSubscribers || 'Tüm Aboneler'}</h3>
-                <div className="text-sm text-slate-500 dark:text-slate-400">
-                    Toplam: <b>{allUsers.length}</b> Kayıtlı Kullanıcı
-                </div>
-             </div>
-             <button 
-                onClick={loadUsers} 
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 font-medium transition"
-             >
-                <div className="w-4 h-4 animate-spin-slow" style={{ animationDuration: '3s' }}>
-                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-1.343 3-3s-1.343-3-3-3m0 6c-1.657 0-3-1.343-3-3s1.343-3 3-3m-9 0c0-1.657 1.343-3 3-3s3 1.343 3 3m-6 0c0 1.657-1.343 3-3 3s-3-1.343-3-3m0-6c0-1.657 1.343-3 3-3s3 1.343 3 3m-6 0c0 1.657-1.343 3-3 3s-3-1.343-3-3"/></svg>
-                </div>
-                Listeyi Yenile
-             </button>
-          </div>
-
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-slate-700 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
-                <tr>
-                  <th className="px-6 py-3">{t?.admin?.subscribers || 'Aboneler'}</th>
-                  <th className="px-6 py-3">{t?.dashboard?.package || 'Plan'}</th>
-                  <th className="px-6 py-3">{t?.common?.confirm || 'Durum'}</th>
-                  <th className="px-6 py-3">{t?.nav?.admin || 'Rol'}</th>
-                  <th className="px-6 py-3">{t?.common?.edit || 'İşlem'}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                {allUsers.map((u, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-slate-900 dark:text-white">{u.name}</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">{u.email}</div>
-                      <div className="text-xs text-slate-400 dark:text-slate-500">{u.companyName}</div>
-                    </td>
-                    <td className="px-6 py-4 text-slate-600 dark:text-slate-300">
-                       {u.plan === SubscriptionPlan.YEARLY ? 'Yıllık Pro' : u.plan === SubscriptionPlan.MONTHLY ? 'Aylık' : 'Ücretsiz'}
-                    </td>
-                    <td className="px-6 py-4">
-                      {u.isBanned ? (
-                           <span className="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-red-800 text-white animate-pulse">
-                             YASAKLI 🚫
-                           </span>
-                      ) : (
-                          <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${
-                            u.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                          }`}>
-                            {u.isActive ? 'Aktif' : 'Pasif'}
-                          </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-slate-600">
-                        {u.role === UserRole.ADMIN ? <b className="text-purple-600">Yönetici</b> : 'Kullanıcı'}
-                        {u.isBanned && <div className="text-[10px] text-red-500 max-w-[120px] truncate" title={u.banReason}>{u.banReason}</div>}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2 justify-end">
-                        {u.role !== UserRole.ADMIN && (
-                            <button
-                                onClick={() => {
-                                    if(u.isBanned) {
-                                      handleUnbanUser(u);
-                                    } else {
-                                      setBanModal({ isOpen: true, userId: u.id, userName: u.name });
-                                    }
-                                }}
-                                className={`p-1.5 hover:bg-slate-100 rounded transition ${u.isBanned ? 'text-green-600 ring-2 ring-green-100 bg-green-50' : 'text-amber-600'}`}
-                                title={u.isBanned ? "Yasağı Kaldır" : "Yasakla (Ban)"}
-                            >
-                                <Shield size={16} fill={u.isBanned ? "currentColor" : "none"}/>
-                            </button>
-                        )}
-                        <button 
-                            onClick={() => handleSendWelcomeEmail(u)}
-                            disabled={emailSending[u.id]}
-                            className={`flex items-center gap-1 px-2 py-1.5 rounded text-xs font-medium transition ${
-                                emailSending[u.id] 
-                                ? 'bg-indigo-50 text-indigo-400 cursor-not-allowed' 
-                                : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
-                            }`}
-                            title="Hoş Geldin Maili Gönder"
-                        >
-                           {emailSending[u.id] ? <Loader2 size={14} className="animate-spin"/> : <Send size={14} />}
-                           {emailSending[u.id] ? '...' : (t?.admin?.sendMail || 'Mail At')}
-                        </button>
-                        <button 
-                            onClick={() => handleEditUser(u)}
-                            className="p-1.5 hover:bg-slate-100 rounded transition" 
-                            title={t?.common?.edit || "Düzenle"}>
-                          <Edit2 size={16} className="text-slate-600" />
-                        </button>
-                        <button 
-                            onClick={() => handleDeleteUser(u.id)}
-                            className="p-1.5 hover:bg-slate-100 rounded transition text-red-600" 
-                            title={t?.common?.delete || "Sil"}>
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        </div>
-      )}
-
-      {/* Templates Tab */}
-      {activeTab === 'templates' && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-           <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
-            <h3 className="font-bold text-slate-900 dark:text-white">{t?.admin?.documentTemplates || 'Doküman Şablonları'}</h3>
-            <button 
-                onClick={handleCreateTemplate}
-                className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 flex items-center gap-1">
-                <Plus size={16} /> {t?.admin?.newTemplateButton || 'Yeni Şablon'}
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-3">{t?.admin?.templateName || 'Şablon Adı'}</th>
-                  <th className="px-6 py-3">{t?.admin?.category || 'Kategori'}</th>
-                  <th className="px-6 py-3">{t?.admin?.type || 'Tür'}</th>
-                  <th className="px-6 py-3 text-right">{t?.admin?.action || 'İşlem'}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {templates.length > 0 ? (
-                  templates.map((template, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50">
-                      <td className="px-6 py-4 font-medium text-slate-900">
-                        {t?.templates?.[`t${template.id}_title`] || template.title}
-                        {template.isPremium && <span className="ml-2 inline-block px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] rounded border border-amber-200">PRO</span>}
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">{template.category}</td>
-                      <td className="px-6 py-4 text-slate-600">
-                        {template.isPremium ? (t?.admin?.premium || 'Premium') : (t?.admin?.standard || 'Standart')}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                         <div className="flex justify-end gap-2">
-                             <button onClick={() => handleEditTemplate(template)} className="p-1.5 hover:bg-slate-100 rounded text-blue-600">
-                                 <Edit2 size={16} />
-                             </button>
-                             <button onClick={() => handleDeleteTemplate(template.id)} className="p-1.5 hover:bg-slate-100 rounded text-red-600">
-                                 <Trash2 size={16} />
-                             </button>
-                         </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
-                      Aktif şablon bulunamadı.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Packages Tab */}
-      {activeTab === 'packages' && (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {subscriptionPlans.map((plan) => (
-                    <div key={plan.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative hover:shadow-md transition">
-                        <div className="flex justify-between items-start mb-4">
-                            <div>
-                                <h3 className="font-bold text-lg text-slate-900">{plan.name}</h3>
-                                <p className="text-2xl font-bold text-blue-600 mt-2">{plan.price} <span className="text-sm text-slate-500 font-normal">{plan.period}</span></p>
-                            </div>
-                            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
-                                <CreditCard size={20} />
-                            </div>
-                        </div>
-                        
-                        <div className="space-y-3 mb-6">
-                            {plan.features.map((feature: string, idx: number) => (
-                                <div key={idx} className="flex items-center gap-2 text-sm text-slate-600">
-                                    <Check size={14} className="text-green-500" />
-                                    {feature}
-                                </div>
-                            ))}
-                        </div>
-
-                        <button 
-                            onClick={() => handleEditPlan(plan)}
-                            className="w-full py-2 border border-slate-200 rounded-lg text-slate-600 font-medium hover:bg-slate-50 hover:text-slate-900 transition flex items-center justify-center gap-2"
-                        >
-                            <Edit2 size={16} /> Paket Düzenle
-                        </button>
-                    </div>
-                ))}
-            </div>
-
-            {/* Extra Packages Section */}
-            <div className="pt-8 border-t border-slate-200 dark:border-slate-700">
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Ek İndirme Paketleri</h3>
-                    <button className="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-sm font-bold hover:bg-indigo-100 transition">
-                        + Yeni Paket
-                    </button>
-                </div>
-                
-                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-8 border border-dashed border-slate-300 dark:border-slate-700 text-center">
-                    <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-slate-400">
-                        <Download size={24} />
-                    </div>
-                    <h4 className="font-bold text-slate-900 dark:text-white mb-2">Henüz Ek Paket Tanımlanmamış</h4>
-                    <p className="text-sm text-slate-500 max-w-md mx-auto mb-6">
-                        Kullanıcıların mevcut aboneliklerine ek olarak satın alabilecekleri tek seferlik indirme haklarını buradan yönetebilirsiniz.
-                    </p>
-                    <button className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/20">
-                        İlk Paketi Oluştur
-                    </button>
-                </div>
-            </div>
-        </div>
-      )}
-
-      {/* Logs / System Monitoring COMPLETE TAB */}
-      {activeTab === 'logs' && (
-         <div className="space-y-6">
-             {/* Big Status Cards */}
-             {isServerOnline ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                        <div className="p-4 bg-blue-50 text-blue-600 rounded-full">
-                            <Database size={24} />
-                        </div>
-                        <div>
-                            <p className="text-sm text-slate-500">Memory</p>
-                            <h3 className="text-xl font-bold text-slate-900">{serverStatus?.memoryUsage}</h3>
-                            <p className="text-xs text-slate-400">of {serverStatus?.totalMemory}</p>
-                        </div>
-                    </div>
-                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                        <div className="p-4 bg-green-50 text-green-600 rounded-full">
-                            <PlayCircle size={24} />
-                        </div>
-                        <div>
-                            <p className="text-sm text-slate-500">Uptime</p>
-                            <h3 className="text-xl font-bold text-slate-900">{serverStatus?.uptime}s</h3>
-                            <p className="text-xs text-slate-400">Running smoothly</p>
-                        </div>
-                    </div>
-                     <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
-                        <div className="p-4 bg-purple-50 text-purple-600 rounded-full">
-                            <Cpu size={24} />
-                        </div>
-                        <div>
-                            <p className="text-sm text-slate-500">CPU Load</p>
-                            <h3 className="text-xl font-bold text-slate-900">{serverStatus?.cpuLoad ? serverStatus.cpuLoad[0].toFixed(2) : '0'}%</h3>
-                            <p className="text-xs text-slate-400">1 min avg</p>
-                        </div>
-                    </div>
-                </div>
-             ) : (
-                 <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center text-red-800">
-                     <AlertCircle size={48} className="mx-auto mb-4" />
-                     <h3 className="text-xl font-bold">Sunucu Offline</h3>
-                     <p>Verilere erişilemiyor. Lütfen backend servisini başlatın.</p>
-                 </div>
-             )}
-
-             {/* Logs Table */}
-             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                    <h3 className="font-bold text-slate-900 flex items-center gap-2">
-                        <Server size={18} />
-                        Canlı Sunucu Kayıtları (Live Logs)
-                    </h3>
-                </div>
-                <div className="max-h-[500px] overflow-y-auto">
-                    <table className="w-full text-sm text-left font-mono">
-                        <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200 sticky top-0">
-                            <tr>
-                                <th className="px-6 py-2">Zaman</th>
-                                <th className="px-6 py-2">Tür</th>
-                                <th className="px-6 py-2">Olay</th>
-                                <th className="px-6 py-2">Detay</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {serverLogs.map((log, idx) => (
-                                <tr key={idx} className="hover:bg-slate-50">
-                                    <td className="px-6 py-2 text-slate-500 text-xs">
-                                        {new Date(log.time).toLocaleTimeString()}
-                                    </td>
-                                    <td className="px-6 py-2">
-                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                                            log.type === 'error' ? 'bg-red-100 text-red-700' :
-                                            log.type === 'success' ? 'bg-green-100 text-green-700' :
-                                            log.type === 'warning' ? 'bg-orange-100 text-orange-700' :
-                                            'bg-blue-100 text-blue-700'
-                                        }`}>
-                                            {log.type}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-2 font-medium text-slate-700">
-                                        {log.action}
-                                    </td>
-                                    <td className="px-6 py-2 text-slate-500 truncate max-w-xs" title={log.details}>
-                                        {log.details || '-'}
-                                    </td>
-                                </tr>
-                            ))}
-                            {serverLogs.length === 0 && (
-                                <tr>
-                                    <td colSpan={4} className="px-6 py-8 text-center text-slate-400">Log kaydı bulunamadı.</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-             </div>
-         </div>
-      )}
-
-      {/* Placeholder for invoices only now */}
-      {activeTab === 'invoices' && (
-         <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-8 text-center text-slate-500">
-             <AlertCircle size={48} className="mx-auto mb-4 text-slate-300" />
-             <h3 className="text-lg font-medium text-slate-900 mb-2">Henüz Veri Yok</h3>
-             <p>Bu modül şu an simülasyon aşamasındadır.</p>
-         </div>
-      )}
-
-      {/* EDIT USER MODAL */}
-      {isModalOpen && editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
-              <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
-                <Edit2 size={18} className="text-blue-600" />
-                Kullanıcı Düzenle
-              </h3>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 transition"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            
-            <form onSubmit={handleSaveUser} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">E-posta (Kullanıcı Adı)</label>
-                <input 
-                  type="email" 
-                  value={editingUser.email}
-                  onChange={e => setEditingUser({...editingUser, email: e.target.value})}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Ad Soyad</label>
-                <input 
-                  type="text" 
-                  value={editingUser.name}
-                  onChange={e => setEditingUser({...editingUser, name: e.target.value})}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Şirket Adı</label>
-                <input 
-                  type="text" 
-                  value={editingUser.companyName || ''}
-                  onChange={e => setEditingUser({...editingUser, companyName: e.target.value})}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                   <label className="block text-sm font-medium text-slate-700 mb-1">Plan</label>
-                   <select
-                      value={editingUser.plan}
-                      onChange={e => setEditingUser({...editingUser, plan: e.target.value as SubscriptionPlan})}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
-                   >
-                     <option value={SubscriptionPlan.FREE}>Ücretsiz</option>
-                     <option value={SubscriptionPlan.MONTHLY}>Aylık Paket</option>
-                     <option value={SubscriptionPlan.YEARLY}>Yıllık Pro</option>
-                   </select>
-                </div>
-                <div>
-                   <label className="block text-sm font-medium text-slate-700 mb-1">Rol</label>
-                   <select
-                      value={editingUser.role}
-                      onChange={e => setEditingUser({...editingUser, role: e.target.value as UserRole})}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
-                   >
-                     <option value={UserRole.SUBSCRIBER}>Kullanıcı</option>
-                     <option value={UserRole.ADMIN}>Yönetici</option>
-                   </select>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 pt-2">
-                <input 
-                  type="checkbox" 
-                  id="isActive"
-                  checked={editingUser.isActive}
-                  onChange={e => setEditingUser({...editingUser, isActive: e.target.checked})}
-                  className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
-                />
-                <label htmlFor="isActive" className="text-sm font-medium text-slate-700">
-                   Kullanıcı Aktif
-                </label>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-4">
-                <button 
-                  type="button" 
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-slate-700 hover:bg-slate-100 font-medium rounded-lg transition"
-                >
-                  {t?.common?.cancel || 'İptal'}
-                </button>
-                <button 
-                  type="submit" 
-                  className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow"
-                >
-                  {t?.common?.save || 'Değişiklikleri Kaydet'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+    <div className="flex h-screen bg-[#0f172a] text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30">
       
-      {/* TEMPLATE EDIT/CREATE MODAL */}
-      {isTemplateModalOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden animate-in fade-in zoom-in duration-200 border border-slate-200 dark:border-slate-700 flex flex-col max-h-[90vh]">
-                <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                    <h3 className="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
-                        <FileText size={18} className="text-blue-600 dark:text-blue-400" />
-                        {editingTemplate.id ? 'Şablon Tasarla' : 'Yeni Şablon Oluştur'}
-                    </h3>
-                    <button onClick={() => setIsTemplateModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition"><X size={20} /></button>
-                </div>
-                
-                <form onSubmit={handleSaveTemplate} className="flex-1 overflow-y-auto custom-scrollbar flex flex-col md:flex-row">
-                    {/* LEFT: Metadata & Fields */}
-                    <div className="w-full md:w-1/3 p-6 space-y-5 border-r border-slate-200 dark:border-slate-700 bg-slate-50/30 dark:bg-slate-900/20">
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Şablon Adı</label>
-                            <input type="text" required value={editingTemplate.title || ''} onChange={e => setEditingTemplate({...editingTemplate, title: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white" placeholder="Örn: İş Sözleşmesi" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Kategori</label>
-                            <select value={editingTemplate.category || 'contract'} onChange={e => setEditingTemplate({...editingTemplate, category: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white">
-                                <option value="contract">Sözleşme</option>
-                                <option value="petition">Dilekçe</option>
-                                <option value="official">Resmi Evrak</option>
-                                <option value="other">Diğer</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Açıklama</label>
-                            <textarea value={editingTemplate.description || ''} onChange={e => setEditingTemplate({...editingTemplate, description: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white" rows={3} placeholder="Şablon hakkında kısa bilgi..." />
-                        </div>
-
-                        {/* Field Manager */}
-                        <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
-                             <div className="flex justify-between items-center mb-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Değişken Alanlar</label>
-                                <button type="button" onClick={() => {
-                                    const newField = { key: `field_${Date.now()}`, label: 'Yeni Alan', type: 'text' as const };
-                                    setEditingTemplate({...editingTemplate, fields: [...editingTemplate.fields, newField]});
-                                }} className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-1 rounded hover:bg-blue-200 transition">+ Ekle</button>
-                             </div>
-                             <div className="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
-                                {editingTemplate.fields.map((field, idx) => (
-                                    <div key={idx} className="flex gap-2 items-center bg-white dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm">
-                                        <div className="flex-1 min-w-0">
-                                            <input 
-                                              type="text" 
-                                              value={field.label} 
-                                              onChange={(e) => {
-                                                  const newFields = [...editingTemplate.fields];
-                                                  newFields[idx].label = e.target.value;
-                                                  setEditingTemplate({...editingTemplate, fields: newFields});
-                                              }}
-                                              className="text-xs font-bold bg-transparent outline-none w-full text-slate-700 dark:text-slate-200"
-                                              placeholder="Etiket"
-                                            />
-                                            <div className="text-[10px] text-slate-400 font-mono truncate">{`{{${field.key}}}`}</div>
-                                        </div>
-                                        <select 
-                                            value={field.type}
-                                            onChange={(e) => {
-                                                const newFields = [...editingTemplate.fields];
-                                                newFields[idx].type = e.target.value as any;
-                                                setEditingTemplate({...editingTemplate, fields: newFields});
-                                            }}
-                                            className="text-[10px] bg-slate-100 dark:bg-slate-700 rounded px-1 py-1 border-none outline-none dark:text-slate-300 w-16"
-                                        >
-                                            <option value="text">Yazı</option>
-                                            <option value="textarea">Uzun</option>
-                                            <option value="date">Tarih</option>
-                                            <option value="number">Sayı</option>
-                                        </select>
-                                        <button 
-                                            type="button"
-                                            onClick={() => {
-                                                 const newFields = editingTemplate.fields.filter((_, i) => i !== idx);
-                                                 setEditingTemplate({...editingTemplate, fields: newFields});
-                                            }}
-                                            className="text-slate-400 hover:text-red-500 transition-colors"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
-                                    </div>
-                                ))}
-                                {editingTemplate.fields.length === 0 && <p className="text-xs text-slate-400 text-center py-2">Henüz değişken eklenmedi.</p>}
-                             </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                            <input type="checkbox" id="isPremium" checked={editingTemplate.isPremium || false} onChange={e => setEditingTemplate({...editingTemplate, isPremium: e.target.checked})} className="w-4 h-4 text-amber-600 border-slate-300 rounded focus:ring-amber-500" />
-                            <label htmlFor="isPremium" className="text-sm font-medium text-slate-700 dark:text-slate-300">Premium (Ücretli)</label>
-                        </div>
-                    </div>
-
-                    {/* RIGHT: HTML Editor or Visual Editor */}
-                    <div className="w-full md:w-2/3 flex flex-col bg-white dark:bg-slate-800 h-full overflow-hidden border-l border-slate-200 dark:border-slate-700">
-                         {/* Tab Header */}
-                         <div className="flex border-b border-slate-200 dark:border-slate-700">
-                             <button
-                                type="button"
-                                onClick={() => setTemplateEditorMode('html')}
-                                className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${templateEditorMode === 'html' ? 'border-blue-600 text-blue-600 bg-blue-50/50 dark:bg-blue-900/20' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
-                             >
-                                 HTML Kod Editörü
-                             </button>
-                             <button
-                                type="button"
-                                onClick={() => setTemplateEditorMode('visual')}
-                                className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${templateEditorMode === 'visual' ? 'border-blue-600 text-blue-600 bg-blue-50/50 dark:bg-blue-900/20' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
-                             >
-                                 Görsel Editör (Sürükle & Bırak)
-                             </button>
-                         </div>
-
-                        {templateEditorMode === 'html' ? (
-                            <div className="flex-1 flex flex-col p-6 overflow-hidden">
-                                <div className="flex justify-between items-center mb-2">
-                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
-                                        Şablon İçeriği (HTML)
-                                        <span className="ml-2 text-xs font-normal text-slate-500 italic">Değişkenleri {'{{degisken}}'} formatında kullanın.</span>
-                                    </label>
-                                    <div className="flex gap-1">
-                                        {['{{companyName}}', '{{date}}', '{{preparedBy}}'].concat(editingTemplate.fields?.map(f => `{{${f.key}}}`) || []).map(tag => (
-                                            <button
-                                                key={tag}
-                                                type="button"
-                                                onClick={() => setEditingTemplate(prev => ({...prev, content: (prev.content || '') + tag }))}
-                                                className="text-[10px] bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded border border-indigo-100 dark:border-indigo-800/50 hover:bg-indigo-100 transition-colors cursor-copy"
-                                                title="Tıkla ve Ekle"
-                                            >
-                                                {tag}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="flex-1 relative rounded-xl border border-slate-300 dark:border-slate-600 overflow-hidden shadow-inner bg-slate-50 dark:bg-slate-900">
-                                    <textarea
-                                        value={editingTemplate.content || ''}
-                                        onChange={e => setEditingTemplate({...editingTemplate, content: e.target.value})}
-                                        className="w-full h-full p-4 font-mono text-sm bg-transparent outline-none resize-none text-slate-800 dark:text-slate-300"
-                                        placeholder="<div class='print-page'>\n  <h1>{{companyName}}</h1>\n  <p>Lütfen içerik giriniz...</p>\n</div>"
-                                    />
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex-1 overflow-hidden p-6 bg-slate-100 dark:bg-slate-900/50">
-                                <VisualTemplateBuilder 
-                                    template={editingTemplate as DocumentTemplate} 
-                                    onUpdate={(updated) => setEditingTemplate(updated)} 
-                                />
-                            </div>
-                        )}
-
-                        <div className="p-4 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3 z-20">
-                            <button type="button" onClick={() => setIsTemplateModalOpen(false)} className="px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-medium rounded-lg transition">İptal</button>
-                            <button type="submit" className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-blue-500/30 transition-all transform active:scale-95">Değişiklikleri Kaydet</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+      {/* Sidebar */}
+      <aside className="w-64 bg-[#1e293b] border-r border-slate-800/50 flex flex-col">
+        <div className="p-6 border-b border-slate-800/50">
+          <div className="flex items-center gap-3">
+             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <Shield className="text-white" size={20} />
+             </div>
+             <div>
+                 <h1 className="font-bold text-white tracking-tight">Admin Paneli</h1>
+                 <span className="text-xs text-slate-500 font-mono">v3.0.1 (Stable)</span>
+             </div>
+          </div>
         </div>
-      )}
+        
+        <nav className="flex-1 p-4 space-y-2">
+          <SidebarItem icon={Activity} label="Genel Bakış" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
+          <SidebarItem icon={Users} label="Kullanıcılar" active={activeTab === 'users'} onClick={() => setActiveTab('users')} />
+          <SidebarItem icon={FileText} label="Şablonlar" active={activeTab === 'documents'} onClick={() => setActiveTab('documents')} />
+          <SidebarItem icon={ShoppingBag} label="Paketler & Fiyat" active={activeTab === 'packages'} onClick={() => setActiveTab('packages')} />
+          <SidebarItem icon={Server} label="Sistem & Loglar" active={activeTab === 'system'} onClick={() => setActiveTab('system')} />
+        </nav>
 
-      {/* PLAN EDIT MODAL */}
-      {isPlanModalOpen && editingPlan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
-                <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
-                    <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
-                        <CreditCard size={18} className="text-blue-600" />
-                        Paket Düzenle: {editingPlan.name}
-                    </h3>
-                    <button onClick={() => setIsPlanModalOpen(false)} className="text-slate-400 hover:text-slate-600 transition"><X size={20} /></button>
-                </div>
-                <form onSubmit={handleSavePlan} className="p-6 space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Fiyat Gösterimi</label>
-                        <input type="text" value={editingPlan.price || ''} onChange={e => setEditingPlan({...editingPlan, price: e.target.value})} className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Örn: 499 ₺" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Özellikler (Her satıra bir özellik)</label>
-                        <textarea 
-                            value={editingPlan.features ? editingPlan.features.join('\n') : ''} 
-                            onChange={e => setEditingPlan({...editingPlan, features: e.target.value.split('\n')})} 
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm" 
-                            rows={6}
-                            placeholder="Sınırsız Şablon&#10;7/24 Destek"
-                        />
-                         <p className="text-xs text-slate-500 mt-1">Her yeni özelliği yeni bir satıra yazın.</p>
-                    </div>
-                    <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-4">
-                        <button type="button" onClick={() => setIsPlanModalOpen(false)} className="px-4 py-2 text-slate-700 hover:bg-slate-100 font-medium rounded-lg transition">İptal</button>
-                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition shadow-sm hover:shadow">Kaydet</button>
-                    </div>
-                </form>
-            </div>
+        <div className="p-4 border-t border-slate-800/50">
+            <button onClick={onLogout} className="w-full flex items-center gap-2 p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors">
+                <LogOut size={18} />
+                <span>Çıkış Yap</span>
+            </button>
         </div>
-      )}
-      {/* Ban User Modal */}
-      {banModal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl border border-slate-200 overflow-hidden transform transition-all scale-100">
-                <div className="bg-red-50 p-6 border-b border-red-100 flex items-center gap-4">
-                    <div className="p-3 bg-red-100 rounded-full text-red-600">
-                        <Shield size={24} />
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-slate-800">Kullanıcıyı Yasakla</h3>
-                        <p className="text-sm text-red-600 font-medium">@{banModal.userName}</p>
-                    </div>
-                    <button 
-                        onClick={() => setBanModal({isOpen: false, userId: '', userName: ''})}
-                        className="ml-auto text-slate-400 hover:text-slate-600 transition"
-                    >
-                        <X size={20} />
-                    </button>
-                </div>
+      </aside>
 
-                <form onSubmit={handleBanSubmit} className="p-6 space-y-5">
-                    <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">Yasaklama Sebebi</label>
-                        <textarea 
-                            required
-                            placeholder="Örn: Hizmet şartları ihlali..."
-                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all resize-none text-slate-700 placeholder-slate-400"
-                            rows={3}
-                            value={banForm.reason}
-                            onChange={e => setBanForm({...banForm, reason: e.target.value})}
-                        />
-                    </div>
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col min-w-0 bg-[#0f172a]">
+        
+        {/* Header (Top Bar) */}
+        <header className="h-16 border-b border-slate-800/50 bg-[#1e293b]/50 backdrop-blur-md flex items-center justify-between px-8 sticky top-0 z-20">
+             <div className="flex items-center gap-4">
+                 <h2 className="text-lg font-bold text-white capitalize">{
+                     activeTab === 'dashboard' ? 'Sistem Özeti' : 
+                     activeTab === 'users' ? 'Kullanıcı Yönetimi' :
+                     activeTab === 'documents' ? 'Döküman Arşivi' :
+                     activeTab === 'packages' ? 'Paket Konfigürasyonu' : 'Sistem İzleme'
+                 }</h2>
+             </div>
+             
+             <div className="flex items-center gap-4">
+                 <button className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 relative">
+                     <Mail size={18} />
+                     <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+                 </button>
+                 <div className="flex items-center gap-3 pl-4 border-l border-slate-700">
+                     <div className="text-right hidden md:block">
+                         <div className="text-sm font-bold text-white">{user?.name || 'Sistem Admin'}</div>
+                         <div className="text-xs text-emerald-400">Yetkili Erişim</div>
+                     </div>
+                     <div className="w-10 h-10 rounded-full bg-indigo-600 border-2 border-slate-800 shadow-lg flex items-center justify-center text-white font-bold">
+                         A
+                     </div>
+                 </div>
+             </div>
+        </header>
 
-                    <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">Süre</label>
-                        <div className="grid grid-cols-3 gap-3">
-                            {[
-                                { val: '60', label: '1 Saat' },
-                                { val: '1440', label: '1 Gün' },
-                                { val: '10080', label: '1 Hafta' },
-                                { val: '43200', label: '1 Ay' },
-                                { val: 'permanent', label: 'Süresiz' }
-                            ].map(opt => (
-                                <button
-                                    key={opt.val}
-                                    type="button"
-                                    onClick={() => setBanForm({...banForm, duration: opt.val})}
-                                    className={`py-2 px-3 text-sm font-medium rounded-lg border transition-all ${
-                                        banForm.duration === opt.val 
-                                        ? 'bg-red-600 text-white border-red-600 shadow-md transform scale-105' 
-                                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                                    }`}
-                                >
-                                    {opt.label}
-                                </button>
+        {/* Content Body */}
+        <div className="flex-1 overflow-auto p-8 relative">
+           {activeTab === 'dashboard' && <DashboardView />}
+           {activeTab === 'users' && <UsersView />}
+           {activeTab === 'documents' && <TemplatesView />}
+           {activeTab === 'packages' && <PackagesView />}
+           {activeTab === 'system' && <SystemView />}
+        </div>
+      </main>
+
+      {/* --- Edit User Modal --- */}
+      {editingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+           <div className="bg-[#1e293b] w-full max-w-lg rounded-2xl border border-slate-700 shadow-2xl animate-scale-in">
+              <div className="p-6 border-b border-slate-700 flex justify-between items-center">
+                  <h3 className="text-xl font-bold text-white">Kullanıcı Düzenle</h3>
+                  <button onClick={() => setEditingUser(null)}><X className="text-slate-400 hover:text-white" /></button>
+              </div>
+              <div className="p-6 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-400 uppercase">Ad Soyad</label>
+                          <input 
+                            type="text" 
+                            value={editingUser.name} 
+                            onChange={e => setEditingUser({...editingUser, name: e.target.value})}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                          />
+                      </div>
+                      <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-400 uppercase">Şirket</label>
+                          <input 
+                            type="text" 
+                            value={editingUser.companyName || ''} 
+                            onChange={e => setEditingUser({...editingUser, companyName: e.target.value})}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                          />
+                      </div>
+                  </div>
+
+                  <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-400 uppercase">Abonelik Paketi</label>
+                      <select 
+                        value={editingUser.plan}
+                        onChange={e => setEditingUser({...editingUser, plan: e.target.value as SubscriptionPlan})}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none">
+                            {plans.map(p => (
+                                <option key={p.id} value={p.id}>{p.name} ({p.price})</option>
                             ))}
-                        </div>
-                    </div>
+                      </select>
+                  </div>
 
-                    <div className="pt-4 flex gap-3">
-                        <button 
-                            type="button" 
-                            onClick={() => setBanModal({isOpen: false, userId: '', userName: ''})}
-                            className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-medium transition"
-                        >
-                            İptal
-                        </button>
-                        <button 
-                            type="submit" 
-                            className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-bold shadow-lg shadow-red-200 transition active:scale-[0.98] flex items-center justify-center gap-2"
-                        >
-                            <Shield size={18} />
-                            Yasakla
-                        </button>
-                    </div>
-                </form>
+                  <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-400 uppercase flex justify-between">
+                          <span>İndirme Hakkı (Sayı veya "UNLIMITED")</span>
+                          <span className="text-indigo-400 text-[10px] cursor-pointer" onClick={() => setEditingUser({...editingUser, remainingDownloads: 100})}>+100 Ekle</span>
+                      </label>
+                      <div className="flex gap-2">
+                          <input 
+                            type="text" 
+                            value={editingUser.remainingDownloads === 'UNLIMITED' ? 'UNLIMITED' : editingUser.remainingDownloads} 
+                            onChange={e => {
+                                const val = e.target.value;
+                                setEditingUser({
+                                    ...editingUser, 
+                                    remainingDownloads: val === 'UNLIMITED' ? 'UNLIMITED' : parseInt(val) || 0
+                                });
+                            }}
+                            className="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none font-mono"
+                          />
+                          <button 
+                            onClick={() => setEditingUser({...editingUser, remainingDownloads: 'UNLIMITED'})}
+                            className={`px-3 rounded-lg border text-xs font-bold ${editingUser.remainingDownloads === 'UNLIMITED' ? 'bg-indigo-600 text-white border-indigo-500' : 'border-slate-700 text-slate-400 hover:text-white'}`}>
+                            ∞
+                          </button>
+                      </div>
+                      <p className="text-[10px] text-slate-500">* Burada yapacağınız değişiklik kullanıcıya anında yansır.</p>
+                  </div>
+
+                  <div className="flex items-center gap-4 pt-4 border-t border-slate-700/50 mt-4">
+                       <label className="flex items-center gap-2 cursor-pointer">
+                           <input 
+                                type="checkbox" 
+                                checked={editingUser.isBanned || false} 
+                                onChange={e => setEditingUser({...editingUser, isBanned: e.target.checked})}
+                                className="w-4 h-4 rounded bg-slate-900 border-slate-700 text-red-500 focus:ring-red-500"
+                            />
+                           <span className="text-sm font-medium text-red-400">Kullanıcıyı Yasakla</span>
+                       </label>
+                  </div>
+              </div>
+              <div className="p-6 border-t border-slate-700 bg-slate-800/30 flex justify-end gap-3 rounded-b-2xl">
+                  <button onClick={() => setEditingUser(null)} className="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">İptal</button>
+                  <button onClick={() => handleUpdateUser(editingUser)} className="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-500/20 transition-all transform active:scale-95">Değişiklikleri Kaydet</button>
+              </div>
+           </div>
+        </div>
+      )}
+
+      {/* --- Edit Plan Modal --- */}
+      {editingPlan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="bg-[#1e293b] w-full max-w-md rounded-2xl border border-slate-700 shadow-2xl animate-fade-in-up">
+                <div className="p-6 border-b border-slate-700">
+                    <h3 className="text-xl font-bold text-white">Paket Düzenle: {editingPlan.name}</h3>
+                </div>
+                <div className="p-6 space-y-4">
+                     <div>
+                         <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Paket Adı</label>
+                         <input 
+                            value={editingPlan.name} 
+                            onChange={e => setEditingPlan({...editingPlan, name: e.target.value})}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white"
+                         />
+                     </div>
+                     <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Fiyat</label>
+                            <input 
+                                value={editingPlan.price} 
+                                onChange={e => setEditingPlan({...editingPlan, price: e.target.value})}
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">İndirme Limiti</label>
+                            <input 
+                                value={editingPlan.limit} 
+                                onChange={e => setEditingPlan({...editingPlan, limit: e.target.value === 'UNLIMITED' ? 'UNLIMITED' : Number(e.target.value)})}
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white"
+                            />
+                        </div>
+                     </div>
+                </div>
+                <div className="p-6 border-t border-slate-700 bg-slate-800/30 flex justify-end gap-3 rounded-b-2xl">
+                    <button onClick={() => setEditingPlan(null)} className="px-4 py-2 rounded-xl text-slate-400">İptal</button>
+                    <button onClick={() => handleUpdatePlan(editingPlan)} className="px-6 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold">Kaydet</button>
+                </div>
             </div>
         </div>
       )}
+
+      {/* --- Template Builder Modal --- */}
+      {isTemplateBuilderOpen && (
+          <div className="fixed inset-0 z-[60] bg-black">
+              {editingTemplate && (
+                <VisualTemplateBuilder 
+                   initialTemplate={editingTemplate}
+                   onSave={handleTemplateSave}
+                   onClose={() => {
+                       setIsTemplateBuilderOpen(false);
+                       setEditingTemplate(null);
+                   }}
+                />
+              )}
+          </div>
+      )}
+
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center backdrop-blur-sm">
+            <RefreshCw className="animate-spin text-white" size={48} />
+        </div>
+      )}
+
     </div>
   );
 };
+
+export default AdminPanel;
