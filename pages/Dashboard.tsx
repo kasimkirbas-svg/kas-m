@@ -624,68 +624,64 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     </div>
                 </motion.button>
 
-                {/* 2. HIZLI İŞLEMLER (Grid 2x2) */}
-                <div className='flex-1 bg-white dark:bg-[#15171e]/90 backdrop-blur rounded-2xl border border-slate-200 dark:border-white/5 flex flex-col overflow-hidden shadow-lg relative group/panel transition-colors duration-300'>
+                {/* 2. HIZLI İŞLEMLER (Grid 2x2) - Optimized Layout */}
+                <div className='flex-1 bg-white dark:bg-[#15171e]/90 backdrop-blur rounded-2xl border border-slate-200 dark:border-white/5 flex flex-col overflow-hidden shadow-lg relative group/panel transition-colors duration-300 min-h-[180px]'>
                     
                     {/* Header */}
-                    <div className='bg-gradient-to-r from-amber-500 to-orange-600 p-3 flex items-center justify-center shrink-0 shadow-md z-10 relative overflow-hidden'>
+                    <div className='bg-gradient-to-r from-amber-500 to-orange-600 p-2.5 flex items-center justify-center shrink-0 shadow-md z-10 relative overflow-hidden'>
                         <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10"></div>
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] animate-shimmer"></div>
-                        <Zap size={16} className="text-white mr-2 animate-bounce" fill="currentColor" />
-                        <span className='text-white font-black text-sm tracking-widest uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
+                        <Zap size={14} className="text-white mr-1.5 animate-bounce" fill="currentColor" />
+                        <span className='text-white font-black text-xs tracking-widest uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
                     </div>
 
-                    <div className='flex-1 p-3 grid grid-cols-2 grid-rows-2 gap-3 z-10'>
+                    <div className='flex-1 p-2.5 grid grid-cols-2 auto-rows-fr gap-2.5 z-10'>
                         {/* Button 1 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-indigo-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-1.5 group hover:border-indigo-500/50 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 transition-all duration-300 relative overflow-hidden shadow-sm'
                         >   
-                            <div className="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(99,102,241,0.5)] group-hover:scale-110'>
-                                <FileText size={18} />
+                            <div className='w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-sm'>
+                                <FileText size={16} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>TUTANAK<br/>TUT</span>
+                            <span className='text-[9px] font-black text-slate-600 dark:text-slate-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 text-center leading-tight transition-colors z-10'>TUTANAK<br/>TUT</span>
                         </motion.button>
 
                         {/* Button 2 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-1.5 group hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-all duration-300 relative overflow-hidden shadow-sm'
                         >
-                            <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(16,185,129,0.5)] group-hover:scale-110'>
-                                <ClipboardList size={18} />
+                            <div className='w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-sm'>
+                                <ClipboardList size={16} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>GÜNLÜK<br/>RAPOR</span>
+                            <span className='text-[9px] font-black text-slate-600 dark:text-slate-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 text-center leading-tight transition-colors z-10'>GÜNLÜK<br/>RAPOR</span>
                         </motion.button>
 
                         {/* Button 3 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-1.5 group hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all duration-300 relative overflow-hidden shadow-sm'
                         >
-                            <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:scale-110'>
-                                <UserPlus size={18} />
+                            <div className='w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-sm'>
+                                <UserPlus size={16} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>PERSONEL<br/>EKLE</span>
+                            <span className='text-[9px] font-black text-slate-600 dark:text-slate-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 text-center leading-tight transition-colors z-10'>PERSONEL<br/>EKLE</span>
                         </motion.button>
 
                         {/* Button 4 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-rose-500 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-1.5 group hover:border-rose-500/50 hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-all duration-300 relative overflow-hidden shadow-sm'
                         >
-                            <div className="absolute inset-0 bg-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-50 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(244,63,94,0.5)] group-hover:scale-110'>
-                                <Megaphone size={18} />
+                            <div className='w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-sm'>
+                                <Megaphone size={16} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>DUYURU<br/>YAP</span>
+                            <span className='text-[9px] font-black text-slate-600 dark:text-slate-400 group-hover:text-rose-700 dark:group-hover:text-rose-300 text-center leading-tight transition-colors z-10'>DUYURU<br/>YAP</span>
                         </motion.button>
                     </div>
 
@@ -723,104 +719,96 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
         </div>
 
-        {/* 4. FOOTER: PACKAGES (Enhanced with Precious Stones & Visuals) */}
-        <div className='shrink-0 pb-6 pt-4 px-2 mt-2 bg-slate-100/50 dark:bg-black/20 border-t border-slate-200 dark:border-white/5 backdrop-blur-sm'>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 items-center max-w-6xl mx-auto'>
+        {/* 4. FOOTER: PACKAGES (Enhanced with Previous Stones & Visuals) */}
+        <div className='shrink-0 pb-4 pt-2 px-2 mt-2 bg-transparent'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-3 items-center max-w-6xl mx-auto'>
                 
-                {/* 1. SILVER (Was Standart) - Metallic & Industrial */}
+                {/* 1. SILVER (Platinum/Industrial) - Sharp & Clean */}
                 <motion.div 
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    className='relative rounded-2xl bg-gradient-to-br from-slate-200 via-slate-100 to-slate-400 dark:from-[#1a1a1a] dark:via-[#2b2b2b] dark:to-[#121212] border border-slate-300 dark:border-white/10 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-lg hover:shadow-2xl dark:shadow-white/5 h-[110px] md:h-[120px] transition-all duration-300'
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    className='relative rounded-xl bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900 border border-gray-400/50 dark:border-gray-600 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-lg hover:shadow-2xl dark:shadow-gray-900/50 h-[110px] transition-all duration-300'
                 >
-                     {/* Metallic Shine Effect */}
-                     <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent"></div>
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 dark:opacity-30 mix-blend-overlay'></div>
+                     {/* Sharp Metallic Highlight */}
+                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
                      
-                     <div className='absolute -top-10 -right-10 w-24 h-24 bg-white/60 dark:bg-white/5 rounded-full blur-xl group-hover:bg-white/80 dark:group-hover:bg-white/10 transition-colors duration-500'></div>
+                     <div className='absolute -top-12 -right-12 w-24 h-24 bg-gray-400/20 dark:bg-gray-500/10 rounded-full blur-xl'></div>
                      
                      <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Shield size={18} className='text-slate-700 dark:text-slate-300 drop-shadow-sm transition-transform group-hover:rotate-12 duration-300' fill='currentColor' />
-                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-b from-slate-700 via-slate-500 to-slate-800 dark:from-white dark:via-slate-400 dark:to-slate-600 uppercase tracking-widest drop-shadow-sm'>SILVER</span>
+                        <Shield size={16} className='text-gray-700 dark:text-gray-300 drop-shadow-sm' fill='currentColor' />
+                        <span className='text-lg font-black text-gray-700 dark:text-gray-200 uppercase tracking-[0.2em] drop-shadow-sm'>SILVER</span>
                      </div>
-                     <div className='text-xl font-black text-slate-800 dark:text-white mb-0.5 z-10 tracking-tight drop-shadow-sm'>100 TL</div>
-                     <div className='text-[9px] text-slate-600 dark:text-slate-400 font-bold uppercase mb-2 z-10 tracking-wider bg-slate-200/50 dark:bg-white/5 px-2 py-0.5 rounded'>TEMEL LİMİT</div>
+                     <div className='text-xl font-black text-gray-800 dark:text-white mb-0.5 z-10 tracking-tighter'>100 TL</div>
+                     <div className='text-[8px] text-gray-600 dark:text-gray-400 font-bold uppercase mb-2 z-10 tracking-widest bg-gray-300/50 dark:bg-gray-700/50 px-3 py-0.5 rounded-sm'>TEMEL LİMİT</div>
                      <button 
                         onClick={() => onPurchase && onPurchase('STANDART')}
-                        className='w-24 py-1.5 rounded-lg bg-white dark:bg-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#252525] border border-slate-300 dark:border-white/10 text-[10px] font-bold text-slate-900 dark:text-slate-200 shadow-sm hover:shadow-md transition-all z-10 active:scale-95'
+                        className='w-full max-w-[100px] py-1 rounded bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-white text-[9px] font-bold text-white dark:text-gray-900 shadow-md transition-all z-10 active:scale-95 uppercase tracking-wide'
                      >
                         SATIN AL
                      </button>
                 </motion.div>
 
-                {/* 2. GOLD (Center - Highlights & "Recommended" Badge) */}
+                {/* 2. GOLD (Center - Radiating) */}
                 <motion.div 
                     initial={{ scale: 1.02 }}
-                    whileHover={{ scale: 1.07 }}
-                    animate={{ 
-                         boxShadow: ["0 0 15px rgba(245,158,11,0.1)", "0 0 30px rgba(245,158,11,0.3)", "0 0 15px rgba(245,158,11,0.1)"] 
-                    }}
-                    transition={{ 
-                         boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } 
-                    }}
-                    className='relative z-20 rounded-2xl border border-amber-400 dark:border-yellow-500/50 bg-gradient-to-b from-amber-50 to-orange-50 dark:from-amber-950 dark:via-yellow-900/30 dark:to-orange-950/50 flex flex-col items-center justify-center p-3 shadow-xl h-[120px] md:h-[135px] overflow-visible backdrop-blur-md'
+                    whileHover={{ scale: 1.05 }}
+                    className='relative z-20 rounded-xl border border-yellow-500/50 dark:border-yellow-400/50 bg-gradient-to-b from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-950/40 dark:via-amber-900/40 dark:to-orange-950/40 flex flex-col items-center justify-center p-3 shadow-xl dark:shadow-[0_0_30px_rgba(234,179,8,0.15)] h-[125px] overflow-visible backdrop-blur-md'
                 >
-                     {/* "ÖNERİLEN" Badge - Floating above */}
-                     <div className='absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 text-white text-[9px] font-black px-3 py-1 rounded-full shadow-lg dark:shadow-[0_0_15px_rgba(251,191,36,0.5)] animate-pulse z-30 whitespace-nowrap border border-white/20 dark:border-yellow-200 ring-2 ring-black/5'>
-                        🌟 ÖNERİLEN 🌟
+                     {/* "ÖNERİLEN" Badge */}
+                     <div className='absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-white text-[8px] font-black px-3 py-0.5 rounded shadow-lg shadow-amber-500/40 z-30 whitespace-nowrap tracking-widest uppercase ring-1 ring-white/30'>
+                        ÖNERİLEN
                      </div>
 
-                     <div className='absolute -top-6 flex gap-2 z-10 pointer-events-none'>
-                        <motion.div animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}>
-                            <Star size={12} className="text-amber-500 dark:text-yellow-300 fill-amber-500 dark:fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
+                     <div className='absolute -top-5 flex gap-1 z-10 pointer-events-none opacity-80'>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }}>
+                            <Star size={10} className="text-yellow-400 fill-id-400 drop-shadow-md" />
                         </motion.div>
-                        <motion.div animate={{ rotate: -360, y: [0, -3, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-                            <Star size={18} className="text-orange-500 dark:text-amber-400 fill-orange-500 dark:fill-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.8)] -mt-2 mx-1" />
+                         <motion.div animate={{ rotate: -360, scale: [1, 1.2, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+                            <Star size={14} className="text-amber-500 fill-amber-500 drop-shadow-lg -mt-1 mx-1" />
                         </motion.div>
-                        <motion.div animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: 1 }}>
-                            <Star size={12} className="text-amber-500 dark:text-yellow-300 fill-amber-500 dark:fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear", delay: 1 }}>
+                            <Star size={10} className="text-yellow-400 fill-yellow-400 drop-shadow-md" />
                         </motion.div>
                      </div>
-
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/cubes.png)] opacity-10 dark:opacity-20 mix-blend-overlay'></div>
                      
-                     <div className='flex items-center gap-2 mb-1 mt-1 relative z-10'>
-                        <Crown size={24} className='text-amber-600 dark:text-yellow-400 drop-shadow-md' fill='currentColor' />
-                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-600 via-orange-600 to-amber-700 dark:from-yellow-200 dark:via-yellow-400 dark:to-amber-500 uppercase tracking-widest drop-shadow-sm'>GOLD</span>
+                     <div className='flex items-center gap-2 mb-0.5 mt-1 relative z-10'>
+                        <Crown size={20} className='text-amber-600 dark:text-yellow-400 drop-shadow-md' fill='currentColor' />
+                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-600 to-orange-700 dark:from-yellow-300 dark:to-amber-500 uppercase tracking-[0.2em] drop-shadow-sm'>GOLD</span>
                      </div>
-                     <div className='text-3xl font-black text-slate-800 dark:text-white mb-0.5 z-10 drop-shadow-md tracking-tighter'>175 TL</div>
-                     <div className='text-[9px] text-amber-800 dark:text-amber-200 font-black uppercase mb-3 z-10 tracking-widest bg-amber-100 dark:bg-amber-900/50 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-700'>2 KAT AVANTAJ</div>
+                     <div className='text-3xl font-black text-slate-800 dark:text-white mb-0.5 z-10 drop-shadow-sm tracking-tighter'>175 TL</div>
+                     <div className='text-[8px] text-amber-900 dark:text-amber-100 font-black uppercase mb-2 z-10 tracking-widest bg-gradient-to-r from-transparent via-amber-200 dark:via-amber-800/50 to-transparent px-4 py-0.5 rounded-full'>2 KAT AVANTAJ</div>
                      <button 
                         onClick={() => onPurchase && onPurchase('GOLD')}
-                        className='w-32 py-2 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 border border-amber-300/50 text-[10px] font-black text-white shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 dark:shadow-[0_0_15px_rgba(245,158,11,0.3)] transform active:scale-95 transition-all z-10'
+                        className='w-full max-w-[120px] py-1.5 rounded bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-[10px] font-black text-white shadow-lg shadow-amber-500/30 transform active:scale-95 transition-all z-10 uppercase tracking-wider'
                      >
                         HEMEN AL
                      </button>
                 </motion.div>
 
-                {/* 3. DIAMOND (Was Premium/Pro) - Holographic & Neon */}
+                {/* 3. DIAMOND (Infinite/Prestige) - Magnificent & Neon */}
                 <motion.div 
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    className='relative rounded-2xl bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-[#082f49] dark:via-[#0f172a] dark:to-[#1e1b4b] border border-cyan-200 dark:border-cyan-500/50 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl dark:shadow-cyan-500/20 h-[110px] md:h-[120px] transition-all duration-300'
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    className='relative rounded-xl bg-[#0f172a] border border-cyan-500/30 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-xl hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] h-[110px] transition-all duration-300'
                 >
-                     {/* Holographic Sheen */}
-                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-400/10 to-transparent skew-y-12 animate-pulse-slow"></div>
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-5 dark:opacity-30 mix-blend-overlay'></div>
+                     {/* Background Animation */}
+                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-[#0f172a] to-[#0f172a] group-hover:from-cyan-900/40 transition-colors duration-500"></div>
+                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 animate-pulse-slow"></div>
                      
-                     <div className='absolute -bottom-10 -right-10 w-32 h-32 bg-cyan-400/20 dark:bg-cyan-500/20 rounded-full blur-2xl group-hover:bg-cyan-300/30 dark:group-hover:bg-cyan-400/30 transition-colors duration-500'></div>
-                     
-                     {/* Sparkles */}
-                     <div className="absolute top-2 right-4 animate-pulse delay-75"><Star size={8} className="text-cyan-400 fill-cyan-200" /></div>
-                     <div className="absolute bottom-4 left-4 animate-pulse delay-300"><Star size={6} className="text-blue-400 fill-blue-200" /></div>
+                     {/* Neon Borders */}
+                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
+                     <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
+
+                     {/* Prismatic Flashes */}
+                     <div className="absolute -left-[100%] top-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 group-hover:animate-shine"></div>
 
                      <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Gem size={18} className='text-cyan-600 dark:text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] transition-transform group-hover:rotate-[360deg] duration-1000 ease-in-out' fill='currentColor' />
-                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-cyan-300 dark:via-cyan-100 dark:to-blue-200 uppercase tracking-widest drop-shadow-sm'>DIAMOND</span>
+                        <Gem size={16} className='text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] transition-transform group-hover:rotate-[360deg] duration-1000' fill='currentColor' />
+                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 uppercase tracking-[0.2em] drop-shadow-[0_0_5px_rgba(6,182,212,0.5)]'>DIAMOND</span>
                      </div>
-                     <div className='text-xl font-black text-cyan-900 dark:text-cyan-100 mb-0.5 z-10 tracking-tight drop-shadow-sm'>250 TL</div>
-                     <div className='text-[9px] text-cyan-800 dark:text-cyan-200 font-bold uppercase mb-2 z-10 tracking-wider bg-cyan-100/50 dark:bg-cyan-900/30 px-2 py-0.5 rounded border border-cyan-200 dark:border-cyan-500/30'>SINIRSIZ LİMİT</div>
+                     <div className='text-xl font-black text-white mb-0.5 z-10 tracking-tighter drop-shadow-md text-shadow-glow'>250 TL</div>
+                     <div className='text-[8px] text-cyan-200 font-bold uppercase mb-2 z-10 tracking-widest bg-cyan-900/30 px-3 py-0.5 rounded border border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]'>SINIRSIZ LİMİT</div>
                       <button 
                         onClick={() => onPurchase && onPurchase('PREMIUM')}
-                        className='w-24 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 dark:bg-cyan-600 dark:hover:bg-cyan-500 text-white border border-cyan-400/50 text-[10px] font-bold shadow-lg shadow-cyan-500/30 hover:shadow-cyan-400/50 transition-all z-10 active:scale-95'
+                        className='w-full max-w-[100px] py-1 rounded bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-[9px] font-bold shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all z-10 active:scale-95 uppercase tracking-wide'
                      >
                         SATIN AL
                      </button>
