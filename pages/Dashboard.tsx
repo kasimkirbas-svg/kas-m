@@ -317,20 +317,37 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             {/* Left: LOGO REMOVED */}
             <div className='w-1/4'></div>
 
-            {/* Center: Title */}
-            <div className='flex-1 flex flex-col items-center justify-center text-center'>
-                 <motion.h1 
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className='text-2xl md:text-4xl font-black tracking-tight relative'
+            {/* Center: Title (Enhanced) */}
+            <div className='flex-1 flex flex-col items-center justify-center text-center relative z-20'>
+                 <motion.div
+                    initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
+                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                    transition={{ duration: 1, ease: 'backOut' }}
+                    className="relative"
                  >
-                    <span className='bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent drop-shadow-sm'>
-                        DOKÜMAN YÖNETİM MERKEZİ
-                    </span>
-                 </motion.h1>
-                 <span className='text-[10px] md:text-xs text-amber-500/80 font-bold tracking-[0.4em] uppercase mt-1'>
-                        PREMIUM İŞ GÜVENLİĞİ PLATFORMU
-                 </span>
+                    {/* Ambient Glow behind Title */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/10 blur-[50px] rounded-full pointer-events-none"></div>
+
+                    <h1 className='text-3xl md:text-5xl font-black tracking-tighter relative z-10 select-none'>
+                        <span className='bg-gradient-to-br from-white via-indigo-100 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
+                            DOKÜMAN YÖNETİM MERKEZİ
+                        </span>
+                    </h1>
+                 </motion.div>
+
+                 <motion.div 
+                    initial={{ width: 0, opacity: 0 }} 
+                    animate={{ width: "auto", opacity: 1 }} 
+                    transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+                    className="relative mt-2 overflow-hidden"
+                 >
+                     <span className='text-[10px] md:text-xs font-bold tracking-[0.8em] uppercase relative z-10 bg-gradient-to-r from-amber-200 via-yellow-500 to-amber-200 bg-clip-text text-transparent bg-[length:200%_auto] animate-bg-pan drop-shadow-sm whitespace-nowrap px-4 py-1'>
+                            İŞ GÜVENLİĞİ PLATFORMU
+                     </span>
+                     
+                     {/* Decorative lines */}
+                     <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></span>
+                 </motion.div>
             </div>
             
             {/* Right: Balance */}
