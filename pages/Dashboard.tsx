@@ -360,8 +360,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             onClick={() => toggleSector(sector.id)}
                             className={`
                             relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group
-                            border transition-all duration-500
-                            ${isActive ? 'border-white shadow-[0_0_30px_rgba(255,255,255,0.2)] scale-105 -translate-y-1' : 'border-white/5 shadow-lg bg-slate-800/40'}
+                            border transition-all duration-300
+                            ${isActive ? 'border-2 border-white shadow-[0_0_50px_rgba(255,255,255,0.5)] scale-105 -translate-y-2 z-20 ring-4 ring-white/10' : 'border-white/5 shadow-lg bg-slate-800/40 hover:border-white/30'}
                             ${index === SECTORS.length - 1 ? 'col-span-2 md:col-span-1 lg:col-span-1' : ''}
                             `}
                         >   
@@ -394,10 +394,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                 <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${isActive ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-white/50'}`}></div>
                             </div>
                             
-                            {/* Selected Checkmark (Optional but nice) */}
+                            {/* Selected Checkmark (Enhanced) */}
                             {isSelected && (
-                                <div className='absolute top-2 right-2 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg z-20 animate-in zoom-in duration-200'>
-                                    <CheckCircle2 size={12} strokeWidth={3} />
+                                <div className='absolute top-3 right-3 w-7 h-7 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-[0_0_20px_rgba(16,185,129,0.5)] z-30 animate-in zoom-in spin-in-90 duration-300 ring-2 ring-white'>
+                                    <CheckCircle2 size={16} strokeWidth={3} />
                                 </div>
                             )}
 
