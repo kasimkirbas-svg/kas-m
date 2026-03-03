@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
 import { 
   Factory, 
   Building2, 
@@ -129,14 +128,14 @@ const SECTORS = [
 ];
 
 const RECENT_DOCS = [
-  { id: 1, title: 'Risk Analiz Raporu', icon: FileText, color: 'text-blue-400', count: 10, total: 10, used: 2, status: 'Tamamlandı', date: '2 dk önce', active: true },
-  { id: 2, title: 'Patlatma Tutanağı', icon: AlertTriangle, color: 'text-orange-400', count: 15, total: 20, used: 8, status: 'İşleniyor...', date: '5 dk önce', active: true },
-  { id: 3, title: 'Yangın Tatbikat Raporu', icon: Activity, color: 'text-red-400', count: 10, total: 12, used: 3, status: 'Beklemede', date: '12 dk önce', active: false },
-  { id: 4, title: 'İş İskelesi Kontrol Formu', icon: HardHat, color: 'text-blue-300', count: 25, total: 50, used: 12, status: 'Tamamlandı', date: '15 dk önce', active: true },
-  { id: 5, title: 'Trafo Bakım Çizelgesi', icon: Zap, color: 'text-yellow-400', count: 5, total: 5, used: 1, status: 'İnceleniyor', date: '21 dk önce', active: true },
-  { id: 6, title: 'Kimyasal Stok Listesi', icon: Beaker, color: 'text-emerald-400', count: 30, total: 30, used: 28, status: 'Tamamlandı', date: '35 dk önce', active: true },
-  { id: 7, title: 'Günlük Kasa Raporu', icon: Wallet, color: 'text-purple-400', count: 30, total: 30, used: 15, status: 'Onaylandı', date: '1 saat önce', active: false },
-  { id: 8, title: 'İşe Başlama Eğitim Dök.', icon: CheckCircle2, color: 'text-green-400', count: 200, total: 200, used: 45, status: 'Tamamlandı', date: '2 saat önce', active: true },
+  { id: 1, title: 'Risk Analiz Raporu', icon: FileText, color: 'text-blue-400', count: 10, total: 10, used: 2 },
+  { id: 2, title: 'Patlatma Tutanağı', icon: AlertTriangle, color: 'text-orange-400', count: 15, total: 20, used: 8 },
+  { id: 3, title: 'Yangın Tatbikat Raporu', icon: Activity, color: 'text-red-400', count: 10, total: 12, used: 3 },
+  { id: 4, title: 'İş İskelesi Kontrol Formu', icon: HardHat, color: 'text-blue-300', count: 25, total: 50, used: 12 },
+  { id: 5, title: 'Trafo Bakım Çizelgesi', icon: Zap, color: 'text-yellow-400', count: 5, total: 5, used: 1 },
+  { id: 6, title: 'Kimyasal Stok Listesi', icon: Beaker, color: 'text-emerald-400', count: 30, total: 30, used: 28 },
+  { id: 7, title: 'Günlük Kasa Raporu', icon: Wallet, color: 'text-purple-400', count: 30, total: 30, used: 15 },
+  { id: 8, title: 'İşe Başlama Eğitim Dök.', icon: CheckCircle2, color: 'text-green-400', count: 200, total: 200, used: 45 },
 ];
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
@@ -232,80 +231,61 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                             <FileText size={18} className="text-blue-500" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-black text-white uppercase tracking-wider">DÖKÜMANLAR</h3>
-                            <p className="text-[10px] text-slate-400 font-medium">Güncel belge akışı</p>
+                            <h3 className="text-sm font-black text-white uppercase tracking-wider">REFERANS DOKÜMANLAR</h3>
+                            <p className="text-[10px] text-slate-400 font-medium">Sık kullanılan belge şablonları</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <span className="flex h-2 w-2 relative">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
-                        <span className="text-[10px] text-green-500 font-bold font-mono tracking-wider">CANLI</span>
-                    </div>
+                    <span className="text-[10px] text-slate-500 font-mono bg-white/5 px-2 py-1 rounded">EN ÇOK KULLANILANLAR</span>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
-                    <AnimatePresence>
                     {RECENT_DOCS.map((doc, idx) => (
-                        <motion.div 
-                            key={doc.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.1 }}
-                            className="p-3 flex items-center gap-4 hover:bg-white/[0.03] rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-white/5 relative overflow-hidden"
-                        >
-                            {/* Active Indicator Line */}
-                            {doc.active && (
-                                <motion.div 
-                                    layoutId="activeIndicator"
-                                    className="absolute left-0 top-3 bottom-3 w-0.5 bg-blue-500 rounded-r-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"
-                                />
-                            )}
-
-                            <div className={`p-2.5 rounded-lg bg-white/5 ${doc.color} shadow-lg shadow-black/20 relative group-hover:scale-110 transition-transform duration-300`}>
+                        <div key={doc.id} className="p-3 flex items-center gap-4 hover:bg-white/[0.03] rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-white/5">
+                            <div className={`p-2.5 rounded-lg bg-white/5 ${doc.color} shadow-lg shadow-black/20`}>
                                 <doc.icon size={20} />
-                                {doc.active && (
-                                    <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500 border-2 border-[#161922]"></span>
-                                    </span>
-                                )}
                             </div>
-                            
                             <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <h4 className="text-sm font-bold text-slate-200 group-hover:text-white truncate">{doc.title}</h4>
-                                    {doc.status === 'İşleniyor...' && (
-                                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/10 animate-pulse">
-                                            İŞLENİYOR
-                                         </span>
-                                    )}
-                                </div>
-                                <div className="flex items-center gap-4 text-[10px] text-slate-500 font-medium">
-                                    <span className="flex items-center gap-1">
-                                        <div className={`w-1.5 h-1.5 rounded-full ${
-                                            doc.status === 'Tamamlandı' ? 'bg-emerald-500' : 
-                                            doc.status === 'Beklemede' ? 'bg-amber-500' :
-                                            doc.status === 'Onaylandı' ? 'bg-purple-500' : 'bg-blue-500'
-                                        }`}></div>
-                                        {doc.status}
-                                    </span>
-                                    <span className="text-slate-600">•</span>
-                                    <span>{doc.date}</span>
+                                <h4 className="text-sm font-bold text-slate-200 group-hover:text-white truncate mb-1">{doc.title}</h4>
+                                <div className="flex items-center gap-3">
+                                    <div className="h-1.5 w-32 bg-[#0f1115] rounded-full overflow-hidden border border-white/5">
+                                        <div className={`h-full ${doc.color.replace('text-', 'bg-')}`} style={{ width: `${(doc.used / doc.total) * 100}%` }}></div>
+                                    </div>
+                                    <span className="text-[10px] text-slate-400 font-mono">{Math.round((doc.used / doc.total) * 100)}%</span>
                                 </div>
                             </div>
-
-                            <div className="text-right">
-                                <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                                    <button className="p-2 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors">
-                                        <Download size={16} />
-                                    </button>
-                                </div>
+                            <div className="text-right hidden sm:block">
+                                <div className="text-xs font-black text-slate-400">{doc.total} ADET</div>
+                                <div className="text-[9px] text-slate-600 uppercase">AYLIK LİMİT</div>
                             </div>
-                        </motion.div>
+                             <div className="opacity-0 group-hover:opacity-100 transition-opacity px-2">
+                                <ChevronRight size={16} className="text-slate-500 group-hover:text-white" />
+                            </div>
+                        </div>
                     ))}
-                    </AnimatePresence>
+                     {/* Duplicate for visual fullness if needed or just real data */}
+                     {RECENT_DOCS.map((doc, idx) => (
+                        <div key={'dup-'+doc.id} className="p-3 flex items-center gap-4 hover:bg-white/[0.03] rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-white/5">
+                            <div className={`p-2.5 rounded-lg bg-white/5 ${doc.color} shadow-lg shadow-black/20`}>
+                                <doc.icon size={20} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <h4 className="text-sm font-bold text-slate-200 group-hover:text-white truncate mb-1">{doc.title}</h4>
+                                <div className="flex items-center gap-3">
+                                    <div className="h-1.5 w-32 bg-[#0f1115] rounded-full overflow-hidden border border-white/5">
+                                        <div className={`h-full ${doc.color.replace('text-', 'bg-')}`} style={{ width: `${(doc.used / doc.total) * 100}%` }}></div>
+                                    </div>
+                                    <span className="text-[10px] text-slate-400 font-mono">{Math.round((doc.used / doc.total) * 100)}%</span>
+                                </div>
+                            </div>
+                            <div className="text-right hidden sm:block">
+                                <div className="text-xs font-black text-slate-400">{doc.total} ADET</div>
+                                <div className="text-[9px] text-slate-600 uppercase">AYLIK LİMİT</div>
+                            </div>
+                             <div className="opacity-0 group-hover:opacity-100 transition-opacity px-2">
+                                <ChevronRight size={16} className="text-slate-500 group-hover:text-white" />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
