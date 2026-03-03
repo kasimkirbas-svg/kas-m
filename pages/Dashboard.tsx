@@ -437,25 +437,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                     <div className='flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2'>
                         
-                        {/* List Items */}
-                        <div className='flex flex-col gap-1 pb-2 border-b border-white/5'>
-                            {[
-                                'İş Analizi Dokümanı', 
-                                'İş Eğitimleri', 
-                                'İş Belgeleri', 
-                                'İş Erzurumlar', 
-                                'İş Evrakları', 
-                                'İş Sertifikaları'
-                            ].map((item, i) => (
-                                <div key={i} className='flex items-center gap-2 p-1.5 hover:bg-white/5 rounded cursor-pointer group'>
-                                    <div className='w-1.5 h-1.5 rounded-full bg-emerald-500 group-hover:bg-emerald-400'></div>
-                                    <span className='text-xs font-bold text-slate-300 group-hover:text-white transition-colors'>{item}</span>
-                                </div>
-                            ))}
-                        </div>
-
                         {/* Action Buttons */}
-                        <div className='flex flex-col gap-2 mt-2'>
+                        <div className='flex flex-col gap-2'>
                             <button className='flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-[#1e293b] to-[#0f172a] border border-white/10 hover:border-amber-500/50 hover:text-amber-400 text-slate-300 transition-all font-bold text-xs shadow group'>
                                 <div className='p-1.5 bg-white/5 rounded group-hover:bg-amber-500 group-hover:text-black transition-colors'>
                                     <FileText size={16} />
