@@ -114,13 +114,7 @@ const App = () => {
     }
 
     // B. Settings Loading
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    if (savedTheme) {
-        setTheme(savedTheme);
-    } else {
-        // Default to dark if no preference found
-        setTheme('dark');
-    }
+    // Theme is forced to dark, ignoring saved preference
 
     const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;
     if (savedLanguage) {
@@ -198,18 +192,6 @@ const App = () => {
       if (e.key === 'authToken' && !e.newValue) {
           setUser(null);
           setCurrentView('auth');
-      }
-      if (e.key === 'theme' && e.newValue) {
-          const newTheme = e.newValue as 'light' | 'dark';
-          setTheme(newTheme);
-          // applyTheme handles DOM update, but we need to define it first or move this effect. 
-          // Since applyTheme is defined below, we can just duplicate logic or rely on the function being available (closure).
-          const html = document.documentElement;
-          if (newTheme === 'dark') {
-            html.classList.add('dark');
-          } else {
-            html.classList.remove('dark');
-          }
       }
       if (e.key === 'language' && e.newValue) {
           const lang = e.newValue as 'tr' | 'en' | 'ar';

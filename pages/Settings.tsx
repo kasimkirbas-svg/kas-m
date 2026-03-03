@@ -20,12 +20,6 @@ export const Settings: React.FC<SettingsProps> = ({
   onThemeChange 
 }) => {
   const [notifications, setNotifications] = useState(true);
-  const [selectedTheme, setSelectedTheme] = useState<'light' | 'dark'>(theme);
-
-  // Sync internal state if prop changes
-  useEffect(() => {
-    setSelectedTheme(theme);
-  }, [theme]);
 
   // Load notification preference
   useEffect(() => {
@@ -38,11 +32,6 @@ export const Settings: React.FC<SettingsProps> = ({
   const handleSave = () => {
     // Persist local settings
     localStorage.setItem('notifications', String(notifications));
-
-    // Apply Theme Change only on Save
-    if (onThemeChange && selectedTheme !== theme) {
-      onThemeChange(selectedTheme);
-    }
     
     // Show success message
     alert(t?.settings?.settingsSaved || 'Ayarlarınız başarıyla kaydedildi.');
