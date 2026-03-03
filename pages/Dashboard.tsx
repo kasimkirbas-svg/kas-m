@@ -605,14 +605,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             </div>
 
             {/* RIGHT: Quick Actions & Archive (Sidebar) - Updated Layout */}
-            <div className='lg:col-span-1 flex flex-col gap-4 overflow-hidden'>
+            <div className='lg:col-span-1 flex flex-col gap-4 overflow-y-auto no-scrollbar pb-2 px-1'>
                 
                 {/* 1. SERTİFİKA OLUŞTUR (Blue Button) - Main Action */}
                 <motion.button 
                     whileHover={{ scale: 1.02, filter: "brightness(1.1)" }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                    className='group shrink-0 h-28 rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 border-2 border-blue-400/30 relative overflow-hidden shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] flex items-center px-5 justify-between ring-4 ring-blue-500/10'
+                    className='group shrink-0 h-28 rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 border-2 border-blue-400/30 relative overflow-hidden shadow-lg shadow-blue-600/20 flex items-center px-5 justify-between ring-4 ring-blue-500/5'
                 >
                     <div className='absolute right-[-20%] top-[-50%] w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500'></div>
                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 mix-blend-overlay'></div>
@@ -631,10 +631,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 </motion.button>
 
                 {/* 2. HIZLI İŞLEMLER (Grid 2x2) - Optimized Layout - FIXED */}
-                <div className='bg-slate-100 dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col'>
+                <div className='shrink-0 bg-slate-100 dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col'>
                     
                     {/* Header - Compact */}
-                    <div className='bg-gradient-to-r from-amber-600 to-orange-700 py-2 px-3 flex items-center justify-between shrink-0 shadow-md relative overflow-hidden'>
+                    <div className='bg-gradient-to-r from-amber-600 to-orange-700 py-2.5 px-3 flex items-center justify-between shrink-0 shadow-md relative overflow-hidden'>
                         <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10"></div>
                         <div className='flex items-center gap-2 relative z-10'>
                             <Zap size={14} className="text-white animate-pulse" fill="currentColor" />
@@ -711,8 +711,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             </div>
                         </motion.button>
                     </div>
-                    {/* Extra padding added to prevent cutoff */}
-                    <div className="h-2"></div>
                 </div>
 
                 {/* 3. DÖKÜMAN ARŞİVİ (Enhanced Footer Button) */}
@@ -720,7 +718,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('my-documents')}
-                    className='shrink-0 h-20 rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-visible group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20'
+                    className='shrink-0 h-20 rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20'
                 >
                     <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
                     
