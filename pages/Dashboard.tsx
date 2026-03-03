@@ -735,18 +735,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 {/* 1. SILVER (Was Standart) */}
                 <motion.div 
                     whileHover={{ scale: 1.05, y: -5 }}
-                    className='relative rounded-2xl bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 dark:from-slate-700 dark:via-slate-800 dark:to-slate-900 border border-slate-300 dark:border-slate-500/30 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-xl dark:shadow-2xl h-[100px] md:h-[110px]'
+                    className='relative rounded-2xl bg-gradient-to-b from-slate-100 via-slate-200 to-slate-300 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 border-2 border-slate-200 dark:border-slate-700/50 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-lg hover:shadow-xl dark:shadow-slate-900/50 h-[100px] md:h-[110px] transition-all duration-300'
                 >
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 dark:opacity-20 mixed-blend-overlay'></div>
-                     <div className='absolute top-0 right-0 w-24 h-24 bg-white/40 dark:bg-white/5 rounded-full blur-2xl group-hover:bg-white/50 dark:group-hover:bg-white/10 transition-colors'></div>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-5 dark:opacity-20 mix-blend-overlay'></div>
+                     <div className='absolute top-0 right-0 w-24 h-24 bg-white/40 dark:bg-slate-700/30 rounded-full blur-2xl group-hover:bg-white/60 dark:group-hover:bg-slate-600/30 transition-colors duration-500'></div>
                      
                      <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Shield size={18} className='text-slate-600 dark:text-slate-300 drop-shadow-md' fill='currentColor' />
-                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-600 via-slate-800 to-slate-600 dark:from-slate-100 dark:via-slate-300 dark:to-slate-100 uppercase tracking-widest drop-shadow-sm'>SILVER</span>
+                        <Shield size={18} className='text-slate-600 dark:text-slate-400 drop-shadow-sm transition-transform group-hover:rotate-12 duration-300' fill='currentColor' />
+                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-700 via-slate-900 to-slate-700 dark:from-slate-200 dark:via-slate-400 dark:to-slate-200 uppercase tracking-widest drop-shadow-sm'>SILVER</span>
                      </div>
-                     <div className='text-xl font-black text-slate-800 dark:text-white mb-0.5 z-10 tracking-tight'>100 TL</div>
-                     <div className='text-[9px] text-slate-600 dark:text-slate-400 font-bold uppercase mb-2 z-10'>TEMEL LİMİT</div>
-                     <button className='w-24 py-1 rounded bg-slate-300 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 border border-slate-400 dark:border-slate-500 text-[10px] font-bold text-slate-800 dark:text-white shadow-lg transition-all z-10'>
+                     <div className='text-xl font-black text-slate-800 dark:text-slate-200 mb-0.5 z-10 tracking-tight drop-shadow-sm'>100 TL</div>
+                     <div className='text-[9px] text-slate-600 dark:text-slate-500 font-bold uppercase mb-2 z-10 tracking-wider'>TEMEL LİMİT</div>
+                     <button className='w-24 py-1 rounded bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 text-[10px] font-bold text-slate-700 dark:text-slate-300 shadow-sm hover:shadow-md transition-all z-10'>
                         SATIN AL
                      </button>
                 </motion.div>
@@ -796,18 +796,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 {/* 3. DIAMOND (Was Premium/Pro) */}
                 <motion.div 
                     whileHover={{ scale: 1.05, y: -5 }}
-                    className='relative rounded-2xl bg-gradient-to-b from-cyan-100 via-cyan-200 to-cyan-300 dark:from-cyan-900 dark:via-cyan-950 dark:to-blue-950 border border-cyan-300 dark:border-cyan-500/30 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-xl dark:shadow-2xl h-[100px] md:h-[110px]'
+                    className='relative rounded-2xl bg-gradient-to-b from-cyan-50 via-cyan-100 to-blue-100 dark:from-cyan-950 dark:via-blue-950 dark:to-indigo-950 border-2 border-cyan-200 dark:border-cyan-700/50 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-lg hover:shadow-xl dark:shadow-cyan-900/40 h-[100px] md:h-[110px] transition-all duration-300'
                 >
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 dark:opacity-20 mixed-blend-overlay'></div>
-                     <div className='absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-400/20 transition-colors'></div>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-5 dark:opacity-20 mix-blend-overlay'></div>
+                     <div className='absolute bottom-0 left-0 w-32 h-32 bg-cyan-400/20 dark:bg-cyan-600/20 rounded-full blur-2xl group-hover:bg-cyan-300/30 dark:group-hover:bg-cyan-500/30 transition-colors duration-500'></div>
 
                      <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Gem size={18} className='text-cyan-600 dark:text-cyan-300 drop-shadow-md' fill='currentColor' />
-                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-cyan-500 to-blue-600 dark:from-cyan-200 dark:via-cyan-100 dark:to-blue-200 uppercase tracking-widest drop-shadow-sm'>DIAMOND</span>
+                        <Gem size={18} className='text-cyan-600 dark:text-cyan-400 drop-shadow-sm transition-transform group-hover:rotate-[360deg] duration-700 ease-in-out' fill='currentColor' />
+                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-cyan-200 dark:via-blue-300 dark:to-indigo-200 uppercase tracking-widest drop-shadow-sm'>DIAMOND</span>
                      </div>
-                     <div className='text-xl font-black text-cyan-900 dark:text-white mb-0.5 z-10 tracking-tight'>250 TL</div>
-                     <div className='text-[9px] text-cyan-800 dark:text-cyan-200 font-bold uppercase mb-2 z-10'>SINIRSIZ LİMİT</div>
-                      <button className='w-24 py-1 rounded bg-cyan-200 hover:bg-cyan-100 dark:bg-cyan-800 dark:hover:bg-cyan-700 border border-cyan-400 dark:border-cyan-500/50 text-[10px] font-bold text-cyan-900 dark:text-white shadow-lg transition-all z-10'>
+                     <div className='text-xl font-black text-cyan-900 dark:text-cyan-100 mb-0.5 z-10 tracking-tight drop-shadow-sm'>250 TL</div>
+                     <div className='text-[9px] text-cyan-800 dark:text-cyan-200/80 font-bold uppercase mb-2 z-10 tracking-wider'>SINIRSIZ LİMİT</div>
+                      <button className='w-24 py-1 rounded bg-cyan-200 hover:bg-cyan-300 dark:bg-cyan-800 dark:hover:bg-cyan-700 border border-cyan-300 dark:border-cyan-600/50 text-[10px] font-bold text-cyan-900 dark:text-cyan-100 shadow-sm hover:shadow-md transition-all z-10'>
                         SATIN AL
                      </button>
                 </motion.div>
