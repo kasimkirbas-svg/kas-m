@@ -4,7 +4,7 @@ import {
   LogOut, Menu, X,
   Activity, DollarSign, Upload, Edit3, Trash2, Eye, 
   RefreshCw, Database, Lock, Unlock, CheckCircle,
-  Terminal as TerminalIcon, Globe, Key, UserCheck, AlertTriangle
+  Terminal as TerminalIcon, Globe, Key, UserCheck, AlertTriangle, Plus
 } from 'lucide-react';
 import { User, SubscriptionPlan, UserRole } from '../types';
 import { PLANS as DEFAULT_PLANS } from '../constants';
@@ -437,7 +437,7 @@ const BanUserModal = ({ user, onClose, onConfirm }: { user: User, onClose: () =>
 
 export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   // State
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'packages' | 'templates' | 'system'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'packages' | 'templates' | 'system' | 'security'>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   
@@ -446,6 +446,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   const [templates, setTemplates] = useState<any[]>([]);
   const [plans, setPlans] = useState<any[]>(DEFAULT_PLANS);
   const [systemLogs, setSystemLogs] = useState<SystemLog[]>([]);
+  const [bannedIps, setBannedIps] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Helper: Logout Wrapper
@@ -506,6 +507,12 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
       
       // 3. Maintenance Status
       fetchApi('/api/maintenance').then(res => res.json()).then(d => setMaintenanceMode(d.maintenance));
+
+      // 5. Banned IPs
+      fetchApi('/api/admin/banned-ips')
+        .then(res => res.json())
+        .then(d => { if (d.success && d.bannedIps) setBannedIps(d.bannedIps); })
+        .catch(() => {});
 
       // 4. Logs
       fetchLogs();
@@ -636,6 +643,41 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
       } catch (e) {
           alert('Bir hata oluştu.');
       }
+  };
+
+  const handleBanIp = async (ip: string, reason: string) => {
+      if(!ip) return false;
+      try {
+          const res = await fetchApi('/api/admin/banned-ips', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ip, reason })
+          });
+          
+          const d = await res.json();
+          if (res.ok && d.success) {
+              addLog(`IP Banned: ${ip}`, 'WARN');
+              // reload list
+              fetchApi('/api/admin/banned-ips').then(r=>r.json()).then(d=>{ if(d.success) setBannedIps(d.bannedIps || [])});
+              return true;
+          } else {
+              alert(d.message || 'Başarısız');
+              return false;
+          }
+      } catch(e) { alert('Hata oluştu'); return false; }
+  };
+
+  const handleUnbanIp = async (ip: string) => {
+      if(!confirm(`${ip} üzerindeki yasağı kaldırmak istediğinize emin misiniz?`)) return;
+      try {
+          const res = await fetchApi(`/api/admin/banned-ips/${encodeURIComponent(ip)}`, { method: 'DELETE' });
+          if(res.ok) {
+               addLog(`IP Unbanned: ${ip}`, 'SUCCESS');
+               setBannedIps(prev => prev.filter(x => x.ip !== ip));
+          } else {
+               alert('Hata oluştu');
+          }
+      } catch(e) { alert('Hata oluştu'); }
   };
 
   const handleBanConfirm = async (reason: string, durationMinutes: number) => {
@@ -952,6 +994,82 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
       </div>
   );
 
+  const SecurityView = () => (
+      <div className="space-y-6 h-[calc(100vh-140px)] flex flex-col p-1 animate-in fade-in duration-300">
+         <div className="flex justify-between items-center bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-4">
+               <div className="w-12 h-12 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.2)]">
+                  <Lock size={24} />
+               </div>
+               <div>
+                  <h2 className="text-xl font-bold text-white">IP Güvenlik Duvarı</h2>
+                  <p className="text-sm text-slate-400">Şüpheli ağ trafiğini engelleyin.</p>
+               </div>
+            </div>
+            
+            <button 
+                onClick={() => {
+                    const ip = prompt('Yasaklanacak IP Adresini Giriniz (IPv4/IPv6):');
+                    if(!ip) return;
+                    const reason = prompt('Yasaklama Sebebi:');
+                    handleBanIp(ip, reason || 'Yönetici tarafından engellendi');
+                }}
+                className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg flex items-center gap-2 shadow-lg shadow-rose-900/20 transition-all hover:scale-105"
+            >
+                <Plus size={18} />
+                <span>IP Engelle</span>
+            </button>
+         </div>
+
+         <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-4">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 content-start">
+                {bannedIps.length === 0 && (
+                    <div className="col-span-full py-20 flex flex-col items-center justify-center text-slate-500 border-2 border-dashed border-slate-800 rounded-3xl bg-slate-900/20">
+                        <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6">
+                            <CheckCircle className="text-emerald-500" size={40} />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Güvenli Bölge</h3>
+                        <p className="max-w-md text-center text-slate-400">Şu anda engellenmiş herhangi bir IP adresi bulunmuyor.</p>
+                    </div>
+                )}
+                
+                {bannedIps.map((entry: any, i) => (
+                    <div key={i} className="group relative bg-[#0f172a] border border-rose-500/20 hover:border-rose-500/60 rounded-xl p-5 transition-all hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] flex flex-col gap-3">
+                        <div className="flex justify-between items-start">
+                            <div className="flex items-center gap-2 font-mono text-sm text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded border border-rose-500/20">
+                                <Globe size={14} />
+                                {entry.ip}
+                            </div>
+                            <button 
+                                onClick={() => handleUnbanIp(entry.ip)} 
+                                className="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-colors shadow-sm"
+                                title="Yasağı Kaldır"
+                            >
+                                <Unlock size={16} />
+                            </button>
+                        </div>
+                        
+                        <div className="bg-slate-950/50 p-3 rounded-lg border border-slate-800/50 min-h-[60px]">
+                            <div className="text-[10px] text-slate-500 uppercase font-bold mb-1">Sebep</div>
+                            <div className="text-sm text-slate-300 line-clamp-2" title={entry.reason}>
+                                {entry.reason || 'Belirtilmedi'}
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between text-[10px] text-slate-500 mt-auto pt-2 border-t border-slate-800/50">
+                            <div className="flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                                <span>{new Date(entry.bannedAt || Date.now()).toLocaleDateString('tr-TR')}</span>
+                            </div>
+                            <div className="font-mono opacity-50 font-bold">PERMA</div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+         </div>
+      </div>
+  );
+
 
   return (
     <div className="flex h-screen bg-[#020617] text-white font-sans overflow-hidden fixed inset-0 z-[100]">
@@ -1016,6 +1134,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                   {activeTab === 'packages' && 'Fiyatlandırma Politikası'}
                   {activeTab === 'templates' && 'Doküman Kütüphanesi'}
                   {activeTab === 'system' && 'Sunucu Terminali'}
+                  {activeTab === 'security' && 'Güvenlik Duvarı'}
                </h1>
             </div>
 
@@ -1093,6 +1212,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                {activeTab === 'packages' && <PackagesView />}
                {activeTab === 'templates' && <TemplatesView />}
                {activeTab === 'system' && <SystemView />}
+               {activeTab === 'security' && <SecurityView />}
             </div>
          </div>
       </main>
