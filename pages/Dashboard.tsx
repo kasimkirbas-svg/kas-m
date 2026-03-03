@@ -341,14 +341,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     initial={{ width: 0, opacity: 0 }} 
                     animate={{ width: "auto", opacity: 1 }} 
                     transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                    className="relative mt-2 overflow-hidden"
+                    className="relative mt-2 overflow-hidden px-8 py-2"
                  >
-                     <span className='text-[10px] md:text-xs font-black tracking-[0.8em] uppercase relative z-10 text-slate-600 dark:text-amber-200 drop-shadow-sm whitespace-nowrap px-4 py-1'>
-                            İŞ GÜVENLİĞİ PLATFORMU
+                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/50 dark:via-amber-500/10 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }}></div>
+                     
+                     <span className='relative z-10 text-xs md:text-sm font-black tracking-[1em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-slate-600 via-slate-800 to-slate-600 dark:from-amber-200 dark:via-amber-100 dark:to-amber-200 drop-shadow-sm whitespace-nowrap animate-pulse'>
+                            İŞ TAKİP PANELİ
                      </span>
                      
-                     {/* Decorative lines */}
-                     <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-400 dark:via-amber-500/50 to-transparent"></span>
+                     {/* Decorative lines - Enhanced */}
+                     <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 dark:via-amber-500 to-transparent opacity-50"></span>
+                     <span className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 dark:via-amber-500 to-transparent opacity-50"></span>
                  </motion.div>
             </div>
             
