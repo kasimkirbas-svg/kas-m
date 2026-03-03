@@ -230,108 +230,60 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
         {/* Content Area */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
             
-            {/* Left: Documents List (Carbon & Gold Detail) */}
-            <div className="lg:col-span-3 flex flex-col bg-[#111] rounded-3xl border border-white/10 overflow-hidden h-[400px] shadow-[0_20px_40px_rgba(0,0,0,0.8)] relative z-10 bg-fiber-carbon">
-                 {/* Top Metallic Bar */}
-                <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between shrink-0 bg-gradient-to-r from-[#1c1c1f] to-[#121215] shadow-lg relative overflow-hidden">
-                    <div className="flex items-center gap-4 relative z-10">
-                        <div className="p-2.5 rounded-xl bg-gradient-to-br from-amber-600/20 to-amber-700/10 border border-amber-500/20 shadow-[0_0_20px_rgba(234,179,8,0.15)] ring-1 ring-amber-500/10">
-                            <FileText size={22} className="text-amber-400 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
-                        </div>
-                        <div>
-                            <h3 className="text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-100 to-amber-400 uppercase tracking-widest font-sans drop-shadow-sm text-gold-glow">DÖKÜMANLAR</h3>
-                            <p className="text-[10px] text-stone-500 font-bold uppercase tracking-widest opacity-80">Doküman Listesi</p>
-                        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+            
+            {/* Left: Documents List (Reference Layout) */}
+            <div className="lg:col-span-3 flex flex-col bg-[#e0e0e0] rounded-t-xl border-x border-t border-white/20 overflow-hidden h-[440px] shadow-[0_20px_40px_rgba(0,0,0,0.8)] relative z-10">
+                 {/* Header Row - Dark Metallic */}
+                <div className="px-4 py-2 bg-gradient-to-r from-[#1c1c22] to-[#2a2a30] flex items-center justify-between shrink-0 border-b-2 border-orange-500/50 shadow-lg relative z-20">
+                    <div className="flex items-center gap-2">
+                        <span className="text-slate-300 font-bold text-xs tracking-widest uppercase">DÖKÜMANLAR</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        {recentDocuments.length > 0 && (
-                             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-emerald-500/30 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8)]">
-                                <span className="flex h-2 w-2 relative">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_10px_#22c55e]"></span>
-                                </span>
-                                <span className="text-[10px] text-emerald-400 font-bold font-mono tracking-wider text-glow drop-shadow-md">CANLI AKIŞ</span>
-                            </div>
-                        )}
+                         <span className="text-slate-400 font-bold text-[10px] tracking-widest uppercase">ADET / AY</span>
                     </div>
                 </div>
                 
-                <div className="flex-1 overflow-y-auto custom-scrollbar relative">
-                    {/* Inner Shadow for Depth */}
-                    <div className="absolute top-0 inset-x-0 h-8 bg-gradient-to-b from-black/80 to-transparent z-10 pointer-events-none"></div>
-
-                    {recentDocuments.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-slate-500 gap-4 opacity-50">
-                            <div className="p-6 rounded-full bg-white/5 shadow-inner border border-white/5">
-                                <FileText size={48} className="text-slate-700" />
-                            </div>
-                            <p className="text-sm font-bold uppercase tracking-wider text-slate-600">Henüz belge oluşturulmadı</p>
-                        </div>
-                    ) : (
-                    <div className="flex flex-col w-full">
-                    <AnimatePresence>
-                    {recentDocuments.map((doc, idx) => (
-                        <motion.div 
-                            key={doc.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.05 }}
-                            className="group relative border-b border-white/[0.05] transition-colors cursor-pointer hover:bg-white/[0.02]"
-                            onClick={() => onNavigate('my-documents')}
+                {/* Metallic List Content */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-1 bg-[#cfcfcf]">
+                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/brushed-alum.png')] opacity-50 mix-blend-multiply pointer-events-none"></div>
+                    
+                    {[
+                        { title: "Risk Analiz Raporu", limit: "10 ADET / AY", icon: AlertTriangle, color: "text-blue-700" },
+                        { title: "Patlayıcıdan Korunma Dök.", limit: "10 ADET / AY", icon: Zap, color: "text-orange-700" },
+                        { title: "Yangından Korunma Dök.", limit: "10 ADET / AY", icon:  AlertTriangle, color: "text-red-700" },
+                        { title: "Yüksekte Çalışma Dök.", limit: "10 ADET / AY", icon: HardHat, color: "text-blue-600" },
+                        { title: "Elektrik İşlerinde Dök.", limit: "200 ADET / AY", icon: Zap, color: "text-yellow-700" },
+                        { title: "İşe Başlama Eğitim Dök.", limit: "200 ADET / AY", icon: FileCheck, color: "text-orange-600" },
+                        { title: "Sertifika Oluşturma", limit: "100 SINIRSIZ", icon: Award, color: "text-amber-800" },
+                        { title: "Personel Sağlık Formu", limit: "100 SINIRSIZ", icon: Activity, color: "text-red-600" },
+                        { title: "Matrix Puanlama Risk Analizi", limit: "100 SINIRSIZ", icon: ClipboardList, color: "text-slate-700" }
+                    ].map((item, i) => (
+                        <div 
+                            key={i} 
+                            onClick={() => onNavigate('templates', { search: item.title })}
+                            className="relative flex items-center justify-between p-2 mb-[1px] bg-gradient-to-b from-slate-100 to-slate-300 border border-slate-400 shadow-[0_1px_2px_rgba(0,0,0,0.2)] hover:brightness-110 cursor-pointer group transition-all"
                         >
-                            {/* Detailed Row Background */}
-                             <div className={`absolute inset-0 ${idx % 2 === 0 ? 'bg-black/20' : 'bg-transparent'}`}></div>
-
-                            <div className="px-6 py-4 flex items-center gap-6 relative z-10">
-                                {/* Icon Badge - Detailed Enamel Pin Style */}
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-b from-[#2a2a30] to-[#121215] border border-white/10 shadow-[0_4px_6px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.1)] group-hover:scale-105 transition-transform duration-300 relative overflow-hidden`}>
-                                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
-                                    <FileText size={20} className="text-slate-400 group-hover:text-amber-400 transition-colors drop-shadow-[0_2px_3px_rgba(0,0,0,1)]" />
+                            <div className="flex items-center gap-3 relative z-10">
+                                <div className="p-1 w-8 h-8 flex items-center justify-center bg-white rounded border border-slate-400 shadow-inner">
+                                    <item.icon size={16} className={item.color} />
                                 </div>
-                                
-                                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                    <div className="flex items-center justify-between mb-1.5">
-                                        <h4 className="text-sm font-bold text-slate-200 group-hover:text-white truncate tracking-tight transition-colors drop-shadow-sm">{doc.templateId}</h4>
-                                        <span className="font-mono text-[10px] text-amber-600/80 group-hover:text-amber-500 transition-colors bg-amber-900/10 px-1.5 py-0.5 rounded border border-amber-900/20">#{doc.id.substring(0,6)}</span>
-                                    </div>
-                                    <div className="flex items-center gap-4 text-[11px] font-medium">
-                                        {/* Status Badge - Pin Style */}
-                                        <div className={`flex items-center gap-2 px-2.5 py-1 rounded-md border shadow-sm ${
-                                            doc.status === 'COMPLETED' ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-400' : 
-                                            doc.status === 'DOWNLOADED' ? 'bg-blue-950/40 border-blue-500/30 text-blue-400' : 
-                                            'bg-amber-950/40 border-amber-500/30 text-amber-400'
-                                        }`}>
-                                            <div className={`w-1.5 h-1.5 rounded-full ring-1 ring-black/50 ${
-                                                doc.status === 'COMPLETED' ? 'bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)]' : 
-                                                doc.status === 'DOWNLOADED' ? 'bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.8)]' : 
-                                                'bg-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.8)]'
-                                            }`}></div>
-                                            <span className="uppercase tracking-wider text-[9px] font-black text-shadow-sm">
-                                                {doc.status === 'COMPLETED' ? 'TAMAMLANDI' : doc.status === 'DOWNLOADED' ? 'İNDİRİLDİ' : 'TASLAK'}
-                                            </span>
-                                        </div>
-                                        <span className="text-slate-700">|</span>
-                                        <span className="font-bold text-slate-500 group-hover:text-slate-400 transition-colors">{new Date(doc.createdAt).toLocaleDateString('tr-TR')}</span>
-                                    </div>
-                                </div>
-
-                                {/* Count / Limits Highlight */}
-                                <div className="hidden md:flex flex-col items-end justify-center min-w-[80px]">
-                                     <span className="text-xs font-black text-amber-500/90 text-gold-glow tracking-widest group-hover:text-amber-400 transition-colors">1 ADET</span>
-                                     <div className="h-px w-full bg-gradient-to-r from-transparent via-amber-900/50 to-transparent mt-0.5"></div>
-                                </div>
-
-                                <div className="text-right pl-2">
-                                     <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#222] border border-white/5 text-slate-500 hover:bg-amber-600 hover:text-black hover:border-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-300 opacity-60 group-hover:opacity-100 transform translate-x-1 group-hover:translate-x-0 btn-marble">
-                                        <Download size={16} />
-                                    </button>
-                                </div>
+                                <span className="text-xs font-black text-slate-800 uppercase tracking-tight group-hover:text-black">{item.title}</span>
                             </div>
-                        </motion.div>
+                            <div className="relative z-10">
+                                <span className={`text-[10px] font-black tracking-widest ${item.limit.includes("SINIRSIZ") ? "text-amber-700" : "text-slate-600"}`}>
+                                    {item.limit}
+                                </span>
+                            </div>
+                        </div>
                     ))}
-                    </AnimatePresence>
-                    </div>
-                    )}
+                    
+                    {/* Faux Empty Rows to fill space if needed */}
+                     <div className="opacity-30 pointer-events-none">
+                        {[1,2,3].map(n => (
+                            <div key={n} className="h-10 mb-[1px] bg-slate-300/50 border border-slate-400/30"></div>
+                        ))}
+                     </div>
                 </div>
             </div>
 
