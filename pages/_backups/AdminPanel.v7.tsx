@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   LayoutDashboard, Users, ShoppingBag, FileText, Server, 
-  LogOut, Search, Bell, Menu, Activity, DollarSign,
-  Upload, Edit3, Eye, RefreshCw, Lock
+  Settings, LogOut, Search, Bell, Menu, X, MoreVertical,
+  TrendingUp, AlertTriangle, Shield, Activity, DollarSign,
+  Download, Upload, Edit3, Trash2, Power, Eye, RefreshCw,
+  Cpu, Database, Lock, Unlock, Zap, ChevronRight, CheckCircle
 } from 'lucide-react';
-import { User } from '../types';
+import { User, SubscriptionPlan, DocumentTemplate } from '../types';
 import { PLANS as DEFAULT_PLANS } from '../constants';
 import { fetchApi } from '../src/utils/api';
 
@@ -68,98 +70,40 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [plans, setPlans] = useState<any[]>(DEFAULT_PLANS);
-  // Logs should fetch from API if exists, otherwise assume empty or try mock
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [stats, setStats] = useState({
-    mrr: 0,
-    activeUsers: 0,
-    totalDocs: 0,
-    queue: 0
-  });
   const [loading, setLoading] = useState(true);
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      
-      // 1. Fetch Users
-      // Using fetchApi ensures we use the correct base URL
-      const usersRes = await fetchApi('/api/users');
-      let usersData: User[] = [];
-      if (usersRes.ok) {
-        usersData = await usersRes.json();
-        setUsers(usersData);
-      } else {
-        console.error('Kullanıcılar alınamadı');
-      }
-
-      // 2. Fetch Logs or use placeholder if endpoint unavailable
-      // Since logs endpoint might return 404 if json-server doesn't have it (we added empty logs array to db.json so it should return [])
-      try {
-        const logsRes = await fetchApi('/api/logs');
-        if (logsRes.ok) {
-           const logData = await logsRes.json();
-           setLogs(logData);
-        }
-      } catch (err) {
-        console.warn('Log verisi alınamadı:', err);
-      }
-
-      // 3. Fetch Documents (for stats - total generated)
-      let docsCount = 0;
-      try {
-        const docsRes = await fetchApi('/api/documents');
-        if (docsRes.ok) {
-           const docs = await docsRes.json();
-           // The API might return { success: true, documents: [...] } or just [...]
-           if (Array.isArray(docs)) {
-                docsCount = docs.length;
-           } else if (docs.documents && Array.isArray(docs.documents)) {
-                docsCount = docs.documents.length;
-           }
-        }
-      } catch (err) {
-        console.warn('Doküman verisi alınamadı:', err);
-      }
-
-      // 4. Calculate Real Stats from Users
-      let calculatedMrr = 0;
-      let activeCount = 0;
-
-      usersData.forEach((u: User) => {
-        if (u.isActive) activeCount++;
-        
-        // Find plan price for MRR calculation
-        const planInfo = DEFAULT_PLANS.find(p => p.id === u.plan);
-        if (planInfo) {
-          // Extract number from "250 TL" -> 250
-          const priceStr = planInfo.price.replace(/[^0-9]/g, ''); 
-          const price = parseInt(priceStr) || 0;
-          
-          // Add to MRR based on plan period (assuming monthly price is listed)
-          calculatedMrr += price;
-        }
-      });
-
-      setStats({
-        mrr: calculatedMrr,
-        activeUsers: activeCount,
-        totalDocs: docsCount,
-        queue: Math.floor(Math.random() * 5) // Still mock queue as we don't track queue yet
-      });
-
-    } catch (e) {
-      console.error('Veri yükleme sırasında genel hata:', e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
+  // Fake Data Loader
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        // Simulate API Calls
+        setTimeout(() => {
+          // Mock Users
+          setUsers([
+             { id: '1', name: 'Ahmet Yılmaz', email: 'ahmet@firma.com', role: 'SUBSCRIBER', plan: 'GOLD', remainingDownloads: 45, isActive: true, companyName: 'Yılmaz İnşaat' } as any,
+             { id: '2', name: 'Mehmet Demir', email: 'mehmet@tech.com', role: 'ADMIN', plan: 'PREMIUM', remainingDownloads: 'UNLIMITED', isActive: true, companyName: 'Demir Tech' } as any,
+             { id: '3', name: 'Ayşe Kaya', email: 'ayse@mimarlik.com', role: 'SUBSCRIBER', plan: 'STANDART', remainingDownloads: 0, isActive: false, companyName: 'Kaya Mimarlık' } as any,
+          ]);
+          
+          // Mock Logs
+          setLogs(Array.from({ length: 15 }).map((_, i) => ({
+            id: i.toString(),
+            timestamp: new Date(Date.now() - i * 60000).toLocaleTimeString(),
+            status: Math.random() > 0.9 ? 500 : 200,
+            method: ['GET', 'POST', 'PATCH'][Math.floor(Math.random() * 3)],
+            path: ['/api/auth/login', '/api/users', '/api/generate-pdf'][Math.floor(Math.random() * 3)],
+            latency: `${Math.floor(Math.random() * 200 + 20)}ms`
+          })));
+
+          setLoading(false);
+        }, 1000);
+      } catch (e) {
+        console.error(e);
+      }
+    };
     loadData();
-    // Auto-refresh data every 30 seconds
-    const interval = setInterval(loadData, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   // --- Views ---
@@ -169,39 +113,10 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { 
-            label: 'Aylık Gelir (MRR)', 
-            value: `₺${stats.mrr.toLocaleString()}`, 
-            // Mock trend for now as we don't store historical MRR
-            trend: '+%0', 
-            icon: DollarSign, 
-            color: 'text-amber-400', 
-            bg: 'bg-amber-500/10' 
-          },
-          { 
-            label: 'Aktif Kullanıcı', 
-            value: stats.activeUsers.toLocaleString(), 
-            trend: `${users.length} Toplam`, 
-            icon: Users, 
-            color: 'text-emerald-400', 
-            bg: 'bg-emerald-500/10' 
-          },
-          { 
-            label: 'Üretilen Doküman', 
-            value: stats.totalDocs >= 1000 ? `${(stats.totalDocs/1000).toFixed(1)}K` : stats.totalDocs, 
-            trend: 'Toplam', 
-            icon: FileText, 
-            color: 'text-blue-400', 
-            bg: 'bg-blue-500/10' 
-          },
-          { 
-            label: 'Bekleyen Kuyruk', 
-            value: stats.queue.toString(), 
-            trend: 'Anlık', 
-            icon: Activity, 
-            color: 'text-rose-400', 
-            bg: 'bg-rose-500/10' 
-          },
+          { label: 'Aylık Gelir (MRR)', value: '₺84,250', trend: '+12.5%', icon: DollarSign, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+          { label: 'Aktif Kullanıcı', value: '1,248', trend: '+5.2%', icon: Users, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+          { label: 'Üretilen Doküman', value: '45.2K', trend: '+28%', icon: FileText, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+          { label: 'Bekleyen Kuyruk', value: '12', trend: '-2', icon: Activity, color: 'text-rose-400', bg: 'bg-rose-500/10' },
         ].map((stat, i) => (
           <GlassCard key={i} className="p-6 relative overflow-hidden group">
             <div className={`absolute top-0 right-0 p-4 opacity-10 ${stat.color}`}>
@@ -214,7 +129,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
               <h3 className="text-slate-400 text-sm font-medium tracking-wide">{stat.label}</h3>
               <div className="flex items-end gap-3 mt-1">
                 <span className="text-3xl font-bold text-white">{stat.value}</span>
-                <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${stat.color.replace('text-', 'bg-').replace('400', '400/10')} ${stat.color}`}>
+                <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${stat.trend.startsWith('+') ? 'text-emerald-400 bg-emerald-400/10' : 'text-rose-400 bg-rose-400/10'}`}>
                   {stat.trend}
                 </span>
               </div>
@@ -224,7 +139,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
         ))}
       </div>
 
-      {/* Traffic Chart Placeholder (still visual for now, data would need a complex charting lib) */}
+      {/* Traffic Chart Placeholder */}
       <GlassCard className="p-1 h-96 relative group">
         <div className="absolute inset-0 bg-[url('https://v0.dev/placeholder.svg')] opacity-5 bg-center bg-repeat"></div>
         <div className="h-full w-full bg-slate-900/40 rounded-xl flex items-center justify-center relative overflow-hidden">
@@ -249,7 +164,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Users className="text-amber-500" /> Kullanıcı Yönetimi ({users.length})
+          <Users className="text-amber-500" /> Kullanıcı Yönetimi
         </h2>
         <div className="flex gap-3">
           <div className="relative">
@@ -260,7 +175,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
               className="bg-[#1e293b] border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 w-72"
             />
           </div>
-          <GlowButton onClick={loadData} icon={RefreshCw}>Yenile</GlowButton>
+          <GlowButton>Filtrele</GlowButton>
         </div>
       </div>
 
@@ -276,13 +191,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/50 text-sm text-slate-300">
-            {users.length === 0 ? (
-                <tr>
-                    <td colSpan={5} className="p-8 text-center text-slate-500 italic">
-                        Henüz kayıtlı kullanıcı bulunmuyor.
-                    </td>
-                </tr>
-            ) : users.map(u => (
+            {users.map(u => (
               <tr key={u.id} className="hover:bg-slate-800/30 transition-colors group">
                 <td className="p-5">
                    <div className="flex items-center gap-3">
@@ -385,16 +294,65 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                </div>
             </div>
             <div className="flex-1 bg-[#0B0F19] p-4 font-mono text-xs overflow-y-auto custom-scrollbar space-y-1">
-               {logs.length === 0 ? (
-                  <div className="text-slate-600 italic p-4 text-center">Henüz sistem log kaydı bulunmuyor.</div>
-               ) : logs.map((log) => (
+               {logs.map((log) => (
                  <div key={log.id} className="flex gap-3 hover:bg-white/5 p-0.5 rounded transition-colors group">
                     <span className="text-slate-600 select-none">[{log.timestamp}]</span>
                     <span className={`${log.status === 200 ? 'text-emerald-500' : 'text-red-500'} font-bold w-8`}>{log.status}</span>
-                    <span className="text-amber-500 w-16">{log.method}</span>
+                    <span className="text-purple-400 w-12">{log.method}</span>
                     <span className="text-slate-300 flex-1">{log.path}</span>
-                    <span className="text-slate-500">{log.latency}</span>
+                    <span className="text-slate-600 text-right w-16 group-hover:text-amber-500 transition-colors">{log.latency}</span>
                  </div>
+               ))}
+               <div className="animate-pulse text-amber-500">_</div>
+            </div>
+         </GlassCard>
+      </div>
+
+      {/* Control Panel */}
+      <div className="space-y-6">
+         <GlassCard className="p-6">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+               <Shield className="text-amber-500" size={20} /> Güvenlik Duvarı
+            </h3>
+            <div className="space-y-4">
+              <div>
+                 <label className="text-xs text-slate-400 font-bold uppercase mb-1.5 block">IP Ban (Blacklist)</label>
+                 <div className="flex gap-2">
+                    <input type="text" placeholder="192.168.1.1" className="bg-[#0B0F19] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white w-full focus:outline-none focus:border-red-500" />
+                    <button className="bg-red-500/10 border border-red-500/30 text-red-500 p-2 rounded-lg hover:bg-red-500 hover:text-white transition-all"><Lock size={18} /></button>
+                 </div>
+              </div>
+              <div className="pt-4 border-t border-slate-800">
+                 <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-white">Bakım Modu</span>
+                    <div className="w-10 h-5 bg-slate-700 rounded-full relative cursor-pointer opacity-50">
+                       <div className="w-5 h-5 bg-slate-400 rounded-full absolute left-0 top-0 border-2 border-[#1e293b]"></div>
+                    </div>
+                 </div>
+                 <p className="text-[10px] text-slate-500">Aktif edildiğinde sadece adminler giriş yapabilir. Tüm kullanıcı oturumları sonlandırılır.</p>
+              </div>
+            </div>
+         </GlassCard>
+
+         <GlassCard className="p-6">
+             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+               <Server className="text-blue-500" size={20} /> Sunucu Kaynakları
+            </h3>
+            <div className="space-y-4">
+               {[
+                 { label: 'CPU Kullanımı', val: '42%', color: 'blue' },
+                 { label: 'RAM (16GB)', val: '8.4GB', color: 'purple' },
+                 { label: 'SSD (Database)', val: '24%', color: 'emerald' },
+               ].map((item, i) => (
+                  <div key={i}>
+                     <div className="flex justify-between text-xs mb-1">
+                        <span className="text-slate-400">{item.label}</span>
+                        <span className="text-white font-bold">{item.val}</span>
+                     </div>
+                     <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div className={`h-full bg-${item.color}-500 w-[${parseInt(item.val)}%] rounded-full`} style={{ width: item.val }}></div>
+                     </div>
+                  </div>
                ))}
             </div>
          </GlassCard>
@@ -403,107 +361,112 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   );
 
   return (
-    <div className="flex min-h-screen bg-[#020617] text-white font-sans selection:bg-amber-500/30">
-      {/* Sidebar */}
-      <aside className={`${isSidebarCollapsed ? 'w-20' : 'w-72'} bg-[#0B0F19] border-r border-[#1e293b] flex flex-col transition-all duration-300 z-50 fixed h-full left-0`}>
-        <div className="p-6 flex items-center justify-center border-b border-[#1e293b]">
-           {isSidebarCollapsed ? (
-             <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-amber-500/20">K</div>
-           ) : (
-             <div className="flex items-center gap-3">
-               <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-amber-500/20">K</div>
-               <div>
-                 <h1 className="font-bold text-lg leading-tight tracking-tight">KIRBAŞ</h1>
-                 <p className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Panel Yönetimi</p>
+    <div className="flex h-screen bg-[#060910] text-slate-200 overflow-hidden font-sans selection:bg-amber-500/30">
+      
+      {/* Sidebar Navigation */}
+      <aside className={`${isSidebarCollapsed ? 'w-20' : 'w-72'} bg-[#0B0F19] border-r border-[#1F2937] flex flex-col transition-all duration-300 relative z-20`}>
+         <div className="h-20 flex items-center justify-center border-b border-[#1F2937]">
+            {isSidebarCollapsed ? (
+               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center font-bold text-white shadow-lg shadow-amber-500/20">K</div>
+            ) : (
+               <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center font-bold text-white">K</div>
+                  <span className="font-bold text-white tracking-tight text-lg">KIRBAŞ <span className="text-amber-500">ADMIN</span></span>
                </div>
-             </div>
-           )}
-        </div>
+            )}
+         </div>
 
-        <nav className="flex-1 py-8 px-4 space-y-2">
-           {[
-             { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-             { id: 'users', label: 'Kullanıcılar', icon: Users },
-             { id: 'packages', label: 'Paketler & Fiyat', icon: ShoppingBag },
-             { id: 'templates', label: 'Doküman Merkezi', icon: FileText },
-             { id: 'system', label: 'DevOps & Loglar', icon: Server },
-           ].map(item => (
-             <button
-               key={item.id}
-               onClick={() => setActiveTab(item.id as any)}
-               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group ${
-                 activeTab === item.id 
-                 ? 'bg-amber-500/10 text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.1)] border border-amber-500/20' 
-                 : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-               }`}
-             >
-               <item.icon size={20} className={activeTab === item.id ? 'animate-pulse' : ''} />
-               {!isSidebarCollapsed && <span className="font-medium text-sm">{item.label}</span>}
-               {activeTab === item.id && !isSidebarCollapsed && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />}
+         <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto custom-scrollbar">
+            {[
+              { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+              { id: 'users', label: 'Kullanıcılar', icon: Users },
+              { id: 'packages', label: 'Paketler & Fiyat', icon: ShoppingBag },
+              { id: 'templates', label: 'Doküman Merkezi', icon: FileText },
+              { id: 'system', label: 'DevOps & Loglar', icon: Server },
+            ].map((item) => (
+               <button
+                 key={item.id}
+                 onClick={() => setActiveTab(item.id as any)}
+                 className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 group relative ${
+                   activeTab === item.id 
+                     ? 'bg-amber-500/10 text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.1)]' 
+                     : 'text-slate-400 hover:text-slate-200 hover:bg-[#151b2b]'
+                 }`}
+               >
+                 <item.icon size={22} className={activeTab === item.id ? 'stroke-[2.5px]' : 'stroke-[1.5px]'} />
+                 {!isSidebarCollapsed && (
+                    <span className="font-medium">{item.label}</span>
+                 )}
+                 {activeTab === item.id && !isSidebarCollapsed && (
+                    <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,1)]" />
+                 )}
+               </button>
+            ))}
+         </nav>
+
+         <div className="p-4 border-t border-[#1F2937]">
+             <button onClick={onLogout} className={`w-full flex items-center ${isSidebarCollapsed ? 'justify-center' : 'gap-3'} p-3 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors`}>
+                <LogOut size={20} />
+                {!isSidebarCollapsed && <span className="font-medium">Çıkış Yap</span>}
              </button>
-           ))}
-        </nav>
-
-        <div className="p-4 border-t border-[#1e293b]">
-          <button onClick={onLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors">
-            <LogOut size={20} />
-            {!isSidebarCollapsed && <span className="font-medium text-sm">Çıkış Yap</span>}
-          </button>
-        </div>
+         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'ml-20' : 'ml-72'}`}>
-        {/* Header */}
-        <header className="h-20 bg-[#0B0F19]/80 backdrop-blur-md border-b border-[#1e293b] sticky top-0 z-40 px-8 flex items-center justify-between">
-           <div className="flex items-center gap-4">
-              <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="p-2 text-slate-400 hover:text-white transition-colors">
-                <Menu size={24} />
-              </button>
-              <div>
-                <h2 className="text-xl font-bold text-white tracking-wide">
-                  {activeTab === 'dashboard' ? 'Sistem Özeti' : 
-                   activeTab === 'users' ? 'Kullanıcı Listesi' :
-                   activeTab === 'packages' ? 'Abonelik Paketleri' : 'Yönetim Paneli'}
-                </h2>
-              </div>
-           </div>
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col min-w-0 bg-[#060910] relative">
+         {/* Top Header */}
+         <header className="h-20 bg-[#0B0F19]/80 backdrop-blur-md border-b border-[#1F2937] flex items-center justify-between px-8 sticky top-0 z-10">
+            <div className="flex items-center gap-4">
+               <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-[#1F2937] transition-colors">
+                  <Menu size={20} />
+               </button>
+               <h2 className="text-xl font-bold text-white capitalize">{
+                  activeTab === 'dashboard' ? 'Sistem Özeti' : 
+                  activeTab === 'users' ? 'Kullanıcı Listesi' :
+                  activeTab === 'packages' ? 'Abonelik Konfigurasyonu' : 
+                  activeTab === 'system' ? 'Sunucu Terminali' : 'Doküman Şablonları'
+               }</h2>
+            </div>
+            
+            <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-[#151b2b] rounded-full border border-slate-800">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span className="text-xs font-mono text-emerald-400">SYS:ONLINE</span>
+                </div>
+                <div className="relative cursor-pointer">
+                    <Bell size={20} className="text-slate-400 hover:text-white transition-colors" />
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#0B0F19]"></span>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200 font-bold hover:border-amber-500/50 transition-colors cursor-pointer">
+                    A
+                </div>
+            </div>
+         </header>
 
-           <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="text-xs font-bold text-emerald-500">SYS : ONLINE</span>
-              </div>
-              <button className="p-2 relative text-slate-400 hover:text-white transition-colors">
-                 <Bell size={20} />
-                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0B0F19]" />
-              </button>
-              <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-white font-bold cursor-pointer hover:border-amber-500 transition-colors">
-                A
-              </div>
-           </div>
-        </header>
-
-        {/* Content Area */}
-        <div className="p-8">
-           {loading ? (
-             <div className="flex items-center justify-center h-[60vh]">
-               <div className="flex flex-col items-center gap-4">
-                 <div className="w-12 h-12 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin" />
-                 <p className="text-slate-500 animate-pulse">Sistem Verileri Yükleniyor...</p>
+         {/* Scrollable Content */}
+         <div className="flex-1 overflow-auto p-8 custom-scrollbar">
+            {loading ? (
+               <div className="flex items-center justify-center h-full flex-col gap-4">
+                  <div className="w-16 h-16 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
+                  <span className="text-amber-500 font-mono text-sm animate-pulse">SYSTEM_INITIALIZING...</span>
                </div>
-             </div>
-           ) : (
-              <>
-                {activeTab === 'dashboard' && <DashboardView />}
-                {activeTab === 'users' && <UsersView />}
-                {activeTab === 'packages' && <PackagesView />}
-                {activeTab === 'system' && <SystemView />}
-                {/* Other tabs can be added similarly */}
-              </>
-           )}
-        </div>
+            ) : (
+               <>
+                 {activeTab === 'dashboard' && <DashboardView />}
+                 {activeTab === 'users' && <UsersView />}
+                 {activeTab === 'packages' && <PackagesView />}
+                 {activeTab === 'system' && <SystemView />}
+                 {activeTab === 'templates' && (
+                    <div className="flex flex-col items-center justify-center h-full text-slate-500 gap-4">
+                       <FileText size={64} className="opacity-20" />
+                       <p>Şablon Yönetimi Modülü Yapım Aşamasında...</p>
+                    </div>
+                 )}
+               </>
+            )}
+         </div>
       </main>
+
     </div>
   );
 };
