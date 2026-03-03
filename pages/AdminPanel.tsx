@@ -732,16 +732,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
       {/* Subscribers Tab (Active Management) */}
       {activeTab === 'subscribers' && (
         <div className="space-y-4">
-          <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
              <div>
-                <h3 className="text-lg font-bold text-slate-900">{t?.admin?.allSubscribers || 'Tüm Aboneler'}</h3>
-                <div className="text-sm text-slate-500">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t?.admin?.allSubscribers || 'Tüm Aboneler'}</h3>
+                <div className="text-sm text-slate-500 dark:text-slate-400">
                     Toplam: <b>{allUsers.length}</b> Kayıtlı Kullanıcı
                 </div>
              </div>
              <button 
                 onClick={loadUsers} 
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 font-medium transition"
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 font-medium transition"
              >
                 <div className="w-4 h-4 animate-spin-slow" style={{ animationDuration: '3s' }}>
                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-1.343 3-3s-1.343-3-3-3m0 6c-1.657 0-3-1.343-3-3s1.343-3 3-3m-9 0c0-1.657 1.343-3 3-3s3 1.343 3 3m-6 0c0 1.657-1.343 3-3 3s-3-1.343-3-3m0-6c0-1.657 1.343-3 3-3s3 1.343 3 3m-6 0c0 1.657-1.343 3-3 3s-3-1.343-3-3"/></svg>
@@ -750,10 +750,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
              </button>
           </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
+              <thead className="text-xs text-slate-700 dark:text-slate-400 uppercase bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
                 <tr>
                   <th className="px-6 py-3">{t?.admin?.subscribers || 'Aboneler'}</th>
                   <th className="px-6 py-3">{t?.dashboard?.package || 'Plan'}</th>
@@ -762,15 +762,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
                   <th className="px-6 py-3">{t?.common?.edit || 'İşlem'}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                 {allUsers.map((u, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50">
+                  <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-medium text-slate-900">{u.name}</div>
-                      <div className="text-xs text-slate-500">{u.email}</div>
-                      <div className="text-xs text-slate-400">{u.companyName}</div>
+                      <div className="font-medium text-slate-900 dark:text-white">{u.name}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">{u.email}</div>
+                      <div className="text-xs text-slate-400 dark:text-slate-500">{u.companyName}</div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600">
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-300">
                        {u.plan === SubscriptionPlan.YEARLY ? 'Yıllık Pro' : u.plan === SubscriptionPlan.MONTHLY ? 'Aylık' : 'Ücretsiz'}
                     </td>
                     <td className="px-6 py-4">
@@ -845,9 +845,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, t, currentView }) 
 
       {/* Templates Tab */}
       {activeTab === 'templates' && (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-           <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-            <h3 className="font-bold text-slate-900">{t?.admin?.documentTemplates || 'Doküman Şablonları'}</h3>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+           <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
+            <h3 className="font-bold text-slate-900 dark:text-white">{t?.admin?.documentTemplates || 'Doküman Şablonları'}</h3>
             <button 
                 onClick={handleCreateTemplate}
                 className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 flex items-center gap-1">

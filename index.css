@@ -11,7 +11,7 @@
   }
 
   body {
-    @apply antialiased overflow-hidden selection:bg-amber-500/30 selection:text-amber-200 transition-colors duration-300
+    @apply antialiased overflow-hidden selection:bg-amber-500/30 selection:text-amber-800 dark:selection:text-amber-200 transition-colors duration-500 ease-in-out
            bg-slate-50 text-slate-900 
            dark:bg-[#0f1115] dark:text-slate-200;
   }
