@@ -89,11 +89,11 @@ export const Layout: React.FC<LayoutProps> = ({
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)] opacity-80"></div>
       </div>
 
-      {/* INDUSTRIAL TOP NAVIGATION BAR - Now Transparent/Minimal */}
-      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-4 bg-transparent shrink-0 pointer-events-none">
+      {/* INDUSTRIAL TOP NAVIGATION BAR - Improved Visibility */}
+      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-4 bg-transparent shrink-0 pointer-events-auto">
         
         {/* Left: Branding */}
-        <div className="flex items-center gap-4 pointer-events-auto">
+        <div className="flex items-center gap-4">
             {/* Mobile Menu Toggle */}
             <button 
                 onClick={() => setMobileMenuOpen(true)}
