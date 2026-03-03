@@ -278,7 +278,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0B1120] text-slate-900 dark:text-slate-100 p-6 md:p-8 lg:p-12 pb-32">
+    <div className="min-h-screen text-slate-900 dark:text-slate-100 p-6 md:p-8 lg:p-12 pb-32">
         <AnimatePresence>
             {notification && (
                 <motion.div 
@@ -306,7 +306,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
             className="max-w-7xl mx-auto space-y-8"
         >
             {/* 1. HERO SECTION (Real Data) */}
-            <motion.div variants={itemVariants} className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-900 to-slate-950 border border-white/5 shadow-2xl p-8 md:p-12 mb-12 group">
+            <motion.div variants={itemVariants} className="relative overflow-hidden rounded-[2.5rem] bg-indigo-900/10 dark:bg-slate-900/20 backdrop-blur-3xl border border-white/5 shadow-2xl p-8 md:p-12 mb-12 group">
                 {/* Dynamic Background */}
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-indigo-500/30 transition-colors duration-1000" />
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none group-hover:bg-purple-500/20 transition-colors duration-1000" />
@@ -384,7 +384,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                 {/* Left Column - Navigation/Tabs */}
                 <div className="lg:col-span-8 space-y-8">
                     {/* Tab Navigation */}
-                    <motion.div variants={itemVariants} className="flex p-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-x-auto">
+                    <motion.div variants={itemVariants} className="flex p-1 bg-white/10 dark:bg-slate-900/10 backdrop-blur-md rounded-2xl border border-white/10 dark:border-white/5 shadow-sm relative overflow-x-auto">
                          {[
                             { id: 'profile', label: 'Hesap Bilgileri', icon: User },
                             { id: 'security', label: 'Güvenlik', icon: Lock },
@@ -402,7 +402,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                 {activeTab === tab.id && (
                                     <motion.div 
                                         layoutId="activeTab"
-                                        className="absolute inset-0 bg-slate-900 dark:bg-indigo-600 rounded-xl shadow-lg"
+                                        className="absolute inset-0 bg-indigo-600/80 dark:bg-indigo-600/50 backdrop-blur-sm rounded-xl shadow-lg border border-white/10"
                                         initial={false}
                                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                     />
@@ -416,11 +416,11 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                     </motion.div>
 
                     {/* Content Container */}
-                    <motion.div variants={itemVariants} className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm min-h-[400px] relative overflow-hidden">
+                    <motion.div variants={itemVariants} className="bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl rounded-[2rem] border border-white/10 dark:border-white/5 p-8 shadow-sm min-h-[400px] relative overflow-hidden">
                         <AnimatePresence mode="wait">
                             {activeTab === 'profile' && (
                                 <motion.div 
-                                    key="profile" 
+                                    key="profile"  
                                     initial={{ opacity: 0, x: -20 }} 
                                     animate={{ opacity: 1, x: 0 }} 
                                     exit={{ opacity: 0, x: 20 }} 
@@ -720,7 +720,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
 
                 {/* Right Column - Subscription Card & Real Timeline */}
                 <motion.div variants={itemVariants} className="lg:col-span-4 space-y-8">
-                     <div className="bg-slate-900 dark:bg-gradient-to-br dark:from-indigo-950 dark:to-slate-900 rounded-[2.5rem] p-8 relative overflow-hidden text-white shadow-2xl border border-white/10 group">
+                     <div className="bg-slate-900/40 dark:bg-slate-900/20 backdrop-blur-3xl rounded-[2.5rem] p-8 relative overflow-hidden text-white shadow-2xl border border-white/5 group">
                         {/* Golden/Premium Effects */}
                         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -mr-16 -mt-16 pointer-events-none group-hover:bg-amber-500/20 transition-colors duration-1000" />
                         <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-600/20 rounded-full blur-[60px] -ml-10 -mb-10 pointer-events-none" />
@@ -771,7 +771,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                      </div>
 
                      {/* REAL TIMELINE (Replaced Mock Data) */}
-                     <div className="bg-white dark:bg-slate-900 rounded-[2rem] p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+                     <div className="bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl rounded-[2rem] p-6 border border-white/10 dark:border-white/5 shadow-sm">
                         <h3 className="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2 text-lg">
                              <History size={20} className="text-indigo-500" />
                              Son Aktiviteler
@@ -782,7 +782,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                  <Loader2 className="animate-spin text-slate-400" />
                              </div>
                         ) : timeline.length > 0 ? (
-                            <div className="relative pl-4 space-y-6 border-l-2 border-slate-100 dark:border-slate-800">
+                            <div className="relative pl-4 space-y-6 border-l-2 border-slate-200/20 dark:border-white/10">
                                 {timeline.map((item, idx) => (
                                     <motion.div 
                                         key={item.id}

@@ -78,10 +78,11 @@ export const Layout: React.FC<LayoutProps> = ({
           {/* Subtle Grid Pattern */}
           <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"></div>
           
-          {/* Animated Floating Color Blobs - Premium Palette */}
-          <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full bg-purple-900/20 blur-[120px] animate-float mix-blend-screen opacity-40"></div>
-          <div className="absolute top-[10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-amber-600/10 blur-[100px] animate-float-delayed mix-blend-screen opacity-30"></div>
-          <div className="absolute bottom-[-20%] left-[20%] w-[900px] h-[900px] rounded-full bg-indigo-900/20 blur-[150px] animate-float-slow mix-blend-screen opacity-40"></div>
+          {/* Animated Floating Color Blobs - Premium Palette - Enhanced Visibility */}
+          <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full bg-purple-600/20 blur-[120px] animate-float mix-blend-screen opacity-60"></div>
+          <div className="absolute top-[20%] right-[-20%] w-[700px] h-[700px] rounded-full bg-amber-500/10 blur-[100px] animate-float-delayed mix-blend-screen opacity-50"></div>
+          <div className="absolute bottom-[-20%] left-[10%] w-[900px] h-[900px] rounded-full bg-indigo-600/20 blur-[150px] animate-float-slow mix-blend-screen opacity-60"></div>
+          <div className="absolute bottom-[20%] right-[20%] w-[600px] h-[600px] rounded-full bg-emerald-500/10 blur-[120px] animate-float mix-blend-screen opacity-40"></div>
           
           {/* Moving sheen effect */}
           <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.01] to-transparent animate-pulse-slow"></div>
