@@ -128,18 +128,8 @@ const SECTORS = [
   }
 ];
 
-const RECENT_DOCS = [
-  { id: 1, title: 'Risk Analiz Raporu', icon: FileText, color: 'text-blue-400', count: 10, total: 10, used: 2, status: 'Tamamlandı', date: '2 dk önce', active: true },
-  { id: 2, title: 'Patlatma Tutanağı', icon: AlertTriangle, color: 'text-orange-400', count: 15, total: 20, used: 8, status: 'İşleniyor...', date: '5 dk önce', active: true },
-  { id: 3, title: 'Yangın Tatbikat Raporu', icon: Activity, color: 'text-red-400', count: 10, total: 12, used: 3, status: 'Beklemede', date: '12 dk önce', active: false },
-  { id: 4, title: 'İş İskelesi Kontrol Formu', icon: HardHat, color: 'text-blue-300', count: 25, total: 50, used: 12, status: 'Tamamlandı', date: '15 dk önce', active: true },
-  { id: 5, title: 'Trafo Bakım Çizelgesi', icon: Zap, color: 'text-yellow-400', count: 5, total: 5, used: 1, status: 'İnceleniyor', date: '21 dk önce', active: true },
-  { id: 6, title: 'Kimyasal Stok Listesi', icon: Beaker, color: 'text-emerald-400', count: 30, total: 30, used: 28, status: 'Tamamlandı', date: '35 dk önce', active: true },
-  { id: 7, title: 'Günlük Kasa Raporu', icon: Wallet, color: 'text-purple-400', count: 30, total: 30, used: 15, status: 'Onaylandı', date: '1 saat önce', active: false },
-  { id: 8, title: 'İşe Başlama Eğitim Dök.', icon: CheckCircle2, color: 'text-green-400', count: 200, total: 200, used: 45, status: 'Tamamlandı', date: '2 saat önce', active: true },
-];
 
-export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDocuments = [] }) => {
   const [activeSector, setActiveSector] = useState<string | null>(null);
 
   return (
@@ -237,62 +227,58 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="flex h-2 w-2 relative">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
-                        <span className="text-[10px] text-green-500 font-bold font-mono tracking-wider">CANLI</span>
+                        {recentDocuments.length > 0 && (
+                            <>
+                                <span className="flex h-2 w-2 relative">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                                <span className="text-[10px] text-green-500 font-bold font-mono tracking-wider">CANLI</span>
+                            </>
+                        )}
                     </div>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
+                    {recentDocuments.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-full text-slate-500 gap-2">
+                            <FileText size={40} className="text-slate-700" />
+                            <p className="text-sm font-medium">Henüz belge oluşturulmadı</p>
+                        </div>
+                    ) : (
                     <AnimatePresence>
-                    {RECENT_DOCS.map((doc, idx) => (
+                    {recentDocuments.map((doc, idx) => (
                         <motion.div 
                             key={doc.id}
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.1 }}
                             className="p-3 flex items-center gap-4 hover:bg-white/[0.03] rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-white/5 relative overflow-hidden"
+                            onClick={() => onNavigate('my-documents')}
                         >
-                            {/* Active Indicator Line */}
-                            {doc.active && (
-                                <motion.div 
-                                    layoutId="activeIndicator"
-                                    className="absolute left-0 top-3 bottom-3 w-0.5 bg-blue-500 rounded-r-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"
-                                />
-                            )}
-
-                            <div className={`p-2.5 rounded-lg bg-white/5 ${doc.color} shadow-lg shadow-black/20 relative group-hover:scale-110 transition-transform duration-300`}>
-                                <doc.icon size={20} />
-                                {doc.active && (
-                                    <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500 border-2 border-[#161922]"></span>
-                                    </span>
-                                )}
+                            <div className={`p-2.5 rounded-lg bg-white/5 text-blue-400 shadow-lg shadow-black/20 relative group-hover:scale-110 transition-transform duration-300`}>
+                                <FileText size={20} />
                             </div>
                             
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <h4 className="text-sm font-bold text-slate-200 group-hover:text-white truncate">{doc.title}</h4>
-                                    {doc.status === 'İşleniyor...' && (
-                                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/10 animate-pulse">
-                                            İŞLENİYOR
+                                    <h4 className="text-sm font-bold text-slate-200 group-hover:text-white truncate">{doc.templateId}</h4>
+                                    {doc.status === 'DRAFT' && (
+                                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/10">
+                                            TASLAK
                                          </span>
                                     )}
                                 </div>
                                 <div className="flex items-center gap-4 text-[10px] text-slate-500 font-medium">
                                     <span className="flex items-center gap-1">
                                         <div className={`w-1.5 h-1.5 rounded-full ${
-                                            doc.status === 'Tamamlandı' ? 'bg-emerald-500' : 
-                                            doc.status === 'Beklemede' ? 'bg-amber-500' :
-                                            doc.status === 'Onaylandı' ? 'bg-purple-500' : 'bg-blue-500'
+                                            doc.status === 'COMPLETED' ? 'bg-emerald-500' : 
+                                            doc.status === 'DOWNLOADED' ? 'bg-blue-500' : 'bg-amber-500'
                                         }`}></div>
-                                        {doc.status}
+                                        {doc.status === 'COMPLETED' ? 'Tamamlandı' : doc.status === 'DOWNLOADED' ? 'İndirildi' : 'Taslak'}
                                     </span>
                                     <span className="text-slate-600">•</span>
-                                    <span>{doc.date}</span>
+                                    <span>{new Date(doc.createdAt).toLocaleDateString('tr-TR')}</span>
                                 </div>
                             </div>
 
@@ -306,6 +292,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                         </motion.div>
                     ))}
                     </AnimatePresence>
+                    )}
                 </div>
             </div>
 
