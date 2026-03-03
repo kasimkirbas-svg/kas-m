@@ -335,94 +335,94 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
                 </div>
             </div>
 
-            {/* Right Panel: 3D Quick Actions */}
-            <div className="lg:col-span-1 flex flex-col gap-6 h-full text-center">
+            {/* Right Panel: Quick Actions (Image Replication) */}
+            <div className="lg:col-span-1 flex flex-col gap-4 h-full">
                  
-                 {/* 3D Certificate Banner */}
+                 {/* 1. Certificate Banner (Blue Card) */}
                  <button 
                     onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                    className="h-44 relative rounded-2xl overflow-hidden group perspective-1000 transform transition-transform card-hover-3d border-metal active:scale-95"
-                 >
-                     <div className="absolute inset-0 bg-[#0f1015] z-0"></div>
-                     <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-blue-900/10 to-black z-0"></div>
-                     {/* Shine Sweep Effect */}
-                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shine-sweep z-10 pointer-events-none"></div>
+                    className="relative h-40 rounded-xl overflow-hidden group border border-blue-500/30 shadow-[0_10px_30px_rgba(37,99,235,0.4)] active:scale-95 transition-transform"
+                 > 
+                     {/* Blue Gradient Background */}
+                     <div className="absolute inset-0 bg-gradient-to-b from-blue-600 to-blue-900 z-0"></div>
+                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay z-0"></div>
+                     
+                     <div className="absolute top-2 right-2 bg-yellow-500 text-black text-[9px] font-black px-2 py-0.5 rounded shadow z-20 animate-pulse">YENİ</div>
 
-                     <div className="absolute top-2 right-2 z-30">
-                         <span className="bg-yellow-500 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-[0_0_10px_rgba(234,179,8,0.5)] animate-pulse">YENİ</span>
-                     </div>
-
-                     <div className="absolute top-0 right-0 p-4 opacity-30 group-hover:opacity-60 transition-opacity z-10 duration-500">
-                        <Award size={100} className="text-blue-500 -rotate-12 drop-shadow-[0_0_20px_rgba(59,130,246,0.6)]" />
+                     <div className="relative z-10 flex flex-col justify-center h-full p-4 items-center text-center">
+                         <div className="mb-2 p-2 bg-blue-500/50 rounded-full border border-blue-300/30 shadow-lg">
+                             <Award size={32} className="text-white drop-shadow-md" />
+                         </div>
+                         <h3 className="text-xl font-black text-white leading-tight drop-shadow-md text-emboss">SERTİFİKA<br/>OLUŞTUR</h3>
+                         <div className="absolute bottom-2 right-2 opacity-50">
+                             <img src="https://www.transparenttextures.com/patterns/always-grey.png" className="w-16 h-16 object-contain mix-blend-overlay opacity-30" alt="" />
+                         </div>
                      </div>
                      
-                     <div className="relative z-20 flex flex-col justify-between h-full p-5 text-left">
-                         <div>
-                            <div className="p-2.5 w-fit rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-[0_5px_15px_rgba(37,99,235,0.4)] border border-blue-400/30 mb-3">
-                                <Award className="text-white drop-shadow-md" size={24} />
-                            </div>
-                            <h3 className="text-xl font-black text-white leading-tight mb-1 drop-shadow-md text-emboss">SERTİFİKA<br/>OLUŞTUR</h3>
-                         </div>
-
-                         <div className="flex items-center gap-2 group-hover:gap-4 transition-all">
-                             <div className="h-8 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 text-white text-[10px] font-bold flex items-center gap-2 shadow-[0_4px_10px_rgba(37,99,235,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] border border-blue-400/20 btn-pressable">
-                                 <span className="text-shadow-sm">OLUŞTUR</span>
-                                 <ChevronRight size={14} />
-                             </div>
-                         </div>
+                     {/* Decorative Scroll/Certificate graphic could go here if available */}
+                     <div className="absolute -bottom-4 -right-4 text-blue-950 opacity-40 transform -rotate-12">
+                         <FileText size={80} fill="currentColor" />
                      </div>
                  </button>
 
-                 <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent w-full my-1"></div>
+                 {/* 2. Quick Actions Header */}
+                 <div className="relative flex items-center justify-center my-1">
+                     <div className="absolute inset-0 flex items-center">
+                         <div className="w-full border-t border-white/10"></div>
+                     </div>
+                     <div className="relative z-10 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 px-6 py-1.5 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)] border border-yellow-400">
+                         <span className="text-black text-xs font-black tracking-widest uppercase drop-shadow-sm">HIZLI İŞLEMLER</span>
+                     </div>
+                 </div>
 
-                 {/* 3D Action Buttons */}
-                 <div className="flex-1 flex flex-col gap-4">
+                 {/* 3. Stacked Action Buttons */}
+                 <div className="flex flex-col gap-3">
+                    {/* Tutanak Tut */}
                     <button 
                         onClick={() => onNavigate('templates', { search: 'Tutanak' })}
-                        className="flex-1 p-4 rounded-xl bg-[#131318] border border-white/5 hover:border-orange-500/30 relative group transition-all btn-pressable overflow-hidden flex items-center gap-4"
+                        className="w-full p-3 rounded-xl bg-[#202025] border-l-4 border-l-yellow-600 border-y border-r border-white/5 hover:bg-[#2a2a30] group transition-all flex items-center gap-4 shadow-lg active:scale-95"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        
-                        <div className="p-3 bg-gradient-to-br from-[#2a1b12] to-[#1a110d] rounded-xl border border-orange-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform z-10">
-                            <ClipboardList size={22} className="text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
+                        <div className="p-2 bg-yellow-900/20 rounded-lg border border-yellow-600/30 group-hover:bg-yellow-600 group-hover:text-black transition-colors">
+                            <ClipboardList size={20} className="text-yellow-600 group-hover:text-black transition-colors" />
                         </div>
-                        <div className="text-left relative z-10">
-                            <div className="text-[9px] font-black text-stone-500 uppercase tracking-widest mb-0.5 group-hover:text-orange-500/70 transition-colors">HIZLI İŞLEM</div>
-                            <div className="text-sm font-black text-slate-200 group-hover:text-white tracking-tight drop-shadow-md">TUTANAK TUT</div>
+                        <div className="flex flex-col items-start">
+                            <span className="text-sm font-black text-slate-200 group-hover:text-white tracking-wide">TUTANAK TUT</span>
                         </div>
-                         <ChevronRight className="ml-auto text-white/20 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" size={16} />
+                        <ChevronRight className="ml-auto text-stone-600 group-hover:text-white transition-colors" size={16} />
                     </button>
                     
+                    {/* Günlük Rapor Tut */}
                     <button 
                         onClick={() => onNavigate('templates', { search: 'Rapor' })}
-                        className="flex-1 p-4 rounded-xl bg-[#131318] border border-white/5 hover:border-emerald-500/30 relative group transition-all btn-pressable overflow-hidden flex items-center gap-4"
+                        className="w-full p-3 rounded-xl bg-[#202025] border-l-4 border-l-emerald-600 border-y border-r border-white/5 hover:bg-[#2a2a30] group transition-all flex items-center gap-4 shadow-lg active:scale-95"
                     >
-                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                        <div className="p-3 bg-gradient-to-br from-[#0e231b] to-[#081510] rounded-xl border border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform z-10">
-                            <Activity size={22} className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                         <div className="p-2 bg-emerald-900/20 rounded-lg border border-emerald-600/30 group-hover:bg-emerald-600 group-hover:text-black transition-colors">
+                            <FileCheck size={20} className="text-emerald-500 group-hover:text-black transition-colors" />
                         </div>
-                        <div className="text-left relative z-10">
-                            <div className="text-[9px] font-black text-stone-500 uppercase tracking-widest mb-0.5 group-hover:text-emerald-500/70 transition-colors">GÜNLÜK</div>
-                            <div className="text-sm font-black text-slate-200 group-hover:text-white tracking-tight drop-shadow-md">RAPOR OLUŞTUR</div>
+                        <div className="flex flex-col items-start">
+                            <span className="text-sm font-black text-slate-200 group-hover:text-white tracking-wide">GÜNLÜK RAPOR TUT</span>
                         </div>
-                        <ChevronRight className="ml-auto text-white/20 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" size={16} />
+                        <ChevronRight className="ml-auto text-stone-600 group-hover:text-white transition-colors" size={16} />
                     </button>
                     
+                    {/* Doküman Arşivi */}
                      <button 
                         onClick={() => onNavigate('my-documents')}
-                        className="flex-1 p-4 rounded-xl bg-[#131318] border border-white/5 hover:border-purple-500/30 relative group transition-all btn-pressable overflow-hidden flex items-center gap-4"
+                        className="w-full p-3 rounded-xl bg-[#202025] border-l-4 border-l-purple-600 border-y border-r border-white/5 hover:bg-[#2a2a30] group transition-all flex items-center gap-4 shadow-lg active:scale-95"
                     >
-                         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                         <div className="p-2 bg-purple-900/20 rounded-lg border border-purple-600/30 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                            <Archive size={20} className="text-purple-500 group-hover:text-white transition-colors" />
+                        </div>
+                        <div className="flex flex-col items-start">
+                             <span className="text-sm font-black text-slate-200 group-hover:text-white tracking-wide">DOKÜMAN ARŞİVİ</span>
+                        </div>
+                        <ChevronRight className="ml-auto text-stone-600 group-hover:text-white transition-colors" size={16} />
+                    </button>
 
-                        <div className="p-3 bg-gradient-to-br from-[#1e1029] to-[#120a1a] rounded-xl border border-purple-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform z-10">
-                            <Archive size={22} className="text-purple-500 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
-                        </div>
-                        <div className="text-left relative z-10">
-                             <div className="text-[9px] font-black text-stone-500 uppercase tracking-widest mb-0.5 group-hover:text-purple-500/70 transition-colors">ARŞİV</div>
-                             <div className="text-sm font-black text-slate-200 group-hover:text-white tracking-tight drop-shadow-md">DOKÜMANLARIM</div>
-                        </div>
-                        <ChevronRight className="ml-auto text-white/20 group-hover:text-purple-500 group-hover:translate-x-1 transition-all" size={16} />
+                    {/* PDF İndir / Yazdır (Red Button) */}
+                    <button className="w-full mt-2 p-3 rounded-xl bg-gradient-to-r from-red-900 via-red-800 to-red-900 border border-red-700 hover:brightness-110 group transition-all flex items-center justify-center gap-3 shadow-[0_5px_15px_rgba(220,38,38,0.4)] active:scale-95">
+                         <Download size={20} className="text-white drop-shadow-sm" />
+                         <span className="text-sm font-black text-white tracking-wide drop-shadow-md">PDF İNDİR / YAZDIR</span>
                     </button>
                  </div>
             </div>
