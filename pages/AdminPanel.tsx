@@ -54,7 +54,7 @@ const Badge = ({ children, color = 'emerald' }: { children: React.ReactNode, col
 
 // --- Modals ---
 
-const UserEditModal = ({ user, onClose, onSave }: { user: User, onClose: () => void, onSave: (u: Partial<User>) => void }) => {
+const UserEditModal = ({ user, onClose, onSave, isSelf }: { user: User, onClose: () => void, onSave: (u: Partial<User>) => void, isSelf?: boolean }) => {
     const [formData, setFormData] = useState({...user});
 
     return (
@@ -63,7 +63,7 @@ const UserEditModal = ({ user, onClose, onSave }: { user: User, onClose: () => v
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                         <Edit3 size={20} className="text-amber-500" />
-                        Kullanıcı Düzenle
+                        {isSelf ? 'Profilimi Düzenle' : 'Kullanıcı Düzenle'}
                     </h3>
                     <button onClick={onClose} className="text-slate-400 hover:text-white"><X size={24}/></button>
                 </div>
@@ -91,7 +91,8 @@ const UserEditModal = ({ user, onClose, onSave }: { user: User, onClose: () => v
                             <select 
                                 value={formData.role} 
                                 onChange={e => setFormData({...formData, role: e.target.value as UserRole})}
-                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1"
+                                disabled={isSelf}
+                                className={`w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1 ${isSelf ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 <option value={UserRole.ADMIN}>Yönetici</option>
                                 <option value={UserRole.SUBSCRIBER}>Abone</option>
@@ -103,7 +104,8 @@ const UserEditModal = ({ user, onClose, onSave }: { user: User, onClose: () => v
                             <select 
                                 value={formData.plan} 
                                 onChange={e => setFormData({...formData, plan: e.target.value as SubscriptionPlan})}
-                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1"
+                                disabled={isSelf}
+                                className={`w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1 ${isSelf ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 {Object.values(SubscriptionPlan).map(p => (
                                     <option key={p} value={p}>{p}</option>
@@ -125,7 +127,8 @@ const UserEditModal = ({ user, onClose, onSave }: { user: User, onClose: () => v
                                         remainingDownloads: val.toLowerCase() === 'sınırsız' || val.toLowerCase() === 'unlimited' ? 'UNLIMITED' : parseInt(val) || 0
                                     })
                                 }}
-                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1"
+                                disabled={isSelf}
+                                className={`w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1 ${isSelf ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 placeholder="Sayı veya 'Sınırsız'"
                             />
                         </div>
@@ -134,7 +137,8 @@ const UserEditModal = ({ user, onClose, onSave }: { user: User, onClose: () => v
                                 type="checkbox" 
                                 checked={formData.isActive ?? true}
                                 onChange={e => setFormData({...formData, isActive: e.target.checked})}
-                                className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-amber-500 focus:ring-amber-500"
+                                disabled={isSelf}
+                                className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-amber-500 focus:ring-amber-500 disabled:opacity-50"
                             />
                             <label className="text-sm text-white">Hesap Aktif</label>
                         </div>
@@ -1172,9 +1176,18 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                                    <div className="text-xs text-slate-400 truncate font-mono">{user?.email}</div>
                                </div>
                                <div className="p-2">
-                                   <button className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-700/50 text-slate-300 hover:text-white text-sm flex items-center gap-3 transition-colors group">
+                                   <button 
+                                       onClick={() => {
+                                           if (user) {
+                                               setSelectedUser(user);
+                                               setShowEditModal(true);
+                                               setIsProfileMenuOpen(false);
+                                           }
+                                       }}
+                                       className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-700/50 text-slate-300 hover:text-white text-sm flex items-center gap-3 transition-colors group"
+                                   >
                                        <Users size={16} className="text-slate-500 group-hover:text-amber-500 transition-colors" /> 
-                                       Profil Ayarları (Soon)
+                                       Profil Bilgilerini Düzenle
                                    </button>
                                    <div className="border-t border-slate-700/50 my-2 mx-1"></div>
                                    <button 
@@ -1223,6 +1236,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
             user={selectedUser} 
             onClose={() => setShowEditModal(false)}
             onSave={handleUpdateKey}
+            isSelf={user?.id === selectedUser.id}
         />
       )}
       

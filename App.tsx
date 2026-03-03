@@ -295,7 +295,7 @@ const App = () => {
 
     // ADMIN ROUTING (Prioritize Admin Views)
     if (user?.role === UserRole.ADMIN && ['admin', 'dashboard', 'users', 'templates'].includes(currentView)) {
-      return <AdminPanel user={user} t={t} currentView={currentView} />
+      return <AdminPanel user={user} onLogout={handleLogout} />
     }
 
     // 1. Document Editor
