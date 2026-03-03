@@ -598,7 +598,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                     <div className='flex flex-col items-start z-10 gap-1'>
                         <span className='bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-amber-500/20 animate-pulse'>YENİ</span>
-                        <span className='text-xl font-black text-white leading-none tracking-tight drop-shadow-md'>SERTİFİKA<br/>OLUŞTUR</span>
+                        <span className='text-xl font-black text-white leading-none tracking-tight drop-shadow-md text-left'>SERTİFİKA<br/>OLUŞTUR</span>
                         <span className='text-[10px] text-blue-200 font-medium tracking-wide'>Profesyonel şablonlar ile</span>
                     </div>
                     <div className='w-16 h-16 relative z-10 drop-shadow-2xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300'>
@@ -612,57 +612,62 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     {/* Header */}
                     <div className='bg-gradient-to-r from-amber-500 to-orange-600 p-3 flex items-center justify-center shrink-0 shadow-lg z-10 relative overflow-hidden'>
                         <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10"></div>
-                        <Zap size={16} className="text-black mr-2 animate-pulse" fill="currentColor" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] animate-shimmer"></div>
+                        <Zap size={16} className="text-black mr-2 animate-bounce" fill="currentColor" />
                         <span className='text-black font-black text-sm tracking-widest uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
                     </div>
 
                     <div className='flex-1 p-3 grid grid-cols-2 grid-rows-2 gap-3 z-10'>
                         {/* Button 1 */}
                         <motion.button 
-                            whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-amber-500/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] transition-all'
-                        >
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0'>
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/80 border border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-indigo-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all duration-300 relative overflow-hidden'
+                        >   
+                            <div className="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(99,102,241,0.5)] group-hover:scale-110'>
                                 <FileText size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>TUTANAK<br/>TUT</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight transition-colors z-10'>TUTANAK<br/>TUT</span>
                         </motion.button>
 
                         {/* Button 2 */}
                         <motion.button 
-                            whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/80 border border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0'>
+                            <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(16,185,129,0.5)] group-hover:scale-110'>
                                 <ClipboardList size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>GÜNLÜK<br/>RAPOR</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight transition-colors z-10'>GÜNLÜK<br/>RAPOR</span>
                         </motion.button>
 
                         {/* Button 3 */}
                         <motion.button 
-                            whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/80 border border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-500/20 text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0'>
+                            <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-500/20 text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:scale-110'>
                                 <UserPlus size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>PERSONEL<br/>EKLE</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight transition-colors z-10'>PERSONEL<br/>EKLE</span>
                         </motion.button>
 
                         {/* Button 4 */}
                         <motion.button 
-                            whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] transition-all'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/80 border border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-rose-500 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-500/20 text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0'>
+                            <div className="absolute inset-0 bg-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-500/20 text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(244,63,94,0.5)] group-hover:scale-110'>
                                 <Megaphone size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>DUYURU<br/>YAP</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight transition-colors z-10'>DUYURU<br/>YAP</span>
                         </motion.button>
                     </div>
 
@@ -679,18 +684,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 >
                     <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
                     
+                    {/* Animated Pulse Ring */}
+                    <div className="absolute right-[-20%] top-[-50%] w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl group-hover:animate-pulse"></div>
+                    
                     <div className='flex items-center gap-4 z-10'>
-                        <div className='w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-inner'>
-                            <FolderOpen size={20} />
+                        <div className='w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-inner ring-1 ring-indigo-500/30'>
+                            <FolderOpen size={24} />
                         </div>
                         <div className='flex flex-col items-start'>
                             <span className='text-sm font-black text-white tracking-tight group-hover:text-indigo-200 transition-colors'>DÖKÜMAN ARŞİVİ</span>
-                            <span className='text-[10px] text-slate-500 font-medium group-hover:text-slate-400'>Tüm dosyalarınızı görüntüleyin</span>
+                            <span className='text-[10px] text-slate-500 font-medium group-hover:text-slate-400'>Tüm dosyalarınızı inceleyin</span>
                         </div>
                     </div>
 
-                    <div className='z-10 bg-indigo-500/20 p-2 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-400'>
-                        <ArrowRight size={16} />
+                    <div className='z-10 bg-indigo-500/10 p-2.5 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-400 group-hover:translate-x-1 duration-300 border border-indigo-500/20'>
+                        <ArrowRight size={18} />
                     </div>
                 </motion.button>
             </div>
