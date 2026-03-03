@@ -1127,12 +1127,12 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
       <main className="flex-1 flex flex-col min-w-0 bg-[#020617] relative">
          
          {/* Top Header */}
-         <header className="h-20 bg-[#0B0F19]/80 backdrop-blur border-b border-slate-800 flex items-center justify-between px-8 z-40 sticky top-0 shadow-sm">
+         <header className="h-20 bg-[#0B0F19]/80 backdrop-blur border-b border-slate-800 flex items-center justify-between px-4 md:px-8 z-40 sticky top-0 shadow-sm transition-all">
             <div className="flex items-center gap-4">
                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-slate-400 hover:text-white bg-slate-800/50 rounded-lg transition-colors border border-transparent hover:border-slate-600">
                   <Menu size={20} />
                </button>
-               <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden md:block">
+               <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block animate-in fade-in slide-in-from-left-4">
                   {activeTab === 'dashboard' && 'Sistem Kontrol Paneli'}
                   {activeTab === 'users' && 'Kullanıcı Veritabanı'}
                   {activeTab === 'packages' && 'Fiyatlandırma Politikası'}
@@ -1142,25 +1142,27 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                </h1>
             </div>
 
-            <div className="flex items-center gap-4">
-               <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+            <div className="flex items-center gap-2 md:gap-4">
+               <div className="flex items-center gap-2 px-2 md:px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.1)] transition-all hover:scale-105">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
-                  <span className="text-xs font-bold text-emerald-500 tracking-wider ml-1">ONLINE</span>
+                  <span className="text-[10px] md:text-xs font-bold text-emerald-500 tracking-wider ml-1 hidden sm:inline">ONLINE</span>
                </div>
                
                <div className="relative">
                    <button 
                         onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                        className="flex items-center gap-3 pl-4 border-l border-slate-800 hover:bg-slate-800/50 rounded-lg p-2 transition-colors cursor-pointer outline-none"
+                        className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-slate-800 hover:bg-slate-800/50 rounded-lg p-1 md:p-2 transition-colors cursor-pointer outline-none group"
                    >
-                      <div className="text-right hidden md:block">
-                         <div className="text-sm font-bold text-white">{user?.name || 'Administrator'}</div>
-                         <div className="text-[10px] text-amber-500 font-bold tracking-wider">ROOT ACCESS</div>
+                      <div className="text-right">
+                         <div className="text-xs md:text-sm font-bold text-white group-hover:text-amber-500 transition-colors max-w-[100px] md:max-w-[150px] truncate">
+                            {user?.name || 'Administrator'}
+                         </div>
+                         <div className="text-[9px] md:text-[10px] text-amber-500/80 font-bold tracking-wider group-hover:text-amber-500">ROOT</div>
                       </div>
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center text-white font-bold shadow-lg shadow-black/50">
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center text-white font-bold shadow-lg shadow-black/50 group-hover:shadow-amber-900/20 transition-all">
                          {(user?.name || 'A').charAt(0)}
                       </div>
                    </button>
