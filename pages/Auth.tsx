@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Mail, Lock, User, Building2, Eye, EyeOff, 
-  ArrowRight, Check, AlertCircle, Loader2, Sparkles, Hexagon, Star, Crown, Zap
+  ArrowRight, Check, AlertCircle, Loader2, Sparkles, Hexagon, Star, Crown, Zap, Shield
 } from 'lucide-react';
 import { fetchApi } from '../src/utils/api';
 
