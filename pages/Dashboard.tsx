@@ -409,138 +409,136 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             </div>
 
             {/* RIGHT: Quick Actions & Archive (Sidebar) - Restored Old Style */}
-            <div className='lg:col-span-1 flex flex-col gap-4 overflow-hidden'>
+            <div className='lg:col-span-1 flex flex-col gap-3 overflow-hidden'>
                 
-                {/* 1. HIZLI İŞLEMLER (Quick Actions) */}
-                <div className='flex flex-col gap-2'>
-                    <h3 className='text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1 mb-1'>HIZLI İŞLEMLER</h3>
-                    
-                    {/* Sertifika Button - Highlighted */}
-                    <button 
-                        onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                        className='group w-full p-4 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 border border-orange-500/30 text-left relative overflow-hidden shadow-lg shadow-orange-500/20 hover:brightness-110 transition-all'
-                    >
-                        <div className='absolute right-[-10px] top-[-10px] opacity-20 rotate-12 group-hover:rotate-0 transition-transform duration-500'>
-                            <Award size={64} className="text-white" />
-                        </div>
-                        <div className='relative z-10'>
-                            <Award className="text-white mb-2" size={24} />
-                            <div className='text-sm font-black text-white leading-tight'>SERTİFİKA<br/>OLUŞTUR</div>
-                            <div className='text-[10px] text-orange-100 mt-1 opacity-80'>Personel eğitimi için</div>
-                        </div>
-                    </button>
-
-                    {/* Other Actions Grid */}
-                    <div className='grid grid-cols-2 gap-2'>
-                        <button className='p-3 rounded-xl bg-slate-800 border border-white/5 hover:bg-slate-700 hover:border-amber-500/30 transition-all flex flex-col items-center gap-2 group'>
-                            <Users size={20} className='text-blue-400 group-hover:scale-110 transition-transform' />
-                            <span className='text-[9px] font-bold text-slate-300'>PERSONEL</span>
-                        </button>
-                        <button className='p-3 rounded-xl bg-slate-800 border border-white/5 hover:bg-slate-700 hover:border-amber-500/30 transition-all flex flex-col items-center gap-2 group'>
-                            <Upload size={20} className='text-emerald-400 group-hover:scale-110 transition-transform' />
-                            <span className='text-[9px] font-bold text-slate-300'>YÜKLE</span>
-                        </button>
-                        <button className='p-3 rounded-xl bg-slate-800 border border-white/5 hover:bg-slate-700 hover:border-amber-500/30 transition-all flex flex-col items-center gap-2 group'>
-                            <Activity size={20} className='text-rose-400 group-hover:scale-110 transition-transform' />
-                            <span className='text-[9px] font-bold text-slate-300'>KAZA KAYDI</span>
-                        </button>
-                        <button 
-                            onClick={() => onNavigate('templates', { category: 'Risk' })}
-                            className='p-3 rounded-xl bg-slate-800 border border-white/5 hover:bg-slate-700 hover:border-amber-500/30 transition-all flex flex-col items-center gap-2 group'
-                        >
-                            <AlertTriangle size={20} className='text-yellow-400 group-hover:scale-110 transition-transform' />
-                            <span className='text-[9px] font-bold text-slate-300'>RİSK ANALİZİ</span>
-                        </button>
+                {/* 1. SERTİFİKA OLUŞTUR (Blue Button) */}
+                <button 
+                    onClick={() => onNavigate('templates', { search: 'Sertifika' })}
+                    className='group shrink-0 h-24 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 border border-blue-400/30 relative overflow-hidden shadow-lg shadow-blue-900/50 hover:brightness-110 transition-all flex items-center px-4 justify-between'
+                >
+                    <div className='absolute right-[-10%] top-[-50%] w-32 h-32 bg-white/10 rounded-full blur-2xl'></div>
+                    <div className='flex flex-col items-start z-10'>
+                        <span className='bg-amber-400 text-black text-[9px] font-black px-1.5 py-0.5 rounded mb-1'>YENİ</span>
+                        <span className='text-lg font-black text-white leading-none tracking-tight'>SERTİFİKA<br/>OLUŞTUR</span>
                     </div>
-                </div>
+                    <div className='w-16 h-16 relative z-10 drop-shadow-lg transform group-hover:scale-110 transition-transform'>
+                         <Award className="text-amber-300 w-full h-full" strokeWidth={1.5} />
+                    </div>
+                </button>
 
-                {/* 2. DÖKÜMAN ARŞİVİ (Document Archive) */}
-                <div className='flex-1 min-h-[200px] bg-slate-800/30 rounded-2xl border border-white/5 p-4 flex flex-col overflow-hidden relative'>
-                    <h3 className='text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2'>
-                        <FolderOpen size={12} className='text-blue-400' />
-                        DÖKÜMAN ARŞİVİ
-                    </h3>
+                {/* 2. HIZLI İŞLEMLER LİSTESİ (Yellow Header) */}
+                <div className='flex-1 bg-[#15171e]/90 backdrop-blur rounded-xl border border-white/5 flex flex-col overflow-hidden shadow-2xl'>
                     
-                    <div className='flex-1 overflow-y-auto custom-scrollbar space-y-2 relative z-10'>
-                        {/* Mock Archive Items */}
-                        {['2025 İş Planları', 'Ocak Ayı Raporları', 'Taşeron Sözleşmeleri', 'Arşiv 2024', 'Eski Prosedürler'].map((folder, i) => (
-                            <div key={i} className='flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer group transition-colors'>
-                                <div className='w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors'>
-                                    <Archive size={14} />
-                                </div>
-                                <div className='flex-1'>
-                                    <div className='text-xs font-bold text-slate-300 group-hover:text-white'>{folder}</div>
-                                    <div className='text-[9px] text-slate-500'>{Math.floor(Math.random() * 20) + 5} dosya</div>
-                                </div>
-                                <ChevronRight size={12} className='text-slate-600 group-hover:translate-x-1 transition-transform' />
-                            </div>
-                        ))}
-                         
-                         {/* Divider */}
-                         <div className='h-px bg-white/5 my-2'></div>
-
-                         {/* Recent Files */}
-                         <div className='text-[9px] text-slate-500 font-bold mb-2'>SON DÖKÜMANLAR</div>
-                         {['Risk Analizi v2.pdf', 'Sertifika_AhmetK.pdf'].map((file, i) => (
-                            <div key={`file-${i}`} className='flex items-center gap-2 p-1.5 rounded hover:bg-white/5 cursor-pointer opacity-70 hover:opacity-100'>
-                                <FileText size={12} className='text-slate-400' />
-                                <span className='text-[10px] text-slate-300 truncate'>{file}</span>
-                            </div>
-                         ))}
+                    {/* Header */}
+                    <div className='bg-gradient-to-r from-amber-400 to-yellow-500 p-2 flex items-center justify-center shrink-0 shadow-md'>
+                        <span className='text-black font-black text-sm tracking-widest uppercase'>HIZLI İŞLEMLER</span>
                     </div>
 
-                    {/* Gradient Fade at bottom */}
-                    <div className='absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-slate-900/50 to-transparent pointer-events-none'></div>
+                    <div className='flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2'>
+                        
+                        {/* List Items */}
+                        <div className='flex flex-col gap-1 pb-2 border-b border-white/5'>
+                            {[
+                                'İş Analizi Dokümanı', 
+                                'İş Eğitimleri', 
+                                'İş Belgeleri', 
+                                'İş Erzurumlar', 
+                                'İş Evrakları', 
+                                'İş Sertifikaları'
+                            ].map((item, i) => (
+                                <div key={i} className='flex items-center gap-2 p-1.5 hover:bg-white/5 rounded cursor-pointer group'>
+                                    <div className='w-1.5 h-1.5 rounded-full bg-emerald-500 group-hover:bg-emerald-400'></div>
+                                    <span className='text-xs font-bold text-slate-300 group-hover:text-white transition-colors'>{item}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className='flex flex-col gap-2 mt-2'>
+                            <button className='flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-[#1e293b] to-[#0f172a] border border-white/10 hover:border-amber-500/50 hover:text-amber-400 text-slate-300 transition-all font-bold text-xs shadow group'>
+                                <div className='p-1.5 bg-white/5 rounded group-hover:bg-amber-500 group-hover:text-black transition-colors'>
+                                    <FileText size={16} />
+                                </div>
+                                <span className='tracking-wide'>TUTANAK TUT</span>
+                            </button>
+
+                            <button className='flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-[#1e293b] to-[#0f172a] border border-white/10 hover:border-emerald-500/50 hover:text-emerald-400 text-slate-300 transition-all font-bold text-xs shadow group'>
+                                <div className='p-1.5 bg-white/5 rounded group-hover:bg-emerald-500 group-hover:text-black transition-colors'>
+                                    <ClipboardList size={16} />
+                                </div>
+                                <span className='tracking-wide'>GÜNLÜK RAPOR TUT</span>
+                            </button>
+                        </div>
+
+                        {/* Bottom Buttons */}
+                        <div className='flex flex-col gap-2 mt-2 pt-2 border-t border-white/5'>
+                            <button className='w-full py-3 rounded-lg bg-indigo-900/80 hover:bg-indigo-800 border border-indigo-700/50 text-indigo-100 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg'>
+                                <Archive size={14} />
+                                DÖKÜMAN ARŞİVİ
+                            </button>
+                             <button className='w-full py-3 rounded-lg bg-red-900/80 hover:bg-red-800 border border-red-700/50 text-red-100 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg'>
+                                <Download size={14} />
+                                PDF İNDİR / YAZDIR
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
 
             </div>
 
         </div>
 
-        {/* 4. FOOTER: PACKAGES (Row Layout - Restored) */}
-        <div className='shrink-0 h-[140px] md:h-[160px] pb-2'>
-            <div className='h-full grid grid-cols-1 md:grid-cols-3 gap-4'>
-                {PLANS.map((plan) => (
-                    <div 
-                        key={plan.id} 
-                        className={`
-                            relative h-full rounded-2xl border bg-[#15171e]/90 p-4 flex flex-col justify-between group overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform duration-300
-                            ${plan.popular ? 'border-amber-500/50 shadow-lg shadow-amber-500/10' : 'border-white/5 hover:border-white/20'}
-                        `}
-                    >
-                        {/* Glow Effect */}
-                        <div className={`absolute -right-10 -top-10 w-32 h-32 bg-${plan.color}-500/10 rounded-full blur-3xl group-hover:bg-${plan.color}-500/20 transition-colors`}></div>
-                        
-                        <div className='relative z-10 flex justify-between items-start'>
-                            <div>
-                                <h4 className={`text-sm font-black uppercase tracking-wider text-${plan.color}-500`}>{plan.name}</h4>
-                                <div className='flex items-baseline gap-1 mt-1'>
-                                    <span className='text-2xl font-black text-white tracking-tighter'>{plan.price}</span>
-                                    <span className='text-[10px] text-slate-500 font-bold'>{plan.period}</span>
-                                </div>
-                            </div>
-                            <div className={`w-8 h-8 rounded-full bg-${plan.color}-500/10 flex items-center justify-center text-${plan.color}-500 border border-${plan.color}-500/20`}>
-                                {plan.popular ? <Star size={14} fill="currentColor" /> : <CheckCircle2 size={16} />}
-                            </div>
-                        </div>
+        {/* 4. FOOTER: PACKAGES (Exact Re-creation) */}
+        <div className='shrink-0 h-[100px] md:h-[120px] pb-2'>
+            <div className='h-full grid grid-cols-1 md:grid-cols-3 gap-0.5 md:gap-3 px-1'>
+                
+                {/* STANDART */}
+                <div className='relative rounded-xl border-2 border-blue-900/50 bg-gradient-to-b from-[#0f172a] to-blue-950 flex flex-col items-center justify-center p-2 group cursor-pointer overflow-hidden'>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10'></div>
+                     <div className='flex items-center gap-2 mb-1 z-10'>
+                        <Shield size={16} className='text-blue-400' fill='currentColor' />
+                        <span className='text-sm font-black text-blue-100 uppercase tracking-widest'>STANDART</span>
+                     </div>
+                     <div className='text-2xl font-black text-white mb-1 z-10'>100 TL</div>
+                     <div className='text-[9px] text-blue-200 font-bold uppercase mb-2 z-10'>STANDART DOKÜMAN LİMİTİ</div>
+                     <button className='w-full max-w-[120px] py-1 rounded bg-gradient-to-r from-blue-600 to-blue-800 border border-blue-500 text-[10px] font-bold text-white shadow-lg hover:brightness-110 z-10'>
+                        SATIN AL
+                     </button>
+                </div>
 
-                        <div className='relative z-10 mt-2'>
-                             <div className='flex gap-2 text-[10px] text-slate-400 font-medium'>
-                                <span>• {plan.limit} Döküman</span>
-                                <span>• {plan.features[0]}</span>
-                             </div>
-                             <div className={`mt-3 h-1 w-full bg-slate-800 rounded-full overflow-hidden`}>
-                                <div className={`h-full bg-${plan.color}-500 w-1/3 group-hover:w-full transition-all duration-700`}></div>
-                             </div>
-                        </div>
+                {/* GOLD (Orta) */}
+                <div className='relative rounded-xl border-2 border-yellow-600 bg-gradient-to-b from-amber-900/40 to-yellow-900/40 flex flex-col items-center justify-center p-2 scale-105 z-20 shadow-2xl shadow-amber-500/10 cursor-pointer group'>
+                     <div className='absolute -top-3 flex gap-1 text-amber-400'>
+                        <Star size={12} fill='currentColor' />
+                        <Star size={12} fill='currentColor' />
+                        <Star size={12} fill='currentColor' />
+                     </div>
+                     <div className='flex items-center gap-2 mb-1'>
+                        <Shield size={18} className='text-amber-400' fill='currentColor' />
+                        <span className='text-lg font-black text-amber-100 uppercase tracking-widest drop-shadow-md text-gold-glow'>GOLD</span>
+                     </div>
+                     <div className='text-3xl font-black text-amber-400 mb-1 drop-shadow-sm'>175 TL</div>
+                     <div className='text-[9px] text-amber-200 font-bold uppercase mb-2'>2 KAT DOKÜMAN LİMİTİ</div>
+                     <button className='w-full max-w-[140px] py-1.5 rounded bg-gradient-to-r from-amber-500 to-yellow-600 border border-yellow-400 text-[11px] font-black text-slate-900 shadow-xl hover:brightness-110'>
+                        ÖNERİLEN
+                     </button>
+                </div>
 
-                        {plan.popular && (
-                            <div className='absolute bottom-0 right-0 bg-amber-500 text-slate-900 text-[9px] font-black px-3 py-1 rounded-tl-lg'>
-                                EN ÇOK TERCİH EDİLEN
-                            </div>
-                        )}
-                    </div>
-                ))}
+                {/* PREMIUM */}
+                <div className='relative rounded-xl border-2 border-purple-900/50 bg-gradient-to-b from-[#0f172a] to-purple-950 flex flex-col items-center justify-center p-2 group cursor-pointer overflow-hidden'>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10'></div>
+                     <div className='flex items-center gap-2 mb-1 z-10'>
+                        <Shield size={16} className='text-purple-400' fill='currentColor' />
+                        <span className='text-sm font-black text-purple-100 uppercase tracking-widest'>PRO</span>
+                     </div>
+                     <div className='text-2xl font-black text-white mb-1 z-10'>250 TL</div>
+                     <div className='text-[9px] text-purple-200 font-bold uppercase mb-2 z-10'>3 KAT DOKÜMAN LİMİTİ</div>
+                      <button className='w-full max-w-[120px] py-1 rounded bg-gradient-to-r from-purple-600 to-purple-800 border border-purple-500 text-[10px] font-bold text-white shadow-lg hover:brightness-110 z-10'>
+                        SATIN AL
+                     </button>
+                </div>
+
             </div>
         </div>
 
