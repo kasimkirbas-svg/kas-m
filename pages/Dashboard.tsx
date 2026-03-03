@@ -218,7 +218,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
                             ))}
                         </ul>
                     </div>
-                </div>
+                </motion.div>
                 ))}
             </div>
         </div>
