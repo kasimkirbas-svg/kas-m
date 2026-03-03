@@ -2060,6 +2060,25 @@ app.put('/api/users/:id', authenticateToken, requireAdmin, async (req, res) => {
     }
 });
 
+// Admin: Reset User Password
+app.put('/api/users/:id/password', authenticateToken, requireAdmin, async (req, res) => {
+    const { id } = req.params;
+    const { password } = req.body;
+
+    if (!password || password.length < 6) {
+        return res.status(400).json({ success: false, message: 'Parola en az 6 karakter olmalıdır.' });
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await dbAdapter.updateUser(id, { password: hashedPassword });
+        res.json({ success: true, message: 'Kullanıcı parolası başarıyla güncellendi.' });
+    } catch(e) {
+        console.error('Password Reset Error:', e);
+        res.status(500).json({ success: false, message: 'Parola güncellenemedi.' });
+    }
+});
+
 // Admin: Delete User (Protected)
 app.delete('/api/users/:id', authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, ShoppingBag, FileText, Server, 
-  Settings, LogOut, Search, Bell, Menu, X, MoreVertical,
-  Activity, DollarSign, Upload, Edit3, Trash2, Power, Eye, 
-  RefreshCw, Database, Lock, Unlock, Zap, CheckCircle,
-  Terminal as TerminalIcon, Globe
+  LogOut, Menu, X,
+  Activity, DollarSign, Upload, Edit3, Trash2, Eye, 
+  RefreshCw, Database, Lock, Unlock, CheckCircle,
+  Terminal as TerminalIcon, Globe, Key, UserCheck, AlertTriangle
 } from 'lucide-react';
-import { User, SubscriptionPlan, DocumentTemplate } from '../types';
+import { User, SubscriptionPlan, UserRole } from '../types';
 import { PLANS as DEFAULT_PLANS } from '../constants';
 import { fetchApi } from '../src/utils/api';
 
@@ -26,7 +26,7 @@ interface SystemLog {
 
 // --- Components ---
 
-const GlassCard = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+const GlassCard: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <div className={`bg-[#0f172a]/70 backdrop-blur-md border border-slate-800 rounded-2xl shadow-xl ${className}`}>
     {children}
   </div>
@@ -39,6 +39,7 @@ const Badge = ({ children, color = 'emerald' }: { children: React.ReactNode, col
     blue: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
     rose: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
     slate: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+    purple: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
   };
   return (
     <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${colors[color] || colors.slate} flex items-center gap-1.5 w-fit`}>
@@ -46,6 +47,214 @@ const Badge = ({ children, color = 'emerald' }: { children: React.ReactNode, col
       {children}
     </span>
   );
+};
+
+// --- Modals ---
+
+const UserEditModal = ({ user, onClose, onSave }: { user: User, onClose: () => void, onSave: (u: Partial<User>) => void }) => {
+    const [formData, setFormData] = useState({...user});
+
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+            <GlassCard className="w-full max-w-lg p-6 animate-in zoom-in duration-300">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Edit3 size={20} className="text-amber-500" />
+                        Kullanıcı Düzenle
+                    </h3>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white"><X size={24}/></button>
+                </div>
+                
+                <div className="space-y-4">
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Ad Soyad</label>
+                        <input 
+                            value={formData.name || ''} 
+                            onChange={e => setFormData({...formData, name: e.target.value})}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">E-Posta</label>
+                        <input 
+                            value={formData.email} 
+                            onChange={e => setFormData({...formData, email: e.target.value})}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1"
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-xs font-bold text-slate-500 uppercase">Rol</label>
+                            <select 
+                                value={formData.role} 
+                                onChange={e => setFormData({...formData, role: e.target.value as UserRole})}
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1"
+                            >
+                                <option value={UserRole.ADMIN}>Yönetici</option>
+                                <option value={UserRole.SUBSCRIBER}>Abone</option>
+                                <option value={UserRole.GUEST}>Misafir</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-slate-500 uppercase">Paket</label>
+                            <select 
+                                value={formData.plan} 
+                                onChange={e => setFormData({...formData, plan: e.target.value as SubscriptionPlan})}
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1"
+                            >
+                                {Object.values(SubscriptionPlan).map(p => (
+                                    <option key={p} value={p}>{p}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                         <div>
+                            <label className="text-xs font-bold text-slate-500 uppercase">Kalan Hak</label>
+                            <input 
+                                type="text"
+                                value={formData.remainingDownloads === 'UNLIMITED' ? 'Sınırsız' : formData.remainingDownloads} 
+                                onChange={e => {
+                                    const val = e.target.value;
+                                    setFormData({
+                                        ...formData, 
+                                        remainingDownloads: val.toLowerCase() === 'sınırsız' || val.toLowerCase() === 'unlimited' ? 'UNLIMITED' : parseInt(val) || 0
+                                    })
+                                }}
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1"
+                                placeholder="Sayı veya 'Sınırsız'"
+                            />
+                        </div>
+                         <div className="flex items-center gap-2 mt-6">
+                            <input 
+                                type="checkbox" 
+                                checked={formData.isActive ?? true}
+                                onChange={e => setFormData({...formData, isActive: e.target.checked})}
+                                className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-amber-500 focus:ring-amber-500"
+                            />
+                            <label className="text-sm text-white">Hesap Aktif</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-8">
+                    <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800">İptal</button>
+                    <button onClick={() => onSave(formData)} className="px-6 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold shadow-lg shadow-amber-900/20">Kaydet</button>
+                </div>
+            </GlassCard>
+        </div>
+    );
+};
+
+const PasswordResetModal = ({ userId, onClose, onSave }: { userId: string, onClose: () => void, onSave: (p: string) => void }) => {
+    const [password, setPassword] = useState('');
+
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+            <GlassCard className="w-full max-w-sm p-6 animate-in zoom-in duration-300 border-rose-500/20">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Key size={20} className="text-rose-500" />
+                        Şifre Sıfırla
+                    </h3>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white"><X size={24}/></button>
+                </div>
+                
+                <div className="space-y-4">
+                    <div className="bg-rose-500/10 border border-rose-500/20 p-3 rounded-lg flex items-start gap-3">
+                        <AlertTriangle className="text-rose-500 shrink-0" size={18} />
+                        <p className="text-xs text-rose-200">
+                            Bu işlem kullanıcının mevcut şifresini kalıcı olarak değiştirecektir.
+                        </p>
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Yeni Şifre</label>
+                        <input 
+                            type="text"
+                            value={password} 
+                            onChange={e => setPassword(e.target.value)}
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-rose-500 outline-none mt-1 font-mono"
+                            placeholder="Yeni şifreyi girin..."
+                        />
+                    </div>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-8">
+                    <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800">İptal</button>
+                    <button 
+                        onClick={() => onSave(password)} 
+                        disabled={password.length < 6}
+                        className="px-6 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold shadow-lg shadow-rose-900/20"
+                    >
+                        Şifreyi Güncelle
+                    </button>
+                </div>
+            </GlassCard>
+        </div>
+    );
+};
+
+const UserViewModal = ({ user, onClose }: { user: User, onClose: () => void }) => {
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+            <GlassCard className="w-full max-w-2xl p-0 overflow-hidden animate-in zoom-in duration-300">
+                <div className="bg-[#0B0F19] p-6 border-b border-slate-800 flex justify-between items-center">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                            {(user.name || '?').charAt(0)}
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold text-white">{user.name}</h3>
+                            <p className="text-slate-400 text-sm">{user.email}</p>
+                        </div>
+                    </div>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white"><X size={24}/></button>
+                </div>
+                
+                <div className="p-6 grid grid-cols-2 gap-6 bg-[#0f172a]/50">
+                     <div className="space-y-4">
+                        <div className="p-4 bg-slate-900/50 rounded-xl border border-slate-800">
+                            <h4 className="text-xs font-bold text-slate-500 uppercase mb-3 flex items-center gap-2"><UserCheck size={14}/> Hesap Bilgileri</h4>
+                            <div className="space-y-2 text-sm">
+                                <div className="flex justify-between"><span className="text-slate-400">ID:</span> <span className="text-white font-mono text-xs">{user.id}</span></div>
+                                <div className="flex justify-between"><span className="text-slate-400">Rol:</span> <span className="text-amber-400 font-bold">{user.role}</span></div>
+                                <div className="flex justify-between"><span className="text-slate-400">Durum:</span> 
+                                    {user.isActive ? <span className="text-emerald-400">Aktif</span> : <span className="text-rose-400">Pasif</span>}
+                                </div>
+                                <div className="flex justify-between"><span className="text-slate-400">Ban Durumu:</span> 
+                                    {user.isBanned ? <span className="text-rose-500 font-bold">BANLI</span> : <span className="text-emerald-500">Temiz</span>}
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+
+                     <div className="space-y-4">
+                        <div className="p-4 bg-slate-900/50 rounded-xl border border-slate-800">
+                            <h4 className="text-xs font-bold text-slate-500 uppercase mb-3 flex items-center gap-2"><ShoppingBag size={14}/> Abonelik Detayları</h4>
+                            <div className="space-y-2 text-sm">
+                                <div className="flex justify-between"><span className="text-slate-400">Paket:</span> <span className="text-indigo-400 font-bold">{user.plan}</span></div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-slate-400">Kalan Hak:</span> 
+                                    <span className="px-2 py-0.5 bg-slate-800 rounded text-white font-mono">
+                                        {user.remainingDownloads === 'UNLIMITED' ? '∞' : user.remainingDownloads}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between"><span className="text-slate-400">Başlangıç:</span> <span className="text-slate-300">{user.subscriptionStartDate || '-'}</span></div>
+                                <div className="flex justify-between"><span className="text-slate-400">Bitiş:</span> <span className="text-slate-300">{user.subscriptionEndDate || '-'}</span></div>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+
+                <div className="p-4 bg-[#0B0F19] border-t border-slate-800 flex justify-between items-center">
+                    <div className="text-xs text-slate-500">
+                        Oluşturulma: {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}
+                    </div>
+                </div>
+            </GlassCard>
+        </div>
+    );
 };
 
 // --- Main Admin Component ---
@@ -62,6 +271,14 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   const [systemLogs, setSystemLogs] = useState<SystemLog[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Modal States
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  // Need separate state to track which user is being reset if different from edit
+  const [passwordModalUser, setPasswordModalUser] = useState<User | null>(null);
+
   // Helper: Add Log
   const addLog = (message: string, type: SystemLog['type'] = 'INFO', source = 'AdminPanel') => {
     setSystemLogs(prev => [{
@@ -76,8 +293,6 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   // Fetch Data
   const loadData = async () => {
     setLoading(true);
-    // addLog('Fetching system data...', 'INFO'); // Do not spam log on load
-    
     try {
       // 1. Users
       const usersRes = await fetchApi('/api/users');
@@ -146,6 +361,47 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
     }
   };
 
+  const handleUpdateKey = async (updatedData: Partial<User>) => {
+      if (!selectedUser) return;
+      try {
+          const res = await fetchApi(`/api/users/${selectedUser.id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(updatedData)
+          });
+          
+          if (res.ok) {
+              const updatedUser = await res.json();
+              addLog(`User updated: ${selectedUser.email}`, 'SUCCESS');
+              loadData(); // Reload to refresh table
+              setShowEditModal(false);
+              setSelectedUser(null);
+          } else {
+              alert('Güncelleme başarısız');
+          }
+      } catch (e) { alert('Güncelleme hatası'); }
+  };
+
+  const handlePasswordReset = async (newPassword: string) => {
+      if (!passwordModalUser) return;
+      try {
+          const res = await fetchApi(`/api/users/${passwordModalUser.id}/password`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ password: newPassword })
+          });
+
+          if (res.ok) {
+              addLog(`Password reset for: ${passwordModalUser.email}`, 'WARN');
+              alert('Şifre başarıyla güncellendi.');
+              setShowPasswordModal(false);
+              setPasswordModalUser(null);
+          } else {
+              alert('Şifre güncelleme başarısız.');
+          }
+      } catch (e) { alert('Hata oluştu.'); }
+  };
+  
   // --- Views ---
 
   const DashboardView = () => (
@@ -280,12 +536,15 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                         </td>
                         <td className="p-4 text-right">
                         <div className="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                             <button onClick={() => { setSelectedUser(u); setShowViewModal(true); }} className="p-1.5 text-blue-500 hover:bg-blue-500/10 rounded" title="Detay"><Eye size={16}/></button>
+                             <button onClick={() => { setSelectedUser(u); setShowEditModal(true); }} className="p-1.5 text-amber-500 hover:bg-amber-500/10 rounded" title="Düzenle"><Edit3 size={16}/></button>
+                             <button onClick={() => { setPasswordModalUser(u); setShowPasswordModal(true); }} className="p-1.5 text-purple-500 hover:bg-purple-500/10 rounded" title="Şifre Değiştir"><Key size={16}/></button>
                             {u.isBanned ? (
                                 <button onClick={() => handleBanUser(u.id, true)} className="p-1.5 text-emerald-500 hover:bg-emerald-500/10 rounded" title="Banı Kaldır"><Unlock size={16}/></button>
                             ) : (
-                                <button onClick={() => handleBanUser(u.id, false)} className="p-1.5 text-amber-500 hover:bg-amber-500/10 rounded" title="Banla"><Lock size={16}/></button>
+                                <button onClick={() => handleBanUser(u.id, false)} className="p-1.5 text-rose-500 hover:bg-rose-500/10 rounded" title="Banla"><Lock size={16}/></button>
                             )}
-                            <button onClick={() => deleteUser(u.id)} className="p-1.5 text-rose-500 hover:bg-rose-500/10 rounded"><Trash2 size={16}/></button>
+                            <button onClick={() => deleteUser(u.id)} className="p-1.5 text-slate-500 hover:bg-slate-700 hover:text-white rounded" title="Sil"><Trash2 size={16}/></button>
                         </div>
                         </td>
                     </tr>
@@ -532,6 +791,28 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
             </div>
          </div>
       </main>
+
+      {/* --- Modals Rendered at Top Level --- */}
+      {showEditModal && selectedUser && (
+        <UserEditModal 
+            user={selectedUser} 
+            onClose={() => setShowEditModal(false)}
+            onSave={handleUpdateKey}
+        />
+      )}
+      {showViewModal && selectedUser && (
+          <UserViewModal 
+             user={selectedUser} 
+             onClose={() => setShowViewModal(false)}
+          />
+      )}
+      {showPasswordModal && passwordModalUser && (
+          <PasswordResetModal 
+             userId={passwordModalUser.id} 
+             onClose={() => setShowPasswordModal(false)}
+             onSave={handlePasswordReset}
+          />
+      )}
     </div>
   );
 };

@@ -23,6 +23,7 @@ export interface User {
   companyName?: string;
   subscriptionStartDate?: string;
   subscriptionEndDate?: string;
+  createdAt?: string;
   isActive?: boolean;
   password?: string;
   isBanned?: boolean;
