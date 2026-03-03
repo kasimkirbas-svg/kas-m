@@ -22,9 +22,11 @@ import {
   ChevronUp,
   FileText,
   Search,
-  ArrowRight
+  ArrowRight,
+  CheckCircle2
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
+import { PLANS } from '../constants';
 
 interface DashboardProps {
   user: User;
@@ -184,9 +186,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   const [activeSectorId, setActiveSectorId] = useState<string>('factory'); // Default to factory
   const [hoveredSectorId, setHoveredSectorId] = useState<string | null>(null);
 
-  // The simplified top-left requires just the logo
-  // The document list should show 10 items for the selected sector
-  // Clicking a document should open the editor
   
   const currentSectorId = hoveredSectorId || activeSectorId;
   const currentSector = SECTORS.find(s => s.id === currentSectorId) || SECTORS[0];
@@ -239,8 +238,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     <Shield className='text-slate-900 w-7 h-7 group-hover:scale-110 transition-transform' strokeWidth={2.5} />
                  </div>
                  <div className='flex flex-col'>
-                    <span className='text-xl font-black text-slate-100 tracking-tighter leading-none'>KAS-M</span>
-                    <span className='text-[10px] bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent font-bold tracking-[0.2em]'>OSGB</span>
+                    <span className='text-xl font-black text-slate-100 tracking-tighter leading-none'>KIRBAŞ</span>
+                    <span className='text-[10px] bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent font-bold tracking-[0.2em]'>PANEL YÖNETİMİ</span>
                  </div>
             </div>
 
@@ -315,7 +314,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             </div>
         </div>
 
-        {/* 3. Main Content: Dynamic Document List + Info/Ads */}
+        {/* 3. Main Content: Split Grid */}
         <div className='flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-5 overflow-hidden pb-2'>
             
             {/* LEFT: Dynamic Document List for Selected Sector */}
@@ -386,69 +385,71 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 </div>
             </div>
 
-            {/* RIGHT: Quick Access / Subscription / Stats */}
-            <div className='flex flex-col gap-4'>
+            {/* RIGHT: Quick Actions & Packages */}
+            <div className='flex flex-col gap-4 h-full overflow-hidden'>
                 
-                {/* Subscription Promo */}
-                <div className='rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 p-1 shadow-lg shadow-orange-500/10 relative overflow-hidden group cursor-pointer'>
-                    <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/cubes.png)] opacity-10 mix-blend-overlay'></div>
-                    <div className='bg-[#0f1115] rounded-xl h-full p-5 relative z-10 flex flex-col items-center text-center overflow-hidden'>
-                        <div className='absolute top-0 right-0 p-3 opacity-10'>
-                            <Award size={100} />
+                {/* 1. Quick Action: Certificate */}
+                <div 
+                    onClick={() => onNavigate('templates', { search: 'Sertifika' })}
+                    className='shrink-0 h-32 relative rounded-2xl bg-gradient-to-br from-[#1e293b] to-[#0f172a] border border-white/10 p-5 cursor-pointer group hover:border-amber-500/50 transition-all shadow-xl overflow-hidden'
+                >
+                    <div className='absolute right-0 top-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors'></div>
+                    <div className='absolute right-4 top-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500'>
+                        <Award size={64} className='text-amber-500' />
+                    </div>
+                    
+                    <div className='relative z-10 flex flex-col justify-center h-full'>
+                        <div className='w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-500 mb-2'>
+                            <FileCheck size={20} />
                         </div>
-                        <div className='w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-3 shadow shadow-orange-500/40'>
-                            <Star className='text-slate-900' fill='currentColor' size={24} />
-                        </div>
-                        <h3 className='text-lg font-black text-white italic tracking-tight uppercase'>PREMIUM'A GEÇİN</h3>
-                        <p className='text-xs text-slate-400 mt-2 leading-relaxed'>
-                            Sınırsız doküman oluşturma, yapay zeka desteği ve tüm sektörlere erişim hakkı kazanın.
+                        <h3 className='text-lg font-bold text-white tracking-tight'>Sertifika Oluştur</h3>
+                        <p className='text-xs text-slate-400'>
+                            Personel veya eğitim sertifikası hazırlayın.
                         </p>
-                        <button className='mt-4 w-full py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 text-slate-900 font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-orange-500/20'>
-                            PAKETLERİ İNCELE
-                        </button>
                     </div>
                 </div>
 
-                {/* Recent Activity or Stats */}
-                <div className='flex-1 rounded-2xl bg-slate-800/20 border border-white/5 p-5 relative overflow-hidden'>
-                    <h3 className='text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2'>
-                        <Activity size={14} className='text-emerald-500' />
-                        SİSTEM DURUMU
-                    </h3>
-                    
-                    <div className='space-y-4'>
-                        <div className='bg-slate-900/50 p-3 rounded-lg flex items-center justify-between border border-white/5'>
-                            <div className='flex items-center gap-3'>
-                                <div className='w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center text-blue-500'>
-                                    <Archive size={16} />
+                {/* 2. Packages (Grid Layout) */}
+                <div className='flex-1 bg-[#15171e]/80 backdrop-blur rounded-2xl border border-white/5 p-4 flex flex-col overflow-hidden'>
+                     <h3 className='shrink-0 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2'>
+                        <Star size={12} className='text-amber-500' />
+                        ABONELİK PAKETLERİ
+                     </h3>
+                     
+                     <div className='flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3'>
+                        {PLANS.map((plan) => (
+                            <div key={plan.id} className='relative p-4 rounded-xl bg-[#0f1115] border border-white/5 hover:border-amber-500/30 transition-colors group'>
+                                {plan.popular && (
+                                    <div className='absolute top-0 right-0 px-2 py-1 bg-amber-500 text-[9px] font-black text-slate-900 rounded-bl-lg rounded-tr-lg'>
+                                        POPÜLER
+                                    </div>
+                                )}
+                                <div className='flex justify-between items-start mb-2'>
+                                    <div>
+                                        <h4 className='text-sm font-bold text-slate-200 group-hover:text-amber-500 transition-colors'>{plan.name}</h4>
+                                        <div className='flex items-baseline gap-1'>
+                                            <span className='text-lg font-black text-white'>{plan.price}</span>
+                                            <span className='text-[10px] text-slate-500'>{plan.period}</span>
+                                        </div>
+                                    </div>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-${plan.color}-500/10 text-${plan.color}-500`}>
+                                        <CheckCircle2 size={16} />
+                                    </div>
                                 </div>
-                                <div className='flex flex-col'>
-                                    <span className='text-xs font-bold text-slate-300'>Toplam Şablon</span>
-                                    <span className='text-[10px] text-slate-500'>Tüm Sektörler</span>
-                                </div>
+                                <ul className='space-y-1 mb-3'>
+                                    {plan.features.slice(0, 2).map((feature, idx) => (
+                                        <li key={idx} className='flex items-center gap-2 text-[10px] text-slate-400'>
+                                            <div className='w-1 h-1 rounded-full bg-slate-600'></div>
+                                            {feature}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button className='w-full py-2 rounded bg-slate-800 text-[10px] font-bold text-slate-300 hover:bg-white hover:text-black transition-colors'>
+                                    SATIN AL
+                                </button>
                             </div>
-                            <span className='text-lg font-black text-white'>142</span>
-                        </div>
-
-                        <div className='bg-slate-900/50 p-3 rounded-lg flex items-center justify-between border border-white/5'>
-                            <div className='flex items-center gap-3'>
-                                <div className='w-8 h-8 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-500'>
-                                    <Download size={16} />
-                                </div>
-                                <div className='flex flex-col'>
-                                    <span className='text-xs font-bold text-slate-300'>İndirilenler</span>
-                                    <span className='text-[10px] text-slate-500'>Bu Ay</span>
-                                </div>
-                            </div>
-                            <span className='text-lg font-black text-white'>1.2k</span>
-                        </div>
-                    </div>
-
-                    <div className='mt-6 pt-4 border-t border-white/5'>
-                         <p className='text-[10px] text-slate-500 text-center'>
-                            Sistem v3.2.0 • Son Güncelleme: Bugün
-                         </p>
-                    </div>
+                        ))}
+                     </div>
                 </div>
 
             </div>
