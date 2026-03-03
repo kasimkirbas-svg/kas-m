@@ -330,9 +330,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     {/* Ambient Glow behind Title */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/5 blur-[50px] rounded-full pointer-events-none"></div>
 
-                    <h1 className='text-3xl md:text-5xl font-black tracking-tighter relative z-10 select-none'>
-                        <span className='bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-indigo-100 dark:to-slate-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
-                            YILLIK DOKÜMAN
+                    <h1 className='text-3xl md:text-5xl font-black tracking-tight relative z-10 select-none drop-shadow-2xl'>
+                        <span className='bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-indigo-100 dark:to-slate-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)] animate-pulse'>
+                            YILLIK DOKÜMANLAR
                         </span>
                     </h1>
                  </motion.div>
@@ -350,8 +350,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             İŞ TAKİP PANELİ
                      </span>
                      
-                     {/* Decorative lines - Enhanced */}
-                     <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 dark:via-amber-500 to-transparent opacity-50"></span>
+                     {/* Decorative lines - Removed as requested */}
                  </motion.div>
             </div>
             
