@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Factory, 
@@ -11,19 +11,20 @@ import {
   FileCheck, 
   AlertTriangle,
   ChevronRight,
-  ClipboardList,
   Archive,
   Download,
   Shield,
   Star,
   Activity,
   Award,
-  ChevronDown,
-  ChevronUp,
   FileText,
   Search,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  Users,
+  Upload,
+  FolderOpen,
+  PieChart
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 import { PLANS } from '../constants';
@@ -182,38 +183,51 @@ const SECTORS = [
   }
 ];
 
+// Flatten all docs for "All View"
+const ALL_DOCS = SECTORS.reduce<Array<{doc: string, sector: typeof SECTORS[0]}>>((acc, sector) => {
+    return acc.concat(sector.docs.map(d => ({ doc: d, sector })));
+}, []);
+
 export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTemplateSelect, templates }) => {
-  const [activeSectorId, setActiveSectorId] = useState<string>('factory'); // Default to factory
   const [hoveredSectorId, setHoveredSectorId] = useState<string | null>(null);
 
+  // Logic: Show hovered sector docs, otherwise check activeSectorId? 
+  // User requested: "mouse her hangi bir sektörde olmadığında tüm şablonlar gözüksün"
+  // So NO persisted active state from click necessary, rely on hover.
   
-  const currentSectorId = hoveredSectorId || activeSectorId;
-  const currentSector = SECTORS.find(s => s.id === currentSectorId) || SECTORS[0];
+  const currentSector = useMemo(() => {
+      return SECTORS.find(s => s.id === hoveredSectorId);
+  }, [hoveredSectorId]);
 
-  const handleDocumentClick = (docName: string) => {
-    // 1. Try to find a real template that matches this name
+  const displayDocs = useMemo(() => {
+      if (currentSector) {
+          return currentSector.docs.map(doc => ({ doc, sector: currentSector }));
+      }
+      return ALL_DOCS; // Show all if no hover
+  }, [currentSector]);
+
+  const handleDocumentClick = (docName: string, sectorId: string) => {
+    // 1. Find existing template
     const existingTemplate = templates.find(t => t.title.toLowerCase().includes(docName.toLowerCase()));
 
     if (existingTemplate) {
         onTemplateSelect(existingTemplate);
     } else {
-        // 2. Determine category based on current sector
-        let category = 'safety'; // default
-        if (currentSector.id === 'factory') category = 'production';
-        if (currentSector.id === 'company') category = 'hr';
-        // ... simplistic mapping
+        // 2. Mock Template
+        const sector = SECTORS.find(s => s.id === sectorId)!;
+        let category = 'safety'; 
+        if (sector.id === 'factory') category = 'production';
+        if (sector.id === 'company') category = 'hr';
 
-        // 3. Create a temporary template object to pass to the editor
-        // This simulates "Loading" this dynamic template
         const newTemplate: DocumentTemplate = {
             id: 'dynamic-' + Math.random().toString(36).substr(2, 9),
             title: docName,
             category: category,
-            description: `${currentSector.name} sektörü için ${docName} şablonu.`,
+            description: `${sector.name} sektörü için ${docName} şablonu.`,
             isPro: false,
             createdAt: new Date().toISOString(),
-            content: [], // Start empty or with default fields
-            tags: [currentSector.id, 'form']
+            content: [],
+            tags: [sector.id, 'form']
         };
         onTemplateSelect(newTemplate);
     }
@@ -264,23 +278,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </header>
 
         {/* 2. Sectors Row: Animated & Detailed */}
-        <div className='shrink-0 h-36 md:h-40 perspective-1000'>
+        <div className='shrink-0 h-36 md:h-40 perspective-1000' onMouseLeave={() => setHoveredSectorId(null)}>
             <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 h-full'>
                 {SECTORS.map((sector, index) => (
                 <motion.div 
                     key={sector.id}
                     whileHover={{ scale: 1.05, y: -5, zIndex: 10 }}
                     whileTap={{ scale: 0.95 }}
-                    onMouseEnter={() => {
-                        setHoveredSectorId(sector.id);
-                        setActiveSectorId(sector.id);
-                    }}
-                    onMouseLeave={() => setHoveredSectorId(null)}
-                    onClick={() => setActiveSectorId(sector.id)}
+                    onMouseEnter={() => setHoveredSectorId(sector.id)}
                     className={`
                     relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group
                     border transition-all duration-500
-                    ${activeSectorId === sector.id ? 'border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.2)]' : 'border-white/5 shadow-lg bg-slate-800/40'}
+                    ${hoveredSectorId === sector.id ? 'border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.2)]' : 'border-white/5 shadow-lg bg-slate-800/40'}
                     ${index === SECTORS.length - 1 ? 'col-span-2 md:col-span-1 lg:col-span-1' : ''}
                     `}
                 >   
@@ -289,7 +298,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         className='absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110'
                         style={{ backgroundImage: `url(${sector.image})` }}
                     >
-                        <div className={`absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/40 transition-colors duration-300 ${activeSectorId === sector.id ? 'bg-slate-900/30' : ''}`}></div>
+                        <div className={`absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/40 transition-colors duration-300 ${hoveredSectorId === sector.id ? 'bg-slate-900/30' : ''}`}></div>
                         <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-overlay opacity-40 group-hover:opacity-60 transition-opacity`}></div>
                         <div className='absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90'></div>
                     </div>
@@ -298,16 +307,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     <div className='relative z-10 p-4 w-full flex flex-col items-center group-hover:-translate-y-1 transition-transform'>
                         <div className={`
                             mb-2 p-2.5 rounded-xl backdrop-blur-md border border-white/20 transition-all duration-300 shadow-lg
-                            ${activeSectorId === sector.id ? 'bg-amber-500 text-slate-900 scale-110 rotate-3' : 'bg-white/10 text-white group-hover:bg-white/20'}
+                            ${hoveredSectorId === sector.id ? 'bg-amber-500 text-slate-900 scale-110 rotate-3' : 'bg-white/10 text-white group-hover:bg-white/20'}
                         `}>
                             <sector.icon size={20} className="drop-shadow-sm" />
                         </div>
-                        <span className={`text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 ${activeSectorId === sector.id ? 'text-amber-400' : 'text-slate-300 group-hover:text-white'}`}>
+                        <span className={`text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 ${hoveredSectorId === sector.id ? 'text-amber-400' : 'text-slate-300 group-hover:text-white'}`}>
                             {sector.name}
                         </span>
                         
                         {/* Hover Indicator */}
-                        <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${activeSectorId === sector.id ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-white/50'}`}></div>
+                        <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${hoveredSectorId === sector.id ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-white/50'}`}></div>
                     </div>
                 </motion.div>
                 ))}
@@ -315,145 +324,224 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </div>
 
         {/* 3. Main Content: Split Grid */}
-        <div className='flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-5 overflow-hidden pb-2'>
+        <div className='flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-5 overflow-hidden pb-2'>
             
-            {/* LEFT: Dynamic Document List for Selected Sector */}
-            <div className='lg:col-span-2 flex flex-col h-full bg-[#15171e]/80 backdrop-blur-sm rounded-2xl border border-white/5 relative overflow-hidden shadow-2xl'>
+            {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
+            <div className='lg:col-span-3 flex flex-col h-full bg-[#15171e]/80 backdrop-blur-sm rounded-2xl border border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between shrink-0'>
                     <div className='flex items-center gap-4'>
-                        <div className='w-12 h-12 rounded-lg bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center '>
-                            <currentSector.icon className={currentSector.accent} size={24} />
+                        <div className={`w-12 h-12 rounded-lg bg-gradient-to-br border border-slate-700 flex items-center justify-center transition-colors duration-500 ${currentSector ? 'from-slate-800 to-slate-900' : 'from-amber-500/10 to-orange-500/10'}`}>
+                            {currentSector ? (
+                                <currentSector.icon className={currentSector.accent} size={24} />
+                            ) : (
+                                <Archive className="text-amber-500" size={24} />
+                            )}
                         </div>
                         <div>
                             <h2 className='text-xl font-bold text-white tracking-tight flex items-center gap-2'>
-                                {currentSector.name} <span className='text-slate-500 font-normal'>DOKÜMANLARI</span>
+                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'} <span className='text-slate-500 font-normal'>DOKÜMANLARI</span>
                             </h2>
                             <p className='text-xs text-slate-400 font-medium mt-0.5 tracking-wide'>
-                                Bu sektör için önerilen {currentSector.docs.length} adet doküman şablonu bulundu.
+                                {currentSector 
+                                    ? `Bu sektör için önerilen ${currentSector.docs.length} adet doküman şablonu bulundu.`
+                                    : `Sistemde kayıtlı toplam ${ALL_DOCS.length} adet doküman listeleniyor.`
+                                }
                             </p>
                         </div>
                     </div>
                     <div className='flex gap-2'>
-                        <button className='p-2 hover:bg-white/5 rounded-lg transition-colors text-slate-400 hover:text-white'>
-                            <Search size={20} />
+                         <button className='p-2 hover:bg-white/5 rounded-lg transition-colors text-slate-400 hover:text-white flex items-center gap-2 border border-white/5 bg-slate-900/50'>
+                            <span className='text-xs font-bold hidden md:inline'>ARA</span>
+                            <Search size={18} />
                         </button>
                     </div>
                 </div>
 
                 {/* List Body */}
-                <div className='flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2'>
+                <div className='flex-1 overflow-y-auto custom-scrollbar p-3 relative'>
                     <AnimatePresence mode='wait'>
                         <motion.div 
-                            key={currentSector.id}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 10 }}
-                            transition={{ duration: 0.2 }}
-                            className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                            key={currentSector ? currentSector.id : 'all'}
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.3 }}
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pb-4"
                         >
-                            {currentSector.docs.map((doc, idx) => (
-                                <div 
-                                    key={`${currentSector.id}-${idx}`}
-                                    onClick={() => handleDocumentClick(doc)}
-                                    className='group flex items-center gap-4 p-3 rounded-xl bg-slate-800/30 border border-white/5 hover:bg-slate-800/60 hover:border-amber-500/30 transition-all cursor-pointer relative overflow-hidden'
+                            {displayDocs.map((item, idx) => (
+                                <motion.div 
+                                    key={`${item.sector.id}-${idx}`}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.02 }}
+                                    onClick={() => handleDocumentClick(item.doc, item.sector.id)}
+                                    className='group flex items-center gap-3 p-3 rounded-xl bg-slate-800/30 border border-white/5 hover:bg-slate-800/80 hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg hover:shadow-amber-500/10'
                                 >
-                                    <div className='absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-slate-700 to-transparent group-hover:via-amber-500 transition-colors'></div>
+                                    {/* Hover Highlight Gradient */}
+                                    <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000'></div>
+
+                                    {/* Accent Bar */}
+                                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${currentSector ? 'from-transparent via-slate-500 to-transparent' : 'from-transparent via-amber-500/50 to-transparent group-hover:via-amber-500'} transition-colors`}></div>
                                     
-                                    <div className='w-10 h-10 rounded-full bg-slate-900/80 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform'>
-                                        <FileText size={18} className='text-slate-400 group-hover:text-amber-400 transition-colors' />
+                                    {/* Icon */}
+                                    <div className={`w-10 h-10 rounded-lg bg-slate-900 border border-white/5 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner`}>
+                                        <FileText size={18} className='text-slate-500 group-hover:text-amber-400 transition-colors' />
                                     </div>
                                     
                                     <div className='flex-1 min-w-0'>
-                                        <h3 className='text-sm font-bold text-slate-200 truncate group-hover:text-amber-100 transition-colors'>{doc}</h3>
-                                        <div className='flex items-center gap-2 mt-1'>
-                                            <span className='text-[10px] text-slate-500 font-medium px-1.5 py-0.5 rounded bg-slate-900/50 uppercase tracking-wider'>ŞABLON</span>
-                                            <span className='text-[10px] text-emerald-500/80 font-medium flex items-center gap-1'>
-                                                <Star size={8} fill='currentColor' /> POPÜLER
-                                            </span>
+                                        <h3 className='text-xs font-bold text-slate-300 truncate group-hover:text-white transition-colors'>{item.doc}</h3>
+                                        <div className='flex items-center gap-2 mt-1 opacity-60 group-hover:opacity-100 transition-opacity'>
+                                            <span className='text-[9px] text-slate-400 font-bold uppercase tracking-wider'>{item.sector.name}</span>
                                         </div>
                                     </div>
 
-                                    <div className='w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-500 -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all'>
-                                        <ArrowRight size={16} />
+                                    {/* Action Icon */}
+                                    <div className='w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-slate-900 scale-0 group-hover:scale-100 transition-transform shadow-lg shadow-amber-500/50'>
+                                        <ArrowRight size={14} />
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </motion.div>
                     </AnimatePresence>
                 </div>
             </div>
 
-            {/* RIGHT: Quick Actions & Packages */}
-            <div className='flex flex-col gap-4 h-full overflow-hidden'>
+            {/* RIGHT: Quick Actions & Archive (Sidebar) - Restored Old Style */}
+            <div className='lg:col-span-1 flex flex-col gap-4 overflow-hidden'>
                 
-                {/* 1. Quick Action: Certificate */}
-                <div 
-                    onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                    className='shrink-0 h-32 relative rounded-2xl bg-gradient-to-br from-[#1e293b] to-[#0f172a] border border-white/10 p-5 cursor-pointer group hover:border-amber-500/50 transition-all shadow-xl overflow-hidden'
-                >
-                    <div className='absolute right-0 top-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors'></div>
-                    <div className='absolute right-4 top-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500'>
-                        <Award size={64} className='text-amber-500' />
-                    </div>
+                {/* 1. HIZLI İŞLEMLER (Quick Actions) */}
+                <div className='flex flex-col gap-2'>
+                    <h3 className='text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1 mb-1'>HIZLI İŞLEMLER</h3>
                     
-                    <div className='relative z-10 flex flex-col justify-center h-full'>
-                        <div className='w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-500 mb-2'>
-                            <FileCheck size={20} />
+                    {/* Sertifika Button - Highlighted */}
+                    <button 
+                        onClick={() => onNavigate('templates', { search: 'Sertifika' })}
+                        className='group w-full p-4 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 border border-orange-500/30 text-left relative overflow-hidden shadow-lg shadow-orange-500/20 hover:brightness-110 transition-all'
+                    >
+                        <div className='absolute right-[-10px] top-[-10px] opacity-20 rotate-12 group-hover:rotate-0 transition-transform duration-500'>
+                            <Award size={64} className="text-white" />
                         </div>
-                        <h3 className='text-lg font-bold text-white tracking-tight'>Sertifika Oluştur</h3>
-                        <p className='text-xs text-slate-400'>
-                            Personel veya eğitim sertifikası hazırlayın.
-                        </p>
+                        <div className='relative z-10'>
+                            <Award className="text-white mb-2" size={24} />
+                            <div className='text-sm font-black text-white leading-tight'>SERTİFİKA<br/>OLUŞTUR</div>
+                            <div className='text-[10px] text-orange-100 mt-1 opacity-80'>Personel eğitimi için</div>
+                        </div>
+                    </button>
+
+                    {/* Other Actions Grid */}
+                    <div className='grid grid-cols-2 gap-2'>
+                        <button className='p-3 rounded-xl bg-slate-800 border border-white/5 hover:bg-slate-700 hover:border-amber-500/30 transition-all flex flex-col items-center gap-2 group'>
+                            <Users size={20} className='text-blue-400 group-hover:scale-110 transition-transform' />
+                            <span className='text-[9px] font-bold text-slate-300'>PERSONEL</span>
+                        </button>
+                        <button className='p-3 rounded-xl bg-slate-800 border border-white/5 hover:bg-slate-700 hover:border-amber-500/30 transition-all flex flex-col items-center gap-2 group'>
+                            <Upload size={20} className='text-emerald-400 group-hover:scale-110 transition-transform' />
+                            <span className='text-[9px] font-bold text-slate-300'>YÜKLE</span>
+                        </button>
+                        <button className='p-3 rounded-xl bg-slate-800 border border-white/5 hover:bg-slate-700 hover:border-amber-500/30 transition-all flex flex-col items-center gap-2 group'>
+                            <Activity size={20} className='text-rose-400 group-hover:scale-110 transition-transform' />
+                            <span className='text-[9px] font-bold text-slate-300'>KAZA KAYDI</span>
+                        </button>
+                        <button 
+                            onClick={() => onNavigate('templates', { category: 'Risk' })}
+                            className='p-3 rounded-xl bg-slate-800 border border-white/5 hover:bg-slate-700 hover:border-amber-500/30 transition-all flex flex-col items-center gap-2 group'
+                        >
+                            <AlertTriangle size={20} className='text-yellow-400 group-hover:scale-110 transition-transform' />
+                            <span className='text-[9px] font-bold text-slate-300'>RİSK ANALİZİ</span>
+                        </button>
                     </div>
                 </div>
 
-                {/* 2. Packages (Grid Layout) */}
-                <div className='flex-1 bg-[#15171e]/80 backdrop-blur rounded-2xl border border-white/5 p-4 flex flex-col overflow-hidden'>
-                     <h3 className='shrink-0 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2'>
-                        <Star size={12} className='text-amber-500' />
-                        ABONELİK PAKETLERİ
-                     </h3>
-                     
-                     <div className='flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-3'>
-                        {PLANS.map((plan) => (
-                            <div key={plan.id} className='relative p-4 rounded-xl bg-[#0f1115] border border-white/5 hover:border-amber-500/30 transition-colors group'>
-                                {plan.popular && (
-                                    <div className='absolute top-0 right-0 px-2 py-1 bg-amber-500 text-[9px] font-black text-slate-900 rounded-bl-lg rounded-tr-lg'>
-                                        POPÜLER
-                                    </div>
-                                )}
-                                <div className='flex justify-between items-start mb-2'>
-                                    <div>
-                                        <h4 className='text-sm font-bold text-slate-200 group-hover:text-amber-500 transition-colors'>{plan.name}</h4>
-                                        <div className='flex items-baseline gap-1'>
-                                            <span className='text-lg font-black text-white'>{plan.price}</span>
-                                            <span className='text-[10px] text-slate-500'>{plan.period}</span>
-                                        </div>
-                                    </div>
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-${plan.color}-500/10 text-${plan.color}-500`}>
-                                        <CheckCircle2 size={16} />
-                                    </div>
+                {/* 2. DÖKÜMAN ARŞİVİ (Document Archive) */}
+                <div className='flex-1 min-h-[200px] bg-slate-800/30 rounded-2xl border border-white/5 p-4 flex flex-col overflow-hidden relative'>
+                    <h3 className='text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2'>
+                        <FolderOpen size={12} className='text-blue-400' />
+                        DÖKÜMAN ARŞİVİ
+                    </h3>
+                    
+                    <div className='flex-1 overflow-y-auto custom-scrollbar space-y-2 relative z-10'>
+                        {/* Mock Archive Items */}
+                        {['2025 İş Planları', 'Ocak Ayı Raporları', 'Taşeron Sözleşmeleri', 'Arşiv 2024', 'Eski Prosedürler'].map((folder, i) => (
+                            <div key={i} className='flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer group transition-colors'>
+                                <div className='w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors'>
+                                    <Archive size={14} />
                                 </div>
-                                <ul className='space-y-1 mb-3'>
-                                    {plan.features.slice(0, 2).map((feature, idx) => (
-                                        <li key={idx} className='flex items-center gap-2 text-[10px] text-slate-400'>
-                                            <div className='w-1 h-1 rounded-full bg-slate-600'></div>
-                                            {feature}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <button className='w-full py-2 rounded bg-slate-800 text-[10px] font-bold text-slate-300 hover:bg-white hover:text-black transition-colors'>
-                                    SATIN AL
-                                </button>
+                                <div className='flex-1'>
+                                    <div className='text-xs font-bold text-slate-300 group-hover:text-white'>{folder}</div>
+                                    <div className='text-[9px] text-slate-500'>{Math.floor(Math.random() * 20) + 5} dosya</div>
+                                </div>
+                                <ChevronRight size={12} className='text-slate-600 group-hover:translate-x-1 transition-transform' />
                             </div>
                         ))}
-                     </div>
+                         
+                         {/* Divider */}
+                         <div className='h-px bg-white/5 my-2'></div>
+
+                         {/* Recent Files */}
+                         <div className='text-[9px] text-slate-500 font-bold mb-2'>SON DÖKÜMANLAR</div>
+                         {['Risk Analizi v2.pdf', 'Sertifika_AhmetK.pdf'].map((file, i) => (
+                            <div key={`file-${i}`} className='flex items-center gap-2 p-1.5 rounded hover:bg-white/5 cursor-pointer opacity-70 hover:opacity-100'>
+                                <FileText size={12} className='text-slate-400' />
+                                <span className='text-[10px] text-slate-300 truncate'>{file}</span>
+                            </div>
+                         ))}
+                    </div>
+
+                    {/* Gradient Fade at bottom */}
+                    <div className='absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-slate-900/50 to-transparent pointer-events-none'></div>
                 </div>
 
             </div>
 
+        </div>
+
+        {/* 4. FOOTER: PACKAGES (Row Layout - Restored) */}
+        <div className='shrink-0 h-[140px] md:h-[160px] pb-2'>
+            <div className='h-full grid grid-cols-1 md:grid-cols-3 gap-4'>
+                {PLANS.map((plan) => (
+                    <div 
+                        key={plan.id} 
+                        className={`
+                            relative h-full rounded-2xl border bg-[#15171e]/90 p-4 flex flex-col justify-between group overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform duration-300
+                            ${plan.popular ? 'border-amber-500/50 shadow-lg shadow-amber-500/10' : 'border-white/5 hover:border-white/20'}
+                        `}
+                    >
+                        {/* Glow Effect */}
+                        <div className={`absolute -right-10 -top-10 w-32 h-32 bg-${plan.color}-500/10 rounded-full blur-3xl group-hover:bg-${plan.color}-500/20 transition-colors`}></div>
+                        
+                        <div className='relative z-10 flex justify-between items-start'>
+                            <div>
+                                <h4 className={`text-sm font-black uppercase tracking-wider text-${plan.color}-500`}>{plan.name}</h4>
+                                <div className='flex items-baseline gap-1 mt-1'>
+                                    <span className='text-2xl font-black text-white tracking-tighter'>{plan.price}</span>
+                                    <span className='text-[10px] text-slate-500 font-bold'>{plan.period}</span>
+                                </div>
+                            </div>
+                            <div className={`w-8 h-8 rounded-full bg-${plan.color}-500/10 flex items-center justify-center text-${plan.color}-500 border border-${plan.color}-500/20`}>
+                                {plan.popular ? <Star size={14} fill="currentColor" /> : <CheckCircle2 size={16} />}
+                            </div>
+                        </div>
+
+                        <div className='relative z-10 mt-2'>
+                             <div className='flex gap-2 text-[10px] text-slate-400 font-medium'>
+                                <span>• {plan.limit} Döküman</span>
+                                <span>• {plan.features[0]}</span>
+                             </div>
+                             <div className={`mt-3 h-1 w-full bg-slate-800 rounded-full overflow-hidden`}>
+                                <div className={`h-full bg-${plan.color}-500 w-1/3 group-hover:w-full transition-all duration-700`}></div>
+                             </div>
+                        </div>
+
+                        {plan.popular && (
+                            <div className='absolute bottom-0 right-0 bg-amber-500 text-slate-900 text-[9px] font-black px-3 py-1 rounded-tl-lg'>
+                                EN ÇOK TERCİH EDİLEN
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
 
       </div>
