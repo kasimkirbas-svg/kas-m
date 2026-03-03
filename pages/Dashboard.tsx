@@ -24,7 +24,8 @@ import {
   Users,
   Upload,
   FolderOpen,
-  PieChart
+  PieChart,
+  ClipboardList
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 import { PLANS } from '../constants';
