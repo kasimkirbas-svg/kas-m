@@ -71,8 +71,19 @@ export const Layout: React.FC<LayoutProps> = ({
   */
 
   return (
-    <div className={`flex flex-col font-sans bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-200 selection:bg-amber-500/30 min-h-screen transition-colors duration-300`}>
+    <div className={`flex flex-col font-sans bg-slate-200 dark:bg-[#0f1115] text-slate-900 dark:text-slate-200 selection:bg-amber-500/30 min-h-screen transition-colors duration-300 relative overflow-hidden`}>
       
+      {/* GLOBAL BACKGROUND EFFECTS (Added for Premium Feel) */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
+          {/* Subtle Grid Pattern */}
+          <div className="absolute inset-0 bg-grid-slate-900/[0.03] dark:bg-grid-white/[0.02] bg-[size:32px_32px] [mask-image:linear-gradient(to_bottom,transparent,black)]"></div>
+          
+          {/* Animated Floating Color Blobs */}
+          <div className="absolute top-[-20%] left-[-10%] w-[700px] h-[700px] rounded-full bg-indigo-200/30 dark:bg-indigo-900/10 blur-[130px] animate-float mix-blend-multiply dark:mix-blend-screen opacity-60"></div>
+          <div className="absolute top-[20%] right-[-20%] w-[600px] h-[600px] rounded-full bg-amber-200/30 dark:bg-amber-800/10 blur-[120px] animate-float-delayed mix-blend-multiply dark:mix-blend-screen opacity-50"></div>
+          <div className="absolute bottom-[-20%] left-[30%] w-[800px] h-[800px] rounded-full bg-blue-200/30 dark:bg-blue-900/10 blur-[130px] animate-float-slow mix-blend-multiply dark:mix-blend-screen opacity-50"></div>
+      </div>
+
       {/* INDUSTRIAL TOP NAVIGATION BAR - Now Transparent/Minimal */}
       <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-4 bg-transparent shrink-0 pointer-events-none">
         

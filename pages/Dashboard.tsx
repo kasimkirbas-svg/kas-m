@@ -306,13 +306,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   };
 
   return (
-    <div className='w-full min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-slate-200 dark:bg-[#0f172a] relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300 overflow-y-auto'>
+    <div className='w-full min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-transparent relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300 overflow-y-auto'>
       
-      {/* Background Ambience - Considerably Darker in Light Mode for Contrast */}
-      <div className='absolute top-0 left-0 w-full h-[800px] bg-gradient-to-b from-slate-300 via-slate-200 to-slate-300 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-[#0f172a] pointer-events-none z-0 transition-colors duration-500'></div>
-      <div className='absolute -top-[20%] right-[10%] w-[600px] h-[600px] bg-amber-500/5 blur-[120px] rounded-full pointer-events-none z-0 animate-pulse-slow'></div>
-      <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.03] mix-blend-overlay pointer-events-none z-0'></div>
-
       <div className='flex-1 flex flex-col p-4 md:p-6 w-full max-w-[1920px] mx-auto z-10 h-full gap-5'>
         
         {/* 1. Header: LOGO ONLY (Left) & CENTER TITLE */}

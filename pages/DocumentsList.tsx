@@ -162,7 +162,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
             return (
               <div
                 key={template.id}
-                className={`group relative bg-white dark:bg-slate-800 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-100 dark:border-slate-700 h-full flex flex-col ${isLocked ? 'grayscale-[0.8] opacity-80 hover:grayscale-0 hover:opacity-100' : 'hover:-translate-y-2'}`}
+                className={`group relative bg-white dark:bg-slate-800 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-200 dark:border-slate-700 h-full flex flex-col ${isLocked ? 'grayscale-[0.8] opacity-80 hover:grayscale-0 hover:opacity-100' : 'hover:-translate-y-2'}`}
                 onClick={() => !isLocked && onSelectTemplate(template)}
               >
                  {/* Top Decor Bar */}

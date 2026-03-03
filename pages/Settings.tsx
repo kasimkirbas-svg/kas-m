@@ -49,7 +49,7 @@ export const Settings: React.FC<SettingsProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-200 p-4 pt-20 md:p-8 md:pt-8 pb-20 transition-colors duration-300">
+    <div className="min-h-screen bg-transparent text-slate-900 dark:text-slate-200 p-4 pt-20 md:p-8 md:pt-8 pb-20 transition-colors duration-300">
       <div className="max-w-4xl mx-auto space-y-6">
         
         <header className="mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">
