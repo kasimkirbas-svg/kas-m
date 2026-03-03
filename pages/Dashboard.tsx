@@ -230,8 +230,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
         {/* Content Area */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
             
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
-            
             {/* Left: Documents List (Reference Layout) */}
             <div className="lg:col-span-3 flex flex-col bg-[#e0e0e0] rounded-t-xl border-x border-t border-white/20 overflow-hidden h-[440px] shadow-[0_20px_40px_rgba(0,0,0,0.8)] relative z-10">
                  {/* Header Row - Dark Metallic */}
