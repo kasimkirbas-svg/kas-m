@@ -353,176 +353,373 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             <div className='w-1/4'></div>
         </header>
 
-        {/* MAIN UNIFIED INTERFACE WRAPPER (Glass Effect) */}
-        <div className='flex-1 flex flex-col min-h-0 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-white/40 dark:border-white/5 shadow-2xl relative overflow-hidden'>
-            
-            {/* 2. Sectors Row (Now acts as the Header/Tabs for the Interface) */}
-            <div className='shrink-0 h-auto md:h-32 bg-gradient-to-b from-white/50 to-transparent dark:from-slate-800/50 relative z-20 border-b border-slate-200/50 dark:border-white/5' onMouseLeave={() => setHoveredSectorId(null)}>
-                 <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-700 to-transparent"></div>
-                 <div className='flex overflow-x-auto snap-x md:grid md:grid-cols-7 gap-1 h-32 md:h-full px-2 py-2 md:px-4 md:py-3 scrollbar-hide'>
-                    {SECTORS.map((sector, index) => {
-                        const isSelected = selectedSectorIds.includes(sector.id);
-                        const isHovered = hoveredSectorId === sector.id;
-                        const isActive = isSelected || isHovered;
+        {/* 2. Sectors Row: Animated & Detailed */}
+        <div className='shrink-0 h-auto md:h-40 perspective-1000' onMouseLeave={() => setHoveredSectorId(null)}>
+            <div className='flex overflow-x-auto snap-x md:grid md:grid-cols-7 gap-3 h-32 md:h-full pb-2 md:pb-0 px-1 md:px-0 scrollbar-hide'>
+                {SECTORS.map((sector, index) => {
+                    const isSelected = selectedSectorIds.includes(sector.id);
+                    const isHovered = hoveredSectorId === sector.id;
+                    const isActive = isSelected || isHovered;
 
-                        return (
-                            <motion.div 
-                                key={sector.id}
-                                whileHover={{ y: -2 }}
-                                whileTap={{ scale: 0.98 }}
-                                onMouseEnter={() => setHoveredSectorId(sector.id)}
-                                onClick={() => toggleSector(sector.id)}
-                                className={`
-                                relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-center overflow-hidden group shrink-0 w-[120px] md:w-auto snap-center
-                                transition-all duration-300
-                                ${isActive 
-                                    ? 'bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 transform scale-[1.02]' 
-                                    : 'hover:bg-white/50 dark:hover:bg-slate-800/50 border border-transparent hover:border-slate-200/50'}
-                                `}
-                            >   
-                                {/* New Simple Clean Look for Tabs */}
+                    return (
+                        <motion.div 
+                            key={sector.id}
+                            whileHover={{ scale: 1.05, y: -5, zIndex: 10 }}
+                            whileTap={{ scale: 0.95 }}
+                            onMouseEnter={() => setHoveredSectorId(sector.id)}
+                            onClick={() => toggleSector(sector.id)}
+                            className={`
+                            relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group shrink-0 w-[140px] md:w-auto snap-center
+                            border transition-all duration-300
+                            ${isActive 
+                                ? 'border-2 border-slate-700 dark:border-white shadow-xl dark:shadow-[0_0_50px_rgba(255,255,255,0.5)] scale-105 -translate-y-2 z-20 ring-4 ring-slate-300 dark:ring-white/10' 
+                                : 'border-slate-300 dark:border-white/5 shadow-md bg-white dark:bg-slate-800/40 hover:border-slate-500 dark:hover:border-white/30'}
+                            `}
+                        >   
+                            {/* Background Image */}
+                            <div 
+                                className='absolute inset-0 bg-cover bg-center transition-transform duration-700'
+                                style={{ 
+                                    backgroundImage: `url(${sector.image})`,
+                                    transform: isActive ? 'scale(1.1)' : 'scale(1)'
+                                }}
+                            >
+                                <div className={`absolute inset-0 transition-colors duration-300 ${isActive ? 'bg-slate-100/30 dark:bg-slate-900/30' : 'bg-slate-100/50 dark:bg-slate-900/60 group-hover:bg-slate-100/40 dark:group-hover:bg-slate-900/40'}`}></div>
+                                <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-overlay opacity-40 transition-opacity ${isActive ? 'opacity-60' : 'group-hover:opacity-60'}`}></div>
+                                <div className='absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-950 dark:via-transparent dark:to-transparent opacity-90'></div>
+                            </div>
+                            
+                            {/* Content */}
+                            <div className='relative z-10 p-4 w-full flex flex-col items-center transition-transform'>
                                 <div className={`
-                                    p-2 rounded-lg transition-all duration-300 mb-2
-                                    ${isActive ? 'bg-amber-500 text-white shadow-md shadow-amber-500/30' : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-slate-300 dark:group-hover:bg-slate-700'}
+                                    mb-2 p-2.5 rounded-xl backdrop-blur-md border border-white/20 transition-all duration-300 shadow-md
+                                    ${isActive ? 'bg-amber-500 text-slate-900 scale-110 rotate-3' : 'bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-white group-hover:bg-white dark:group-hover:bg-white/20'}
                                 `}>
-                                    <sector.icon size={22} />
+                                    <sector.icon size={20} className="drop-shadow-sm" />
                                 </div>
-                                <span className={`text-[10px] font-bold uppercase tracking-wider text-center transition-colors ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-500'}`}>
+                                <span className={`text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 drop-shadow-sm ${isActive ? 'text-slate-900 dark:text-amber-400' : 'text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white'}`}>
                                     {sector.name}
                                 </span>
                                 
-                                {isActive && <motion.div layoutId="activeTab" className="absolute bottom-0 w-1/2 h-1 bg-amber-500 rounded-t-full" />}
-                            </motion.div>
-                        )
-                    })}
-                </div>
+                                {/* Hover/Selected Indicator */}
+                                <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${isActive ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-slate-400 dark:group-hover:bg-white/50'}`}></div>
+                            </div>
+                            
+                            {/* Selected Checkmark (Enhanced Animation) */}
+                            <AnimatePresence>
+                                {isSelected && (
+                                    <motion.div 
+                                        initial={{ scale: 0, rotate: -180, opacity: 0 }}
+                                        animate={{ 
+                                            scale: 1, 
+                                            rotate: 0, 
+                                            opacity: 1,
+                                            transition: { 
+                                                type: "spring",
+                                                stiffness: 260,
+                                                damping: 20 
+                                            } 
+                                        }}
+                                        exit={{ scale: 0, opacity: 0 }}
+                                        className='absolute top-3 right-3 w-8 h-8 bg-gradient-to-tr from-emerald-500 to-emerald-400 rounded-full flex items-center justify-center text-white shadow-[0_4px_12px_rgba(16,185,129,0.5)] z-30 ring-2 ring-white ring-offset-2 ring-offset-slate-900'
+                                    >
+                                        <motion.div
+                                            initial={{ pathLength: 0, opacity: 0 }}
+                                            animate={{ pathLength: 1, opacity: 1 }}
+                                            transition={{ delay: 0.2, duration: 0.3 }}
+                                        >
+                                            <CheckCircle2 size={18} strokeWidth={3} className="drop-shadow-md" />
+                                        </motion.div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                        </motion.div>
+                )})}
             </div>
+        </div>
 
-            {/* 3. Main Content Grid (Unified Body) */}
-            <div className='flex-1 md:min-h-0 grid grid-cols-1 lg:grid-cols-4 md:overflow-hidden'>
+        {/* 3. Main Content: Split Grid */}
+        <div className='flex-1 md:min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-5 md:overflow-hidden pb-2'>
+            
+            {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
+            <div className='lg:col-span-3 flex flex-col h-[600px] md:h-full bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
                 
-                {/* LEFT: Document List (Transparent Integration) */}
-                <div className='lg:col-span-3 flex flex-col h-[600px] md:h-full relative z-10'>
-                    
-                    {/* Toolbar */}
-                    <div className='p-4 pl-6 flex items-center justify-between shrink-0 gap-4'>
-                        <div className='flex items-center gap-4 flex-1 min-w-0'>
-                             <h2 className='text-xl font-black text-slate-800 dark:text-white tracking-tight flex items-center gap-2'>
-                                <span className="w-2 h-8 bg-amber-500 rounded-full"></span>
-                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'}
-                            </h2>
-                            <span className="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300">
-                                {currentSector ? currentSector.docs.length : ALL_DOCS.length} Doküman
-                            </span>
+                {/* Panel Header */}
+                <div className='p-5 border-b border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
+                    <div className='flex items-center gap-4 flex-1 min-w-0'>
+                        <div className={`w-12 h-12 shrink-0 rounded-lg bg-gradient-to-br border border-slate-300 dark:border-slate-700 flex items-center justify-center transition-colors duration-500 ${currentSector ? 'from-white to-slate-100 dark:from-slate-800 dark:to-slate-900' : 'from-amber-100 to-orange-100 dark:from-amber-500/10 dark:to-orange-500/10'}`}>
+                            {currentSector ? (
+                                <currentSector.icon className={currentSector.accent} size={24} />
+                            ) : (
+                                <Archive className="text-amber-700 dark:text-amber-500" size={24} />
+                            )}
                         </div>
-
-                        <div className='flex items-center gap-2 shrink-0 bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700'>
-                             {/* Search Input */}
-                             <div className='flex items-center px-3 gap-2 w-64'>
-                                <Search size={16} className="text-slate-400"/>
-                                <input 
-                                    type="text"
-                                    value={searchQuery} 
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Hızlı arama..."
-                                    className='bg-transparent border-none outline-none text-sm font-medium text-slate-700 dark:text-slate-200 placeholder-slate-400 w-full'
-                                />
-                                {searchQuery && <button onClick={() => setSearchQuery('')} className="text-slate-400 hover:text-red-500"><X size={12}/></button>}
-                             </div>
-                             <div className="w-px h-6 bg-slate-200 dark:bg-slate-700"></div>
-                             <button className='p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors'>
-                                <ArrowUpDown size={16} />
-                             </button>
+                        <div className="flex-1 min-w-0">
+                            <h2 className='text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2 truncate'>
+                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'} <span className='text-slate-500 dark:text-slate-500 font-normal hidden sm:inline'>DOKÜMANLARI</span>
+                            </h2>
+                            <p className='text-xs text-slate-600 dark:text-slate-400 font-bold mt-0.5 tracking-wide truncate'>
+                                {currentSector 
+                                    ? `Bu sektör için önerilen ${currentSector.docs.length} adet doküman şablonu bulundu.`
+                                    : `Sistemde kayıtlı toplam ${ALL_DOCS.length} adet doküman listeleniyor.`
+                                }
+                            </p>
                         </div>
                     </div>
 
-                    {/* List Body */}
-                    <div className='flex-1 overflow-y-auto custom-scrollbar px-6 pb-6 relative'>
-                         <AnimatePresence mode='wait'>
-                            <motion.div 
-                                key={currentSector ? currentSector.id : 'all'}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+                    <div className='flex items-center gap-2 shrink-0'>
+                         {/* Search Input */}
+                         <div className={`relative transition-all duration-300 ${isSearchActive ? 'w-48 md:w-64' : 'w-10 md:w-10 overflow-hidden'} h-10`}>
+                            <input 
+                                type="text"
+                                value={searchQuery} 
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Doküman ara..."
+                                className={`
+                                    w-full h-full bg-white dark:bg-slate-950/50 border border-slate-300 dark:border-white/10 rounded-lg px-10 text-xs text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all font-bold shadow-inner
+                                    ${isSearchActive ? 'opacity-100' : 'opacity-0'}
+                                `}
+                            />
+                            <button 
+                                onClick={() => setIsSearchActive(!isSearchActive)}
+                                className='absolute left-0 top-0 w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors z-10'
                             >
-                                {displayDocs.map((item, idx) => (
-                                    <div 
-                                        key={`${item.sector.id}-${idx}`}
-                                        onClick={() => handleDocumentClick(item.doc, item.sector.id)}
-                                        className='group flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-white/5 hover:bg-white hover:scale-[1.02] hover:shadow-lg hover:border-amber-400/50 transition-all duration-200 cursor-pointer relative overflow-hidden'
-                                    >
-                                        <div className={`w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-colors`}>
-                                            <FileText size={18} className='text-slate-500 dark:text-slate-400 group-hover:text-white' />
-                                        </div>
-                                        
-                                        <div className='flex-1 min-w-0'>
-                                            <h3 className='text-xs font-black text-slate-800 dark:text-slate-300 truncate group-hover:text-amber-700 dark:group-hover:text-white transition-colors'>{item.doc}</h3>
-                                            <div className='flex items-center gap-2 mt-0.5'>
-                                                <span className='text-[9px] text-slate-500 dark:text-slate-500 font-bold uppercase'>{item.sector.name}</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                             <ArrowRight size={14} className="text-amber-500" />
+                                <Search size={18} />
+                            </button>
+                            {isSearchActive && searchQuery && (
+                                <button 
+                                    onClick={() => setSearchQuery('')}
+                                    className='absolute right-0 top-0 w-10 h-10 flex items-center justify-center text-slate-500 hover:text-red-500 transition-colors'
+                                >
+                                    <span className="text-xs">✕</span>
+                                </button>
+                            )}
+                         </div>
+
+                         {/* Sort Button */}
+                         <div className="relative group/sort">
+                            <button className='w-10 h-10 bg-white dark:bg-slate-800/50 border border-slate-300 dark:border-white/5 rounded-lg flex items-center justify-center text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm'>
+                                <ArrowUpDown size={18} />
+                            </button>
+                            {/* Sort Dropdown */}
+                            <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50 origin-top-right scale-0 group-hover/sort:scale-100 transition-transform duration-200">
+                                <button 
+                                    onClick={() => setSortBy('default')}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'default' ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-white/5' : 'text-slate-700 dark:text-slate-300'}`}
+                                >
+                                    Varsayılan
+                                    {sortBy === 'default' && <CheckCircle2 size={12} />}
+                                </button>
+                                <button 
+                                    onClick={() => setSortBy('az')}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'az' ? 'text-amber-600 dark:text-amber-400 bg-slate-50 dark:bg-white/5' : 'text-slate-700 dark:text-slate-300'}`}
+                                >
+                                    A-Z Sırala
+                                    {sortBy === 'az' && <CheckCircle2 size={12} />}
+                                </button>
+                                <button 
+                                    onClick={() => setSortBy('favorites')}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'favorites' ? 'text-amber-600 dark:text-amber-400 bg-slate-50 dark:bg-white/5' : 'text-slate-700 dark:text-slate-300'}`}
+                                >
+                                    Favoriler
+                                    {sortBy === 'favorites' && <CheckCircle2 size={12} />}
+                                </button>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                {/* List Body */}
+                <div className='flex-1 overflow-y-auto custom-scrollbar p-3 relative bg-white dark:bg-transparent'>
+                    <AnimatePresence mode='wait'>
+                        <motion.div 
+                            key={currentSector ? currentSector.id : 'all'}
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.3 }}
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pb-4"
+                        >
+                            {displayDocs.map((item, idx) => (
+                                <motion.div 
+                                    key={`${item.sector.id}-${idx}`}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.02 }}
+                                    onClick={() => handleDocumentClick(item.doc, item.sector.id)}
+                                    className='group flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 hover:bg-white dark:hover:bg-slate-800/80 hover:border-amber-500 dark:hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg'
+                                >
+                                    {/* Hover Highlight Gradient */}
+                                    <div className='absolute inset-0 bg-gradient-to-r from-transparent via-amber-50/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000'></div>
+
+                                    {/* Accent Bar */}
+                                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${currentSector ? 'from-transparent via-slate-400 dark:via-slate-500 to-transparent' : 'from-transparent via-amber-500/50 to-transparent group-hover:via-amber-500'} transition-colors`}></div>
+                                    
+                                    {/* Icon */}
+                                    <div className={`w-10 h-10 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm`}>
+                                        <FileText size={18} className='text-slate-600 dark:text-slate-500 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors' />
+                                    </div>
+                                    
+                                    <div className='flex-1 min-w-0'>
+                                        <h3 className='text-xs font-black text-slate-900 dark:text-slate-300 truncate group-hover:text-amber-700 dark:group-hover:text-white transition-colors'>{item.doc}</h3>
+                                        <div className='flex items-center gap-2 mt-1 opacity-80 group-hover:opacity-100 transition-opacity'>
+                                            <span className='text-[9px] text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider'>{item.sector.name}</span>
                                         </div>
                                     </div>
-                                ))}
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
+
+                                    {/* Actions */}
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleFavorite(item.doc);
+                                            }}
+                                            className={`
+                                                w-7 h-7 rounded-full flex items-center justify-center transition-all z-20 
+                                                ${favorites.includes(item.doc) 
+                                                    ? 'text-rose-500 bg-rose-500/10 opacity-100' 
+                                                    : 'text-slate-400 dark:text-slate-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-700 opacity-0 group-hover:opacity-100'}
+                                            `}
+                                            title="Favorilere Ekle"
+                                        >
+                                            <Heart size={14} fill={favorites.includes(item.doc) ? "currentColor" : "none"} />
+                                        </button>
+
+                                        <div className='w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-slate-900 scale-0 group-hover:scale-100 transition-transform shadow-lg shadow-amber-500/50'>
+                                            <ArrowRight size={14} />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
-
-                {/* RIGHT: Sidebar (Integrated) */}
-                <div className='lg:col-span-1 bg-slate-50/50 dark:bg-slate-800/20 border-l border-slate-200 dark:border-white/5 p-4 flex flex-col gap-4 overflow-hidden relative'>
-                    
-                    {/* Header for Sidebar */}
-                    <div className="flex items-center gap-2 mb-2 px-1">
-                        <Zap size={16} className="text-amber-500" />
-                        <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Hızlı İşlemler</span>
-                    </div>
-
-                    {/* 1. SERTİFİKA OLUŞTUR */}
-                    <motion.button 
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                        className='group shrink-0 h-24 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 relative overflow-hidden shadow-lg flex items-center px-4 justify-between'
-                    >
-                         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
-                         <div className='relative z-10 text-left'>
-                             <span className='bg-white/20 text-white text-[9px] font-bold px-2 py-0.5 rounded backdrop-blur-sm'>YENİ</span>
-                             <div className='text-lg font-black text-white leading-none mt-1'>SERTİFİKA<br/>OLUŞTUR</div>
-                         </div>
-                         <Award className="text-white/80 w-10 h-10 relative z-10 group-hover:scale-110 group-hover:rotate-12 transition-transform" />
-                    </motion.button>
-
-                    {/* 2. GRID BUTTONS */}
-                    <div className='grid grid-cols-2 gap-2'>
-                        {[
-                            { icon: FileText, label: 'TUTANAK', color: 'text-indigo-600', bg: 'bg-indigo-50' },
-                            { icon: ClipboardList, label: 'RAPOR', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-                            { icon: UserPlus, label: 'PERSONEL', color: 'text-blue-600', bg: 'bg-blue-50' },
-                            { icon: Megaphone, label: 'DUYURU', color: 'text-rose-600', bg: 'bg-rose-50' },
-                        ].map((btn, i) => (
-                             <button key={i} className='h-20 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-amber-400 transition-colors flex flex-col items-center justify-center gap-1 shadow-sm hover:shadow-md group'>
-                                 <div className={`w-8 h-8 rounded-full ${btn.bg} dark:bg-slate-700 flex items-center justify-center ${btn.color} dark:text-slate-300 group-hover:scale-110 transition-transform`}>
-                                     <btn.icon size={16} />
-                                 </div>
-                                 <span className='text-[9px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white'>{btn.label}</span>
-                             </button>
-                        ))}
-                    </div>
-
-                    {/* 3. ARCHIVE BUTTON */}
-                    <button onClick={() => onNavigate('documents')} className='mt-auto h-16 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-between px-5 font-bold shadow-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors group'>
-                         <span className="text-sm">Tüm Arşiv</span>
-                         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
-                </div>
-
             </div>
+
+            {/* RIGHT: Quick Actions & Archive (Sidebar) - Updated Layout */}
+            <div className='lg:col-span-1 flex flex-col gap-4 overflow-hidden'>
+                
+                {/* 1. SERTİFİKA OLUŞTUR (Blue Button) - Main Action */}
+                <motion.button 
+                    whileHover={{ scale: 1.02, filter: "brightness(1.1)" }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => onNavigate('templates', { search: 'Sertifika' })}
+                    className='group shrink-0 h-28 rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 border-2 border-blue-400/30 relative overflow-hidden shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] flex items-center px-5 justify-between ring-4 ring-blue-500/10'
+                >
+                    <div className='absolute right-[-20%] top-[-50%] w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500'></div>
+                    <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 mix-blend-overlay'></div>
+                    
+                    {/* Shiny Line Effect */}
+                    <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-shine" />
+
+                    <div className='flex flex-col items-start z-10 gap-1'>
+                        <span className='bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-amber-500/20 animate-pulse'>YENİ</span>
+                        <span className='text-xl font-black text-white leading-none tracking-tight drop-shadow-md text-left'>SERTİFİKA<br/>OLUŞTUR</span>
+                        <span className='text-[10px] text-blue-200 font-medium tracking-wide'>Profesyonel şablonlar ile</span>
+                    </div>
+                    <div className='w-16 h-16 relative z-10 drop-shadow-2xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300'>
+                         <Award className="text-amber-300 w-full h-full filter drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" strokeWidth={1.5} />
+                    </div>
+                </motion.button>
+
+                {/* 2. HIZLI İŞLEMLER (Grid 2x2) */}
+                <div className='flex-1 bg-white dark:bg-[#15171e]/90 backdrop-blur rounded-2xl border border-slate-200 dark:border-white/5 flex flex-col overflow-hidden shadow-lg relative group/panel transition-colors duration-300'>
+                    
+                    {/* Header */}
+                    <div className='bg-gradient-to-r from-amber-500 to-orange-600 p-3 flex items-center justify-center shrink-0 shadow-md z-10 relative overflow-hidden'>
+                        <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] animate-shimmer"></div>
+                        <Zap size={16} className="text-white mr-2 animate-bounce" fill="currentColor" />
+                        <span className='text-white font-black text-sm tracking-widest uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
+                    </div>
+
+                    <div className='flex-1 p-3 grid grid-cols-2 grid-rows-2 gap-3 z-10'>
+                        {/* Button 1 */}
+                        <motion.button 
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-indigo-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all duration-300 relative overflow-hidden'
+                        >   
+                            <div className="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(99,102,241,0.5)] group-hover:scale-110'>
+                                <FileText size={18} />
+                            </div>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>TUTANAK<br/>TUT</span>
+                        </motion.button>
+
+                        {/* Button 2 */}
+                        <motion.button 
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 relative overflow-hidden'
+                        >
+                            <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(16,185,129,0.5)] group-hover:scale-110'>
+                                <ClipboardList size={18} />
+                            </div>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>GÜNLÜK<br/>RAPOR</span>
+                        </motion.button>
+
+                        {/* Button 3 */}
+                        <motion.button 
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300 relative overflow-hidden'
+                        >
+                            <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:scale-110'>
+                                <UserPlus size={18} />
+                            </div>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>PERSONEL<br/>EKLE</span>
+                        </motion.button>
+
+                        {/* Button 4 */}
+                        <motion.button 
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-rose-500 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300 relative overflow-hidden'
+                        >
+                            <div className="absolute inset-0 bg-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-50 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(244,63,94,0.5)] group-hover:scale-110'>
+                                <Megaphone size={18} />
+                            </div>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>DUYURU<br/>YAP</span>
+                        </motion.button>
+                    </div>
+
+                    {/* Decorative Background Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent pointer-events-none" />
+                </div>
+
+                {/* 3. DÖKÜMAN ARŞİVİ (Enhanced Footer Button) */}
+                <motion.button 
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => onNavigate('documents')}
+                    className='shrink-0 h-20 rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300'
+                >
+                    <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                    
+                    {/* Animated Pulse Ring */}
+                    <div className="absolute right-[-20%] top-[-50%] w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl group-hover:animate-pulse"></div>
+                    
+                    <div className='flex items-center gap-4 z-10'>
+                        <div className='w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-500 dark:text-indigo-300 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-inner ring-1 ring-indigo-500/30'>
+                            <FolderOpen size={24} />
+                        </div>
+                        <div className='flex flex-col items-start'>
+                            <span className='text-sm font-black text-slate-800 dark:text-white tracking-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-200 transition-colors'>DÖKÜMAN ARŞİVİ</span>
+                            <span className='text-[10px] text-slate-500 font-medium group-hover:text-slate-600 dark:group-hover:text-slate-400'>Tüm dosyalarınızı inceleyin</span>
+                        </div>
+                    </div>
+
+                    <div className='z-10 bg-indigo-50 dark:bg-indigo-500/10 p-2.5 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-400 group-hover:translate-x-1 duration-300 border border-indigo-200 dark:border-indigo-500/20'>
+                        <ArrowRight size={18} />
+                    </div>
+                </motion.button>
+            </div>
+
         </div>
 
         {/* 4. FOOTER: PACKAGES (Enhanced with Precious Stones & Visuals) */}
