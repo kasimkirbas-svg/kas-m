@@ -436,6 +436,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   // State
   const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'packages' | 'templates' | 'system'>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   
   // Data
   const [users, setUsers] = useState<User[]>([]);
@@ -443,6 +444,13 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   const [plans, setPlans] = useState<any[]>(DEFAULT_PLANS);
   const [systemLogs, setSystemLogs] = useState<SystemLog[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Helper: Logout Wrapper
+  const handleAdminLogout = () => {
+      if (confirm('Oturumu kapatmak istediğinize emin misiniz?')) {
+          onLogout && onLogout();
+      }
+  };
 
   // Modal States
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -945,7 +953,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
          </nav>
 
          <div className="p-4 border-t border-slate-800 bg-[#0B0F19]">
-            <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all border border-transparent hover:border-rose-500/20">
+            <button onClick={handleAdminLogout} className="w-full flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all border border-transparent hover:border-rose-500/20">
                <LogOut size={20} />
                {sidebarOpen && <span className="text-sm font-medium">Güvenli Çıkış</span>}
             </button>
@@ -979,14 +987,47 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                   <span className="text-xs font-bold text-emerald-500 tracking-wider ml-1">ONLINE</span>
                </div>
                
-               <div className="flex items-center gap-3 pl-4 border-l border-slate-800">
-                  <div className="text-right hidden md:block">
-                     <div className="text-sm font-bold text-white">{user?.name || 'Administrator'}</div>
-                     <div className="text-[10px] text-amber-500 font-bold tracking-wider">ROOT ACCESS</div>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center text-white font-bold shadow-lg shadow-black/50">
-                     {(user?.name || 'A').charAt(0)}
-                  </div>
+               <div className="relative">
+                   <button 
+                        onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                        className="flex items-center gap-3 pl-4 border-l border-slate-800 hover:bg-slate-800/50 rounded-lg p-2 transition-colors cursor-pointer outline-none"
+                   >
+                      <div className="text-right hidden md:block">
+                         <div className="text-sm font-bold text-white">{user?.name || 'Administrator'}</div>
+                         <div className="text-[10px] text-amber-500 font-bold tracking-wider">ROOT ACCESS</div>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center text-white font-bold shadow-lg shadow-black/50">
+                         {(user?.name || 'A').charAt(0)}
+                      </div>
+                   </button>
+                   
+                   {/* Dropdown Menu */}
+                   {isProfileMenuOpen && (
+                       <>
+                           <div className="fixed inset-0 z-40" onClick={() => setIsProfileMenuOpen(false)}></div>
+                           <div className="absolute right-0 top-full mt-2 w-56 bg-[#0f172a] border border-slate-700/50 rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 ring-1 ring-black/5">
+                               <div className="p-4 border-b border-slate-700/50 bg-[#1e293b]/50">
+                                   <div className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Hesap Bilgileri</div>
+                                   <div className="text-sm font-medium text-white truncate">{user?.name}</div>
+                                   <div className="text-xs text-slate-400 truncate font-mono">{user?.email}</div>
+                               </div>
+                               <div className="p-2">
+                                   <button className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-700/50 text-slate-300 hover:text-white text-sm flex items-center gap-3 transition-colors group">
+                                       <Users size={16} className="text-slate-500 group-hover:text-amber-500 transition-colors" /> 
+                                       Profil Ayarları (Soon)
+                                   </button>
+                                   <div className="border-t border-slate-700/50 my-2 mx-1"></div>
+                                   <button 
+                                        onClick={handleAdminLogout}
+                                        className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-rose-500/10 text-rose-400 hover:text-rose-500 text-sm flex items-center gap-3 transition-colors font-medium group"
+                                   >
+                                       <LogOut size={16} className="text-rose-500/70 group-hover:text-rose-500 transition-colors" /> 
+                                       Güvenli Çıkış
+                                   </button>
+                               </div>
+                           </div>
+                       </>
+                   )}
                </div>
             </div>
          </header>
