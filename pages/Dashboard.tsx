@@ -352,7 +352,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                      
                      {/* Decorative lines - Enhanced */}
                      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 dark:via-amber-500 to-transparent opacity-50"></span>
-                     <span className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 dark:via-amber-500 to-transparent opacity-50"></span>
                  </motion.div>
             </div>
             
