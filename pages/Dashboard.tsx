@@ -191,21 +191,61 @@ const ALL_DOCS = SECTORS.reduce<Array<{doc: string, sector: typeof SECTORS[0]}>>
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTemplateSelect, templates }) => {
   const [hoveredSectorId, setHoveredSectorId] = useState<string | null>(null);
+  const [selectedSectorIds, setSelectedSectorIds] = useState<string[]>([]);
 
-  // Logic: Show hovered sector docs, otherwise check activeSectorId? 
-  // User requested: "mouse her hangi bir sektörde olmadığında tüm şablonlar gözüksün"
-  // So NO persisted active state from click necessary, rely on hover.
+  // Interaction Logic:
+  // 1. Hover shows sector docs temporarily (if no selection? or overrides selection?)
+  //    User said: "mouse hareket ettirince tüm dökümanlar gözüküyor" -> indicates hover is ephemeral.
+  //    "tıkladığında o büyüklük kalsın" -> Click locks state.
+  //    "birden fazla sektörde seçilebilsin" -> Multi-select.
   
   const currentSector = useMemo(() => {
-      return SECTORS.find(s => s.id === hoveredSectorId);
-  }, [hoveredSectorId]);
+      // If hovering, show that sector's info for the "Header" part or accent colors
+      if (hoveredSectorId) return SECTORS.find(s => s.id === hoveredSectorId);
+      // If one sector is selected, maybe show that context? 
+      // User didn't specify header behavior for multi-select, lets default to standard or first selected.
+      if (selectedSectorIds.length === 1) return SECTORS.find(s => s.id === selectedSectorIds[0]);
+      return null;
+  }, [hoveredSectorId, selectedSectorIds]);
 
   const displayDocs = useMemo(() => {
-      if (currentSector) {
-          return currentSector.docs.map(doc => ({ doc, sector: currentSector }));
+      // 1. Hover takes priority for immediate feedback? 
+      // User said: "mouse fabrikaya getirince fabrika dökümanları... mouse hareket ettirince tüm..."
+      // BUT "tıkladığında fabrika dökümanları gözüksün... seçtiği sektöre bir daha tıkladığında eski haline dönsün"
+      // This implies:
+      // If Hovering -> Show Hovered Sector Docs
+      // Else If SelectedItems > 0 -> Show Selected Docs
+      // Else -> Show All
+
+      if (hoveredSectorId) {
+          const s = SECTORS.find(sc => sc.id === hoveredSectorId);
+          return s ? s.docs.map(doc => ({ doc, sector: s })) : [];
       }
-      return ALL_DOCS; // Show all if no hover
-  }, [currentSector]);
+
+      if (selectedSectorIds.length > 0) {
+           // Aggregate docs from all selected sectors
+           const docs: Array<{doc: string, sector: typeof SECTORS[0]}> = [];
+           selectedSectorIds.forEach(id => {
+               const s = SECTORS.find(sc => sc.id === id);
+               if (s) {
+                   s.docs.forEach(d => docs.push({ doc: d, sector: s }));
+               }
+           });
+           return docs;
+      }
+
+      return ALL_DOCS; 
+  }, [hoveredSectorId, selectedSectorIds]);
+
+  const toggleSector = (id: string) => {
+      setSelectedSectorIds(prev => {
+          if (prev.includes(id)) {
+              return prev.filter(item => item !== id);
+          } else {
+              return [...prev, id];
+          }
+      });
+  };
 
   const handleDocumentClick = (docName: string, sectorId: string) => {
     // 1. Find existing template
@@ -281,46 +321,63 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         {/* 2. Sectors Row: Animated & Detailed */}
         <div className='shrink-0 h-36 md:h-40 perspective-1000' onMouseLeave={() => setHoveredSectorId(null)}>
             <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 h-full'>
-                {SECTORS.map((sector, index) => (
-                <motion.div 
-                    key={sector.id}
-                    whileHover={{ scale: 1.05, y: -5, zIndex: 10 }}
-                    whileTap={{ scale: 0.95 }}
-                    onMouseEnter={() => setHoveredSectorId(sector.id)}
-                    className={`
-                    relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group
-                    border transition-all duration-500
-                    ${hoveredSectorId === sector.id ? 'border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.2)]' : 'border-white/5 shadow-lg bg-slate-800/40'}
-                    ${index === SECTORS.length - 1 ? 'col-span-2 md:col-span-1 lg:col-span-1' : ''}
-                    `}
-                >   
-                    {/* Background Image */}
-                    <div 
-                        className='absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110'
-                        style={{ backgroundImage: `url(${sector.image})` }}
-                    >
-                        <div className={`absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/40 transition-colors duration-300 ${hoveredSectorId === sector.id ? 'bg-slate-900/30' : ''}`}></div>
-                        <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-overlay opacity-40 group-hover:opacity-60 transition-opacity`}></div>
-                        <div className='absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90'></div>
-                    </div>
-                    
-                    {/* Content */}
-                    <div className='relative z-10 p-4 w-full flex flex-col items-center group-hover:-translate-y-1 transition-transform'>
-                        <div className={`
-                            mb-2 p-2.5 rounded-xl backdrop-blur-md border border-white/20 transition-all duration-300 shadow-lg
-                            ${hoveredSectorId === sector.id ? 'bg-amber-500 text-slate-900 scale-110 rotate-3' : 'bg-white/10 text-white group-hover:bg-white/20'}
-                        `}>
-                            <sector.icon size={20} className="drop-shadow-sm" />
-                        </div>
-                        <span className={`text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 ${hoveredSectorId === sector.id ? 'text-amber-400' : 'text-slate-300 group-hover:text-white'}`}>
-                            {sector.name}
-                        </span>
-                        
-                        {/* Hover Indicator */}
-                        <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${hoveredSectorId === sector.id ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-white/50'}`}></div>
-                    </div>
-                </motion.div>
-                ))}
+                {SECTORS.map((sector, index) => {
+                    const isSelected = selectedSectorIds.includes(sector.id);
+                    const isHovered = hoveredSectorId === sector.id;
+                    const isActive = isSelected || isHovered;
+
+                    return (
+                        <motion.div 
+                            key={sector.id}
+                            whileHover={{ scale: 1.05, y: -5, zIndex: 10 }}
+                            whileTap={{ scale: 0.95 }}
+                            onMouseEnter={() => setHoveredSectorId(sector.id)}
+                            onClick={() => toggleSector(sector.id)}
+                            className={`
+                            relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group
+                            border transition-all duration-500
+                            ${isActive ? 'border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.2)] scale-105 -translate-y-1' : 'border-white/5 shadow-lg bg-slate-800/40'}
+                            ${index === SECTORS.length - 1 ? 'col-span-2 md:col-span-1 lg:col-span-1' : ''}
+                            `}
+                        >   
+                            {/* Background Image */}
+                            <div 
+                                className='absolute inset-0 bg-cover bg-center transition-transform duration-700'
+                                style={{ 
+                                    backgroundImage: `url(${sector.image})`,
+                                    transform: isActive ? 'scale(1.1)' : 'scale(1)'
+                                }}
+                            >
+                                <div className={`absolute inset-0 bg-slate-900/60 transition-colors duration-300 ${isActive ? 'bg-slate-900/30' : 'group-hover:bg-slate-900/40'}`}></div>
+                                <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-overlay opacity-40 transition-opacity ${isActive ? 'opacity-60' : 'group-hover:opacity-60'}`}></div>
+                                <div className='absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90'></div>
+                            </div>
+                            
+                            {/* Content */}
+                            <div className='relative z-10 p-4 w-full flex flex-col items-center transition-transform'>
+                                <div className={`
+                                    mb-2 p-2.5 rounded-xl backdrop-blur-md border border-white/20 transition-all duration-300 shadow-lg
+                                    ${isActive ? 'bg-amber-500 text-slate-900 scale-110 rotate-3' : 'bg-white/10 text-white group-hover:bg-white/20'}
+                                `}>
+                                    <sector.icon size={20} className="drop-shadow-sm" />
+                                </div>
+                                <span className={`text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 ${isActive ? 'text-amber-400' : 'text-slate-300 group-hover:text-white'}`}>
+                                    {sector.name}
+                                </span>
+                                
+                                {/* Hover/Selected Indicator */}
+                                <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${isActive ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-white/50'}`}></div>
+                            </div>
+                            
+                            {/* Selected Checkmark (Optional but nice) */}
+                            {isSelected && (
+                                <div className='absolute top-2 right-2 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center text-black shadow-lg z-20'>
+                                    <CheckCircle2 size={12} strokeWidth={3} />
+                                </div>
+                            )}
+
+                        </motion.div>
+                )})}
             </div>
         </div>
 
