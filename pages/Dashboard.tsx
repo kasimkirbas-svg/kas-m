@@ -724,27 +724,29 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </div>
 
         {/* 4. FOOTER: PACKAGES (Enhanced with Precious Stones & Visuals) */}
-        <div className='shrink-0 pb-10 pt-10 px-4 mt-8 bg-slate-100/50 dark:bg-black/20 border-t border-slate-200 dark:border-white/5 backdrop-blur-sm'>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center max-w-6xl mx-auto'>
+        <div className='shrink-0 pb-6 pt-4 px-2 mt-2 bg-slate-100/50 dark:bg-black/20 border-t border-slate-200 dark:border-white/5 backdrop-blur-sm'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 items-center max-w-6xl mx-auto'>
                 
-                {/* 1. SILVER (Was Standart) */}
+                {/* 1. SILVER (Was Standart) - Metallic & Industrial */}
                 <motion.div 
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    className='relative rounded-3xl bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 border border-slate-300 dark:border-slate-700/50 flex flex-col items-center justify-center p-6 group cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl dark:shadow-slate-900/50 h-[140px] md:h-[160px] transition-all duration-300 ring-1 ring-white/20'
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    className='relative rounded-2xl bg-gradient-to-br from-slate-200 via-slate-100 to-slate-400 dark:from-[#1a1a1a] dark:via-[#2b2b2b] dark:to-[#121212] border border-slate-300 dark:border-white/10 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-lg hover:shadow-2xl dark:shadow-white/5 h-[110px] md:h-[120px] transition-all duration-300'
                 >
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-5 dark:opacity-20 mix-blend-overlay'></div>
-                     <div className='absolute -top-10 -right-10 w-32 h-32 bg-white/40 dark:bg-slate-500/20 rounded-full blur-3xl group-hover:bg-white/60 dark:group-hover:bg-slate-400/20 transition-colors duration-500'></div>
-                     <div className='absolute -bottom-10 -left-10 w-32 h-32 bg-slate-400/20 dark:bg-black/40 rounded-full blur-3xl'></div>
+                     {/* Metallic Shine Effect */}
+                     <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent"></div>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 dark:opacity-30 mix-blend-overlay'></div>
                      
-                     <div className='flex items-center gap-2 mb-2 z-10'>
-                        <Shield size={22} className='text-slate-600 dark:text-slate-400 drop-shadow-sm transition-transform group-hover:rotate-12 duration-300' fill='currentColor' />
-                        <span className='text-xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-700 to-slate-900 dark:from-slate-200 dark:to-slate-400 uppercase tracking-widest drop-shadow-sm'>SILVER</span>
+                     <div className='absolute -top-10 -right-10 w-24 h-24 bg-white/60 dark:bg-white/5 rounded-full blur-xl group-hover:bg-white/80 dark:group-hover:bg-white/10 transition-colors duration-500'></div>
+                     
+                     <div className='flex items-center gap-2 mb-1 z-10'>
+                        <Shield size={18} className='text-slate-700 dark:text-slate-300 drop-shadow-sm transition-transform group-hover:rotate-12 duration-300' fill='currentColor' />
+                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-b from-slate-700 via-slate-500 to-slate-800 dark:from-white dark:via-slate-400 dark:to-slate-600 uppercase tracking-widest drop-shadow-sm'>SILVER</span>
                      </div>
-                     <div className='text-2xl font-black text-slate-800 dark:text-slate-200 mb-1 z-10 tracking-tight drop-shadow-sm'>100 TL</div>
-                     <div className='text-[10px] text-slate-600 dark:text-slate-500 font-bold uppercase mb-4 z-10 tracking-wider bg-slate-200/50 dark:bg-slate-800/50 px-2 py-0.5 rounded'>TEMEL LİMİT</div>
+                     <div className='text-xl font-black text-slate-800 dark:text-white mb-0.5 z-10 tracking-tight drop-shadow-sm'>100 TL</div>
+                     <div className='text-[9px] text-slate-600 dark:text-slate-400 font-bold uppercase mb-2 z-10 tracking-wider bg-slate-200/50 dark:bg-white/5 px-2 py-0.5 rounded'>TEMEL LİMİT</div>
                      <button 
                         onClick={() => onPurchase && onPurchase('STANDART')}
-                        className='w-32 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-600 text-xs font-bold text-slate-900 dark:text-slate-300 shadow-md hover:shadow-lg transition-all z-10 active:scale-95'
+                        className='w-24 py-1.5 rounded-lg bg-white dark:bg-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#252525] border border-slate-300 dark:border-white/10 text-[10px] font-bold text-slate-900 dark:text-slate-200 shadow-sm hover:shadow-md transition-all z-10 active:scale-95'
                      >
                         SATIN AL
                      </button>
@@ -752,78 +754,76 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                 {/* 2. GOLD (Center - Highlights & "Recommended" Badge) */}
                 <motion.div 
-                    initial={{ scale: 1.05 }}
-                    whileHover={{ scale: 1.1 }}
+                    initial={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.07 }}
                     animate={{ 
-                        boxShadow: ["0 0 20px rgba(245,158,11,0.2)", "0 0 40px rgba(245,158,11,0.4)", "0 0 20px rgba(245,158,11,0.2)"] 
+                         boxShadow: ["0 0 15px rgba(245,158,11,0.1)", "0 0 30px rgba(245,158,11,0.3)", "0 0 15px rgba(245,158,11,0.1)"] 
                     }}
                     transition={{ 
-                        boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } 
+                         boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } 
                     }}
-                    className='relative z-20 rounded-3xl border-2 border-amber-400 dark:border-yellow-500/50 bg-gradient-to-b from-amber-50 to-orange-50 dark:from-amber-900/40 dark:via-yellow-900/20 dark:to-orange-950/40 flex flex-col items-center justify-center p-6 shadow-2xl h-[160px] md:h-[180px] overflow-visible backdrop-blur-md'
+                    className='relative z-20 rounded-2xl border border-amber-400 dark:border-yellow-500/50 bg-gradient-to-b from-amber-50 to-orange-50 dark:from-amber-950 dark:via-yellow-900/30 dark:to-orange-950/50 flex flex-col items-center justify-center p-3 shadow-xl h-[120px] md:h-[135px] overflow-visible backdrop-blur-md'
                 >
                      {/* "ÖNERİLEN" Badge - Floating above */}
-                     <div className='absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg dark:shadow-[0_0_20px_rgba(251,191,36,0.6)] animate-pulse z-30 whitespace-nowrap border border-white/20 dark:border-yellow-200 ring-2 ring-black/5'>
+                     <div className='absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 text-white text-[9px] font-black px-3 py-1 rounded-full shadow-lg dark:shadow-[0_0_15px_rgba(251,191,36,0.5)] animate-pulse z-30 whitespace-nowrap border border-white/20 dark:border-yellow-200 ring-2 ring-black/5'>
                         🌟 ÖNERİLEN 🌟
                      </div>
 
                      <div className='absolute -top-6 flex gap-2 z-10 pointer-events-none'>
                         <motion.div animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}>
-                            <Star size={16} className="text-amber-500 dark:text-yellow-300 fill-amber-500 dark:fill-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.8)]" />
+                            <Star size={12} className="text-amber-500 dark:text-yellow-300 fill-amber-500 dark:fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
                         </motion.div>
-                        <motion.div animate={{ rotate: -360, y: [0, -5, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-                            <Star size={24} className="text-orange-500 dark:text-amber-400 fill-orange-500 dark:fill-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.8)] -mt-4 mx-2" />
+                        <motion.div animate={{ rotate: -360, y: [0, -3, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
+                            <Star size={18} className="text-orange-500 dark:text-amber-400 fill-orange-500 dark:fill-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.8)] -mt-2 mx-1" />
                         </motion.div>
                         <motion.div animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: 1 }}>
-                            <Star size={16} className="text-amber-500 dark:text-yellow-300 fill-amber-500 dark:fill-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.8)]" />
+                            <Star size={12} className="text-amber-500 dark:text-yellow-300 fill-amber-500 dark:fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
                         </motion.div>
                      </div>
 
                      <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/cubes.png)] opacity-10 dark:opacity-20 mix-blend-overlay'></div>
                      
-                     <div className='flex items-center gap-2 mb-2 mt-2 relative z-10'>
-                        <Crown size={28} className='text-amber-600 dark:text-yellow-400 drop-shadow-md' fill='currentColor' />
-                        <span className='text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-600 via-orange-600 to-amber-700 dark:from-yellow-200 dark:via-yellow-400 dark:to-amber-500 uppercase tracking-widest drop-shadow-sm'>GOLD</span>
+                     <div className='flex items-center gap-2 mb-1 mt-1 relative z-10'>
+                        <Crown size={24} className='text-amber-600 dark:text-yellow-400 drop-shadow-md' fill='currentColor' />
+                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-600 via-orange-600 to-amber-700 dark:from-yellow-200 dark:via-yellow-400 dark:to-amber-500 uppercase tracking-widest drop-shadow-sm'>GOLD</span>
                      </div>
-                     <div className='text-4xl font-black text-slate-800 dark:text-white mb-1 z-10 drop-shadow-md tracking-tighter'>175 TL</div>
-                     <div className='text-[10px] text-amber-800 dark:text-amber-200 font-black uppercase mb-4 z-10 tracking-widest bg-amber-100 dark:bg-amber-900/50 px-3 py-0.5 rounded-full border border-amber-200 dark:border-amber-700'>2 KAT AVANTAJ</div>
+                     <div className='text-3xl font-black text-slate-800 dark:text-white mb-0.5 z-10 drop-shadow-md tracking-tighter'>175 TL</div>
+                     <div className='text-[9px] text-amber-800 dark:text-amber-200 font-black uppercase mb-3 z-10 tracking-widest bg-amber-100 dark:bg-amber-900/50 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-700'>2 KAT AVANTAJ</div>
                      <button 
                         onClick={() => onPurchase && onPurchase('GOLD')}
-                        className='w-40 py-2.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 border-2 border-amber-300/50 text-xs font-black text-white shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 dark:shadow-[0_0_20px_rgba(245,158,11,0.3)] transform active:scale-95 transition-all z-10'
+                        className='w-32 py-2 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 border border-amber-300/50 text-[10px] font-black text-white shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 dark:shadow-[0_0_15px_rgba(245,158,11,0.3)] transform active:scale-95 transition-all z-10'
                      >
                         HEMEN AL
                      </button>
                 </motion.div>
 
-                {/* 3. DIAMOND (Was Premium/Pro) */}
+                {/* 3. DIAMOND (Was Premium/Pro) - Holographic & Neon */}
                 <motion.div 
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    className='relative rounded-3xl bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-cyan-950 dark:via-blue-950 dark:to-indigo-950 border border-cyan-200 dark:border-cyan-500/30 flex flex-col items-center justify-center p-6 group cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl dark:shadow-cyan-900/40 h-[140px] md:h-[160px] transition-all duration-300 ring-1 ring-cyan-400/20'
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    className='relative rounded-2xl bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-[#082f49] dark:via-[#0f172a] dark:to-[#1e1b4b] border border-cyan-200 dark:border-cyan-500/50 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl dark:shadow-cyan-500/20 h-[110px] md:h-[120px] transition-all duration-300'
                 >
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-5 dark:opacity-20 mix-blend-overlay'></div>
-                     <div className='absolute -bottom-10 -right-10 w-40 h-40 bg-cyan-400/20 dark:bg-cyan-500/20 rounded-full blur-3xl group-hover:bg-cyan-300/30 dark:group-hover:bg-cyan-400/30 transition-colors duration-500'></div>
-                     <div className='absolute top-0 left-0 w-32 h-32 bg-indigo-400/10 dark:bg-indigo-600/20 rounded-full blur-3xl'></div>
+                     {/* Holographic Sheen */}
+                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-400/10 to-transparent skew-y-12 animate-pulse-slow"></div>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-5 dark:opacity-30 mix-blend-overlay'></div>
+                     
+                     <div className='absolute -bottom-10 -right-10 w-32 h-32 bg-cyan-400/20 dark:bg-cyan-500/20 rounded-full blur-2xl group-hover:bg-cyan-300/30 dark:group-hover:bg-cyan-400/30 transition-colors duration-500'></div>
+                     
+                     {/* Sparkles */}
+                     <div className="absolute top-2 right-4 animate-pulse delay-75"><Star size={8} className="text-cyan-400 fill-cyan-200" /></div>
+                     <div className="absolute bottom-4 left-4 animate-pulse delay-300"><Star size={6} className="text-blue-400 fill-blue-200" /></div>
 
-                     <div className='flex items-center gap-2 mb-2 z-10'>
-                        <Gem size={22} className='text-cyan-600 dark:text-cyan-400 drop-shadow-md transition-transform group-hover:rotate-[360deg] duration-1000 ease-in-out' fill='currentColor' />
-                        <span className='text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-cyan-300 dark:via-cyan-100 dark:to-blue-200 uppercase tracking-widest drop-shadow-sm'>DIAMOND</span>
+                     <div className='flex items-center gap-2 mb-1 z-10'>
+                        <Gem size={18} className='text-cyan-600 dark:text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] transition-transform group-hover:rotate-[360deg] duration-1000 ease-in-out' fill='currentColor' />
+                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-cyan-300 dark:via-cyan-100 dark:to-blue-200 uppercase tracking-widest drop-shadow-sm'>DIAMOND</span>
                      </div>
-                     <div className='text-2xl font-black text-cyan-900 dark:text-cyan-100 mb-1 z-10 tracking-tight drop-shadow-sm'>250 TL</div>
-                     <div className='text-[10px] text-cyan-800 dark:text-cyan-200 font-bold uppercase mb-4 z-10 tracking-wider bg-cyan-100/50 dark:bg-cyan-900/30 px-2 py-0.5 rounded border border-cyan-200 dark:border-cyan-800/30'>SINIRSIZ LİMİT</div>
+                     <div className='text-xl font-black text-cyan-900 dark:text-cyan-100 mb-0.5 z-10 tracking-tight drop-shadow-sm'>250 TL</div>
+                     <div className='text-[9px] text-cyan-800 dark:text-cyan-200 font-bold uppercase mb-2 z-10 tracking-wider bg-cyan-100/50 dark:bg-cyan-900/30 px-2 py-0.5 rounded border border-cyan-200 dark:border-cyan-500/30'>SINIRSIZ LİMİT</div>
                       <button 
                         onClick={() => onPurchase && onPurchase('PREMIUM')}
-                        className='w-32 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white border border-cyan-400/50 text-xs font-bold shadow-md shadow-cyan-500/30 hover:shadow-lg transition-all z-10 active:scale-95'
+                        className='w-24 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 dark:bg-cyan-600 dark:hover:bg-cyan-500 text-white border border-cyan-400/50 text-[10px] font-bold shadow-lg shadow-cyan-500/30 hover:shadow-cyan-400/50 transition-all z-10 active:scale-95'
                      >
                         SATIN AL
                      </button>
-                     
-                     {/* Sparkles */}
-                     <div className="absolute top-4 right-4 animate-pulse delay-75">
-                         <Star size={10} className="text-cyan-400 fill-cyan-200" />
-                     </div>
-                     <div className="absolute bottom-4 left-4 animate-pulse delay-300">
-                         <Star size={8} className="text-blue-400 fill-blue-200" />
-                     </div>
                 </motion.div>
 
             </div>
