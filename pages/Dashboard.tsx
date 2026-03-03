@@ -20,7 +20,8 @@ import {
   Award,
   ChevronDown,
   ChevronUp,
-  Search
+  Search,
+  User as UserIcon
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 
@@ -160,7 +161,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
             {/* Left: User Info (Absolute) */}
             <div className='absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-3'>
                 <div className='w-10 h-10 rounded-full bg-white shadow-md border border-slate-200 flex items-center justify-center'>
-                    <User className='text-slate-600' size={20} />
+                    <UserIcon className='text-slate-600' size={20} />
                 </div>
                 <div className='hidden md:block text-left'>
                     <div className='text-xs text-slate-400 font-bold uppercase tracking-wider'>Hoşgeldiniz</div>
