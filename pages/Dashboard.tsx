@@ -313,13 +313,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <header className='shrink-0 flex items-center justify-between py-2'>
             
             {/* Left: LOGO ONLY */}
-            <div className='w-1/4 flex items-center gap-3'>
-                 <div className='w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 transform rotate-3 hover:rotate-0 transition-all duration-300 group cursor-pointer'>
-                    <Shield className='text-slate-900 w-7 h-7 group-hover:scale-110 transition-transform' strokeWidth={2.5} />
+            <div className='w-1/4 flex items-center gap-4'>
+                 <div className='w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20 group cursor-pointer hover:scale-105 transition-transform'>
+                    <Shield className='text-slate-900 w-7 h-7' strokeWidth={2.5} />
                  </div>
-                 <div className='flex flex-col'>
-                    <span className='text-xl font-black text-slate-100 tracking-tighter leading-none'>KIRBAŞ</span>
-                    <span className='text-[10px] bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent font-bold tracking-[0.2em]'>PANEL YÖNETİMİ</span>
+                 <div className='flex flex-col gap-0.5 mt-1'>
+                    <span className='text-2xl font-black text-slate-100 tracking-[-0.05em] leading-none'>KIRBAŞ</span>
+                    <span className='text-[10px] bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent font-bold tracking-[0.25em] leading-none'>PANEL YÖNETİMİ</span>
                  </div>
             </div>
 
@@ -394,12 +394,34 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                 <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${isActive ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-white/50'}`}></div>
                             </div>
                             
-                            {/* Selected Checkmark (Enhanced) */}
-                            {isSelected && (
-                                <div className='absolute top-3 right-3 w-7 h-7 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-[0_0_20px_rgba(16,185,129,0.5)] z-30 animate-in zoom-in spin-in-90 duration-300 ring-2 ring-white'>
-                                    <CheckCircle2 size={16} strokeWidth={3} />
-                                </div>
-                            )}
+                            {/* Selected Checkmark (Enhanced Animation) */}
+                            <AnimatePresence>
+                                {isSelected && (
+                                    <motion.div 
+                                        initial={{ scale: 0, rotate: -180, opacity: 0 }}
+                                        animate={{ 
+                                            scale: 1, 
+                                            rotate: 0, 
+                                            opacity: 1,
+                                            transition: { 
+                                                type: "spring",
+                                                stiffness: 260,
+                                                damping: 20 
+                                            } 
+                                        }}
+                                        exit={{ scale: 0, opacity: 0 }}
+                                        className='absolute top-3 right-3 w-8 h-8 bg-gradient-to-tr from-emerald-500 to-emerald-400 rounded-full flex items-center justify-center text-white shadow-[0_4px_12px_rgba(16,185,129,0.5)] z-30 ring-2 ring-white ring-offset-2 ring-offset-slate-900'
+                                    >
+                                        <motion.div
+                                            initial={{ pathLength: 0, opacity: 0 }}
+                                            animate={{ pathLength: 1, opacity: 1 }}
+                                            transition={{ delay: 0.2, duration: 0.3 }}
+                                        >
+                                            <CheckCircle2 size={18} strokeWidth={3} className="drop-shadow-md" />
+                                        </motion.div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                         </motion.div>
                 )})}
