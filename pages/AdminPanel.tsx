@@ -19,8 +19,11 @@ interface AdminProps {
 interface SystemLog {
   id: string;
   timestamp: string;
-  type: 'INFO' | 'ERROR' | 'WARN' | 'SUCCESS';
-  message: string;
+  time?: string;
+  type: 'INFO' | 'ERROR' | 'WARN' | 'SUCCESS' | 'info' | 'error' | 'warning' | 'success'; 
+  message?: string;
+  details?: string;
+  action?: string;
   source: string;
 }
 
@@ -464,15 +467,23 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   const [showBanModal, setShowBanModal] = useState(false);
   const [banModalUser, setBanModalUser] = useState<User | null>(null);
 
+
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+
   // Helper: Add Log
   const addLog = (message: string, type: SystemLog['type'] = 'INFO', source = 'AdminPanel') => {
-    setSystemLogs(prev => [{
-      id: Math.random().toString(36).substr(2, 9),
-      timestamp: new Date().toISOString(),
-      type,
-      message,
-      source
-    }, ...prev].slice(0, 50));
+    // Also push to displaying queue if fetched from server doesn't contain it immediately
+    // Ideally we rely on server sync
+  };
+
+  const fetchLogs = async () => {
+      try {
+          const res = await fetchApi('/api/logs');
+          if (res.ok) {
+              const data = await res.json();
+              if (data.logs) setSystemLogs(data.logs);
+          }
+      } catch (e) {}
   };
 
   // Fetch Data
@@ -484,8 +495,6 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
       if (usersRes.ok) {
         const data = await usersRes.json();
         setUsers(Array.isArray(data) ? data : []);
-      } else {
-        addLog('Failed to load users', 'ERROR');
       }
 
       // 2. Templates
@@ -494,14 +503,15 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
         const data = await tplRes.json();
         setTemplates(Array.isArray(data) ? data : []);
       }
+      
+      // 3. Maintenance Status
+      fetchApi('/api/maintenance').then(res => res.json()).then(d => setMaintenanceMode(d.maintenance));
 
-      // 3. Health
-      fetchApi('/api/health').then(res => {
-          if (res.ok) addLog('System health check: OK', 'SUCCESS', 'SYS');
-      }).catch(err => addLog(`System health check failed: ${err.message}`, 'ERROR', 'SYS'));
+      // 4. Logs
+      fetchLogs();
 
     } catch (err: any) {
-      addLog(`System Error: ${err.message}`, 'ERROR');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -510,11 +520,30 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   useEffect(() => {
     loadData();
     const interval = setInterval(() => {
-        // Ping server for liveness
+        // Ping server for liveness & logs
         fetchApi('/api/health').catch(() => {});
-    }, 60000);
+        fetchLogs();
+    }, 5000); // Poll logs every 5s
     return () => clearInterval(interval);
   }, []); 
+
+  const toggleMaintenance = async () => {
+      const newState = !maintenanceMode;
+      try {
+          const res = await fetchApi('/api/maintenance', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ enabled: newState })
+          });
+          if (res.ok) {
+              setMaintenanceMode(newState);
+              alert(`Bakım modu ${newState ? 'AKTİF' : 'DEVRE DIŞI'}`);
+              fetchLogs();
+          }
+      } catch (e) {
+          alert('İşlem başarısız.');
+      }
+  };
 
   // Actions
   const handleBanUser = async (userId: string, isBanned: boolean) => {
@@ -705,12 +734,13 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                   <Badge color="blue">LOGS</Badge>
                </div>
                <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
-                  {systemLogs.length === 0 ? <div className="text-center text-slate-600 my-10">Kayıt yok.</div> : null}
-                  {systemLogs.map(log => (
-                    <div key={log.id} className="text-xs flex gap-2 border-b border-slate-800/50 pb-2 mb-2 last:border-0">
-                       <span className="text-slate-500 font-mono">[{log.timestamp.split('T')[1].split('.')[0]}]</span>
-                       <span className={log.type === 'ERROR' ? 'text-red-400' : log.type === 'SUCCESS' ? 'text-emerald-400' : 'text-slate-300'}>
-                         {log.message}
+                  {systemLogs.length === 0 ? <div className="text-center text-slate-600 my-10">Bağlantı bekleniyor...</div> : null}
+                  {systemLogs.slice(0, 15).map((log, i) => (
+                    <div key={log.id || i} className="text-xs flex gap-2 border-b border-slate-800/50 pb-2 mb-2 last:border-0 items-start">
+                       <span className="text-slate-500 font-mono flex-shrink-0">[{new Date(log.timestamp || log.time || Date.now()).toLocaleTimeString()}]</span>
+                       <span className={log.type === 'error' ? 'text-red-400 break-all' : log.type === 'success' ? 'text-emerald-400' : 'text-slate-300 break-all'}>
+                         <span className="text-amber-500 font-bold mr-1">{(log.action || 'INFO')}:</span>
+                         {log.message || log.details}
                        </span>
                     </div>
                   ))}
@@ -852,17 +882,24 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
      </div>
   );
   
+
   const SystemView = () => (
       <div className="space-y-6 h-[calc(100vh-140px)] flex flex-col animate-in fade-in duration-300">
          <div className="flex flex-col md:flex-row gap-4">
-            <GlassCard className="p-6 flex-1 flex items-center gap-4">
+            <GlassCard className="p-6 flex-1 flex items-center gap-4 relative overflow-hidden group">
                <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
                   <Server size={24} />
                </div>
                <div>
-                  <div className="text-xs text-slate-500 font-bold uppercase">Sunucu Adı</div>
-                  <div className="text-lg font-bold text-white">KIRBAS-MAIN-V1</div>
+                  <div className="text-xs text-slate-500 font-bold uppercase">Sistem Durumu</div>
+                  <div className="text-lg font-bold text-white uppercase">{maintenanceMode ? 'Bakımda' : 'Yayında'}</div>
                </div>
+               <button 
+                onClick={toggleMaintenance}
+                className={`absolute right-4 top-1/2 -translate-y-1/2 px-3 py-1 rounded text-xs font-bold transition-all ${maintenanceMode ? 'bg-amber-500 text-black' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}
+               >
+                 {maintenanceMode ? 'Çıkış Yap' : 'Bakım Modu'}
+               </button>
             </GlassCard>
             <GlassCard className="p-6 flex-1 flex items-center gap-4">
                <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500">
@@ -891,15 +928,18 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
                    <div className="w-3 h-3 rounded-full bg-green-500" />
                 </div>
-                <div className="font-mono text-xs text-slate-400">admin@kirbas-terminal: ~</div>
+                <div className="font-mono text-xs text-slate-400">admin@kirbas-terminal: ~ (Live Logs)</div>
              </div>
              <div className="flex-1 p-4 font-mono text-xs text-emerald-500 overflow-y-auto custom-scrollbar bg-black/90 selection:bg-emerald-500/30">
-                <div className="mb-2 text-slate-500">Last login: {new Date().toUTCString()} from 192.168.1.1</div>
-                {systemLogs.map(log => (
-                   <div key={log.id} className="mb-1 leading-relaxed">
-                      <span className="text-blue-500">[{log.timestamp.split('T')[1].split('.')[0]}]</span>{' '}
-                      <span className="text-slate-600 mx-1">{log.source}:</span>
-                      <span className={log.type === 'ERROR' ? 'text-red-500 font-bold' : log.type === 'WARN' ? 'text-amber-500' : 'text-slate-300'}>{log.message}</span>
+                <div className="mb-2 text-slate-500">Connecting to server stream... OK</div>
+                {systemLogs.map((log, i) => (
+                   <div key={log.id || i} className="mb-1 leading-relaxed border-b border-slate-800/30 pb-0.5 animate-in fade-in slide-in-from-left-2 duration-300">
+                      <span className="text-blue-500 select-none">[{new Date(log.timestamp || log.time || Date.now()).toLocaleTimeString()}]</span>{' '}
+                      <span className="text-purple-400 mx-1 select-none">{(log.source || 'SYS').toUpperCase()}:</span>
+                      <span className="text-yellow-500 font-bold mx-1">{(log.action || 'INFO').toUpperCase()}</span>
+                      <span className={log.type === 'error' ? 'text-red-500 font-bold' : log.type === 'warning' ? 'text-amber-500' : 'text-slate-300'}>
+                         {log.message || log.details}
+                      </span>
                    </div>
                 ))}
                 <div className="flex items-center gap-2 mt-2">
@@ -911,6 +951,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
          </GlassCard>
       </div>
   );
+
 
   return (
     <div className="flex h-screen bg-[#020617] text-white font-sans overflow-hidden fixed inset-0 z-[100]">

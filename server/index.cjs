@@ -1282,20 +1282,58 @@ const systemLogs = [];
 const loginAttempts = {}; // { email: { count: 0, firstAttempt: timestamp } }
 const forgotPasswordCodes = new Map(); // Map<email, { code, expiresAt }>
 const startTime = Date.now();
+// Maintenance Mode
+let isMaintenanceMode = false;
 
 // Logger Middleware
 app.use((req, res, next) => {
-    const log = {
-        id: Date.now(),
-        type: 'info',
-        action: `${req.method} ${req.url}`,
-        time: new Date().toISOString(),
-        ip: req.ip
-    };
-    systemLogs.unshift(log); // Add to beginning
-    if (systemLogs.length > 100) systemLogs.pop(); // Keep last 100
+    // Only log non-static asset requests to avoid noise
+    if (!req.url.match(/\.(css|js|png|jpg|ico)$/)) {
+        const log = {
+            id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+            type: 'info',
+            action: `${req.method}`, 
+            details: `${req.url}`,
+            source: req.ip || 'unknown',
+            time: new Date().toISOString()
+        };
+        systemLogs.unshift(log); // Add to beginning
+        if (systemLogs.length > 200) systemLogs.pop(); // Keep last 200
+    }
     next();
 });
+
+// Maintenance Middleware
+const checkMaintenance = (req, res, next) => {
+    // Allow Admin Login & Status Checks
+    const allowed = [
+        '/api/auth/login', 
+        '/api/maintenance', 
+        '/api/status',
+        '/api/health'
+    ];
+    
+    // Check if path starts with allowed (or exact match for deep paths)
+    const isAllowed = allowed.some(a => req.path.startsWith(a));
+
+    if (isMaintenanceMode && !isAllowed) {
+        // If user is admin (checking token), let them pass
+        const authHeader = req.headers['authorization'];
+        if (authHeader) {
+            const token = authHeader && authHeader.split(' ')[1];
+            if (token) {
+                 try {
+                     const user = jwt.verify(token, JWT_SECRET);
+                     if (user.role === 'ADMIN') return next();
+                 } catch(e) {}
+            }
+        }
+        return res.status(503).json({ success: false, message: 'Sistem şu anda bakım modundadır. Lütfen daha sonra tekrar deneyiniz.', maintenance: true });
+    }
+    next();
+};
+
+app.use(checkMaintenance);
 
 // Check mode
 // Mock mode completely removed as requested
@@ -2441,7 +2479,29 @@ app.get('/api/status', authenticateToken, requireAdmin, (req, res) => {
     });
 });
 
+
 app.get('/api/logs', authenticateToken, requireAdmin, (req, res) => {
+    res.json({ success: true, logs: systemLogs });
+});
+
+app.get('/api/maintenance', (req, res) => {
+    res.json({ maintenance: isMaintenanceMode });
+});
+
+app.post('/api/maintenance', authenticateToken, requireAdmin, (req, res) => {
+    const { enabled } = req.body;
+    isMaintenanceMode = enabled;
+    systemLogs.unshift({
+        id: Date.now().toString(),
+        type: 'warning',
+        action: enabled ? 'MAINTENANCE_ON' : 'MAINTENANCE_OFF',
+        details: enabled ? 'System put into maintenance mode' : 'Maintenance mode disabled',
+        time: new Date().toISOString(),
+        source: 'ADMIN'
+    });
+    res.json({ success: true, maintenance: isMaintenanceMode });
+});
+
     res.json(systemLogs);
 });
 
