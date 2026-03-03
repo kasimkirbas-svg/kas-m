@@ -63,118 +63,91 @@ const App = () => {
     }
   };
 
-  // Initialize application on mount (load users, theme, language, documents)
+  // 1. Theme Effect: Sync theme state to DOM
   useEffect(() => {
-    // Initialize admin user if no users exist
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  // 2. Main Initialization Effect
+  useEffect(() => {
+    // A. User Loading
     const existingUsers = localStorage.getItem('allUsers');
     if (!existingUsers) {
       const initialUsers: User[] = [ADMIN_USER];
       localStorage.setItem('allUsers', JSON.stringify(initialUsers));
     }
 
-    const savedUser = localStorage.getItem('currentUser');
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;
-    
-    if (savedTheme) setTheme(savedTheme);
-    if (savedLanguage) {
-        setLanguage(savedLanguage);
-        setT(getTranslation(savedLanguage));
-    }
-
-    // Apply Theme to Document root
-    useEffect(() => {
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-        localStorage.setItem('theme', theme);
-    }, [theme]);
-
-    const savedUser = localStorage.getItem('currentUser');
+    const savedUserStr = localStorage.getItem('currentUser');
+    if (savedUserStr) {
       try {
-        const parsedUser = JSON.parse(savedUser);
+        const parsedUser = JSON.parse(savedUserStr);
         setUser(parsedUser);
-        // Only set view to dashboard if currently on auth (refresh case)
-        if (currentView === 'auth') {
-           setCurrentView('dashboard');
-        }
+        if (currentView === 'auth') setCurrentView('dashboard');
         
-        // Security Check: Verify user still exists (invalidates deleted users on refresh)
+        // Validate user session
         fetchApi('/api/auth/me')
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('User invalid');
-                }
-                return res.json();
-            })
-            .then(data => {
-                if(!data.success) {
-                     throw new Error('Session invalid');
-                }
-                // Optional: Update user data
-                // setUser(data.user);
-            })
-            .catch(() => {
-                // If API returns 401/403 or user not found
-                console.warn('Session expired or user deleted. Logging out.');
-                setUser(null);
-                setCurrentView('auth');
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('authToken');
-            });
-
-      } catch (error) {
-        console.error('Error loading user:', error);
+          .then(res => {
+            if (!res.ok) throw new Error('User invalid');
+            return res.json();
+          })
+          .then(data => {
+            if (!data.success) throw new Error('Session invalid');
+             // setUser(data.user); // Optional sync
+          })
+          .catch(() => {
+            console.warn('Session expired. Logging out.');
+            setUser(null);
+            setCurrentView('auth');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('authToken');
+          });
+      } catch (e) {
+        console.error('Error parsing user', e);
         setUser(null);
         localStorage.removeItem('currentUser');
       }
     }
 
+    // B. Settings Loading
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     if (savedTheme) {
-      setTheme(savedTheme);
-      applyTheme(savedTheme);
+        setTheme(savedTheme);
     } else {
+        // Default to dark if no preference found
         setTheme('dark');
-        applyTheme('dark');
     }
-    
-    // Fetch Templates from Backend
-    const loadTemplates = async () => {
-        try {
-            const res = await fetchApi('/api/templates');
-            if (res.ok) {
-                const data = await res.json();
-                if (Array.isArray(data) && data.length > 0) {
-                    setTemplates(data);
-                }
-            }
-        } catch (e) {
-            console.error('Failed to load templates', e);
-        }
-    };
-    loadTemplates();
 
+    const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;
     if (savedLanguage) {
       setLanguage(savedLanguage);
       setT(getTranslation(savedLanguage));
-      // Update info for RTL
       const dir = savedLanguage === 'ar' ? 'rtl' : 'ltr';
       document.documentElement.dir = dir;
       document.documentElement.lang = savedLanguage;
     }
 
+    // C. Data Loading (Templates)
+    const loadTemplates = async () => {
+      try {
+        const res = await fetchApi('/api/templates');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setTemplates(data);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load templates', e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadTemplates();
 
-    // Force dark theme as the default for the industrial design
-    applyTheme('dark');
-    setTheme('dark'); 
-
-    // Apply theme
-    applyTheme(savedTheme || 'dark');
-
-
-    setIsLoading(false);
   }, []);
 
   // Fetch Documents
