@@ -71,7 +71,7 @@ export const Layout: React.FC<LayoutProps> = ({
   */
 
   return (
-    <div className={`flex flex-col font-sans bg-slate-950 text-slate-200 selection:bg-amber-500/30 min-h-screen`}>
+    <div className={`flex flex-col font-sans bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-200 selection:bg-amber-500/30 min-h-screen transition-colors duration-300`}>
       
       {/* INDUSTRIAL TOP NAVIGATION BAR - Now Transparent/Minimal */}
       <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-4 bg-transparent shrink-0 pointer-events-none">
@@ -81,7 +81,7 @@ export const Layout: React.FC<LayoutProps> = ({
             {/* Mobile Menu Toggle */}
             <button 
                 onClick={() => setMobileMenuOpen(true)}
-                className="md:hidden p-2 text-slate-400 hover:text-amber-500 hover:bg-slate-800 rounded-lg transition-colors"
+                className="md:hidden p-2 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 aria-label="Menüyü Aç"
             >
                 <Menu size={24} />
@@ -97,8 +97,8 @@ export const Layout: React.FC<LayoutProps> = ({
                 </div>
                 {/* Text visible on tablet+ */}
                 <div className="hidden md:flex flex-col drop-shadow-md">
-                    <span className="font-bold text-lg leading-none text-slate-100 tracking-wide group-hover:text-amber-500 transition-colors">KIRBAŞ</span>
-                    <span className="text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase">Panel Yönetimi</span>
+                    <span className="font-bold text-lg leading-none text-slate-800 dark:text-slate-100 tracking-wide group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">KIRBAŞ</span>
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-[0.2em] uppercase">Panel Yönetimi</span>
                 </div>
             </div>
             
@@ -113,12 +113,12 @@ export const Layout: React.FC<LayoutProps> = ({
                             className={`
                                 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all relative group overflow-hidden
                                 ${isActive 
-                                    ? 'bg-slate-800 text-amber-500 shadow-inner shadow-black/20' 
-                                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                                    ? 'bg-slate-200 dark:bg-slate-800 text-amber-600 dark:text-amber-500 shadow-inner shadow-black/5 dark:shadow-black/20' 
+                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
                                 }
                             `}
                         >
-                            <item.icon size={18} className={`transition-transform duration-300 ${isActive ? 'text-amber-500 scale-110' : 'text-slate-500 group-hover:scale-110'}`} />
+                            <item.icon size={18} className={`transition-transform duration-300 ${isActive ? 'text-amber-600 dark:text-amber-500 scale-110' : 'text-slate-500 group-hover:scale-110'}`} />
                             <span className="relative z-10">{item.label}</span>
                             {isActive && <div className="absolute inset-0 bg-amber-500/5 rounded-lg"></div>}
                         </button>
@@ -134,7 +134,7 @@ export const Layout: React.FC<LayoutProps> = ({
             <div className="relative">
                 <button 
                     onClick={() => setNotificationsOpen(!notificationsOpen)}
-                    className="p-2 text-slate-400 hover:text-amber-500 hover:bg-slate-800 rounded-lg transition-all relative group"
+                    className="p-2 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all relative group"
                 >
                     <Bell size={20} />
                     <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></span>
@@ -143,22 +143,22 @@ export const Layout: React.FC<LayoutProps> = ({
                 {notificationsOpen && (
                     <>
                     <div className="fixed inset-0 z-40" onClick={() => setNotificationsOpen(false)}></div>
-                    <div className="absolute right-0 top-full mt-2 w-80 bg-slate-900 rounded-xl shadow-2xl border border-slate-800 z-50 overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
-                        <div className="p-4 border-b border-slate-800 bg-slate-950/50 flex justify-between items-center">
-                            <h3 className="font-bold text-slate-200 text-sm">Bildirimler</h3>
-                            <button className="text-xs text-amber-500 hover:text-amber-400 font-bold">Temizle</button>
+                    <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800 z-50 overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
+                        <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 flex justify-between items-center">
+                            <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm">Bildirimler</h3>
+                            <button className="text-xs text-amber-600 dark:text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 font-bold">Temizle</button>
                         </div>
                         <div className="max-h-64 overflow-y-auto custom-scrollbar">
                             {notifications.map((notif) => (
-                                <div key={notif.id} className="p-4 border-b border-slate-800 hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                                <div key={notif.id} className="p-4 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
                                     <div className="flex gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-amber-500 shrink-0 border border-slate-700 shadow-sm shadow-amber-500/10">
+                                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-amber-600 dark:text-amber-500 shrink-0 border border-slate-200 dark:border-slate-700 shadow-sm shadow-amber-500/10">
                                             <MessageSquare size={14} />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-slate-200 group-hover:text-amber-500 transition-colors">{notif.title}</p>
-                                            <p className="text-xs text-slate-400 mt-1 leading-relaxed">{notif.message}</p>
-                                            <p className="text-[10px] text-slate-600 mt-2 font-mono">{notif.time}</p>
+                                            <p className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">{notif.title}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{notif.message}</p>
+                                            <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-2 font-mono">{notif.time}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -173,13 +173,13 @@ export const Layout: React.FC<LayoutProps> = ({
             <div className="relative">
                 <button 
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                    className="flex items-center gap-3 pl-2 py-1 hover:bg-slate-800 rounded-xl transition-colors text-left group"
+                    className="flex items-center gap-3 pl-2 py-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors text-left group"
                 >
                    <div className="text-right hidden md:block leading-tight">
-                       <div className="text-sm font-bold text-slate-200 group-hover:text-amber-500 transition-colors">{user.name}</div>
+                       <div className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">{user.name}</div>
                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{user.role === 'ADMIN' ? 'YÖNETİCİ' : 'KULLANICI'}</div>
                    </div>
-                   <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 font-bold shadow-sm group-hover:border-amber-500/50 transition-colors text-sm">
+                   <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold shadow-sm group-hover:border-amber-500/50 transition-colors text-sm">
                         {user.name.charAt(0).toUpperCase()}
                    </div>
                    <ChevronDown size={14} className="text-slate-500 hidden sm:block" />
@@ -188,25 +188,25 @@ export const Layout: React.FC<LayoutProps> = ({
                 {profileMenuOpen && (
                     <>
                     <div className="fixed inset-0 z-40" onClick={() => setProfileMenuOpen(false)}></div>
-                    <div className="absolute right-0 top-full mt-2 w-64 bg-slate-900 rounded-xl shadow-2xl border border-slate-800 z-50 overflow-hidden animate-in zoom-in-95 duration-200 transform origin-top-right">
-                        <div className="p-4 border-b border-slate-800 md:hidden bg-slate-950/30">
-                            <div className="text-sm font-bold text-slate-200">{user.name}</div>
+                    <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800 z-50 overflow-hidden animate-in zoom-in-95 duration-200 transform origin-top-right">
+                        <div className="p-4 border-b border-slate-200 dark:border-slate-800 md:hidden bg-slate-50 dark:bg-slate-950/30">
+                            <div className="text-sm font-bold text-slate-800 dark:text-slate-200">{user.name}</div>
                             <div className="text-xs text-slate-500 truncate">{user.email}</div>
                         </div>
                         <div className="p-2 space-y-1">
-                            <button onClick={() => { onNavigate('profile'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors group">
+                            <button onClick={() => { onNavigate('profile'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group">
                                 <UserIcon size={16} className="group-hover:text-amber-500 transition-colors" /> {_t('nav.profile', 'Profil Bilgilerim')}
                             </button>
-                            <button onClick={() => { onNavigate('settings'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors group">
+                            <button onClick={() => { onNavigate('settings'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group">
                                 <Settings size={16} className="group-hover:text-indigo-500 transition-colors" /> {_t('nav.settings', 'Genel Ayarlar')}
                             </button>
                             {user.role !== 'ADMIN' && (
-                                <button onClick={() => { onNavigate('subscription'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors group">
+                                <button onClick={() => { onNavigate('subscription'); setProfileMenuOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group">
                                     <CreditCard size={16} className="group-hover:text-emerald-500 transition-colors" /> {_t('nav.subscription', 'Abonelik Paketleri')}
                                 </button>
                             )}
-                            <div className="h-px bg-slate-800 my-1 mx-2"></div>
-                            <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                            <div className="h-px bg-slate-200 dark:bg-slate-800 my-1 mx-2"></div>
+                            <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors">
                                 <LogOut size={16} /> {_t('common.logout', 'Oturumu Kapat')}
                             </button>
                         </div>
@@ -231,19 +231,19 @@ export const Layout: React.FC<LayoutProps> = ({
           
           <button 
                 onClick={() => setMobileMenuOpen(false)}
-                className="absolute top-4 right-4 z-20 p-2 text-slate-400 hover:text-white bg-slate-800 rounded-lg shadow-lg border border-slate-700"
+                className="absolute top-4 right-4 z-20 p-2 text-slate-600 dark:text-slate-400 hover:text-white bg-slate-200 dark:bg-slate-800 rounded-lg shadow-lg border border-slate-300 dark:border-slate-700"
           >
               <X size={24} />
           </button>
 
-          <nav className="relative z-10 px-6 py-8 space-y-3 overflow-y-auto w-4/5 max-w-sm h-full bg-slate-900 border-r border-slate-800 shadow-2xl">
+          <nav className="relative z-10 px-6 py-8 space-y-3 overflow-y-auto w-4/5 max-w-sm h-full bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shadow-2xl">
              <div className="mb-8 px-2">
-                 <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-800">
+                 <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
                     <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-700 rounded-lg flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 border border-amber-400/20">
                         K
                     </div>
                     <div>
-                        <div className="font-bold text-lg leading-none text-slate-100 tracking-wide">KIRBAŞ PANEL</div>
+                        <div className="font-bold text-lg leading-none text-slate-800 dark:text-slate-100 tracking-wide">KIRBAŞ PANEL</div>
                         <div className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase mt-1">Mobil Menü</div>
                     </div>
                  </div>
@@ -260,33 +260,33 @@ export const Layout: React.FC<LayoutProps> = ({
                             }}
                             className={`w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold transition-all border. mb-2 ${
                             currentView === item.view
-                                ? 'bg-amber-500/10 text-amber-500 border-amber-500/20'
-                                : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white border-transparent'
+                                ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-500 border-amber-500/20'
+                                : 'bg-slate-200/50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white border-transparent'
                             }`}
                         >
                             <item.icon size={20} />
                             {item.label}
                         </button>
                         ))}
-                        <div className="h-px bg-slate-800 my-6 mx-2"></div>
+                        <div className="h-px bg-slate-200 dark:bg-slate-800 my-6 mx-2"></div>
                      </>
                  )}
              </div>
              
              <div className="px-2 space-y-3">
                  <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Hesap</h2>
-                 <button onClick={() => { onNavigate('settings'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition-all bg-slate-800/30 border border-slate-800 hover:border-slate-700">
+                 <button onClick={() => { onNavigate('settings'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700">
                     <Settings size={20} /> {_t('nav.settings', 'Ayarlar')}
                  </button>
-                 <button onClick={() => { onNavigate('profile'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition-all bg-slate-800/30 border border-slate-800 hover:border-slate-700">
+                 <button onClick={() => { onNavigate('profile'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700">
                     <UserIcon size={20} /> {_t('nav.profile', 'Profilim')}
                  </button>
                  {user.role !== 'ADMIN' && (
-                     <button onClick={() => { onNavigate('subscription'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-emerald-400 hover:bg-emerald-900/10 hover:text-emerald-300 transition-all bg-emerald-500/5 border border-emerald-500/20">
+                     <button onClick={() => { onNavigate('subscription'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/10 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20">
                         <CreditCard size={20} /> {_t('nav.subscription', 'Paketlerim')}
                      </button>
                  )}
-                 <button onClick={onLogout} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-red-500 hover:bg-red-500/10 transition-all border border-transparent mt-4">
+                 <button onClick={onLogout} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all border border-transparent mt-4">
                     <LogOut size={20} /> {_t('common.logout', 'Çıkış Yap')}
                  </button>
              </div>

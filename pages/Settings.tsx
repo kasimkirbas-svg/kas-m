@@ -20,6 +20,12 @@ export const Settings: React.FC<SettingsProps> = ({
   onThemeChange 
 }) => {
   const [notifications, setNotifications] = useState(true);
+  const [selectedTheme, setSelectedTheme] = useState<'light' | 'dark'>(theme);
+
+  // Sync internal state if prop changes
+  useEffect(() => {
+    setSelectedTheme(theme);
+  }, [theme]);
 
   // Load notification preference
   useEffect(() => {
@@ -32,6 +38,11 @@ export const Settings: React.FC<SettingsProps> = ({
   const handleSave = () => {
     // Persist local settings
     localStorage.setItem('notifications', String(notifications));
+
+    // Apply Theme Change only on Save
+    if (onThemeChange && selectedTheme !== theme) {
+      onThemeChange(selectedTheme);
+    }
     
     // Show success message
     alert(t?.settings?.settingsSaved || 'Ayarlarınız başarıyla kaydedildi.');
@@ -117,26 +128,26 @@ export const Settings: React.FC<SettingsProps> = ({
                 </h2>
             </div>
             
-             <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4">
                 <button 
-                    onClick={() => onThemeChange && onThemeChange('dark')}
-                    className={`flex-1 min-w-[140px] p-4 rounded-xl border-2 flex flex-col items-center gap-3 transition-all duration-300 ${theme === 'dark' ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 shadow-md shadow-blue-500/10' : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-900'}`}
+                    onClick={() => setSelectedTheme('dark')}
+                    className={`flex-1 min-w-[140px] p-4 rounded-xl border-2 flex flex-col items-center gap-3 transition-all duration-300 ${selectedTheme === 'dark' ? 'border-blue-600 bg-blue-50 dark:bg-blue-500/10 shadow-md shadow-blue-500/10 scale-105' : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-blue-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-900'}`}
                 >
-                    <div className={`p-3 rounded-full transition-colors ${theme === 'dark' ? 'bg-slate-900 text-blue-500 shadow-lg shadow-blue-500/20' : 'bg-slate-200 dark:bg-slate-900 text-slate-500 dark:text-slate-500'}`}>
+                    <div className={`p-3 rounded-full transition-colors ${selectedTheme === 'dark' ? 'bg-slate-900 text-blue-500 shadow-lg shadow-blue-500/20' : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-500'}`}>
                         <Moon className={`w-6 h-6`} />
                     </div>
-                    <span className={`font-black text-sm uppercase tracking-wider ${theme === 'dark' ? 'text-blue-500 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                    <span className={`font-black text-sm uppercase tracking-wider ${selectedTheme === 'dark' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-400'}`}>
                         {t?.settings?.dark || 'Koyu Mod'}
                     </span>
                 </button>
                  <button 
-                    onClick={() => onThemeChange && onThemeChange('light')}
-                    className={`flex-1 min-w-[140px] p-4 rounded-xl border-2 flex flex-col items-center gap-3 transition-all duration-300 ${theme === 'light' ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 shadow-md shadow-blue-500/10' : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-900'}`}
+                    onClick={() => setSelectedTheme('light')}
+                    className={`flex-1 min-w-[140px] p-4 rounded-xl border-2 flex flex-col items-center gap-3 transition-all duration-300 ${selectedTheme === 'light' ? 'border-amber-500 bg-amber-50 dark:bg-blue-500/10 shadow-md shadow-amber-500/10 scale-105' : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-amber-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-900'}`}
                 >
-                    <div className={`p-3 rounded-full transition-colors ${theme === 'light' ? 'bg-white text-blue-500 shadow-lg shadow-blue-500/20' : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>
+                    <div className={`p-3 rounded-full transition-colors ${selectedTheme === 'light' ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}>
                          <Sun className={`w-6 h-6`} />
                     </div>
-                    <span className={`font-black text-sm uppercase tracking-wider ${theme === 'light' ? 'text-blue-500 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                    <span className={`font-black text-sm uppercase tracking-wider ${selectedTheme === 'light' ? 'text-amber-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-400'}`}>
                         {t?.settings?.light || 'Açık Mod'}
                     </span>
                 </button>
@@ -144,10 +155,10 @@ export const Settings: React.FC<SettingsProps> = ({
         </section>
 
         {/* Notifications */}
-        <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm hover:shadow-md dark:shadow-lg dark:shadow-black/40 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300">
+        <section className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-6 shadow-sm hover:shadow-md dark:shadow-lg dark:shadow-black/40 hover:border-slate-400 dark:hover:border-slate-700 transition-all duration-300">
              <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-rose-500 shadow-sm dark:shadow-inner dark:shadow-black/50">
+                    <div className="p-2.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-rose-600 dark:text-rose-500 shadow-sm dark:shadow-inner dark:shadow-black/50">
                         <Bell className="w-6 h-6" />
                     </div>
                     <div>

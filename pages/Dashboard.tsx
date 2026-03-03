@@ -448,7 +448,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='flex-1 md:min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-5 md:overflow-hidden pb-2'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col h-[600px] md:h-full bg-white/70 dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
+            <div className='lg:col-span-3 flex flex-col h-[600px] md:h-full bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
@@ -644,52 +644,52 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-indigo-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-indigo-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all duration-300 relative overflow-hidden'
                         >   
                             <div className="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-500 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(99,102,241,0.5)] group-hover:scale-110'>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(99,102,241,0.5)] group-hover:scale-110'>
                                 <FileText size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>TUTANAK<br/>TUT</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>TUTANAK<br/>TUT</span>
                         </motion.button>
 
                         {/* Button 2 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
                             <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-50 dark:bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(16,185,129,0.5)] group-hover:scale-110'>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(16,185,129,0.5)] group-hover:scale-110'>
                                 <ClipboardList size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>GÜNLÜK<br/>RAPOR</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>GÜNLÜK<br/>RAPOR</span>
                         </motion.button>
 
                         {/* Button 3 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
                             <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-50 dark:bg-blue-500/20 text-blue-500 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:scale-110'>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:scale-110'>
                                 <UserPlus size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>PERSONEL<br/>EKLE</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>PERSONEL<br/>EKLE</span>
                         </motion.button>
 
                         {/* Button 4 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-rose-500 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-rose-500 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
                             <div className="absolute inset-0 bg-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-50 dark:bg-rose-500/20 text-rose-500 dark:text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(244,63,94,0.5)] group-hover:scale-110'>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-50 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(244,63,94,0.5)] group-hover:scale-110'>
                                 <Megaphone size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>DUYURU<br/>YAP</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>DUYURU<br/>YAP</span>
                         </motion.button>
                     </div>
 
