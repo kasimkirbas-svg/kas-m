@@ -79,7 +79,7 @@ export const DocumentsList: React.FC<DocumentsListProps> = ({
   });
 
   return (
-    <div className="w-full flex flex-col gap-8 animate-fade-in p-2">
+    <div className="w-full flex flex-col gap-8 animate-fade-in p-4 pt-20 md:p-8 pb-20">
       {/* Hero Header */}
       <div className="bg-slate-900 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden text-center md:text-left border border-slate-800">
         <div className="relative z-10 max-w-3xl">

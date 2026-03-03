@@ -78,6 +78,15 @@ export const Layout: React.FC<LayoutProps> = ({
         
         {/* Left: Branding */}
         <div className="flex items-center gap-4 pointer-events-auto">
+            {/* Mobile Menu Toggle */}
+            <button 
+                onClick={() => setMobileMenuOpen(true)}
+                className="md:hidden p-2 text-slate-400 hover:text-amber-500 hover:bg-slate-800 rounded-lg transition-colors"
+                aria-label="Menüyü Aç"
+            >
+                <Menu size={24} />
+            </button>
+
             {/* Logo */}
             <div 
                 className="flex items-center gap-3 cursor-pointer group select-none"
@@ -217,42 +226,67 @@ export const Layout: React.FC<LayoutProps> = ({
 
        {/* Mobile Menu Overlay */}
        {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex flex-col pt-16">
+        <div className="fixed inset-0 z-50 md:hidden flex flex-col pt-16 animate-in slide-in-from-left duration-200">
           <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-md" onClick={() => setMobileMenuOpen(false)} />
           
-          <nav className="relative z-10 px-6 py-8 space-y-3 overflow-y-auto">
-             <div className="mb-6 px-2">
-                 <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Navigasyon</h2>
-                 {menuItems.map(item => (
-                  <button
-                    key={item.view}
-                    onClick={() => {
-                      onNavigate(item.view);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold transition-all border border-transparent mb-2 ${
-                      currentView === item.view
-                        ? 'bg-amber-500/10 text-amber-500 border-amber-500/20'
-                        : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white border-slate-800'
-                    }`}
-                  >
-                    <item.icon size={20} />
-                    {item.label}
-                  </button>
-                ))}
-             </div>
+          <button 
+                onClick={() => setMobileMenuOpen(false)}
+                className="absolute top-4 right-4 z-20 p-2 text-slate-400 hover:text-white bg-slate-800 rounded-lg shadow-lg border border-slate-700"
+          >
+              <X size={24} />
+          </button>
 
-             <div className="h-px bg-slate-800 my-6 mx-2"></div>
+          <nav className="relative z-10 px-6 py-8 space-y-3 overflow-y-auto w-4/5 max-w-sm h-full bg-slate-900 border-r border-slate-800 shadow-2xl">
+             <div className="mb-8 px-2">
+                 <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-800">
+                    <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-700 rounded-lg flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 border border-amber-400/20">
+                        K
+                    </div>
+                    <div>
+                        <div className="font-bold text-lg leading-none text-slate-100 tracking-wide">KIRBAŞ PANEL</div>
+                        <div className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase mt-1">Mobil Menü</div>
+                    </div>
+                 </div>
+
+                 {menuItems.length > 0 && (
+                     <>
+                        <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Navigasyon</h2>
+                        {menuItems.map(item => (
+                        <button
+                            key={item.view}
+                            onClick={() => {
+                            onNavigate(item.view);
+                            setMobileMenuOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold transition-all border. mb-2 ${
+                            currentView === item.view
+                                ? 'bg-amber-500/10 text-amber-500 border-amber-500/20'
+                                : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white border-transparent'
+                            }`}
+                        >
+                            <item.icon size={20} />
+                            {item.label}
+                        </button>
+                        ))}
+                        <div className="h-px bg-slate-800 my-6 mx-2"></div>
+                     </>
+                 )}
+             </div>
              
              <div className="px-2 space-y-3">
                  <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Hesap</h2>
-                 <button onClick={() => { onNavigate('settings'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition-all bg-slate-900 border border-slate-800">
+                 <button onClick={() => { onNavigate('settings'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition-all bg-slate-800/30 border border-slate-800 hover:border-slate-700">
                     <Settings size={20} /> {_t('nav.settings', 'Ayarlar')}
                  </button>
-                 <button onClick={() => { onNavigate('profile'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition-all bg-slate-900 border border-slate-800">
+                 <button onClick={() => { onNavigate('profile'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition-all bg-slate-800/30 border border-slate-800 hover:border-slate-700">
                     <UserIcon size={20} /> {_t('nav.profile', 'Profilim')}
                  </button>
-                 <button onClick={onLogout} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-red-500 hover:bg-red-900/10 transition-all border border-transparent mt-4">
+                 {user.role !== 'ADMIN' && (
+                     <button onClick={() => { onNavigate('subscription'); setMobileMenuOpen(false); }} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-emerald-400 hover:bg-emerald-900/10 hover:text-emerald-300 transition-all bg-emerald-500/5 border border-emerald-500/20">
+                        <CreditCard size={20} /> {_t('nav.subscription', 'Paketlerim')}
+                     </button>
+                 )}
+                 <button onClick={onLogout} className="w-full flex items-center gap-4 px-4 py-4 rounded-xl font-bold text-red-500 hover:bg-red-500/10 transition-all border border-transparent mt-4">
                     <LogOut size={20} /> {_t('common.logout', 'Çıkış Yap')}
                  </button>
              </div>

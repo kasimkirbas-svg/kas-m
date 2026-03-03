@@ -62,7 +62,7 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
   };
 
   return (
-    <div className="w-full flex flex-col gap-8 animate-fade-in p-2">
+    <div className="w-full flex flex-col gap-8 animate-fade-in p-4 pt-20 md:p-8 pb-20">
        {/* Header Section */}
        <div className="bg-slate-900 rounded-3xl p-8 shadow-2xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6 border border-slate-800">
         <div className="relative z-10">

@@ -306,7 +306,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   };
 
   return (
-    <div className='h-screen w-screen overflow-hidden flex flex-col bg-slate-50 dark:bg-[#0f172a] relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300'>
+    <div className='w-full min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-slate-50 dark:bg-[#0f172a] relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300 overflow-y-auto'>
       
       {/* Background Ambience */}
       <div className='absolute top-0 left-0 w-full h-[800px] bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-[#0f172a] pointer-events-none z-0 transition-colors duration-500'></div>
@@ -359,8 +359,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </header>
 
         {/* 2. Sectors Row: Animated & Detailed */}
-        <div className='shrink-0 h-36 md:h-40 perspective-1000' onMouseLeave={() => setHoveredSectorId(null)}>
-            <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 h-full'>
+        <div className='shrink-0 h-auto md:h-40 perspective-1000' onMouseLeave={() => setHoveredSectorId(null)}>
+            <div className='flex overflow-x-auto snap-x md:grid md:grid-cols-7 gap-3 h-32 md:h-full pb-2 md:pb-0 px-1 md:px-0 scrollbar-hide'>
                 {SECTORS.map((sector, index) => {
                     const isSelected = selectedSectorIds.includes(sector.id);
                     const isHovered = hoveredSectorId === sector.id;
@@ -374,12 +374,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             onMouseEnter={() => setHoveredSectorId(sector.id)}
                             onClick={() => toggleSector(sector.id)}
                             className={`
-                            relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group
+                            relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group shrink-0 w-[140px] md:w-auto snap-center
                             border transition-all duration-300
                             ${isActive 
                                 ? 'border-2 border-slate-600 dark:border-white shadow-[0_0_30px_rgba(15,23,42,0.3)] dark:shadow-[0_0_50px_rgba(255,255,255,0.5)] scale-105 -translate-y-2 z-20 ring-4 ring-slate-300 dark:ring-white/10' 
                                 : 'border-slate-200 dark:border-white/5 shadow-lg bg-white/60 dark:bg-slate-800/40 hover:border-slate-400 dark:hover:border-white/30'}
-                            ${index === SECTORS.length - 1 ? 'col-span-2 md:col-span-1 lg:col-span-1' : ''}
                             `}
                         >   
                             {/* Background Image */}
@@ -446,10 +445,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </div>
 
         {/* 3. Main Content: Split Grid */}
-        <div className='flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-5 overflow-hidden pb-2'>
+        <div className='flex-1 md:min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-5 md:overflow-hidden pb-2'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col h-full bg-white/70 dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
+            <div className='lg:col-span-3 flex flex-col h-[600px] md:h-full bg-white/70 dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>

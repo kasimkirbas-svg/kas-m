@@ -154,7 +154,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in p-2">
+    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in p-4 pt-20 md:p-8 pb-20">
       {/* Notifications */}
       {notification && (
         <div className={`fixed top-4 right-4 p-4 rounded-xl shadow-2xl text-white z-50 flex items-center gap-3 animate-in slide-in-from-right ${
