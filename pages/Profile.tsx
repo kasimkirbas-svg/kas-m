@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Building2, Calendar, CreditCard, Download, Edit2, Check, X, Lock, FileText, AlertCircle, Trash2, LogOut, AlertTriangle, Loader2 } from 'lucide-react';
-import { Invoice, SubscriptionPlan } from '../types';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  User, Mail, Building2, Calendar, CreditCard, Download, Edit2, 
+  Check, X, Lock, FileText, AlertCircle, Trash2, LogOut, 
+  AlertTriangle, Loader2, Shield, Crown, Zap, Activity, Clock
+} from 'lucide-react';
+import { Invoice } from '../types';
 import { fetchApi } from '../src/utils/api';
 
 interface ProfileProps {
@@ -11,11 +16,13 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNavigate }) => {
   const [user, setUser] = useState(initialUser);
+  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'billing'>('profile');
   const [isEditing, setIsEditing] = useState(false);
-  const [showPasswordChange, setShowPasswordChange] = useState(false);
-  const [showInvoices, setShowInvoices] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
-  
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLoadingInvoices, setIsLoadingInvoices] = useState(false);
+
+  // Form Data
   const [formData, setFormData] = useState({
     name: initialUser?.name || '',
     email: initialUser?.email || '',
@@ -28,42 +35,12 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
     confirmPassword: ''
   });
 
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-
-  // Account Deletion State
+  // Delete Account State
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteCountdown, setDeleteCountdown] = useState(3);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (showDeleteConfirm && deleteCountdown > 0) {
-      timer = setTimeout(() => setDeleteCountdown(prev => prev - 1), 1000);
-    }
-    return () => clearTimeout(timer);
-  }, [showDeleteConfirm, deleteCountdown]);
-
-  useEffect(() => {
-    const fetchInvoices = async () => {
-      if (!user?.id) return;
-      
-      try {
-        const response = await fetchApi('/api/auth/invoices');
-        const data = await response.json();
-        
-        if (data.success && Array.isArray(data.invoices)) {
-          setInvoices(data.invoices);
-        }
-      } catch (error) {
-        console.error('Error fetching invoices:', error);
-      }
-    };
-
-    if (showInvoices) {
-      fetchInvoices();
-    }
-  }, [showInvoices, user?.id]);
-
+  // Sync user prop
   useEffect(() => {
     if (initialUser) {
         setUser(initialUser);
@@ -75,12 +52,43 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
     }
   }, [initialUser]);
 
+  // Invoice Fetching
+  useEffect(() => {
+    if (activeTab === 'billing' && user?.id) {
+      const fetchInvoices = async () => {
+        setIsLoadingInvoices(true);
+        try {
+          const response = await fetchApi('/api/auth/invoices');
+          const data = await response.json();
+          if (data.success && Array.isArray(data.invoices)) {
+            setInvoices(data.invoices);
+          }
+        } catch (error) {
+          console.error('Error fetching invoices:', error);
+        } finally {
+            setIsLoadingInvoices(false);
+        }
+      };
+      fetchInvoices();
+    }
+  }, [activeTab, user?.id]);
+
+  // Notification Timer
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => setNotification(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [notification]);
+
+  // Delete Countdown
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showDeleteConfirm && deleteCountdown > 0) {
+      timer = setTimeout(() => setDeleteCountdown(prev => prev - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [showDeleteConfirm, deleteCountdown]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -98,34 +106,29 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
           method: 'PUT',
           body: JSON.stringify(formData)
       });
-
       const data = await response.json();
 
       if (data.success) {
-          setNotification({ type: 'success', message: t?.profile?.savedSuccessfully || 'Profil bilgileri güncellendi.' });
+          setNotification({ type: 'success', message: t?.profile?.savedSuccessfully || 'Profil başarıyla güncellendi' });
           setIsEditing(false);
-          
           setUser(prev => ({ ...prev, ...formData }));
-          
           const storedUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
           localStorage.setItem('currentUser', JSON.stringify({ ...storedUser, ...formData }));
       } else {
-          setNotification({ type: 'error', message: data.message || 'Güncelleme başarısız.' });
+          setNotification({ type: 'error', message: data.message || 'Güncelleme hatası' });
       }
     } catch (error) {
-      console.error(error);
-      setNotification({ type: 'error', message: 'Sunucu hatası oluştu.' });
+      setNotification({ type: 'error', message: 'Sunucu hatası oluştu' });
     }
   };
 
   const handleSavePassword = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setNotification({ type: 'error', message: 'Yeni şifreler eşleşmiyor.' });
+      setNotification({ type: 'error', message: 'Şifreler eşleşmiyor' });
       return;
     }
-
     if (passwordData.newPassword.length < 6) {
-        setNotification({ type: 'error', message: 'Şifre en az 6 karakter olmalıdır.' });
+        setNotification({ type: 'error', message: 'Şifre en az 6 karakter olmalı' });
         return;
     }
 
@@ -137,449 +140,564 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                 newPassword: passwordData.newPassword
             })
         });
-
         const data = await response.json();
 
         if (data.success) {
-            setNotification({ type: 'success', message: 'Şifre başarıyla değiştirildi.' });
-            setShowPasswordChange(false);
+            setNotification({ type: 'success', message: 'Şifre başarıyla değiştirildi' });
             setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
         } else {
-            setNotification({ type: 'error', message: data.message || 'Şifre değiştirilemedi.' });
+            setNotification({ type: 'error', message: data.message || 'Hata oluştu' });
         }
     } catch (err) {
-        console.error(err);
-        setNotification({ type: 'error', message: 'Sunucu bağlantı hatası.' });
+        setNotification({ type: 'error', message: 'Bağlantı hatası' });
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+        const res = await fetchApi('/api/auth/delete-account', { 
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        if (!res.ok) throw new Error('Silme işlemi başarısız');
+        const data = await res.json();
+    
+        if(data.success) {
+            localStorage.clear();
+            window.location.href = '/auth?mode=login';
+        } else {
+            setNotification({ type: 'error', message: data.message || 'Hata oluştu' });
+            setShowDeleteConfirm(false);
+        }
+    } catch (e) {
+        setNotification({ type: 'error', message: 'Hata oluştu' });
+        setShowDeleteConfirm(false);
+    } finally {
+        setIsDeleting(false);
+    }
+  };
+
+  // --- Animations ---
+  const fadeIn = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+    transition: { duration: 0.3 }
+  };
+
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in p-4 pt-20 md:p-8 pb-20">
-      {/* Notifications */}
-      {notification && (
-        <div className={`fixed top-4 right-4 p-4 rounded-xl shadow-2xl text-white z-50 flex items-center gap-3 animate-in slide-in-from-right ${
-          notification.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
-        }`}>
-          {notification.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
-          <span className="font-medium">{notification.message}</span>
-        </div>
-      )}
-
-      {/* Profile Header */}
-      <div className="bg-slate-900 rounded-3xl p-8 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-8 border border-slate-800">
-        <div className="relative z-10">
-          <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-4xl font-black text-white shadow-lg mx-auto md:mx-0">
-             {(user?.name || 'U').charAt(0).toUpperCase()}
-          </div>
-        </div>
-        
-        <div className="flex-1 text-center md:text-left relative z-10 self-center">
-          <h1 className="text-3xl font-black text-white mb-1">{user?.name}</h1>
-          <p className="text-slate-400 font-medium mb-4">{user?.email}</p>
-          
-          <div className="flex flex-wrap justify-center md:justify-start gap-3">
-             {user?.companyName && (
-                  <span className="px-3 py-1 bg-slate-800 rounded-lg text-xs font-bold text-slate-300 border border-slate-700 flex items-center gap-2">
-                      <Building2 size={14} className="text-indigo-400" /> {user.companyName}
-                  </span>
-              )}
-             <span className={`px-3 py-1 rounded-lg text-xs font-bold border flex items-center gap-2 uppercase tracking-wider ${
-                 user?.plan === 'PRO' || user?.plan === 'YEARLY' 
-                   ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' 
-                   : 'bg-slate-800 text-slate-400 border-slate-700'
-             }`}>
-                {user?.plan === 'FREE' ? 'ÜCRETSİZ PLAN' : 'PREMIUM ÜYE'}
-             </span>
-          </div>
-        </div>
-
-        <button
-          onClick={() => {
-            setIsEditing(!isEditing);
-            setShowPasswordChange(false);
-            setShowInvoices(false);
-          }}
-          className="relative z-10 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-all backdrop-blur-sm border border-white/10 flex items-center gap-2 group self-center"
-        >
-          <Edit2 size={18} className="group-hover:rotate-12 transition-transform" />
-          {isEditing ? (t?.common?.cancel || 'İptal') : (t?.common?.edit || 'Düzenle')}
-        </button>
-
-        {/* Background Decor */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"></div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left: Profile Information & Settings */}
-        <div className="md:col-span-2 space-y-8">
-          
-          {/* Main Content Area */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm relative overflow-hidden">
-            
-            {/* View Switching Header */}
-            <div className="flex border-b border-slate-200 dark:border-slate-800 mb-8 space-x-1 pb-4 overflow-x-auto custom-scrollbar">
-                <button  
-                    onClick={() => { setShowPasswordChange(false); setShowInvoices(false); }}
-                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${!showPasswordChange && !showInvoices ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0B1120] text-slate-900 dark:text-slate-100 p-6 md:p-8 lg:p-12 pb-32">
+        <AnimatePresence>
+            {notification && (
+                <motion.div 
+                    initial={{ opacity: 0, y: -50, x: 50 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    exit={{ opacity: 0, x: 100 }}
+                    className={`fixed top-6 right-6 z-50 px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 backdrop-blur-xl border border-white/10 ${
+                        notification.type === 'success' 
+                        ? 'bg-emerald-500/90 text-white shadow-emerald-500/20' 
+                        : 'bg-red-500/90 text-white shadow-red-500/20'
+                    }`}
                 >
-                    {t?.profile?.accountInformation || 'Hesap Bilgileri'}
-                </button>
-                 <button 
-                    onClick={() => { setShowPasswordChange(true); setShowInvoices(false); setIsEditing(false); }}
-                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${showPasswordChange ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
-                >
-                    {t?.profile?.changePassword || 'Şifre Değiştir'}
-                </button>
-                <button 
-                    onClick={() => { setShowInvoices(true); setShowPasswordChange(false); setIsEditing(false); }}
-                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${showInvoices ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
-                >
-                    {t?.profile?.invoices || 'Faturalar'}
-                </button>
-            </div>
+                    <div className="p-1 bg-white/20 rounded-full">
+                        {notification.type === 'success' ? <Check size={18} /> : <AlertCircle size={18} />}
+                    </div>
+                    <span className="font-bold tracking-wide">{notification.message}</span>
+                </motion.div>
+            )}
+        </AnimatePresence>
 
-            {/* Content Based on State */}
-            {showPasswordChange ? (
-                // Password Change Form
-                <div className="space-y-6 max-w-lg animate-fade-in">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
-                             <Lock size={20} />
-                        </div>
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Şifre Güncelleme</h2>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Mevcut Şifre</label>
-                        <input
-                            type="password"
-                            name="currentPassword"
-                            value={passwordData.currentPassword}
-                            onChange={handlePasswordChange}
-                            className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Yeni Şifre</label>
-                        <input
-                            type="password"
-                            name="newPassword"
-                            value={passwordData.newPassword}
-                            onChange={handlePasswordChange}
-                            className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Yeni Şifre (Tekrar)</label>
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            value={passwordData.confirmPassword}
-                            onChange={handlePasswordChange}
-                            className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
-                        />
-                    </div>
-                     <div className="pt-4">
-                        <button
-                            onClick={handleSavePassword}
-                            className="px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-bold transition shadow-lg shadow-indigo-500/20 active:scale-95"
-                        >
-                            Şifreyi Güncelle
-                        </button>
-                    </div>
-                </div>
-            ) : showInvoices ? (
-                // Invoices List
-                <div className="space-y-6 animate-fade-in">
-                     <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
-                             <FileText size={20} />
-                        </div>
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Ödeme Geçmişi</h2>
-                    </div>
-
-                    {invoices.length > 0 ? (
-                        <div className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-x-auto custom-scrollbar">
-                            <table className="w-full text-sm text-left min-w-[600px]">
-                                <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 font-bold">
-                                    <tr>
-                                        <th className="px-6 py-4">Tarih</th>
-                                        <th className="px-6 py-4">Fatura No</th>
-                                        <th className="px-6 py-4">Tutar</th>
-                                        <th className="px-6 py-4">Durum</th>
-                                        <th className="px-6 py-4 text-right">İşlem</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                    {invoices.map(invoice => (
-                                        <tr key={invoice.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                            <td className="px-6 py-4 font-medium text-slate-900 dark:text-slate-200">
-                                                {new Date(invoice.date).toLocaleDateString('tr-TR')}
-                                            </td>
-                                            <td className="px-6 py-4 text-slate-500 font-mono">{invoice.invoiceNumber}</td>
-                                            <td className="px-6 py-4 text-slate-900 dark:text-slate-200 font-bold">
-                                                {new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(invoice.amount)}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                                    Ödendi
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <button className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 font-bold text-xs flex items-center gap-1 justify-end ml-auto bg-indigo-50 dark:bg-indigo-900/20 px-3 py-1.5 rounded-lg transition-colors">
-                                                    <Download size={14} /> İndir
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <div className="flex flex-col items-center justify-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700">
-                            <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-full mb-3 text-slate-400">
-                                <FileText size={32} />
-                            </div>
-                            <p className="font-bold text-slate-600 dark:text-slate-400">Henüz fatura bulunmuyor</p>
-                        </div>
-                    )}
-                </div>
-            ) : isEditing ? (
-              // Edit Profile Form
-              <form className="space-y-6 animate-fade-in max-w-2xl">
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
-                            <User size={20} />
-                    </div>
-                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">Bilgileri Düzenle</h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t?.profile?.fullName || 'Ad Soyad'}</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
-                    />
-                    </div>
-                    <div>
-                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t?.profile?.email || 'E-posta'}</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
-                    />
-                    </div>
-                    <div className="md:col-span-2">
-                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t?.profile?.companyName || 'Şirket Adı'} <span className="text-xs text-slate-400 font-normal ml-1">(İsteğe Bağlı)</span></label>
-                    <input
-                        type="text"
-                        name="companyName"
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 outline-none transition-all"
-                    />
-                    </div>
-                </div>
-
-                <div className="flex gap-4 pt-4">
-                  <button
-                    type="button"
-                    onClick={handleSaveProfile}
-                    className="flex-1 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-500/20 active:scale-95"
-                  >
-                    <Check size={18} />
-                    {t?.profile?.saveProfile || 'Kaydet'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                    className="flex-1 px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold flex items-center justify-center gap-2 transition"
-                  >
-                    <X size={18} />
-                    {t?.common?.cancel || 'İptal'}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              // View Profile Information
-              <div className="space-y-6 animate-fade-in max-w-2xl">
-                 <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
-                            <User size={20} />
-                    </div>
-                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">Genel Bilgiler</h2>
-                </div>
-
-                <div className="group p-4 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all bg-slate-50 dark:bg-slate-800/50">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t?.profile?.fullName || 'Ad Soyad'}</p>
-                    <p className="text-lg font-bold text-slate-900 dark:text-white">{user?.name}</p>
-                </div>
+        <div className="max-w-7xl mx-auto space-y-8">
+            {/* Header Section */}
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-900 to-slate-950 border border-white/5 shadow-2xl p-8 md:p-12 mb-12"
+            >
+                {/* Background Effects */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
                 
-                {!showDeleteConfirm ? (
-                        <button 
-                            onClick={() => {
-                                setShowDeleteConfirm(true);
-                                setDeleteCountdown(3);
-                            }}
-                            className="text-red-500 hover:text-red-700 font-bold text-sm flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors w-full md:w-auto justify-center md:justify-start"
-                        >
-                            <Trash2 size={16} />
-                            {t?.profile?.deleteAccount || 'Hesabımı Sil'}
-                        </button>
-                    ) : (
-                        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 animate-in fade-in slide-in-from-top-2">
-                             <h4 className="font-bold text-red-700 dark:text-red-400 mb-2 flex items-center gap-2">
-                                <AlertTriangle size={18} />
-                                Hesabınızı silmek üzeresiniz!
-                             </h4>
-                             <p className="text-sm text-red-600 dark:text-red-300 mb-4">
-                                Bu işlem geri alınamaz. Tüm verileriniz kalıcı olarak silinecektir.
-                             </p>
-                             <div className="flex gap-3">
-                                 <button
-                                    onClick={async () => {
-                                        setIsDeleting(true);
-                                        try {
-                                            const res = await fetchApi('/api/auth/delete-account', { 
-                                                method: 'DELETE',
-                                                headers: { 
-                                                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                                                }
-                                            });
-                                            if (!res.ok) {
-                                                const errorData = await res.json();
-                                                throw new Error(errorData.message || 'Silme işlemi başarısız.');
-                                            }
+                <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                     <motion.div 
+                        whileHover={{ scale: 1.05, rotate: 2 }}
+                        className="group relative"
+                     >
+                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-[3px] shadow-2xl shadow-indigo-500/30">
+                            <div className="w-full h-full rounded-[1.3rem] bg-slate-900 flex items-center justify-center text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400">
+                                {(user?.name || 'U').charAt(0).toUpperCase()}
+                            </div>
+                        </div>
+                        <div className="absolute -bottom-2 -right-2 bg-emerald-500 border-4 border-slate-900 w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
+                            <Check size={14} className="text-white stroke-[3]" />
+                        </div>
+                     </motion.div>
 
-                                            const data = await res.json();
-                                        
-                                            if(data.success) {
-                                                localStorage.removeItem('authToken');
-                                                localStorage.removeItem('currentUser');
-                                                localStorage.clear();
-                                                window.location.href = '/auth?mode=login';
-                                            } else {
-                                                setNotification({ type: 'error', message: data.message || 'Hata oluştu.' });
-                                                setShowDeleteConfirm(false);
-                                            }
-                                        } catch (e) {
-                                            console.error(e);
-                                            setNotification({ type: 'error', message: 'Bir hata oluştu.' });
-                                            setShowDeleteConfirm(false);
-                                        } finally {
-                                            setIsDeleting(false);
-                                        }
-                                    }}
-                                    disabled={deleteCountdown > 0 || isDeleting}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-lg font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
-                                 >
-                                    {isDeleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-                                    {deleteCountdown > 0 ? `Bekleyiniz (${deleteCountdown})` : 'Evet, Hesabımı Sil'}
-                                 </button>
-                                 <button
-                                    onClick={() => setShowDeleteConfirm(false)}
-                                    disabled={isDeleting}
-                                    className="px-4 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition"
-                                 >
-                                    İptal
-                                 </button>
+                     <div className="text-center md:text-left flex-1">
+                        <div className="flex flex-col md:flex-row items-center md:items-baseline gap-4 mb-2">
+                             <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+                                {user?.name}
+                             </h1>
+                             <span className={`px-4 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1.5 uppercase tracking-wider backdrop-blur-md ${
+                                 user?.plan === 'PRO' || user?.plan === 'YEARLY' || user?.role === 'ADMIN'
+                                 ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                                 : 'bg-slate-700/30 text-slate-300 border-slate-600/30'
+                             }`}>
+                                {user?.role === 'ADMIN' ? <Crown size={14} /> : <Zap size={14} />}
+                                {user?.role === 'ADMIN' ? 'Yönetici' : user?.plan === 'FREE' ? 'Başlangıç Planı' : 'Premium Üye'}
+                             </span>
+                        </div>
+                        <p className="text-slate-400 text-lg font-medium mb-6 flex items-center justify-center md:justify-start gap-2">
+                            <Mail size={18} className="text-indigo-400" /> {user?.email}
+                        </p>
+                        
+                        <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                             {user?.companyName && (
+                                 <div className="px-4 py-2 bg-slate-800/50 rounded-xl text-sm font-bold text-slate-300 border border-slate-700/50 flex items-center gap-2 hover:bg-slate-800 transition-colors">
+                                     <Building2 size={16} className="text-indigo-400" /> 
+                                     {user.companyName}
+                                 </div>
+                             )}
+                             <div className="px-4 py-2 bg-slate-800/50 rounded-xl text-sm font-bold text-slate-300 border border-slate-700/50 flex items-center gap-2 hover:bg-slate-800 transition-colors">
+                                 <Calendar size={16} className="text-purple-400" /> 
+                                 Üyelik: {new Date(user?.createdAt || Date.now()).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })}
                              </div>
                         </div>
-                    )}
-              </div>
-            )}
-          </div>
-        </div>
+                     </div>
 
-        {/* Right: Subscription & Usage Information */}
-        <div className="space-y-6">
-          {/* Subscription Card */}
-          <div className="bg-slate-900 dark:bg-slate-950 rounded-3xl p-8 relative overflow-hidden shadow-2xl border border-slate-800">
-             {/* Decorative blob */}
-             <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16"></div>
-             
-            <h3 className="font-black text-white mb-6 flex items-center gap-3 relative z-10 text-xl">
-              <span className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-                 <CreditCard size={18} className="text-white" />
-              </span>
-              {t?.profile?.subscription || 'Abonelik'}
-            </h3>
-            
-            <div className="space-y-6 relative z-10">
-              <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
-                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-2">{t?.profile?.plan || 'MEVCUT PAKET'}</p>
-                <div className="flex flex-col gap-2">
-                     <p className="text-2xl font-black text-white">
-                        {user?.plan === 'YEARLY' ? (t?.profile?.yearlyPro || 'Yıllık Pro') : user?.plan === 'MONTHLY' ? (t?.profile?.monthlyStandard || 'Aylık Standart') : 'Ücretsiz Plan'}
-                    </p>
-                    <span className={`self-start px-3 py-1 rounded-lg text-xs font-bold border ${user?.plan !== 'FREE' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-slate-700 text-slate-400 border-slate-600'}`}>
-                        {user?.plan}
-                    </span>
+                     <div className="hidden lg:block relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500" />
+                        <div className="relative bg-slate-900/50 backdrop-blur-sm border border-white/10 p-6 rounded-2xl w-64">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Kalan Hakkınız</span>
+                                <Activity size={16} className="text-emerald-400" />
+                            </div>
+                            <div className="text-3xl font-black text-white mb-2">
+                                {user?.remainingDownloads === 'UNLIMITED' ? '∞' : user?.remainingDownloads || 0}
+                            </div>
+                            <div className="w-full bg-slate-700/50 rounded-full h-2 overflow-hidden mb-2">
+                                <div 
+                                    className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-1000"
+                                    style={{ width: user?.remainingDownloads === 'UNLIMITED' ? '100%' : `${Math.min(100, ((user?.remainingDownloads || 0) / 10) * 100)}%` }}
+                                />
+                            </div>
+                            <p className="text-xs text-slate-500 font-medium">Bu ayki kullanım: %{user?.remainingDownloads === 'UNLIMITED' ? '0' : Math.max(0, 100 - ((user?.remainingDownloads || 0) * 10)).toFixed(0)}</p>
+                        </div>
+                     </div>
                 </div>
-              </div>
+            </motion.div>
 
-               <div className="flex justify-between items-center px-2">
-                 <p className="font-bold text-slate-400">{t?.profile?.status || 'Durum'}</p>
-                 <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold ${
-                  user?.isActive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
-                }`}>
-                  <span className={`w-2 h-2 rounded-full ${user?.isActive ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
-                  {user?.isActive ? (t?.profile?.active || 'Aktif') : 'Pasif'}
-                </span>
-              </div>
-              
-              {user?.subscriptionEndDate && (
-                  <div className="text-xs font-medium text-slate-500 flex items-center gap-2 justify-center bg-slate-800/50 py-2 rounded-lg">
-                      <Calendar size={14}/> 
-                      Yenileme: {new Date(user.subscriptionEndDate).toLocaleDateString()}
-                  </div>
-              )}
-            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Left Column - Navigation/Tabs */}
+                <div className="lg:col-span-8 space-y-8">
+                    {/* Tab Navigation */}
+                    <div className="flex p-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-x-auto">
+                         {[
+                            { id: 'profile', label: t?.profile?.accountInformation || 'Hesap Bilgileri', icon: User },
+                            { id: 'security', label: t?.profile?.changePassword || 'Güvenlik', icon: Lock },
+                            { id: 'billing', label: t?.profile?.invoices || 'Ödeme Geçmişi', icon: FileText }
+                         ].map((tab) => (
+                             <button
+                                key={tab.id}
+                                onClick={() => { setActiveTab(tab.id as any); setIsEditing(false); }}
+                                className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all relative z-10 ${
+                                    activeTab === tab.id 
+                                    ? 'text-white' 
+                                    : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                                }`}
+                             >
+                                {activeTab === tab.id && (
+                                    <motion.div 
+                                        layoutId="activeTab"
+                                        className="absolute inset-0 bg-slate-900 dark:bg-indigo-600 rounded-xl shadow-lg"
+                                        initial={false}
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                )}
+                                <span className="relative z-10 flex items-center gap-2">
+                                    <tab.icon size={16} />
+                                    {tab.label}
+                                </span>
+                             </button>
+                         ))}
+                    </div>
 
-            {onNavigate && user?.role !== 'ADMIN' && (
-                <button 
-                  onClick={() => onNavigate('subscription')}
-                  className="w-full mt-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl font-bold transition shadow-lg shadow-indigo-900/40 active:scale-95 flex items-center justify-center gap-2"
-                >
-                  {user?.plan === 'FREE' ? 'Premium\'a Yükselt' : 'Planı Yönet'}
-                </button>
-            )}
-          </div>
+                    {/* Content Container */}
+                    <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm min-h-[400px] relative overflow-hidden">
+                        <AnimatePresence mode="wait">
+                            {activeTab === 'profile' && (
+                                <motion.div key="profile" {...fadeIn} className="space-y-8">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                                Profil Detayları
+                                            </h2>
+                                            <p className="text-slate-500 dark:text-slate-400 mt-1">Kişisel bilgilerinizi buradan yönetebilirsiniz.</p>
+                                        </div>
+                                        <button
+                                            onClick={() => setIsEditing(!isEditing)}
+                                            className={`px-5 py-2.5 rounded-xl text-sm font-bold transition flex items-center gap-2 ${
+                                                isEditing 
+                                                ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400' 
+                                                : 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400'
+                                            }`}
+                                        >
+                                            {isEditing ? <X size={16} /> : <Edit2 size={16} />}
+                                            {isEditing ? 'İptal' : 'Düzenle'}
+                                        </button>
+                                    </div>
 
-          {/* Usage Stats Widget */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-8 shadow-sm">
-            <h3 className="font-bold text-slate-900 dark:text-white mb-6 text-lg">{t?.profile?.usageStatistics || 'Hakkım'}</h3>
-            <div className="space-y-4">
-                <div className="flex justify-between items-end mb-2">
-                  <span className="text-sm font-medium text-slate-500">{t?.profile?.downloads || 'İndirme Limiti'}</span>
-                  <span className="font-black text-slate-900 dark:text-white text-lg">
-                    {user?.remainingDownloads === 'UNLIMITED' ? (t?.profile?.unlimited || 'Sınırsız') : user?.remainingDownloads}
-                  </span>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="space-y-4">
+                                            <label className="block text-sm font-bold text-slate-500 uppercase tracking-wider">Ad Soyad</label>
+                                            {isEditing ? (
+                                                <input 
+                                                    name="name"
+                                                    value={formData.name}
+                                                    onChange={handleChange}
+                                                    className="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-bold focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                                                />
+                                            ) : (
+                                                <div className="text-lg font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-slate-800">
+                                                    {user?.name}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <label className="block text-sm font-bold text-slate-500 uppercase tracking-wider">E-Posta</label>
+                                            <div className="relative">
+                                                {isEditing ? (
+                                                    <input 
+                                                        name="email"
+                                                        value={formData.email}
+                                                        onChange={handleChange}
+                                                        type="email"
+                                                        className="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-bold focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                                                    />
+                                                ) : (
+                                                    <div className="text-lg font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                                        {user?.email}
+                                                        <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs px-2 py-1 rounded-md font-bold flex items-center gap-1">
+                                                            <Check size={12} /> Onaylı
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="md:col-span-2 space-y-4">
+                                            <label className="block text-sm font-bold text-slate-500 uppercase tracking-wider">Şirket Bilgisi</label>
+                                            {isEditing ? (
+                                                <input 
+                                                    name="companyName"
+                                                    value={formData.companyName}
+                                                    onChange={handleChange}
+                                                    placeholder="Şirket adı giriniz..."
+                                                    className="w-full bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-bold focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                                                />
+                                            ) : (
+                                                <div className="text-lg font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                                                    <Building2 size={20} className="text-slate-400" />
+                                                    {user?.companyName || <span className="text-slate-400 italic font-normal">Belirtilmemiş</span>}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {isEditing && (
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-end pt-4">
+                                            <button 
+                                                onClick={handleSaveProfile}
+                                                className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-emerald-500/20 flex items-center gap-2 transition-all active:scale-95"
+                                            >
+                                                <Check size={18} /> Değişiklikleri Kaydet
+                                            </button>
+                                        </motion.div>
+                                    )}
+
+                                    {/* Danger Zone */}
+                                    <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800">
+                                        <h3 className="text-sm font-bold text-red-500 uppercase tracking-wider mb-4">Tehlikeli Bölge</h3>
+                                        {!showDeleteConfirm ? (
+                                            <button 
+                                                onClick={() => { setShowDeleteConfirm(true); setDeleteCountdown(3); }}
+                                                className="w-full md:w-auto px-6 py-3 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-xl font-bold transition flex items-center gap-2"
+                                            >
+                                                <Trash2 size={18} /> Hesabımı Kalıcı Olarak Sil
+                                            </button>
+                                        ) : (
+                                            <motion.div 
+                                                initial={{ opacity: 0, height: 0 }} 
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-2xl p-6"
+                                            >
+                                                <div className="flex gap-4">
+                                                    <div className="p-3 bg-red-100 dark:bg-red-900/20 rounded-xl h-fit">
+                                                        <AlertTriangle className="text-red-600 dark:text-red-400" />
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-bold text-red-700 dark:text-red-400 text-lg">Emin misiniz?</h4>
+                                                        <p className="text-red-600/80 dark:text-red-400/70 mt-1 mb-4 text-sm font-medium">
+                                                            Hesabınızı silmek tüm belgelerinizi, fatura geçmişinizi ve kullanıcı verilerinizi kalıcı olarak yok edecektir. Bu işlem geri alınamaz.
+                                                        </p>
+                                                        <div className="flex gap-3">
+                                                            <button 
+                                                                onClick={handleDeleteAccount}
+                                                                disabled={deleteCountdown > 0 || isDeleting}
+                                                                className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold shadow-lg shadow-red-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
+                                                            >
+                                                                {isDeleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                                                                {deleteCountdown > 0 ? `Bekleyiniz (${deleteCountdown})` : 'Evet, Sil'}
+                                                            </button>
+                                                            <button 
+                                                                onClick={() => setShowDeleteConfirm(false)}
+                                                                className="px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+                                                            >
+                                                                Vazgeç
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {activeTab === 'security' && (
+                                <motion.div key="security" {...fadeIn} className="max-w-xl mx-auto py-4">
+                                     <div className="mb-8 text-center">
+                                         <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mx-auto mb-4">
+                                             <Shield size={32} />
+                                         </div>
+                                         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Şifre Değişikliği</h2>
+                                         <p className="text-slate-500 dark:text-slate-400 mt-1">Hesap güvenliğinizi sağlamak için güçlü bir şifre kullanın.</p>
+                                     </div>
+
+                                     <div className="space-y-6 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                                        <div className="space-y-2">
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Mevcut Şifre</label>
+                                            <div className="relative">
+                                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                                <input 
+                                                    type="password"
+                                                    name="currentPassword"
+                                                    value={passwordData.currentPassword}
+                                                    onChange={handlePasswordChange}
+                                                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-medium focus:border-indigo-500 outline-none transition-all"
+                                                    placeholder="••••••••"
+                                                />
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="h-px bg-slate-200 dark:bg-slate-700 my-2" />
+
+                                        <div className="space-y-2">
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Yeni Şifre</label>
+                                            <div className="relative">
+                                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                                <input 
+                                                    type="password"
+                                                    name="newPassword"
+                                                    value={passwordData.newPassword}
+                                                    onChange={handlePasswordChange}
+                                                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-medium focus:border-indigo-500 outline-none transition-all"
+                                                    placeholder="En az 6 karakter"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Yeni Şifre (Tekrar)</label>
+                                            <div className="relative">
+                                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                                <input 
+                                                    type="password"
+                                                    name="confirmPassword"
+                                                    value={passwordData.confirmPassword}
+                                                    onChange={handlePasswordChange}
+                                                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-medium focus:border-indigo-500 outline-none transition-all"
+                                                    placeholder="••••••••"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <button 
+                                            onClick={handleSavePassword}
+                                            className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-600/20 active:scale-95 transition-all text-lg"
+                                        >
+                                            Şifreyi Güncelle
+                                        </button>
+                                     </div>
+                                </motion.div>
+                            )}
+
+                            {activeTab === 'billing' && (
+                                <motion.div key="billing" {...fadeIn} className="space-y-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Fatura & Ödeme Geçmişi</h2>
+                                        <div className="text-sm font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">
+                                            Son Güncelleme: {new Date().toLocaleDateString('tr-TR')}
+                                        </div>
+                                    </div>
+
+                                    {isLoadingInvoices ? (
+                                        <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+                                            <Loader2 size={40} className="animate-spin mb-4" />
+                                            <p className="font-medium animate-pulse">Faturalar yükleniyor...</p>
+                                        </div>
+                                    ) : invoices.length > 0 ? (
+                                        <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                            <table className="w-full text-left border-collapse">
+                                                <thead>
+                                                    <tr className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-black uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                                                        <th className="p-4 pl-6">Tarih</th>
+                                                        <th className="p-4">Fatura No</th>
+                                                        <th className="p-4">Hizmet</th>
+                                                        <th className="p-4">Tutar</th>
+                                                        <th className="p-4">Durum</th>
+                                                        <th className="p-4 text-right pr-6">İşlem</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
+                                                    {invoices.map((invoice, idx) => (
+                                                        <motion.tr 
+                                                            key={invoice.id} 
+                                                            initial={{ opacity: 0, x: -10 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            transition={{ delay: idx * 0.05 }}
+                                                            className="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition"
+                                                        >
+                                                            <td className="p-4 pl-6 font-bold text-slate-700 dark:text-slate-300">
+                                                                {new Date(invoice.date).toLocaleDateString('tr-TR')}
+                                                            </td>
+                                                            <td className="p-4 font-mono text-sm text-slate-500">#{invoice.invoiceNumber}</td>
+                                                            <td className="p-4 text-sm font-medium">Premium Üyelik</td>
+                                                            <td className="p-4 font-black text-slate-900 dark:text-white">
+                                                                {new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(invoice.amount)}
+                                                            </td>
+                                                            <td className="p-4">
+                                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100/50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/30">
+                                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Ödendi
+                                                                </span>
+                                                            </td>
+                                                            <td className="p-4 text-right pr-6">
+                                                                <button className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg transition-colors group-hover:scale-110 active:scale-95">
+                                                                    <Download size={18} />
+                                                                </button>
+                                                            </td>
+                                                        </motion.tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-20 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+                                            <div className="w-16 h-16 mx-auto bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 mb-4">
+                                                <FileText size={32} />
+                                            </div>
+                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Fatura Bulunamadı</h3>
+                                            <p className="text-slate-500 text-sm mt-1">Henüz bir ödeme geçmişiniz bulunmuyor.</p>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
-                {user?.remainingDownloads !== 'UNLIMITED' && (
-                  <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                          (user?.remainingDownloads || 0) < 5 ? 'bg-red-500' : 'bg-blue-600'
-                      }`}
-                      style={{ width: `${Math.min(100, (user?.remainingDownloads / 10) * 100)}%` }} 
-                    ></div>
-                  </div>
-                )}
-                {user?.remainingDownloads !== 'UNLIMITED' && (
-                  <p className="text-xs text-slate-400 mt-2 font-medium">Daha fazla indirme hakkı için paketinizi yükseltin.</p>
-                )}
+
+                {/* Right Column - Subscription Card */}
+                <div className="lg:col-span-4 space-y-8">
+                     <motion.div 
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="bg-slate-900 dark:bg-gradient-to-br dark:from-indigo-950 dark:to-slate-900 rounded-[2.5rem] p-8 relative overflow-hidden text-white shadow-2xl border border-white/10"
+                     >
+                        {/* Golden/Premium Effects */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -mr-16 -mt-16 pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-600/20 rounded-full blur-[60px] -ml-10 -mb-10 pointer-events-none" />
+
+                        <div className="relative z-10">
+                            <div className="flex justify-between items-start mb-8">
+                                <div>
+                                    <p className="text-xs font-black text-indigo-300 uppercase tracking-widest mb-1">Mevcut Plan</p>
+                                    <h3 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                                        {user?.plan === 'YEARLY' ? 'Business Pro' : 'Starter Plan'}
+                                    </h3>
+                                </div>
+                                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-lg">
+                                    <Crown className="text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" size={24} fill="currentColor" fillOpacity={0.3} />
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className="bg-white/5 rounded-2xl p-6 border border-white/5 backdrop-blur-sm">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-sm font-bold text-slate-400">Durum</span>
+                                        <span className="flex items-center gap-2 text-sm font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/20">
+                                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                            Aktif
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm font-bold text-slate-400">Yenileme</span>
+                                        <span className="text-white font-mono font-medium">
+                                            {user?.subscriptionEndDate ? new Date(user.subscriptionEndDate).toLocaleDateString() : 'Veri Yok'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {user?.role !== 'ADMIN' && (
+                                    <button 
+                                        onClick={() => onNavigate && onNavigate('subscription')}
+                                        className="relative w-full py-4 text-center font-bold text-white rounded-2xl text-lg overflow-hidden group shadow-lg shadow-indigo-500/25 transition-all hover:scale-[1.02]"
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] animate-gradient" />
+                                        <span className="relative flex items-center justify-center gap-2">
+                                            {user?.plan === 'FREE' ? 'Premium\'a Geç' : 'Planı Yükselt'} <Zap size={18} fill="currentColor" />
+                                        </span>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                     </motion.div>
+
+                     {/* Quick Actions */}
+                     <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="bg-white dark:bg-slate-900 rounded-[2rem] p-6 border border-slate-200 dark:border-slate-800 shadow-sm"
+                     >
+                        <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                             <Clock size={18} className="text-indigo-500" />
+                             Son İşlemler
+                        </h3>
+                        {/* Mock timeline for visual fullness since user doesn't have robust logs yet */}
+                        <div className="relative pl-4 space-y-6 border-l-2 border-slate-100 dark:border-slate-800">
+                             <div className="relative">
+                                 <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 shadow-md"></div>
+                                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Hesaba giriş yapıldı</p>
+                                 <p className="text-xs text-slate-400 font-medium mt-1">Bugün, 09:42</p>
+                             </div>
+                             <div className="relative">
+                                 <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-indigo-500 border-2 border-white dark:border-slate-900 shadow-md"></div>
+                                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Profil güncellendi</p>
+                                 <p className="text-xs text-slate-400 font-medium mt-1">Dün, 14:20</p>
+                             </div>
+                              <div className="relative">
+                                 <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-slate-300 dark:bg-slate-700 border-2 border-white dark:border-slate-900 shadow-md"></div>
+                                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Fatura görüntülendi</p>
+                                 <p className="text-xs text-slate-400 font-medium mt-1">2 Mart, 11:30</p>
+                             </div>
+                        </div>
+                     </motion.div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
   );
 };
