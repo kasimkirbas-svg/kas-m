@@ -490,13 +490,3 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, recentDo
 };
 
 export default Dashboard;
-                        </div>
-                    </div>
-                </motion.div>
-            </div>
-        </div>
-
-      </div>
-    </div>
-  );
-};
