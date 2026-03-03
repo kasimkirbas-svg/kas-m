@@ -355,8 +355,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </header>
 
         {/* 2. Sectors Row: Animated & Detailed */}
-        <div className='shrink-0 h-auto md:h-40 perspective-1000' onMouseLeave={() => setHoveredSectorId(null)}>
-            <div className='flex overflow-x-auto snap-x md:grid md:grid-cols-7 gap-3 h-32 md:h-full pb-2 md:pb-0 px-1 md:px-0 scrollbar-hide'>
+        <div className='shrink-0 h-auto md:h-48 z-20' onMouseLeave={() => setHoveredSectorId(null)}>
+            <div className='flex overflow-x-auto snap-x md:overflow-visible md:grid md:grid-cols-7 gap-3 h-40 md:h-full p-4 scrollbar-hide items-center'>
                 {SECTORS.map((sector, index) => {
                     const isSelected = selectedSectorIds.includes(sector.id);
                     const isHovered = hoveredSectorId === sector.id;
@@ -365,45 +365,57 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     return (
                         <motion.div 
                             key={sector.id}
-                            whileHover={{ scale: 1.05, y: -5, zIndex: 10 }}
-                            whileTap={{ scale: 0.95 }}
+                            animate={{ 
+                                scale: isActive ? 1.15 : 1,
+                                y: isActive ? -10 : 0,
+                                zIndex: isActive ? 50 : 0
+                            }}
+                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
                             onMouseEnter={() => setHoveredSectorId(sector.id)}
                             onClick={() => toggleSector(sector.id)}
                             className={`
-                            relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group shrink-0 w-[140px] md:w-auto snap-center
-                            border transition-all duration-300
+                            relative rounded-xl cursor-pointer select-none h-32 md:h-36 flex flex-col items-center justify-end overflow-hidden shrink-0 w-[140px] md:w-auto snap-center
+                            border transition-colors duration-300 origin-bottom md:origin-center
                             ${isActive 
-                                ? 'border-2 border-slate-700 dark:border-white shadow-xl dark:shadow-[0_0_50px_rgba(255,255,255,0.5)] scale-105 -translate-y-2 z-20 ring-4 ring-slate-300 dark:ring-white/10' 
-                                : 'border-slate-300 dark:border-white/5 shadow-md bg-white dark:bg-slate-800/40 hover:border-slate-500 dark:hover:border-white/30'}
+                                ? 'border-amber-500 dark:border-white shadow-2xl dark:shadow-[0_0_40px_rgba(255,255,255,0.3)] ring-2 ring-amber-200 dark:ring-white/20' 
+                                : 'border-slate-300 dark:border-white/10 shadow-md bg-white dark:bg-slate-800/40 hover:border-slate-400'}
                             `}
                         >   
                             {/* Background Image */}
-                            <div 
-                                className='absolute inset-0 bg-cover bg-center transition-transform duration-700'
-                                style={{ 
-                                    backgroundImage: `url(${sector.image})`,
-                                    transform: isActive ? 'scale(1.1)' : 'scale(1)'
-                                }}
+                            <motion.div 
+                                className='absolute inset-0 bg-cover bg-center'
+                                animate={{ scale: isActive ? 1.2 : 1 }}
+                                transition={{ duration: 0.5 }}
+                                style={{ backgroundImage: `url(${sector.image})` }}
                             >
-                                <div className={`absolute inset-0 transition-colors duration-300 ${isActive ? 'bg-slate-100/30 dark:bg-slate-900/30' : 'bg-slate-100/50 dark:bg-slate-900/60 group-hover:bg-slate-100/40 dark:group-hover:bg-slate-900/40'}`}></div>
-                                <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-overlay opacity-40 transition-opacity ${isActive ? 'opacity-60' : 'group-hover:opacity-60'}`}></div>
+                                <div className={`absolute inset-0 transition-colors duration-300 ${isActive ? 'bg-slate-900/10 dark:bg-slate-900/20' : 'bg-slate-100/50 dark:bg-slate-900/60'}`}></div>
+                                <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-overlay opacity-40 transition-opacity ${isActive ? 'opacity-80' : 'opacity-60'}`}></div>
                                 <div className='absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-950 dark:via-transparent dark:to-transparent opacity-90'></div>
-                            </div>
+                            </motion.div>
                             
                             {/* Content */}
-                            <div className='relative z-10 p-4 w-full flex flex-col items-center transition-transform'>
-                                <div className={`
-                                    mb-2 p-2.5 rounded-xl backdrop-blur-md border border-white/20 transition-all duration-300 shadow-md
-                                    ${isActive ? 'bg-amber-500 text-slate-900 scale-110 rotate-3' : 'bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-white group-hover:bg-white dark:group-hover:bg-white/20'}
-                                `}>
-                                    <sector.icon size={20} className="drop-shadow-sm" />
-                                </div>
-                                <span className={`text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 drop-shadow-sm ${isActive ? 'text-slate-900 dark:text-amber-400' : 'text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white'}`}>
+                            <div className='relative z-10 p-3 w-full flex flex-col items-center'>
+                                <motion.div 
+                                    className={`
+                                    mb-2 p-2 rounded-xl backdrop-blur-md border border-white/20 shadow-sm
+                                    ${isActive ? 'bg-amber-500 text-slate-900 shadow-amber-500/50' : 'bg-white/80 dark:bg-white/10 text-slate-700 dark:text-slate-200'}
+                                    `}
+                                    animate={{ 
+                                        scale: isActive ? 1.1 : 1,
+                                        rotate: isActive ? 5 : 0
+                                    }}
+                                >
+                                    <sector.icon size={22} className="drop-shadow-sm" />
+                                </motion.div>
+                                <span className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 drop-shadow-sm ${isActive ? 'text-slate-900 dark:text-amber-400' : 'text-slate-700 dark:text-slate-300'}`}>
                                     {sector.name}
                                 </span>
                                 
                                 {/* Hover/Selected Indicator */}
-                                <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${isActive ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-slate-400 dark:group-hover:bg-white/50'}`}></div>
+                                <motion.div 
+                                    className={`h-0.5 rounded-full mt-2 ${isActive ? 'bg-amber-500' : 'bg-slate-300 dark:bg-white/20'}`}
+                                    animate={{ width: isActive ? 40 : 20 }}
+                                />
                             </div>
                             
                             {/* Selected Checkmark (Enhanced Animation) */}
@@ -414,23 +426,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                         animate={{ 
                                             scale: 1, 
                                             rotate: 0, 
-                                            opacity: 1,
-                                            transition: { 
-                                                type: "spring",
-                                                stiffness: 260,
-                                                damping: 20 
-                                            } 
+                                            opacity: 1
                                         }}
                                         exit={{ scale: 0, opacity: 0 }}
-                                        className='absolute top-3 right-3 w-8 h-8 bg-gradient-to-tr from-emerald-500 to-emerald-400 rounded-full flex items-center justify-center text-white shadow-[0_4px_12px_rgba(16,185,129,0.5)] z-30 ring-2 ring-white ring-offset-2 ring-offset-slate-900'
+                                        className='absolute top-2 right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg z-30'
                                     >
-                                        <motion.div
-                                            initial={{ pathLength: 0, opacity: 0 }}
-                                            animate={{ pathLength: 1, opacity: 1 }}
-                                            transition={{ delay: 0.2, duration: 0.3 }}
-                                        >
-                                            <CheckCircle2 size={18} strokeWidth={3} className="drop-shadow-md" />
-                                        </motion.div>
+                                        <CheckCircle2 size={14} strokeWidth={3} />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
