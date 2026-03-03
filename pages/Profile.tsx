@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Mail, Building2, Calendar, CreditCard, Download, Edit2, 
   Check, X, Lock, FileText, AlertCircle, Trash2, LogOut, 
-  AlertTriangle, Loader2, Shield, Crown, Zap, Activity, Clock
+  AlertTriangle, Loader2, Shield, Crown, Zap, Activity, Clock,
+  FileBadge, History, ChevronRight
 } from 'lucide-react';
-import { Invoice } from '../types';
+import { Invoice, GeneratedDocument, SubscriptionPlan } from '../types';
 import { fetchApi } from '../src/utils/api';
 
 interface ProfileProps {
@@ -14,13 +15,27 @@ interface ProfileProps {
   onNavigate?: (view: string) => void;
 }
 
+interface TimelineItem {
+  id: string;
+  type: 'invoice' | 'document' | 'register' | 'plan_start' | 'update';
+  title: string;
+  date: string;
+  description?: string;
+  amount?: number;
+}
+
 export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNavigate }) => {
+  // Real-Time Data State
   const [user, setUser] = useState(initialUser);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [documents, setDocuments] = useState<GeneratedDocument[]>([]);
+  const [timeline, setTimeline] = useState<TimelineItem[]>([]);
+  
+  // UI State
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'billing'>('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [isLoadingInvoices, setIsLoadingInvoices] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Form Data
   const [formData, setFormData] = useState({
@@ -35,43 +50,117 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
     confirmPassword: ''
   });
 
-  // Delete Account State
+  // Account Deletion
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteCountdown, setDeleteCountdown] = useState(3);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Sync user prop
-  useEffect(() => {
-    if (initialUser) {
-        setUser(initialUser);
-        setFormData({
-            name: initialUser.name || '',
-            email: initialUser.email || '',
-            companyName: initialUser.companyName || ''
-        });
-    }
-  }, [initialUser]);
+  // --- Real-Time Data Fetching ---
+  const fetchAllData = async () => {
+    setLoading(true);
+    try {
+        const [userRes, invoicesRes, docsRes] = await Promise.all([
+            fetchApi('/api/auth/me'),
+            fetchApi('/api/auth/invoices'),
+            fetchApi('/api/documents')
+        ]);
 
-  // Invoice Fetching
-  useEffect(() => {
-    if (activeTab === 'billing' && user?.id) {
-      const fetchInvoices = async () => {
-        setIsLoadingInvoices(true);
-        try {
-          const response = await fetchApi('/api/auth/invoices');
-          const data = await response.json();
-          if (data.success && Array.isArray(data.invoices)) {
-            setInvoices(data.invoices);
-          }
-        } catch (error) {
-          console.error('Error fetching invoices:', error);
-        } finally {
-            setIsLoadingInvoices(false);
+        const userData = await userRes.json();
+        const invoicesData = await invoicesRes.json();
+        const docsData = await docsRes.json();
+
+        if (userData.success && userData.user) {
+            setUser(userData.user);
+            // Update Form Data to Match Real User Data
+            setFormData({
+                name: userData.user.name || '',
+                email: userData.user.email || '',
+                companyName: userData.user.companyName || ''
+            });
+
+            // Update Local Storage for Session Persistence
+            const stored = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            localStorage.setItem('currentUser', JSON.stringify({ ...stored, ...userData.user }));
         }
-      };
-      fetchInvoices();
+
+        let newInvoices: Invoice[] = [];
+        if (invoicesData.success && Array.isArray(invoicesData.invoices)) {
+            newInvoices = invoicesData.invoices;
+            setInvoices(newInvoices);
+        }
+
+        let newDocs: GeneratedDocument[] = [];
+        // Note: Check if docsData is array directly or inside a property based on API
+        if (Array.isArray(docsData)) {
+            newDocs = docsData;
+        } else if (docsData.documents && Array.isArray(docsData.documents)) {
+             newDocs = docsData.documents;
+        }
+        setDocuments(newDocs);
+
+        // --- Build Real Timeline ---
+        const events: TimelineItem[] = [];
+
+        // 1. Account Creation
+        if (userData.user?.createdAt) {
+            events.push({
+                id: 'register',
+                type: 'register',
+                title: 'Hesap Oluşturuldu',
+                date: userData.user.createdAt,
+                description: 'Aramıza katıldınız.'
+            });
+        }
+
+        // 2. Plan Start
+        if (userData.user?.subscriptionStartDate) {
+             events.push({
+                id: 'plan_start',
+                type: 'plan_start',
+                title: 'Abonelik Başlangıcı',
+                date: userData.user.subscriptionStartDate, // Use start date
+                description: `${userData.user.plan === 'FREE' ? 'Ücretsiz' : userData.user.plan} plan aktif edildi.`
+            });
+        }
+
+        // 3. Invoices
+        newInvoices.forEach(inv => {
+            events.push({
+                id: `invoice-${inv.id}`,
+                type: 'invoice',
+                title: 'Fatura Oluşturuldu',
+                date: inv.date,
+                description: `#${inv.invoiceNumber} numaralı fatura`,
+                amount: inv.amount
+            });
+        });
+
+        // 4. Documents
+        newDocs.forEach(doc => {
+            events.push({
+                id: `doc-${doc.id}`, // Ensure unique ID
+                type: 'document',
+                title: 'Doküman Oluşturuldu', // Generic title if generatedAt is used
+                date: doc.createdAt || (doc as any).date || new Date().toISOString(),
+                description: 'Yeni bir belge hazırlandı.'
+            });
+        });
+
+        // Sort descending by date
+        events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setTimeline(events.slice(0, 5)); // Keep top 5 latest
+
+    } catch (err) {
+        console.error('Failed to fetch profile data', err);
+        setNotification({ type: 'error', message: 'Veriler güncellenemedi.' });
+    } finally {
+        setLoading(false);
     }
-  }, [activeTab, user?.id]);
+  };
+
+  useEffect(() => {
+    fetchAllData();
+  }, []); // Run once on mount
 
   // Notification Timer
   useEffect(() => {
@@ -109,11 +198,10 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
       const data = await response.json();
 
       if (data.success) {
-          setNotification({ type: 'success', message: t?.profile?.savedSuccessfully || 'Profil başarıyla güncellendi' });
+          setNotification({ type: 'success', message: 'Profil başarıyla güncellendi' });
           setIsEditing(false);
-          setUser(prev => ({ ...prev, ...formData }));
-          const storedUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-          localStorage.setItem('currentUser', JSON.stringify({ ...storedUser, ...formData }));
+          // Re-fetch to ensure sync
+          fetchAllData();
       } else {
           setNotification({ type: 'error', message: data.message || 'Güncelleme hatası' });
       }
@@ -178,12 +266,15 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
     }
   };
 
-  // --- Animations ---
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 },
-    transition: { duration: 0.3 }
+  // --- Animation Variants ---
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+  
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
   };
 
   return (
@@ -208,73 +299,74 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
             )}
         </AnimatePresence>
 
-        <div className="max-w-7xl mx-auto space-y-8">
-            {/* Header Section */}
-            <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-900 to-slate-950 border border-white/5 shadow-2xl p-8 md:p-12 mb-12"
-            >
-                {/* Background Effects */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
+        <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            className="max-w-7xl mx-auto space-y-8"
+        >
+            {/* 1. HERO SECTION (Real Data) */}
+            <motion.div variants={itemVariants} className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-900 to-slate-950 border border-white/5 shadow-2xl p-8 md:p-12 mb-12 group">
+                {/* Dynamic Background */}
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-indigo-500/30 transition-colors duration-1000" />
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none group-hover:bg-purple-500/20 transition-colors duration-1000" />
                 
                 <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                     <motion.div 
-                        whileHover={{ scale: 1.05, rotate: 2 }}
-                        className="group relative"
-                     >
+                     <div className="relative">
                         <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-[3px] shadow-2xl shadow-indigo-500/30">
-                            <div className="w-full h-full rounded-[1.3rem] bg-slate-900 flex items-center justify-center text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400">
+                            <div className="w-full h-full rounded-[1.3rem] bg-slate-900 flex items-center justify-center text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400 select-none">
                                 {(user?.name || 'U').charAt(0).toUpperCase()}
                             </div>
                         </div>
-                        <div className="absolute -bottom-2 -right-2 bg-emerald-500 border-4 border-slate-900 w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
-                            <Check size={14} className="text-white stroke-[3]" />
+                        <div className={`absolute -bottom-2 -right-2 border-4 border-slate-900 w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${user?.isActive ? 'bg-emerald-500' : 'bg-red-500'}`}>
+                            {user?.isActive ? <Check size={16} className="text-white stroke-[3]" /> : <X size={16} className="text-white stroke-[3]" />}
                         </div>
-                     </motion.div>
+                     </div>
 
-                     <div className="text-center md:text-left flex-1">
-                        <div className="flex flex-col md:flex-row items-center md:items-baseline gap-4 mb-2">
+                     <div className="text-center md:text-left flex-1 space-y-3">
+                        <div className="flex flex-col md:flex-row items-center md:items-baseline gap-4">
                              <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">
-                                {user?.name}
+                                {user?.name || 'Yükleniyor...'}
                              </h1>
-                             <span className={`px-4 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1.5 uppercase tracking-wider backdrop-blur-md ${
-                                 user?.plan === 'PRO' || user?.plan === 'YEARLY' || user?.role === 'ADMIN'
-                                 ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
-                                 : 'bg-slate-700/30 text-slate-300 border-slate-600/30'
-                             }`}>
-                                {user?.role === 'ADMIN' ? <Crown size={14} /> : <Zap size={14} />}
-                                {user?.role === 'ADMIN' ? 'Yönetici' : user?.plan === 'FREE' ? 'Başlangıç Planı' : 'Premium Üye'}
-                             </span>
+                             {user?.role && (
+                                <span className={`px-4 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1.5 uppercase tracking-wider backdrop-blur-md ${
+                                    user.role === 'ADMIN'
+                                    ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                                    : 'bg-slate-700/30 text-slate-300 border-slate-600/30'
+                                }`}>
+                                    {user.role === 'ADMIN' ? <Crown size={14} /> : <User size={14} />}
+                                    {user.role === 'ADMIN' ? 'Yönetici' : 'Kullanıcı'}
+                                </span>
+                             )}
                         </div>
-                        <p className="text-slate-400 text-lg font-medium mb-6 flex items-center justify-center md:justify-start gap-2">
+                        <p className="text-slate-400 text-lg font-medium flex items-center justify-center md:justify-start gap-2">
                             <Mail size={18} className="text-indigo-400" /> {user?.email}
                         </p>
                         
-                        <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                        <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
                              {user?.companyName && (
-                                 <div className="px-4 py-2 bg-slate-800/50 rounded-xl text-sm font-bold text-slate-300 border border-slate-700/50 flex items-center gap-2 hover:bg-slate-800 transition-colors">
+                                 <div className="px-4 py-2 bg-slate-800/50 rounded-xl text-sm font-bold text-slate-300 border border-slate-700/50 flex items-center gap-2">
                                      <Building2 size={16} className="text-indigo-400" /> 
                                      {user.companyName}
                                  </div>
                              )}
-                             <div className="px-4 py-2 bg-slate-800/50 rounded-xl text-sm font-bold text-slate-300 border border-slate-700/50 flex items-center gap-2 hover:bg-slate-800 transition-colors">
+                             <div className="px-4 py-2 bg-slate-800/50 rounded-xl text-sm font-bold text-slate-300 border border-slate-700/50 flex items-center gap-2">
                                  <Calendar size={16} className="text-purple-400" /> 
-                                 Üyelik: {new Date(user?.createdAt || Date.now()).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })}
+                                 Katılım: {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' }) : '-'}
                              </div>
                         </div>
                      </div>
 
-                     <div className="hidden lg:block relative group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500" />
+                     {/* Real Usage Stats */}
+                     <div className="hidden lg:block relative group/stats">
+                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20 group-hover/stats:opacity-40 transition duration-500" />
                         <div className="relative bg-slate-900/50 backdrop-blur-sm border border-white/10 p-6 rounded-2xl w-64">
                             <div className="flex justify-between items-center mb-4">
                                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Kalan Hakkınız</span>
                                 <Activity size={16} className="text-emerald-400" />
                             </div>
                             <div className="text-3xl font-black text-white mb-2">
-                                {user?.remainingDownloads === 'UNLIMITED' ? '∞' : user?.remainingDownloads || 0}
+                                {user?.remainingDownloads === 'UNLIMITED' ? '∞' : user?.remainingDownloads ?? '-'}
                             </div>
                             <div className="w-full bg-slate-700/50 rounded-full h-2 overflow-hidden mb-2">
                                 <div 
@@ -292,11 +384,11 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                 {/* Left Column - Navigation/Tabs */}
                 <div className="lg:col-span-8 space-y-8">
                     {/* Tab Navigation */}
-                    <div className="flex p-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-x-auto">
+                    <motion.div variants={itemVariants} className="flex p-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-x-auto">
                          {[
-                            { id: 'profile', label: t?.profile?.accountInformation || 'Hesap Bilgileri', icon: User },
-                            { id: 'security', label: t?.profile?.changePassword || 'Güvenlik', icon: Lock },
-                            { id: 'billing', label: t?.profile?.invoices || 'Ödeme Geçmişi', icon: FileText }
+                            { id: 'profile', label: 'Hesap Bilgileri', icon: User },
+                            { id: 'security', label: 'Güvenlik', icon: Lock },
+                            { id: 'billing', label: 'Ödeme Geçmişi', icon: FileText }
                          ].map((tab) => (
                              <button
                                 key={tab.id}
@@ -321,19 +413,25 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                 </span>
                              </button>
                          ))}
-                    </div>
+                    </motion.div>
 
                     {/* Content Container */}
-                    <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm min-h-[400px] relative overflow-hidden">
+                    <motion.div variants={itemVariants} className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm min-h-[400px] relative overflow-hidden">
                         <AnimatePresence mode="wait">
                             {activeTab === 'profile' && (
-                                <motion.div key="profile" {...fadeIn} className="space-y-8">
+                                <motion.div 
+                                    key="profile" 
+                                    initial={{ opacity: 0, x: -20 }} 
+                                    animate={{ opacity: 1, x: 0 }} 
+                                    exit={{ opacity: 0, x: 20 }} 
+                                    className="space-y-8"
+                                >
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                                                 Profil Detayları
                                             </h2>
-                                            <p className="text-slate-500 dark:text-slate-400 mt-1">Kişisel bilgilerinizi buradan yönetebilirsiniz.</p>
+                                            <p className="text-slate-500 dark:text-slate-400 mt-1">Kişisel bilgilerinizi anlık olarak buradan yönetebilirsiniz.</p>
                                         </div>
                                         <button
                                             onClick={() => setIsEditing(!isEditing)}
@@ -380,7 +478,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                                     <div className="text-lg font-bold text-slate-900 dark:text-white py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                                                         {user?.email}
                                                         <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs px-2 py-1 rounded-md font-bold flex items-center gap-1">
-                                                            <Check size={12} /> Onaylı
+                                                            <Check size={12} /> Doğrulanmış
                                                         </span>
                                                     </div>
                                                 )}
@@ -467,7 +565,13 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                             )}
 
                             {activeTab === 'security' && (
-                                <motion.div key="security" {...fadeIn} className="max-w-xl mx-auto py-4">
+                                <motion.div 
+                                    key="security" 
+                                    initial={{ opacity: 0, x: -20 }} 
+                                    animate={{ opacity: 1, x: 0 }} 
+                                    exit={{ opacity: 0, x: 20 }}
+                                    className="max-w-xl mx-auto py-4"
+                                >
                                      <div className="mb-8 text-center">
                                          <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mx-auto mb-4">
                                              <Shield size={32} />
@@ -535,7 +639,13 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                             )}
 
                             {activeTab === 'billing' && (
-                                <motion.div key="billing" {...fadeIn} className="space-y-6">
+                                <motion.div 
+                                    key="billing" 
+                                    initial={{ opacity: 0, x: -20 }} 
+                                    animate={{ opacity: 1, x: 0 }} 
+                                    exit={{ opacity: 0, x: 20 }}
+                                    className="space-y-6"
+                                >
                                     <div className="flex items-center justify-between mb-4">
                                         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Fatura & Ödeme Geçmişi</h2>
                                         <div className="text-sm font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">
@@ -543,7 +653,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                         </div>
                                     </div>
 
-                                    {isLoadingInvoices ? (
+                                    {loading ? (
                                         <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                                             <Loader2 size={40} className="animate-spin mb-4" />
                                             <p className="font-medium animate-pulse">Faturalar yükleniyor...</p>
@@ -605,19 +715,14 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                    </div>
+                    </motion.div>
                 </div>
 
-                {/* Right Column - Subscription Card */}
-                <div className="lg:col-span-4 space-y-8">
-                     <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-slate-900 dark:bg-gradient-to-br dark:from-indigo-950 dark:to-slate-900 rounded-[2.5rem] p-8 relative overflow-hidden text-white shadow-2xl border border-white/10"
-                     >
+                {/* Right Column - Subscription Card & Real Timeline */}
+                <motion.div variants={itemVariants} className="lg:col-span-4 space-y-8">
+                     <div className="bg-slate-900 dark:bg-gradient-to-br dark:from-indigo-950 dark:to-slate-900 rounded-[2.5rem] p-8 relative overflow-hidden text-white shadow-2xl border border-white/10 group">
                         {/* Golden/Premium Effects */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -mr-16 -mt-16 pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -mr-16 -mt-16 pointer-events-none group-hover:bg-amber-500/20 transition-colors duration-1000" />
                         <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-600/20 rounded-full blur-[60px] -ml-10 -mb-10 pointer-events-none" />
 
                         <div className="relative z-10">
@@ -625,10 +730,10 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                 <div>
                                     <p className="text-xs font-black text-indigo-300 uppercase tracking-widest mb-1">Mevcut Plan</p>
                                     <h3 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                                        {user?.plan === 'YEARLY' ? 'Business Pro' : 'Starter Plan'}
+                                        {user?.plan === 'YEARLY' ? 'Business Pro' : user?.plan === 'MONTHLY' ? 'Aylık Standart' : 'Başlangıç Planı'}
                                     </h3>
                                 </div>
-                                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-lg">
+                                <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-lg group-hover:rotate-12 transition-transform duration-500">
                                     <Crown className="text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" size={24} fill="currentColor" fillOpacity={0.3} />
                                 </div>
                             </div>
@@ -645,7 +750,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm font-bold text-slate-400">Yenileme</span>
                                         <span className="text-white font-mono font-medium">
-                                            {user?.subscriptionEndDate ? new Date(user.subscriptionEndDate).toLocaleDateString() : 'Veri Yok'}
+                                            {user?.subscriptionEndDate ? new Date(user.subscriptionEndDate).toLocaleDateString() : 'Süresiz'}
                                         </span>
                                     </div>
                                 </div>
@@ -663,41 +768,69 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                 )}
                             </div>
                         </div>
-                     </motion.div>
+                     </div>
 
-                     {/* Quick Actions */}
-                     <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="bg-white dark:bg-slate-900 rounded-[2rem] p-6 border border-slate-200 dark:border-slate-800 shadow-sm"
-                     >
-                        <h3 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                             <Clock size={18} className="text-indigo-500" />
-                             Son İşlemler
+                     {/* REAL TIMELINE (Replaced Mock Data) */}
+                     <div className="bg-white dark:bg-slate-900 rounded-[2rem] p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <h3 className="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2 text-lg">
+                             <History size={20} className="text-indigo-500" />
+                             Son Aktiviteler
                         </h3>
-                        {/* Mock timeline for visual fullness since user doesn't have robust logs yet */}
-                        <div className="relative pl-4 space-y-6 border-l-2 border-slate-100 dark:border-slate-800">
-                             <div className="relative">
-                                 <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 shadow-md"></div>
-                                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Hesaba giriş yapıldı</p>
-                                 <p className="text-xs text-slate-400 font-medium mt-1">Bugün, 09:42</p>
+                        
+                        {loading ? (
+                             <div className="flex justify-center p-8">
+                                 <Loader2 className="animate-spin text-slate-400" />
                              </div>
-                             <div className="relative">
-                                 <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-indigo-500 border-2 border-white dark:border-slate-900 shadow-md"></div>
-                                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Profil güncellendi</p>
-                                 <p className="text-xs text-slate-400 font-medium mt-1">Dün, 14:20</p>
-                             </div>
-                              <div className="relative">
-                                 <div className="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-slate-300 dark:bg-slate-700 border-2 border-white dark:border-slate-900 shadow-md"></div>
-                                 <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Fatura görüntülendi</p>
-                                 <p className="text-xs text-slate-400 font-medium mt-1">2 Mart, 11:30</p>
-                             </div>
+                        ) : timeline.length > 0 ? (
+                            <div className="relative pl-4 space-y-6 border-l-2 border-slate-100 dark:border-slate-800">
+                                {timeline.map((item, idx) => (
+                                    <motion.div 
+                                        key={item.id}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        className="relative group cursor-default"
+                                    >
+                                        <div className={`absolute -left-[21px] top-1 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 shadow-md ${
+                                            item.type === 'invoice' ? 'bg-emerald-500' :
+                                            item.type === 'document' ? 'bg-indigo-500' :
+                                            'bg-slate-400'
+                                        }`} />
+                                        
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                                    {item.title}
+                                                </p>
+                                                <p className="text-xs text-slate-400 font-medium mt-1">
+                                                    {new Date(item.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                                                </p>
+                                            </div>
+                                            {item.type === 'invoice' && item.amount && (
+                                                <span className="text-xs font-bold bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded">
+                                                    {item.amount}₺
+                                                </span>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-slate-400 text-sm">
+                                <Clock size={24} className="mx-auto mb-2 opacity-50" />
+                                Henüz bir aktivite yok.
+                            </div>
+                        )}
+                        
+                        <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-center">
+                            <button className="text-xs font-bold text-slate-400 hover:text-indigo-500 flex items-center gap-1 transition-colors">
+                                Tüm Geçmişi Görüntüle <ChevronRight size={14} />
+                            </button>
                         </div>
-                     </motion.div>
-                </div>
+                     </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     </div>
   );
 };
