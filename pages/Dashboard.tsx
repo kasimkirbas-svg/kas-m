@@ -30,7 +30,9 @@ import {
   ArrowUpDown,
   Filter,
   UserPlus,
-  Megaphone
+  Megaphone,
+  Crown,
+  Gem
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 import { PLANS } from '../constants';
