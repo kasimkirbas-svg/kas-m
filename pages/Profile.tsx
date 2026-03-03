@@ -306,7 +306,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
             className="max-w-7xl mx-auto space-y-8"
         >
             {/* 1. HERO SECTION (Real Data) */}
-            <motion.div variants={itemVariants} className="relative overflow-hidden rounded-[2.5rem] bg-indigo-900/10 dark:bg-slate-900/20 backdrop-blur-3xl border border-white/5 shadow-2xl p-8 md:p-12 mb-12 group">
+            <motion.div variants={itemVariants} className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-white/5 to-transparent dark:from-slate-900/40 dark:to-transparent backdrop-blur-2xl border border-white/5 shadow-2xl p-8 md:p-12 mb-12 group">
                 {/* Dynamic Background */}
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-indigo-500/30 transition-colors duration-1000" />
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none group-hover:bg-purple-500/20 transition-colors duration-1000" />
@@ -416,7 +416,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                     </motion.div>
 
                     {/* Content Container */}
-                    <motion.div variants={itemVariants} className="bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl rounded-[2rem] border border-white/10 dark:border-white/5 p-8 shadow-sm min-h-[400px] relative overflow-hidden">
+                    <motion.div variants={itemVariants} className="bg-gradient-to-br from-white/5 via-white/5 to-transparent dark:from-slate-900/30 dark:via-slate-900/10 dark:to-transparent backdrop-blur-2xl rounded-[2rem] border border-white/5 p-8 shadow-sm min-h-[400px] relative overflow-hidden">
                         <AnimatePresence mode="wait">
                             {activeTab === 'profile' && (
                                 <motion.div 
@@ -720,7 +720,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
 
                 {/* Right Column - Subscription Card & Real Timeline */}
                 <motion.div variants={itemVariants} className="lg:col-span-4 space-y-8">
-                     <div className="bg-slate-900/40 dark:bg-slate-900/20 backdrop-blur-3xl rounded-[2.5rem] p-8 relative overflow-hidden text-white shadow-2xl border border-white/5 group">
+                     <div className="bg-gradient-to-br from-slate-900/60 to-slate-900/20 backdrop-blur-2xl rounded-[2.5rem] p-8 relative overflow-hidden text-white shadow-2xl border border-white/5 group">
                         {/* Golden/Premium Effects */}
                         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] -mr-16 -mt-16 pointer-events-none group-hover:bg-amber-500/20 transition-colors duration-1000" />
                         <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-600/20 rounded-full blur-[60px] -ml-10 -mb-10 pointer-events-none" />
@@ -771,7 +771,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                      </div>
 
                      {/* REAL TIMELINE (Replaced Mock Data) */}
-                     <div className="bg-white/10 dark:bg-slate-900/10 backdrop-blur-3xl rounded-[2rem] p-6 border border-white/10 dark:border-white/5 shadow-sm">
+                     <div className="bg-gradient-to-br from-white/5 to-transparent dark:from-slate-900/30 dark:to-transparent backdrop-blur-2xl rounded-[2rem] p-6 border border-white/5 shadow-sm">
                         <h3 className="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2 text-lg">
                              <History size={20} className="text-indigo-500" />
                              Son Aktiviteler
