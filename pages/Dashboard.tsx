@@ -605,14 +605,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             </div>
 
             {/* RIGHT: Quick Actions & Archive (Sidebar) - Updated Layout */}
-            <div className='lg:col-span-1 flex flex-col gap-4 overflow-y-auto no-scrollbar pb-2 px-1'>
+            <div className='lg:col-span-1 flex flex-col gap-3'>
                 
                 {/* 1. SERTİFİKA OLUŞTUR (Blue Button) - Main Action */}
                 <motion.button 
                     whileHover={{ scale: 1.02, filter: "brightness(1.1)" }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                    className='group shrink-0 h-28 rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 border-2 border-blue-400/30 relative overflow-hidden shadow-lg shadow-blue-600/20 flex items-center px-5 justify-between ring-4 ring-blue-500/5'
+                    className='group shrink-0 h-24 rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 border-2 border-blue-400/30 relative overflow-hidden shadow-lg shadow-blue-600/20 flex items-center px-5 justify-between ring-4 ring-blue-500/5'
                 >
                     <div className='absolute right-[-20%] top-[-50%] w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500'></div>
                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 mix-blend-overlay'></div>
@@ -648,7 +648,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => onNavigate('templates', { search: 'Tutanak' })}
-                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-indigo-500/50 dark:hover:border-indigo-500/50 shadow-sm hover:shadow-indigo-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
+                            className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-indigo-500/50 dark:hover:border-indigo-500/50 shadow-sm hover:shadow-indigo-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >   
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-indigo-50/50 dark:from-indigo-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
                             <div className='w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
@@ -665,7 +665,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => onNavigate('templates', { search: 'Günlük Rapor' })}
-                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 shadow-sm hover:shadow-emerald-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
+                            className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 shadow-sm hover:shadow-emerald-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-emerald-50/50 dark:from-emerald-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
                             <div className='w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
@@ -682,7 +682,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => onNavigate('templates', { search: 'İzin' })}
-                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-blue-500/50 dark:hover:border-blue-500/50 shadow-sm hover:shadow-blue-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
+                            className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-blue-500/50 dark:hover:border-blue-500/50 shadow-sm hover:shadow-blue-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-blue-50/50 dark:from-blue-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
                             <div className='w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
@@ -699,7 +699,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => onNavigate('templates', { search: 'Zimmet' })}
-                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 shadow-sm hover:shadow-violet-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
+                            className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 shadow-sm hover:shadow-violet-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-violet-50/50 dark:from-violet-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
                             <div className='w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
@@ -718,7 +718,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('my-documents')}
-                    className='shrink-0 h-20 rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20'
+                    className='shrink-0 h-[4.5rem] rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20'
                 >
                     <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
                     
