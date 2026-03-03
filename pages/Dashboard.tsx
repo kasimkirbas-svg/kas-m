@@ -332,18 +332,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                     <h1 className='text-3xl md:text-5xl font-black tracking-tighter relative z-10 select-none'>
                         <span className='bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-indigo-100 dark:to-slate-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
-                            DOKÜMAN YÖNETİM MERKEZİ
+                            YILLIK DOKÜMAN
                         </span>
                     </h1>
                  </motion.div>
+
+                 <div className="text-amber-500/80 text-xl font-bold my-[-5px] z-20 relative">&</div>
 
                  <motion.div 
                     initial={{ width: 0, opacity: 0 }} 
                     animate={{ width: "auto", opacity: 1 }} 
                     transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                    className="relative mt-2 overflow-hidden px-8 py-2"
+                    className="relative mt-0 overflow-hidden px-8 py-2"
                  >
-                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/50 dark:via-amber-500/10 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }}></div>
                      
                      <span className='relative z-10 text-xs md:text-sm font-black tracking-[1em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-slate-600 via-slate-800 to-slate-600 dark:from-amber-200 dark:via-amber-100 dark:to-amber-200 drop-shadow-sm whitespace-nowrap animate-pulse'>
                             İŞ TAKİP PANELİ
@@ -371,9 +372,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.div 
                             key={sector.id}
                             animate={{ 
-                                scale: isActive ? 1.15 : 1,
-                                y: isActive ? -10 : 0,
-                                zIndex: isActive ? 50 : 0
+                                scale: isHovered ? 1.15 : (isSelected ? 1.05 : 1),
+                                y: isHovered ? -10 : (isSelected ? -5 : 0),
+                                zIndex: isHovered ? 50 : (isSelected ? 20 : 0)
                             }}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
                             onMouseEnter={() => setHoveredSectorId(sector.id)}
