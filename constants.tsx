@@ -199,6 +199,72 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
        { key: 'presenter', label: 'Sunumu Yapacak Kişi', type: 'text' }
     ]
   },
+
+  // --- SERTİFİKA VE BELGE ŞABLONLARI ---
+  {
+    id: 'cert-001',
+    title: 'Başarı Sertifikası',
+    category: 'Sertifika',
+    description: 'Üstün başarı gösteren personel veya öğrenciler için genel başarı belgesi.',
+    isPremium: true,
+    backgroundImage: '/sertifika-bg-1.jpg', 
+    fields: [
+        { key: 'recipientName', label: 'Ad Soyad', type: 'text', required: true, placeholder: 'Örn: Ahmet Yılmaz', position: { x: 50, y: 45, width: 80, height: 10 } },
+        { key: 'achievementText', label: 'Başarı Metni', type: 'textarea', required: true, placeholder: 'Şirketimize katkılarınızdan dolayı...', position: { x: 50, y: 55, width: 80, height: 20 } },
+        { key: 'date', label: 'Tarih', type: 'date', required: true, position: { x: 20, y: 80, width: 30, height: 5 } },
+        { key: 'authorizedSign', label: 'Yetkili İmza', type: 'text', required: true, placeholder: 'Genel Müdür', position: { x: 80, y: 80, width: 30, height: 5 } }
+    ]
+  },
+  {
+    id: 'cert-002',
+    title: 'Katılım Sertifikası',
+    category: 'Sertifika',
+    description: 'Eğitim, seminer veya kurs katılımını belgelemek için.',
+    isPremium: false,
+    fields: [
+        { key: 'participantName', label: 'Katılımcı Adı', type: 'text', required: true },
+        { key: 'courseName', label: 'Eğitim/Kurs Adı', type: 'text', required: true },
+        { key: 'duration', label: 'Süre (Saat)', type: 'number' },
+        { key: 'trainerName', label: 'Eğitmen Adı', type: 'text' }
+    ]
+  },
+  {
+    id: 'cert-003',
+    title: 'Teşekkür Belgesi',
+    category: 'Sertifika',
+    description: 'Katkı sağlayan kişilere verilecek resmi teşekkür yazısı.',
+    isPremium: false,
+    fields: [
+        { key: 'recipientName', label: 'Sayın', type: 'text', required: true },
+        { key: 'reason', label: 'Teşekkür Nedeni', type: 'textarea', required: true },
+        { key: 'issuedBy', label: 'Düzenleyen Kurum/Kişi', type: 'text', required: true }
+    ]
+  },
+  {
+    id: 'cert-004',
+    title: 'Onur Belgesi',
+    category: 'Sertifika',
+    description: 'Özel bir başarı veya davranış için onurlandırma belgesi.',
+    isPremium: true,
+    fields: [
+        { key: 'recipientName', label: 'Ad Soyad', type: 'text', required: true },
+        { key: 'title', label: 'Verilen Unvan', type: 'text', placeholder: 'Ayın Personeli' },
+        { key: 'description', label: 'Açıklama', type: 'textarea' }
+    ]
+  },
+  {
+    id: 'cert-005',
+    title: 'Eğitim Tamamlama Sertifikası',
+    category: 'Sertifika',
+    description: 'Mesleki yeterlilik veya eğitim tamamlama sertifikası.',
+    isPremium: true,
+    fields: [
+        { key: 'studentName', label: 'Öğrenci Adı', type: 'text', required: true },
+        { key: 'programName', label: 'Program Adı', type: 'text', required: true },
+        { key: 'grade', label: 'Derece/Puan', type: 'text' },
+        { key: 'completionDate', label: 'Tamamlama Tarihi', type: 'date', required: true }
+    ]
+  },
   {
     id: 'corp-103',
     title: 'Demirbaş Zimmet Formu',

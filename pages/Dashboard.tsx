@@ -297,10 +297,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             title: docName,
             category: category,
             description: `${sector.name} sektörü için ${docName} şablonu.`,
-            isPro: false,
-            createdAt: new Date().toISOString(),
-            content: [],
-            tags: [sector.id, 'form']
+            isPremium: false, // Changed from isPro to match interface
+            fields: [
+                { key: 'details', label: 'Detaylar', type: 'textarea', required: true, placeholder: 'Lütfen detayları giriniz...' },
+                { key: 'date', label: 'Tarih', type: 'date', required: true }
+            ],
+            content: '', 
         };
         onTemplateSelect(newTemplate);
     }
@@ -641,6 +643,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={() => onNavigate('templates', { search: 'Tutanak' })}
                             className='w-full h-full rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-1.5 group hover:border-indigo-500/50 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 transition-all duration-300 relative overflow-hidden shadow-sm'
                         >   
                             <div className='w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-sm'>
@@ -653,6 +656,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={() => onNavigate('templates', { search: 'Günlük Rapor' })}
                             className='w-full h-full rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-1.5 group hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-all duration-300 relative overflow-hidden shadow-sm'
                         >
                             <div className='w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-sm'>
@@ -665,6 +669,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={() => onNavigate('templates', { search: 'Personel' })}
                             className='w-full h-full rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-1.5 group hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all duration-300 relative overflow-hidden shadow-sm'
                         >
                             <div className='w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-sm'>
@@ -677,6 +682,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={() => onNavigate('templates', { search: 'Duyuru' })}
                             className='w-full h-full rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-1.5 group hover:border-rose-500/50 hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-all duration-300 relative overflow-hidden shadow-sm'
                         >
                             <div className='w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-sm'>
@@ -694,7 +700,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 <motion.button 
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => onNavigate('documents')}
+                    onClick={() => onNavigate('my-documents')}  // Changed from 'documents' to 'my-documents'
                     className='shrink-0 h-20 rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300'
                 >
                     <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
