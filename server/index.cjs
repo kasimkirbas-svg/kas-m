@@ -2639,9 +2639,6 @@ app.post('/api/maintenance', authenticateToken, requireAdmin, (req, res) => {
     res.json({ success: true, maintenance: isMaintenanceMode });
 });
 
-    res.json(systemLogs);
-});
-
 
 
 // --- EMAIL ROUTES RE-ADDED (CLEAN) ---
