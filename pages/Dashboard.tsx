@@ -25,7 +25,10 @@ import {
   Upload,
   FolderOpen,
   PieChart,
-  ClipboardList
+  ClipboardList,
+  Heart,
+  ArrowUpDown,
+  Filter
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 import { PLANS } from '../constants';
@@ -192,6 +195,15 @@ const ALL_DOCS = SECTORS.reduce<Array<{doc: string, sector: typeof SECTORS[0]}>>
 export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTemplateSelect, templates }) => {
   const [hoveredSectorId, setHoveredSectorId] = useState<string | null>(null);
   const [selectedSectorIds, setSelectedSectorIds] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<'default' | 'az' | 'favorites'>('default');
+
+  const toggleFavorite = (docName: string) => {
+      setFavorites(prev => 
+          prev.includes(docName) ? prev.filter(f => f !== docName) : [...prev, docName]
+      );
+  };
 
   // Interaction Logic:
   // 1. Hover shows sector docs temporarily (if no selection? or overrides selection?)
@@ -209,33 +221,45 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   }, [hoveredSectorId, selectedSectorIds]);
 
   const displayDocs = useMemo(() => {
-      // 1. Hover takes priority for immediate feedback? 
-      // User said: "mouse fabrikaya getirince fabrika dökümanları... mouse hareket ettirince tüm..."
-      // BUT "tıkladığında fabrika dökümanları gözüksün... seçtiği sektöre bir daha tıkladığında eski haline dönsün"
-      // This implies:
-      // If Hovering -> Show Hovered Sector Docs
-      // Else If SelectedItems > 0 -> Show Selected Docs
-      // Else -> Show All
+      let docs: Array<{doc: string, sector: typeof SECTORS[0]}> = [];
 
+      // 1. Selector/Hover Context
       if (hoveredSectorId) {
           const s = SECTORS.find(sc => sc.id === hoveredSectorId);
-          return s ? s.docs.map(doc => ({ doc, sector: s })) : [];
+          if (s) docs = s.docs.map(doc => ({ doc, sector: s }));
       }
-
-      if (selectedSectorIds.length > 0) {
-           // Aggregate docs from all selected sectors
-           const docs: Array<{doc: string, sector: typeof SECTORS[0]}> = [];
+      else if (selectedSectorIds.length > 0) {
            selectedSectorIds.forEach(id => {
                const s = SECTORS.find(sc => sc.id === id);
                if (s) {
                    s.docs.forEach(d => docs.push({ doc: d, sector: s }));
                }
            });
-           return docs;
+      }
+      else {
+          docs = ALL_DOCS; 
       }
 
-      return ALL_DOCS; 
-  }, [hoveredSectorId, selectedSectorIds]);
+      // 2. Filter by Search
+      if (searchQuery) {
+          docs = docs.filter(d => d.doc.toLowerCase().includes(searchQuery.toLowerCase()));
+      }
+
+      // 3. Sort
+      if (sortBy === 'az') {
+          docs = [...docs].sort((a, b) => a.doc.localeCompare(b.doc));
+      } else if (sortBy === 'favorites') {
+          docs = [...docs].sort((a, b) => {
+              const aFav = favorites.includes(a.doc);
+              const bFav = favorites.includes(b.doc);
+              if (aFav && !bFav) return -1;
+              if (!aFav && bFav) return 1;
+              return 0;
+          });
+      }
+
+      return docs;
+  }, [hoveredSectorId, selectedSectorIds, searchQuery, sortBy, favorites]);
 
   const toggleSector = (id: string) => {
       setSelectedSectorIds(prev => {
@@ -336,7 +360,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             className={`
                             relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group
                             border transition-all duration-500
-                            ${isActive ? 'border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.2)] scale-105 -translate-y-1' : 'border-white/5 shadow-lg bg-slate-800/40'}
+                            ${isActive ? 'border-white shadow-[0_0_30px_rgba(255,255,255,0.2)] scale-105 -translate-y-1' : 'border-white/5 shadow-lg bg-slate-800/40'}
                             ${index === SECTORS.length - 1 ? 'col-span-2 md:col-span-1 lg:col-span-1' : ''}
                             `}
                         >   
@@ -371,7 +395,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             
                             {/* Selected Checkmark (Optional but nice) */}
                             {isSelected && (
-                                <div className='absolute top-2 right-2 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center text-black shadow-lg z-20'>
+                                <div className='absolute top-2 right-2 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg z-20 animate-in zoom-in duration-200'>
                                     <CheckCircle2 size={12} strokeWidth={3} />
                                 </div>
                             )}
@@ -388,20 +412,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             <div className='lg:col-span-3 flex flex-col h-full bg-[#15171e]/80 backdrop-blur-sm rounded-2xl border border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
                 
                 {/* Panel Header */}
-                <div className='p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between shrink-0'>
-                    <div className='flex items-center gap-4'>
-                        <div className={`w-12 h-12 rounded-lg bg-gradient-to-br border border-slate-700 flex items-center justify-center transition-colors duration-500 ${currentSector ? 'from-slate-800 to-slate-900' : 'from-amber-500/10 to-orange-500/10'}`}>
+                <div className='p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
+                    <div className='flex items-center gap-4 flex-1 min-w-0'>
+                        <div className={`w-12 h-12 shrink-0 rounded-lg bg-gradient-to-br border border-slate-700 flex items-center justify-center transition-colors duration-500 ${currentSector ? 'from-slate-800 to-slate-900' : 'from-amber-500/10 to-orange-500/10'}`}>
                             {currentSector ? (
                                 <currentSector.icon className={currentSector.accent} size={24} />
                             ) : (
                                 <Archive className="text-amber-500" size={24} />
                             )}
                         </div>
-                        <div>
-                            <h2 className='text-xl font-bold text-white tracking-tight flex items-center gap-2'>
-                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'} <span className='text-slate-500 font-normal'>DOKÜMANLARI</span>
+                        <div className="flex-1 min-w-0">
+                            <h2 className='text-xl font-bold text-white tracking-tight flex items-center gap-2 truncate'>
+                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'} <span className='text-slate-500 font-normal hidden sm:inline'>DOKÜMANLARI</span>
                             </h2>
-                            <p className='text-xs text-slate-400 font-medium mt-0.5 tracking-wide'>
+                            <p className='text-xs text-slate-400 font-medium mt-0.5 tracking-wide truncate'>
                                 {currentSector 
                                     ? `Bu sektör için önerilen ${currentSector.docs.length} adet doküman şablonu bulundu.`
                                     : `Sistemde kayıtlı toplam ${ALL_DOCS.length} adet doküman listeleniyor.`
@@ -409,11 +433,66 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             </p>
                         </div>
                     </div>
-                    <div className='flex gap-2'>
-                         <button className='p-2 hover:bg-white/5 rounded-lg transition-colors text-slate-400 hover:text-white flex items-center gap-2 border border-white/5 bg-slate-900/50'>
-                            <span className='text-xs font-bold hidden md:inline'>ARA</span>
-                            <Search size={18} />
-                        </button>
+
+                    <div className='flex items-center gap-2 shrink-0'>
+                         {/* Search Input */}
+                         <div className={`relative transition-all duration-300 ${isSearchActive ? 'w-48 md:w-64' : 'w-10 md:w-10 overflow-hidden'} h-10`}>
+                            <input 
+                                type="text"
+                                value={searchQuery} 
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Doküman ara..."
+                                className={`
+                                    w-full h-full bg-slate-950/50 border border-white/10 rounded-lg px-10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-all
+                                    ${isSearchActive ? 'opacity-100' : 'opacity-0'}
+                                `}
+                            />
+                            <button 
+                                onClick={() => setIsSearchActive(!isSearchActive)}
+                                className='absolute left-0 top-0 w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white transition-colors z-10'
+                            >
+                                <Search size={18} />
+                            </button>
+                            {isSearchActive && searchQuery && (
+                                <button 
+                                    onClick={() => setSearchQuery('')}
+                                    className='absolute right-0 top-0 w-10 h-10 flex items-center justify-center text-slate-500 hover:text-white transition-colors'
+                                >
+                                    <span className="text-xs">✕</span>
+                                </button>
+                            )}
+                         </div>
+
+                         {/* Sort Button */}
+                         <div className="relative group/sort">
+                            <button className='w-10 h-10 bg-slate-800/50 border border-white/5 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-all'>
+                                <ArrowUpDown size={18} />
+                            </button>
+                            {/* Sort Dropdown */}
+                            <div className="absolute right-0 top-full mt-2 w-40 bg-slate-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50 origin-top-right scale-0 group-hover/sort:scale-100 transition-transform duration-200">
+                                <button 
+                                    onClick={() => setSortBy('default')}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-white/5 flex items-center justify-between ${sortBy === 'default' ? 'text-amber-400 bg-white/5' : 'text-slate-300'}`}
+                                >
+                                    Varsayılan
+                                    {sortBy === 'default' && <CheckCircle2 size={12} />}
+                                </button>
+                                <button 
+                                    onClick={() => setSortBy('az')}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-white/5 flex items-center justify-between ${sortBy === 'az' ? 'text-amber-400 bg-white/5' : 'text-slate-300'}`}
+                                >
+                                    A-Z Sırala
+                                    {sortBy === 'az' && <CheckCircle2 size={12} />}
+                                </button>
+                                <button 
+                                    onClick={() => setSortBy('favorites')}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-white/5 flex items-center justify-between ${sortBy === 'favorites' ? 'text-amber-400 bg-white/5' : 'text-slate-300'}`}
+                                >
+                                    Favoriler
+                                    {sortBy === 'favorites' && <CheckCircle2 size={12} />}
+                                </button>
+                            </div>
+                         </div>
                     </div>
                 </div>
 
@@ -455,9 +534,27 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                         </div>
                                     </div>
 
-                                    {/* Action Icon */}
-                                    <div className='w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-slate-900 scale-0 group-hover:scale-100 transition-transform shadow-lg shadow-amber-500/50'>
-                                        <ArrowRight size={14} />
+                                    {/* Actions */}
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleFavorite(item.doc);
+                                            }}
+                                            className={`
+                                                w-7 h-7 rounded-full flex items-center justify-center transition-all z-20 
+                                                ${favorites.includes(item.doc) 
+                                                    ? 'text-rose-500 bg-rose-500/10 opacity-100' 
+                                                    : 'text-slate-500 hover:text-rose-400 hover:bg-slate-700 opacity-0 group-hover:opacity-100'}
+                                            `}
+                                            title="Favorilere Ekle"
+                                        >
+                                            <Heart size={14} fill={favorites.includes(item.doc) ? "currentColor" : "none"} />
+                                        </button>
+
+                                        <div className='w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-slate-900 scale-0 group-hover:scale-100 transition-transform shadow-lg shadow-amber-500/50'>
+                                            <ArrowRight size={14} />
+                                        </div>
                                     </div>
                                 </motion.div>
                             ))}
