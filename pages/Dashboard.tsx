@@ -196,6 +196,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   const [hoveredSectorId, setHoveredSectorId] = useState<string | null>(null);
   const [selectedSectorIds, setSelectedSectorIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchActive, setIsSearchActive] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'default' | 'az' | 'favorites'>('default');
 
