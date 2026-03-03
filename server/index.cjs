@@ -2100,6 +2100,50 @@ app.delete('/api/users/:id', authenticateToken, requireAdmin, async (req, res) =
     }
 });
 
+
+// Admin: Create New User
+app.post('/api/users', authenticateToken, requireAdmin, async (req, res) => {
+    const { name, email, password, role, subscriptionType } = req.body;
+    
+    if (!name || !email || !password) {
+        return res.status(400).json({ success: false, message: 'İsim, E-posta ve Şifre gereklidir.' });
+    }
+
+    try {
+        const existing = await dbAdapter.findUserByEmail(email);
+        if (existing) {
+            return res.status(400).json({ success: false, message: 'Bu e-posta adresi zaten kullanımda.' });
+        }
+        
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        
+        const newUser = {
+            id: Date.now().toString(),
+            name,
+            email,
+            password: hashedPassword,
+            role: role || 'user',
+            companyName: 'Bireysel',
+            plan: subscriptionType || 'FREE',
+            subscriptionType: subscriptionType || 'FREE',
+            subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days default
+            remainingDownloads: 5,
+            isBanned: false,
+            createdAt: new Date().toISOString()
+        };
+
+        await dbAdapter.addUser(newUser);
+        
+        const { password: _, ...userWithoutPassword } = newUser;
+        res.json({ success: true, message: 'Kullanıcı başarıyla oluşturuldu.', user: userWithoutPassword });
+
+    } catch (e) {
+        console.error('Create User Error:', e);
+        res.status(500).json({ success: false, message: 'Kullanıcı oluşturulamadı.' });
+    }
+});
+
 // Admin: Ban User
 app.post('/api/users/:id/ban', authenticateToken, requireAdmin, async (req, res) => {
     const { id } = req.params;

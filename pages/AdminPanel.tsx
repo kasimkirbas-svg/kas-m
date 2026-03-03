@@ -257,6 +257,179 @@ const UserViewModal = ({ user, onClose }: { user: User, onClose: () => void }) =
     );
 };
 
+
+const NewUserModal = ({ onClose, onSave }: { onClose: () => void, onSave: (u: any) => void }) => {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        role: UserRole.SUBSCRIBER,
+        subscriptionType: SubscriptionPlan.FREE
+    });
+
+    const isValid = formData.name && formData.email && formData.password.length >= 6;
+
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+            <GlassCard className="w-full max-w-lg p-6 animate-in zoom-in duration-300">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Users size={20} className="text-emerald-500" />
+                        Yeni Kullanıcı Oluştur
+                    </h3>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white"><X size={24}/></button>
+                </div>
+                
+                <div className="space-y-4">
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Ad Soyad</label>
+                        <input 
+                            value={formData.name} 
+                            onChange={e => setFormData({...formData, name: e.target.value})}
+                            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white focus:border-emerald-500 outline-none mt-1 transition-colors"
+                            placeholder="Örn: Ahmet Yılmaz"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">E-Posta</label>
+                        <input 
+                            type="email"
+                            value={formData.email} 
+                            onChange={e => setFormData({...formData, email: e.target.value})}
+                            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white focus:border-emerald-500 outline-none mt-1 transition-colors"
+                            placeholder="ornek@sirket.com"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Şifre</label>
+                        <input 
+                            type="password"
+                            value={formData.password} 
+                            onChange={e => setFormData({...formData, password: e.target.value})}
+                            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white focus:border-emerald-500 outline-none mt-1 transition-colors font-mono"
+                            placeholder="******"
+                        />
+                         <p className="text-[10px] text-slate-500 mt-1">* En az 6 karakter olmalıdır.</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-xs font-bold text-slate-500 uppercase">Rol</label>
+                            <select 
+                                value={formData.role} 
+                                onChange={e => setFormData({...formData, role: e.target.value as UserRole})}
+                                className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white focus:border-emerald-500 outline-none mt-1 appearance-none"
+                            >
+                                <option value={UserRole.ADMIN}>Yönetici</option>
+                                <option value={UserRole.SUBSCRIBER}>Abone</option>
+                                <option value={UserRole.GUEST}>Misafir</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-slate-500 uppercase">Paket</label>
+                            <select 
+                                value={formData.subscriptionType} 
+                                onChange={e => setFormData({...formData, subscriptionType: e.target.value as SubscriptionPlan})}
+                                className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white focus:border-emerald-500 outline-none mt-1 appearance-none"
+                            >
+                                {Object.values(SubscriptionPlan).map(p => (
+                                    <option key={p} value={p}>{p}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-8">
+                    <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800 transition-colors">İptal</button>
+                    <button 
+                        onClick={() => onSave(formData)} 
+                        disabled={!isValid}
+                        className="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold shadow-lg shadow-emerald-900/20 transition-all"
+                    >
+                        Oluştur
+                    </button>
+                </div>
+            </GlassCard>
+        </div>
+    );
+};
+
+const BanUserModal = ({ user, onClose, onConfirm }: { user: User, onClose: () => void, onConfirm: (reason: string, duration: number) => void }) => {
+    const [reason, setReason] = useState('');
+    const [duration, setDuration] = useState('60'); // Minutes default
+
+    const durationOptions = [
+        { label: '1 Saat', value: '60' },
+        { label: '6 Saat', value: '360' },
+        { label: '24 Saat (1 Gün)', value: '1440' },
+        { label: '3 Gün', value: '4320' },
+        { label: '1 Hafta', value: '10080' },
+        { label: '1 Ay', value: '43200' },
+        { label: 'Süresiz (Kalıcı)', value: '0' },
+    ];
+
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+            <GlassCard className="w-full max-w-md p-6 animate-in zoom-in duration-300 border-rose-500/30">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Lock size={20} className="text-rose-500" />
+                        Kullanıcıyı Yasakla
+                    </h3>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white"><X size={24}/></button>
+                </div>
+
+                <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl mb-6 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-500 font-bold shrink-0">
+                        !
+                    </div>
+                    <div>
+                        <div className="font-bold text-rose-200">Dikkat</div>
+                        <p className="text-xs text-rose-300/70">
+                            <strong>{user.name}</strong> ({user.email}) sisteme erişimini kaybedecek.
+                        </p>
+                    </div>
+                </div>
+                
+                <div className="space-y-4">
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Yasaklama Sebebi</label>
+                        <textarea 
+                            value={reason} 
+                            onChange={e => setReason(e.target.value)}
+                            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white focus:border-rose-500 outline-none mt-1 transition-colors min-h-[80px] resize-none"
+                            placeholder="Örn: Kötüye kullanım..."
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Süre</label>
+                        <select 
+                            value={duration} 
+                            onChange={e => setDuration(e.target.value)}
+                            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white focus:border-rose-500 outline-none mt-1 appearance-none"
+                        >
+                            {durationOptions.map(opt => (
+                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-8">
+                    <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800 transition-colors">İptal</button>
+                    <button 
+                        onClick={() => onConfirm(reason || 'Yönetici kararı', parseInt(duration))} 
+                        className="px-6 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-lg shadow-rose-900/20 transition-all flex items-center gap-2"
+                    >
+                        <Lock size={16} /> Yasakla
+                    </button>
+                </div>
+            </GlassCard>
+        </div>
+    );
+};
+
 // --- Main Admin Component ---
 
 export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
@@ -276,8 +449,12 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  // Need separate state to track which user is being reset if different from edit
   const [passwordModalUser, setPasswordModalUser] = useState<User | null>(null);
+  
+  // New Modals
+  const [showNewUserModal, setShowNewUserModal] = useState(false);
+  const [showBanModal, setShowBanModal] = useState(false);
+  const [banModalUser, setBanModalUser] = useState<User | null>(null);
 
   // Helper: Add Log
   const addLog = (message: string, type: SystemLog['type'] = 'INFO', source = 'AdminPanel') => {
@@ -401,6 +578,50 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
           }
       } catch (e) { alert('Hata oluştu.'); }
   };
+
+  const handleCreateUser = async (userData: any) => {
+      try {
+          const res = await fetchApi('/api/users', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(userData)
+          });
+          
+          if (res.ok) {
+              const data = await res.json();
+              addLog(`New user created: ${userData.email}`, 'SUCCESS');
+              setUsers([data.user, ...users]);
+              setShowNewUserModal(false);
+          } else {
+              const err = await res.json();
+              alert(err.message || 'Kullanıcı oluşturulamadı.');
+          }
+      } catch (e) {
+          alert('Bir hata oluştu.');
+      }
+  };
+
+  const handleBanConfirm = async (reason: string, durationMinutes: number) => {
+      if (!banModalUser) return;
+      try {
+          const res = await fetchApi(`/api/users/${banModalUser.id}/ban`, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ banReason: reason, durationMinutes })
+          });
+          
+          if (res.ok) {
+              addLog(`User banned: ${banModalUser.email} (${reason})`, 'WARN');
+              loadData();
+              setShowBanModal(false);
+              setBanModalUser(null);
+          } else {
+              alert('Yasaklama işlemi başarısız.');
+          }
+      } catch (e) {
+          alert('Hata oluştu.');
+      }
+  };
   
   // --- Views ---
 
@@ -498,7 +719,9 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
          <h2 className="text-2xl font-bold text-white">Kullanıcı Yönetimi</h2>
          <div className="flex gap-2">
             <button onClick={loadData} className="p-2 bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors" title="Reload"><RefreshCw size={18} /></button>
-            <button className="bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-amber-700 transition-colors shadow-lg shadow-amber-900/20">Yeni Kullanıcı</button>
+            <button onClick={() => setShowNewUserModal(true)} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-900/20 flex items-center gap-2">
+                <Users size={16} /> Yeni Kullanıcı
+            </button>
          </div>
       </div>
 
@@ -542,7 +765,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                             {u.isBanned ? (
                                 <button onClick={() => handleBanUser(u.id, true)} className="p-1.5 text-emerald-500 hover:bg-emerald-500/10 rounded" title="Banı Kaldır"><Unlock size={16}/></button>
                             ) : (
-                                <button onClick={() => handleBanUser(u.id, false)} className="p-1.5 text-rose-500 hover:bg-rose-500/10 rounded" title="Banla"><Lock size={16}/></button>
+                                <button onClick={() => { setBanModalUser(u); setShowBanModal(true); }} className="p-1.5 text-rose-500 hover:bg-rose-500/10 rounded" title="Yasakla"><Lock size={16}/></button>
                             )}
                             <button onClick={() => deleteUser(u.id)} className="p-1.5 text-slate-500 hover:bg-slate-700 hover:text-white rounded" title="Sil"><Trash2 size={16}/></button>
                         </div>
@@ -800,6 +1023,22 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
             onSave={handleUpdateKey}
         />
       )}
+      
+      {showNewUserModal && (
+        <NewUserModal
+            onClose={() => setShowNewUserModal(false)}
+            onSave={handleCreateUser}
+        />
+      )}
+      
+      {showBanModal && banModalUser && (
+        <BanUserModal
+            user={banModalUser}
+            onClose={() => setShowBanModal(false)}
+            onConfirm={handleBanConfirm}
+        />
+      )}
+
       {showViewModal && selectedUser && (
           <UserViewModal 
              user={selectedUser} 
