@@ -136,8 +136,8 @@ const SECTORS = [
     name: 'ENERJİ', 
     icon: Zap, 
     image: '/sectors/energy.jpg',
-    color: 'from-yellow-400 to-amber-500',
-    accent: 'text-yellow-300',
+    color: 'from-amber-400 to-orange-500',
+    accent: 'text-amber-600',
     docs: [
         'Trafo Bakım Formu', 
         'Sayaç Okuma Listesi', 
@@ -306,10 +306,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   };
 
   return (
-    <div className='w-full min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-slate-50 dark:bg-[#0f172a] relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300 overflow-y-auto'>
+    <div className='w-full min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-slate-100 dark:bg-[#0f172a] relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300 overflow-y-auto'>
       
-      {/* Background Ambience */}
-      <div className='absolute top-0 left-0 w-full h-[800px] bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-[#0f172a] pointer-events-none z-0 transition-colors duration-500'></div>
+      {/* Background Ambience - Darkened Light Mode */}
+      <div className='absolute top-0 left-0 w-full h-[800px] bg-gradient-to-b from-slate-200 via-slate-100 to-slate-200 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-[#0f172a] pointer-events-none z-0 transition-colors duration-500'></div>
       <div className='absolute -top-[20%] right-[10%] w-[600px] h-[600px] bg-amber-500/5 blur-[120px] rounded-full pointer-events-none z-0 animate-pulse-slow'></div>
       <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.04] mix-blend-overlay pointer-events-none z-0'></div>
 
@@ -448,23 +448,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='flex-1 md:min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-5 md:overflow-hidden pb-2'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col h-[600px] md:h-full bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
+            <div className='lg:col-span-3 flex flex-col h-[600px] md:h-full bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden shadow-lg transition-all duration-300 z-10'>
                 
                 {/* Panel Header */}
-                <div className='p-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
+                <div className='p-5 border-b border-slate-100 dark:border-white/5 bg-white dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
                     <div className='flex items-center gap-4 flex-1 min-w-0'>
                         <div className={`w-12 h-12 shrink-0 rounded-lg bg-gradient-to-br border border-slate-200 dark:border-slate-700 flex items-center justify-center transition-colors duration-500 ${currentSector ? 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900' : 'from-amber-500/10 to-orange-500/10'}`}>
                             {currentSector ? (
                                 <currentSector.icon className={currentSector.accent} size={24} />
                             ) : (
-                                <Archive className="text-amber-500" size={24} />
+                                <Archive className="text-amber-600 dark:text-amber-500" size={24} />
                             )}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h2 className='text-xl font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-2 truncate'>
-                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'} <span className='text-slate-400 dark:text-slate-500 font-normal hidden sm:inline'>DOKÜMANLARI</span>
+                            <h2 className='text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2 truncate'>
+                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'} <span className='text-slate-500 dark:text-slate-500 font-normal hidden sm:inline'>DOKÜMANLARI</span>
                             </h2>
-                            <p className='text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5 tracking-wide truncate'>
+                            <p className='text-xs text-slate-600 dark:text-slate-400 font-bold mt-0.5 tracking-wide truncate'>
                                 {currentSector 
                                     ? `Bu sektör için önerilen ${currentSector.docs.length} adet doküman şablonu bulundu.`
                                     : `Sistemde kayıtlı toplam ${ALL_DOCS.length} adet doküman listeleniyor.`
@@ -482,13 +482,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Doküman ara..."
                                 className={`
-                                    w-full h-full bg-white dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-lg px-10 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-all
+                                    w-full h-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-lg px-10 text-xs text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-all font-bold
                                     ${isSearchActive ? 'opacity-100' : 'opacity-0'}
                                 `}
                             />
                             <button 
                                 onClick={() => setIsSearchActive(!isSearchActive)}
-                                className='absolute left-0 top-0 w-10 h-10 flex items-center justify-center text-slate-400 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors z-10'
+                                className='absolute left-0 top-0 w-10 h-10 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors z-10'
                             >
                                 <Search size={18} />
                             </button>
@@ -504,28 +504,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                          {/* Sort Button */}
                          <div className="relative group/sort">
-                            <button className='w-10 h-10 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-lg flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-all'>
+                            <button className='w-10 h-10 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-lg flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-all'>
                                 <ArrowUpDown size={18} />
                             </button>
                             {/* Sort Dropdown */}
-                            <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50 origin-top-right scale-0 group-hover/sort:scale-100 transition-transform duration-200">
+                            <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50 origin-top-right scale-0 group-hover/sort:scale-100 transition-transform duration-200">
                                 <button 
                                     onClick={() => setSortBy('default')}
-                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'default' ? 'text-amber-500 dark:text-amber-400 bg-amber-50 dark:bg-white/5' : 'text-slate-600 dark:text-slate-300'}`}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'default' ? 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-white/5' : 'text-slate-700 dark:text-slate-300'}`}
                                 >
                                     Varsayılan
                                     {sortBy === 'default' && <CheckCircle2 size={12} />}
                                 </button>
                                 <button 
                                     onClick={() => setSortBy('az')}
-                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'az' ? 'text-amber-500 dark:text-amber-400 bg-slate-50 dark:bg-white/5' : 'text-slate-600 dark:text-slate-300'}`}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'az' ? 'text-amber-600 dark:text-amber-400 bg-slate-50 dark:bg-white/5' : 'text-slate-700 dark:text-slate-300'}`}
                                 >
                                     A-Z Sırala
                                     {sortBy === 'az' && <CheckCircle2 size={12} />}
                                 </button>
                                 <button 
                                     onClick={() => setSortBy('favorites')}
-                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'favorites' ? 'text-amber-500 dark:text-amber-400 bg-slate-50 dark:bg-white/5' : 'text-slate-600 dark:text-slate-300'}`}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'favorites' ? 'text-amber-600 dark:text-amber-400 bg-slate-50 dark:bg-white/5' : 'text-slate-700 dark:text-slate-300'}`}
                                 >
                                     Favoriler
                                     {sortBy === 'favorites' && <CheckCircle2 size={12} />}
@@ -536,7 +536,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 </div>
 
                 {/* List Body */}
-                <div className='flex-1 overflow-y-auto custom-scrollbar p-3 relative'>
+                <div className='flex-1 overflow-y-auto custom-scrollbar p-3 relative bg-white dark:bg-transparent'>
                     <AnimatePresence mode='wait'>
                         <motion.div 
                             key={currentSector ? currentSector.id : 'all'}
@@ -553,23 +553,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.02 }}
                                     onClick={() => handleDocumentClick(item.doc, item.sector.id)}
-                                    className='group flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg hover:shadow-amber-500/10'
+                                    className='group flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:border-amber-400 dark:hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md'
                                 >
                                     {/* Hover Highlight Gradient */}
-                                    <div className='absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/50 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000'></div>
+                                    <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000'></div>
 
                                     {/* Accent Bar */}
-                                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${currentSector ? 'from-transparent via-slate-300 dark:via-slate-500 to-transparent' : 'from-transparent via-amber-500/50 to-transparent group-hover:via-amber-500'} transition-colors`}></div>
+                                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${currentSector ? 'from-transparent via-slate-400 dark:via-slate-500 to-transparent' : 'from-transparent via-amber-500/50 to-transparent group-hover:via-amber-500'} transition-colors`}></div>
                                     
                                     {/* Icon */}
-                                    <div className={`w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner`}>
-                                        <FileText size={18} className='text-slate-400 dark:text-slate-500 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors' />
+                                    <div className={`w-10 h-10 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm`}>
+                                        <FileText size={18} className='text-slate-500 dark:text-slate-500 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors' />
                                     </div>
                                     
                                     <div className='flex-1 min-w-0'>
-                                        <h3 className='text-xs font-bold text-slate-700 dark:text-slate-300 truncate group-hover:text-slate-900 dark:group-hover:text-white transition-colors'>{item.doc}</h3>
-                                        <div className='flex items-center gap-2 mt-1 opacity-60 group-hover:opacity-100 transition-opacity'>
-                                            <span className='text-[9px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider'>{item.sector.name}</span>
+                                        <h3 className='text-xs font-black text-slate-800 dark:text-slate-300 truncate group-hover:text-slate-900 dark:group-hover:text-white transition-colors'>{item.doc}</h3>
+                                        <div className='flex items-center gap-2 mt-1 opacity-80 group-hover:opacity-100 transition-opacity'>
+                                            <span className='text-[9px] text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider'>{item.sector.name}</span>
                                         </div>
                                     </div>
 
@@ -629,14 +629,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 </motion.button>
 
                 {/* 2. HIZLI İŞLEMLER (Grid 2x2) */}
-                <div className='flex-1 bg-white/90 dark:bg-[#15171e]/90 backdrop-blur rounded-2xl border border-slate-200 dark:border-white/5 flex flex-col overflow-hidden shadow-2xl relative group/panel transition-colors duration-300'>
+                <div className='flex-1 bg-white dark:bg-[#15171e]/90 backdrop-blur rounded-2xl border border-slate-200 dark:border-white/5 flex flex-col overflow-hidden shadow-lg relative group/panel transition-colors duration-300'>
                     
                     {/* Header */}
-                    <div className='bg-gradient-to-r from-amber-500 to-orange-600 p-3 flex items-center justify-center shrink-0 shadow-lg z-10 relative overflow-hidden'>
+                    <div className='bg-gradient-to-r from-amber-500 to-orange-600 p-3 flex items-center justify-center shrink-0 shadow-md z-10 relative overflow-hidden'>
                         <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10"></div>
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] animate-shimmer"></div>
-                        <Zap size={16} className="text-black mr-2 animate-bounce" fill="currentColor" />
-                        <span className='text-black font-black text-sm tracking-widest uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
+                        <Zap size={16} className="text-white mr-2 animate-bounce" fill="currentColor" />
+                        <span className='text-white font-black text-sm tracking-widest uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
                     </div>
 
                     <div className='flex-1 p-3 grid grid-cols-2 grid-rows-2 gap-3 z-10'>
@@ -760,34 +760,34 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     transition={{ 
                         boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } 
                     }}
-                    className='relative z-20 rounded-2xl border-2 border-amber-500/30 dark:border-amber-500/50 bg-gradient-to-b from-amber-50 via-yellow-50 to-amber-100 dark:from-amber-900/80 dark:via-yellow-900/60 dark:to-amber-950 flex flex-col items-center justify-center p-4 shadow-md dark:shadow-[0_0_50px_rgba(245,158,11,0.4)] h-[120px] md:h-[130px] overflow-visible'
+                    className='relative z-20 rounded-2xl border border-amber-300 dark:border-amber-500/50 bg-amber-50 dark:bg-gradient-to-b dark:from-amber-900/80 dark:via-yellow-900/60 dark:to-amber-950 flex flex-col items-center justify-center p-4 shadow-lg h-[120px] md:h-[130px] overflow-visible'
                 >
                      {/* "ÖNERİLEN" Badge - Floating above */}
-                     <div className='absolute -top-7 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 text-slate-900 text-[10px] font-black px-4 py-1 rounded-full shadow-lg dark:shadow-[0_0_15px_rgba(251,191,36,0.8)] animate-pulse z-30 whitespace-nowrap border border-yellow-200'>
+                     <div className='absolute -top-7 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 text-white text-[10px] font-black px-4 py-1 rounded-full shadow-lg dark:shadow-[0_0_15px_rgba(251,191,36,0.8)] animate-pulse z-30 whitespace-nowrap border border-white/20 dark:border-yellow-200'>
                         🌟 ÖNERİLEN 🌟
                      </div>
 
                      <div className='absolute -top-3 flex gap-1 z-10'>
                         <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }}>
-                            <Star size={14} className="text-yellow-500 dark:text-yellow-300 fill-yellow-500 dark:fill-yellow-300 drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
+                            <Star size={14} className="text-amber-500 dark:text-yellow-300 fill-amber-500 dark:fill-yellow-300 drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
                         </motion.div>
                         <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }}>
-                            <Star size={18} className="text-amber-500 dark:text-amber-400 fill-amber-500 dark:fill-amber-400 drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] -mt-2" />
+                            <Star size={18} className="text-orange-500 dark:text-amber-400 fill-orange-500 dark:fill-amber-400 drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] -mt-2" />
                         </motion.div>
                         <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }}>
-                            <Star size={14} className="text-yellow-500 dark:text-yellow-300 fill-yellow-500 dark:fill-yellow-300 drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
+                            <Star size={14} className="text-amber-500 dark:text-yellow-300 fill-amber-500 dark:fill-yellow-300 drop-shadow-sm dark:drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
                         </motion.div>
                      </div>
 
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/cubes.png)] opacity-10 dark:opacity-20 mix-blend-overlay'></div>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/cubes.png)] opacity-5 dark:opacity-20 mix-blend-overlay'></div>
                      
                      <div className='flex items-center gap-2 mb-1 mt-2 relative z-10'>
                         <Crown size={22} className='text-amber-600 dark:text-amber-300 drop-shadow-sm' fill='currentColor' />
-                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-600 via-yellow-600 to-amber-700 dark:from-yellow-200 dark:via-yellow-400 dark:to-amber-500 uppercase tracking-widest drop-shadow-sm'>GOLD</span>
+                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-600 via-orange-600 to-amber-700 dark:from-yellow-200 dark:via-yellow-400 dark:to-amber-500 uppercase tracking-widest drop-shadow-sm'>GOLD</span>
                      </div>
-                     <div className='text-3xl font-black text-amber-800 dark:text-white mb-0.5 z-10 drop-shadow-sm tracking-tighter'>175 TL</div>
+                     <div className='text-3xl font-black text-slate-800 dark:text-white mb-0.5 z-10 drop-shadow-sm tracking-tighter'>175 TL</div>
                      <div className='text-[10px] text-amber-700 dark:text-amber-200 font-bold uppercase mb-2 z-10 tracking-wide'>2 KAT AVANTAJ</div>
-                     <button className='w-32 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 border border-yellow-300/50 text-xs font-black text-slate-900 shadow-sm hover:shadow-md dark:shadow-[0_5px_15px_rgba(245,158,11,0.4)] transform active:scale-95 transition-all z-10'>
+                     <button className='w-32 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 border border-amber-400/50 text-xs font-black text-white shadow-sm hover:shadow-md dark:shadow-[0_5px_15px_rgba(245,158,11,0.4)] transform active:scale-95 transition-all z-10'>
                         SATIN AL
                      </button>
                 </motion.div>
