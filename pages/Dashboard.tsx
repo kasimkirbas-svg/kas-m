@@ -31,6 +31,7 @@ import {
   Filter,
   UserPlus,
   Megaphone,
+  Box,
   Crown,
   Gem,
   Crown,
@@ -676,11 +677,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             </div>
                         </motion.button>
 
-                        {/* Button 3: Personel */}
+                        {/* Button 3: İzin Formu */}
                         <motion.button 
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => onNavigate('templates', { search: 'Personel' })}
+                            onClick={() => onNavigate('templates', { search: 'İzin' })}
                             className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-blue-500/50 dark:hover:border-blue-500/50 shadow-sm hover:shadow-blue-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-blue-50/50 dark:from-blue-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
@@ -688,25 +689,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                 <UserPlus size={20} />
                             </div>
                             <div className='flex flex-col items-start z-10'>
-                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Yeni</span>
-                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-300 leading-none'>PERSONEL</span>
+                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Personel</span>
+                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-300 leading-none'>İZİN FORMU</span>
                             </div>
                         </motion.button>
 
-                        {/* Button 4: Duyuru */}
+                        {/* Button 4: Zimmet/Teslim */}
                         <motion.button 
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => onNavigate('templates', { search: 'Duyuru' })}
-                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-rose-500/50 dark:hover:border-rose-500/50 shadow-sm hover:shadow-rose-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
+                            onClick={() => onNavigate('templates', { search: 'Zimmet' })}
+                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 shadow-sm hover:shadow-violet-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
-                            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-rose-50/50 dark:from-rose-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
-                            <div className='w-10 h-10 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 group-hover:bg-rose-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
-                                <Megaphone size={20} />
+                            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-violet-50/50 dark:from-violet-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
+                            <div className='w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
+                                <Box size={20} />
                             </div>
                             <div className='flex flex-col items-start z-10'>
-                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Genel</span>
-                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-rose-600 dark:group-hover:text-rose-300 leading-none'>DUYURU</span>
+                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Demirbaş</span>
+                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-violet-600 dark:group-hover:text-violet-300 leading-none'>ZİMMETLE</span>
                             </div>
                         </motion.button>
                     </div>
