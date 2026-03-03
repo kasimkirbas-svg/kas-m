@@ -711,14 +711,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             </div>
                         </motion.button>
                     </div>
+                    {/* Extra padding added to prevent cutoff */}
+                    <div className="h-2"></div>
                 </div>
 
                 {/* 3. DÖKÜMAN ARŞİVİ (Enhanced Footer Button) */}
                 <motion.button 
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => onNavigate('my-documents')}  // Changed from 'documents' to 'my-documents'
-                    className='shrink-0 h-20 rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300'
+                    onClick={() => onNavigate('my-documents')}
+                    className='shrink-0 h-20 rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-visible group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20'
                 >
                     <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
                     
