@@ -475,29 +475,29 @@ const App = () => {
     
     // 7. Admin Panel (Handles all admin-related views)
     if (user?.role === UserRole.ADMIN && ['admin', 'subscribers', 'users', 'admin-templates', 'admin-packages'].includes(currentView)) {
-      return <AdminPanel user={user} t={t} currentView={currentView} />
+      return <AdminPanel user={user} onLogout={handleLogout} />
     }
 
     // Default Fallback
-    return <div className="p-8 text-center text-slate-500">Sayfa yükleniyor... ({currentView})</div>;
+    return (
+      <Layout 
+        user={user} 
+        currentView={currentView} 
+        onNavigate={handleNavigate} 
+        onLogout={handleLogout}
+        language={language}
+        onLanguageChange={handleLanguageChange}
+        theme={theme}
+        // Theme is locked
+        documentsCount={savedDocuments.length}
+        t={t}
+      >
+        <div className="p-8 text-center text-slate-500">Sayfa yükleniyor... ({currentView})</div>
+      </Layout>
+    );
   };
 
-  return (
-    <Layout 
-      user={user} 
-      currentView={currentView} 
-      onNavigate={handleNavigate} 
-      onLogout={handleLogout}
-      language={language}
-      onLanguageChange={handleLanguageChange}
-      theme={theme}
-      // Theme is locked
-      documentsCount={savedDocuments.length}
-      t={t}
-    >
-      {renderContent()}
-    </Layout>
-  );
+  return renderContent();
 };
 
 export default App;
