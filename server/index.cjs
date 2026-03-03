@@ -3014,6 +3014,17 @@ app.post('/api/buy-rights', authenticateToken, async (req, res) => {
 // Run Migration on Startup (Async)
 migrateUserRights();
 
+// --- GLOBAL ERROR HANDLER ---
+app.use((err, req, res, next) => {
+    console.error('Unhandled Server Error:', err);
+    if (res.headersSent) return next(err);
+    res.status(500).json({ 
+        success: false, 
+        message: 'Sunucu hatası oluştu.',
+        details: err.message
+    });
+});
+
 
 // Vercel Serverless Function Support
 if (require.main === module) {

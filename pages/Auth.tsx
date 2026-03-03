@@ -102,7 +102,14 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
             body: JSON.stringify({ email: formData.email, password: formData.password })
         });
         
-        const data = await res.json();
+        const text = await res.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch(e) {
+            console.error('Non-JSON response:', text);
+            throw new Error(text.substring(0, 100) || 'Sunucu ile iletişim hatası (JSON Parse Error).');
+        }
         
         if (res.ok && data.success) {
             if (data.token) localStorage.setItem('authToken', data.token);
