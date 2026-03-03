@@ -27,7 +27,9 @@ import {
   Beaker,
   ShoppingBag,
   Store,
-  Wallet
+  Wallet,
+  Crown,
+  Settings
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 
