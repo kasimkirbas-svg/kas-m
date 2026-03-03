@@ -725,11 +725,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 
                 {/* 1. SILVER (Platinum/Industrial) - Sharp & Clean */}
                 <motion.div 
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    className='relative rounded-xl bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900 border border-gray-400/50 dark:border-gray-600 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-lg hover:shadow-2xl dark:shadow-gray-900/50 h-[110px] transition-all duration-300'
+                    animate={{ 
+                         boxShadow: ["0 0 5px rgba(255,255,255,0.05)", "0 0 15px rgba(255,255,255,0.1)", "0 0 5px rgba(255,255,255,0.05)"] 
+                    }}
+                    transition={{ 
+                         boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" } 
+                    }}
+                    className='relative rounded-xl bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900 border border-gray-400/50 dark:border-gray-600 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-lg h-[110px] transition-all duration-300'
                 >
                      {/* Sharp Metallic Highlight */}
-                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
+                     <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent"></div>
+                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent translate-x-[-100%] animate-shine transition-transform duration-700 ease-in-out"></div>
                      
                      <div className='absolute -top-12 -right-12 w-24 h-24 bg-gray-400/20 dark:bg-gray-500/10 rounded-full blur-xl'></div>
                      
@@ -740,7 +746,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                      <div className='text-xl font-black text-gray-800 dark:text-white mb-0.5 z-10 tracking-tighter'>100 TL</div>
                      <div className='text-[8px] text-gray-600 dark:text-gray-400 font-bold uppercase mb-2 z-10 tracking-widest bg-gray-300/50 dark:bg-gray-700/50 px-3 py-0.5 rounded-sm'>TEMEL LİMİT</div>
                      <button 
-                        onClick={() => onPurchase && onPurchase('STANDART')}
+                        onClick={() => {
+                            // Gerçek ödeme simülasyonu - Burada normalde ödeme sayfasına yönlendirilir
+                            window.open('https://link-to-payment-gateway.com/buy/silver', '_blank');
+                        }}
                         className='w-full max-w-[100px] py-1 rounded bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-white text-[9px] font-bold text-white dark:text-gray-900 shadow-md transition-all z-10 active:scale-95 uppercase tracking-wide'
                      >
                         SATIN AL
@@ -750,8 +759,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 {/* 2. GOLD (Center - Radiating) */}
                 <motion.div 
                     initial={{ scale: 1.02 }}
-                    whileHover={{ scale: 1.05 }}
-                    className='relative z-20 rounded-xl border border-yellow-500/50 dark:border-yellow-400/50 bg-gradient-to-b from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-950/40 dark:via-amber-900/40 dark:to-orange-950/40 flex flex-col items-center justify-center p-3 shadow-xl dark:shadow-[0_0_30px_rgba(234,179,8,0.15)] h-[125px] overflow-visible backdrop-blur-md'
+                    animate={{ 
+                         boxShadow: ["0 0 15px rgba(245,158,11,0.1)", "0 0 30px rgba(245,158,11,0.3)", "0 0 15px rgba(245,158,11,0.1)"] 
+                    }}
+                    transition={{ 
+                         boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } 
+                    }}
+                    className='relative z-20 rounded-xl border border-yellow-500/50 dark:border-yellow-400/50 bg-gradient-to-b from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-950/40 dark:via-amber-900/40 dark:to-orange-950/40 flex flex-col items-center justify-center p-3 shadow-xl h-[125px] overflow-visible backdrop-blur-md'
                 >
                      {/* "ÖNERİLEN" Badge */}
                      <div className='absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-white text-[8px] font-black px-3 py-0.5 rounded shadow-lg shadow-amber-500/40 z-30 whitespace-nowrap tracking-widest uppercase ring-1 ring-white/30'>
@@ -777,7 +791,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                      <div className='text-3xl font-black text-slate-800 dark:text-white mb-0.5 z-10 drop-shadow-sm tracking-tighter'>175 TL</div>
                      <div className='text-[8px] text-amber-900 dark:text-amber-100 font-black uppercase mb-2 z-10 tracking-widest bg-gradient-to-r from-transparent via-amber-200 dark:via-amber-800/50 to-transparent px-4 py-0.5 rounded-full'>2 KAT AVANTAJ</div>
                      <button 
-                        onClick={() => onPurchase && onPurchase('GOLD')}
+                         onClick={() => {
+                            // Gerçek ödeme simülasyonu - Burada normalde ödeme sayfasına yönlendirilir
+                            window.open('https://link-to-payment-gateway.com/buy/gold', '_blank');
+                        }}
                         className='w-full max-w-[120px] py-1.5 rounded bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-[10px] font-black text-white shadow-lg shadow-amber-500/30 transform active:scale-95 transition-all z-10 uppercase tracking-wider'
                      >
                         HEMEN AL
@@ -786,28 +803,36 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                 {/* 3. DIAMOND (Infinite/Prestige) - Magnificent & Neon */}
                 <motion.div 
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    className='relative rounded-xl bg-[#0f172a] border border-cyan-500/30 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-xl hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] h-[110px] transition-all duration-300'
+                    animate={{ 
+                         boxShadow: ["0 0 10px rgba(6,182,212,0.1)", "0 0 25px rgba(6,182,212,0.3)", "0 0 10px rgba(6,182,212,0.1)"] 
+                    }}
+                    transition={{ 
+                         boxShadow: { duration: 2.5, repeat: Infinity, ease: "easeInOut" } 
+                    }}
+                    className='relative rounded-xl bg-[#0f172a] border border-cyan-500/30 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden shadow-xl h-[110px] transition-all duration-300'
                 >
                      {/* Background Animation */}
-                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-[#0f172a] to-[#0f172a] group-hover:from-cyan-900/40 transition-colors duration-500"></div>
-                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 animate-pulse-slow"></div>
+                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-[#0f172a] to-[#0f172a] animate-pulse-slow"></div>
+                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 animate-float"></div>
                      
                      {/* Neon Borders */}
-                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
-                     <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
+                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50 animate-pulse"></div>
+                     <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50 animate-pulse"></div>
 
                      {/* Prismatic Flashes */}
-                     <div className="absolute -left-[100%] top-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 group-hover:animate-shine"></div>
+                     <div className="absolute -left-[100%] top-0 w-[50%] h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 animate-shine"></div>
 
                      <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Gem size={16} className='text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] transition-transform group-hover:rotate-[360deg] duration-1000' fill='currentColor' />
-                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 uppercase tracking-[0.2em] drop-shadow-[0_0_5px_rgba(6,182,212,0.5)]'>DIAMOND</span>
+                        <Gem size={16} className='text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] animate-[spin_10s_linear_infinite]' fill='currentColor' />
+                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 uppercase tracking-[0.2em] drop-shadow-[0_0_5px_rgba(6,182,212,0.5)] animate-pulse'>DIAMOND</span>
                      </div>
                      <div className='text-xl font-black text-white mb-0.5 z-10 tracking-tighter drop-shadow-md text-shadow-glow'>250 TL</div>
                      <div className='text-[8px] text-cyan-200 font-bold uppercase mb-2 z-10 tracking-widest bg-cyan-900/30 px-3 py-0.5 rounded border border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]'>SINIRSIZ LİMİT</div>
                       <button 
-                        onClick={() => onPurchase && onPurchase('PREMIUM')}
+                        onClick={() => {
+                            // Gerçek ödeme simülasyonu - Burada normalde ödeme sayfasına yönlendirilir
+                            window.open('https://link-to-payment-gateway.com/buy/premium', '_blank');
+                        }}
                         className='w-full max-w-[100px] py-1 rounded bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-[9px] font-bold shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all z-10 active:scale-95 uppercase tracking-wide'
                      >
                         SATIN AL
