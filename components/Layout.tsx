@@ -146,6 +146,52 @@ export const Layout: React.FC<LayoutProps> = ({
         {/* Right: Actions */}
         <div className="flex items-center gap-2 md:gap-4 pointer-events-auto">
             
+            {/* Theme Toggle */}
+            <button 
+                onClick={() => onThemeChange && onThemeChange(theme === 'dark' ? 'light' : 'dark')}
+                className="p-2 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                aria-label="Temayı Değiştir"
+            >
+                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+            {/* Language Selector */}
+            <div className="relative">
+                <button 
+                    onClick={() => setLangMenuOpen(!langMenuOpen)}
+                    className="p-2 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1"
+                >
+                    <Globe size={20} />
+                    <span className="text-xs font-bold uppercase hidden sm:block">{language}</span>
+                </button>
+                {langMenuOpen && (
+                    <>
+                    <div className="fixed inset-0 z-40" onClick={() => setLangMenuOpen(false)}></div>
+                    <div className="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        {[
+                            { code: 'tr', label: 'Türkçe', flag: '🇹🇷' },
+                            { code: 'en', label: 'English', flag: '🇬🇧' },
+                            { code: 'ar', label: 'العربية', flag: '🇸🇦' }
+                        ].map((lang) => (
+                            <button
+                                key={lang.code}
+                                onClick={() => {
+                                    if(onLanguageChange) onLanguageChange(lang.code as any);
+                                    setLangMenuOpen(false);
+                                }}
+                                className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors
+                                    ${language === lang.code ? 'text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-900/10' : 'text-slate-600 dark:text-slate-400'}
+                                `}
+                            >
+                                <span className="text-lg">{lang.flag}</span>
+                                {lang.label}
+                            </button>
+                        ))}
+                    </div>
+                    </>
+                )}
+            </div>
+
             {/* Notifications */}
             <div className="relative">
                 <button 
