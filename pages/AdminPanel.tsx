@@ -30,7 +30,12 @@ interface SystemLog {
 // --- Components ---
 
 const GlassCard: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`bg-[#0f172a]/70 backdrop-blur-md border border-slate-800 rounded-2xl shadow-xl ${className}`}>
+  <div className={`glass-card-premium relative overflow-hidden group/card ${className}`}>
+    {/* Tech Corner Accents */}
+    <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-amber-500/20 rounded-tl-sm opacity-0 group-hover/card:opacity-100 transition-opacity"></div>
+    <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-amber-500/20 rounded-tr-sm opacity-0 group-hover/card:opacity-100 transition-opacity"></div>
+    <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-amber-500/20 rounded-bl-sm opacity-0 group-hover/card:opacity-100 transition-opacity"></div>
+    <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-amber-500/20 rounded-br-sm opacity-0 group-hover/card:opacity-100 transition-opacity"></div>
     {children}
   </div>
 );
@@ -1076,10 +1081,18 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
 
 
   return (
-    <div className="flex h-screen bg-[#020617] text-white font-sans overflow-hidden fixed inset-0 z-[100]">
+    <div className="flex h-screen bg-[#02040a] text-white font-sans overflow-hidden fixed inset-0 z-[100]">
+      
+      {/* --- Cosmic Background Layer --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute inset-0 bg-grid-premium opacity-[0.2]"></div>
+          <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] animate-pulse"></div>
+          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-amber-600/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#02040a_100%)] opacity-50"></div>
+      </div>
       
       {/* Sidebar - LEFT */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} h-full bg-[#0B0F19] border-r border-slate-800 transition-all duration-300 flex flex-col flex-shrink-0 z-50`}>
+      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} h-full bg-[#0B0F19]/90 backdrop-blur-md border-r border-slate-800 transition-all duration-300 flex flex-col flex-shrink-0 z-50`}>
          <div className="h-20 flex items-center justify-center border-b border-slate-800">
             {sidebarOpen ? (
                <div className="flex items-center gap-3 animate-in fade-in">
@@ -1124,7 +1137,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
       </aside>
 
       {/* Main Content - RIGHT */}
-      <main className="flex-1 flex flex-col min-w-0 bg-[#020617] relative">
+      <main className="flex-1 flex flex-col min-w-0 bg-transparent relative z-10 box-border">
          
          {/* Top Header */}
          <header className="h-20 bg-[#0B0F19]/80 backdrop-blur border-b border-slate-800 flex items-center justify-between px-4 md:px-8 z-40 sticky top-0 shadow-sm transition-all">

@@ -74,21 +74,19 @@ export const Layout: React.FC<LayoutProps> = ({
     <div className={`flex flex-col font-sans bg-slate-200 dark:bg-[#0f1115] text-slate-900 dark:text-slate-200 selection:bg-amber-500/30 min-h-screen transition-colors duration-300 relative overflow-hidden`}>
       
       {/* GLOBAL BACKGROUND EFFECTS (Added for Premium Feel) */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050508] to-black">
-          {/* Subtle Grid Pattern */}
-          <div className="absolute inset-0 bg-grid-white/[0.03] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_90%)]"></div>
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none bg-[#02040a]">
+          {/* Cosmic Grid Pattern */}
+          <div className="absolute inset-0 bg-grid-premium opacity-[0.15]"></div>
           
-          {/* Animated Floating Color Blobs - Premium Palette - Enhanced Visibility */}
-          <div className="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] rounded-full bg-indigo-600/30 blur-[100px] animate-float mix-blend-screen opacity-70"></div>
-          <div className="absolute top-[10%] right-[-10%] w-[700px] h-[700px] rounded-full bg-blue-600/20 blur-[90px] animate-float-delayed mix-blend-screen opacity-60"></div>
-          <div className="absolute bottom-[-10%] left-[20%] w-[900px] h-[900px] rounded-full bg-violet-600/20 blur-[120px] animate-float-slow mix-blend-screen opacity-60"></div>
-          <div className="absolute bottom-[10%] right-[10%] w-[600px] h-[600px] rounded-full bg-emerald-500/10 blur-[100px] animate-float mix-blend-screen opacity-50"></div>
+          {/* Animated Floating Color Blobs - Cosmic Palette */}
+          <div className="absolute top-[-20%] left-[-10%] w-[900px] h-[900px] rounded-full bg-[#3b82f6]/10 blur-[150px] animate-pulse"></div>
+          <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-[#f59e0b]/10 blur-[150px] animate-pulse-slow"></div>
           
-          {/* Center Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-blue-500/10 blur-[120px] pointer-events-none"></div>
+          {/* Center Nebula */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full bg-slate-900/40 blur-[100px] mix-blend-overlay"></div>
 
-          {/* Moving sheen effect */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-transparent animate-pulse-slow"></div>
+          {/* Vignette */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)] opacity-80"></div>
       </div>
 
       {/* INDUSTRIAL TOP NAVIGATION BAR - Now Transparent/Minimal */}
