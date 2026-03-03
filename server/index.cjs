@@ -426,10 +426,10 @@ const SOURCE_DB_FILE = path.join(__dirname, 'db.json');
 
 // Determine if we are in a read-only environment (Vercel Production)
 // VERCEL_ENV is 'production', 'preview', or 'development'
-const IS_VERCEL_PROD = process.env.VERCEL && process.env.VERCEL_ENV === 'production';
+const IS_VERCEL = !!process.env.VERCEL;
 
 // Use /tmp only if we are forced to (Vercel Prod), otherwise update local file for persistence
-const DB_FILE = IS_VERCEL_PROD 
+const DB_FILE = IS_VERCEL 
     ? path.join('/tmp', 'db.json') 
     : path.join(__dirname, 'db.json');
 
@@ -442,7 +442,7 @@ const readDB = () => {
         if (!fs.existsSync(DB_FILE)) {
              // FORCE OVERWRITE: If DB_FILE is in /tmp, ALWAYS overwrite from source on startup
              // This ensures we start with the repo's db.json every time serverless function cold starts
-             if (IS_VERCEL_PROD && fs.existsSync(SOURCE_DB_FILE)) {
+             if (IS_VERCEL && fs.existsSync(SOURCE_DB_FILE)) {
                  try {
                     console.log("🔄 Resetting /tmp DB from source...");
                     const params = fs.readFileSync(SOURCE_DB_FILE, 'utf8');
