@@ -381,64 +381,171 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
             </div>
         </div>
 
-        {/* Footer: Pricing - Cards Restored */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             {/* Standard */}
-             <div className="bg-[#161922] border border-white/10 hover:border-blue-500/50 rounded-2xl p-4 flex flex-col items-center justify-between group transition-all relative overflow-hidden h-40 hover:-translate-y-1 hover:shadow-xl">
-                 <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                 <div className="flex flex-col items-center gap-2 relative z-10 pt-2">
-                      <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
-                        <Shield size={24} />
-                      </div>
-                      <div className="text-center">
-                          <div className="text-lg font-black text-white">STANDART</div>
-                          <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">BAŞLANGIÇ</div>
-                      </div>
-                 </div>
-                 <div className="text-center relative z-10 w-full">
-                      <div className="text-2xl font-black text-white mb-2">100 ₺</div>
-                      <button className="w-full py-2 bg-white/10 hover:bg-blue-600 rounded-lg text-[10px] font-bold text-white transition-colors uppercase tracking-widest">SATIN AL</button>
-                 </div>
-             </div>
+        {/* Marketing Pricing Section */}
+        <div className="mt-8 mb-4">
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h2 className="text-2xl font-black text-white tracking-tight">ABONELİK PAKETLERİ</h2>
+                    <p className="text-sm text-slate-400">İhtiyacınıza uygun paketi seçin, hemen kazanmaya başlayın</p>
+                </div>
+                <div className="hidden md:flex items-center gap-2 text-xs font-bold text-slate-500 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
+                    <Shield size={14} className="text-green-500" />
+                    <span>GÜVENLİ ÖDEME</span>
+                    <span className="w-1 h-1 rounded-full bg-slate-600"></span>
+                    <span>ANINDA AKTİVASYON</span>
+                </div>
+            </div>
 
-             {/* Gold */}
-             <div className="bg-gradient-to-tl from-[#1a1608] to-black border border-yellow-500/30 hover:border-yellow-400 rounded-2xl p-4 flex flex-col items-center justify-between group transition-all relative overflow-hidden shadow-[0_0_15px_rgba(234,179,8,0.1)] h-40 scale-105 z-10 hover:shadow-[0_0_30px_rgba(234,179,8,0.2)]">
-                 <div className="absolute top-0 right-0 px-3 py-1 bg-yellow-500 text-black text-[9px] font-black uppercase rounded-bl-xl z-20">ÖNERİLEN</div>
-                 <div className="flex flex-col items-center gap-2 relative z-10 pt-2">
-                      <div className="p-2 rounded-lg bg-yellow-500/10 text-yellow-500">
-                        <Star size={24} className="fill-yellow-500/20" />
-                      </div>
-                      <div className="text-center">
-                          <div className="text-xl font-black text-yellow-500">GOLD</div>
-                          <div className="text-[10px] text-yellow-500/60 font-bold uppercase tracking-widest">2 KAT LİMİT</div>
-                      </div>
-                 </div>
-                 <div className="text-center relative z-10 w-full">
-                      <div className="text-3xl font-black text-yellow-500 mb-2">175 ₺</div>
-                      <button className="w-full py-2 bg-yellow-500 hover:bg-yellow-400 text-black rounded-lg text-[10px] font-black shadow-lg shadow-yellow-500/20 transition-colors uppercase tracking-widest">SATIN AL</button>
-                 </div>
-             </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-8">
+             {/* Standard Plan */}
+             <motion.div 
+                whileHover={{ y: -5 }}
+                className="relative group bg-[#161922] border border-white/10 rounded-2xl p-0.5 overflow-hidden flex flex-col"
+             >
+                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                 
+                 <div className="relative bg-[#0f1115]/90 backdrop-blur-xl rounded-[14px] h-full p-6 flex flex-col">
+                     <div className="mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <Shield className="text-blue-500" size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-1">BAŞLANGIÇ</h3>
+                        <p className="text-xs text-slate-400 font-medium leading-relaxed">Yeni başlayan işletmeler için temel doküman erişimi.</p>
+                     </div>
+                     
+                     <div className="my-6 space-y-3">
+                         <div className="flex items-center gap-3 text-sm text-slate-300">
+                             <CheckCircle2 size={16} className="text-blue-500 shrink-0" />
+                             <span>Aylık <span className="text-white font-bold">100</span> Belge Limiti</span>
+                         </div>
+                         <div className="flex items-center gap-3 text-sm text-slate-300">
+                             <CheckCircle2 size={16} className="text-blue-500 shrink-0" />
+                             <span>Temel Şablonlar</span>
+                         </div>
+                         <div className="flex items-center gap-3 text-sm text-slate-300">
+                             <CheckCircle2 size={16} className="text-blue-500 shrink-0" />
+                             <span>PDF Çıktı Alma</span>
+                         </div>
+                     </div>
 
-             {/* Premium */}
-             <div className="bg-[#1a1025] border border-purple-500/20 hover:border-purple-500/50 rounded-2xl p-4 flex flex-col items-center justify-between group transition-all relative overflow-hidden h-40 hover:-translate-y-1 hover:shadow-xl">
-                 <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                 <div className="flex flex-col items-center gap-2 relative z-10 pt-2">
-                      <div className="p-2 rounded-lg bg-purple-500/10 text-purple-500">
-                        <CheckCircle2 size={24} />
-                      </div>
-                      <div className="text-center">
-                          <div className="text-lg font-black text-white">PREMIUM</div>
-                          <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">SINIRSIZ</div>
-                      </div>
+                     <div className="mt-auto pt-6 border-t border-white/5">
+                         <div className="flex items-end gap-1 mb-4">
+                             <span className="text-3xl font-black text-white">100 ₺</span>
+                             <span className="text-xs text-slate-500 font-bold mb-1.5">/ AY</span>
+                         </div>
+                         <button className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                             HEMEN BAŞLA
+                         </button>
+                     </div>
                  </div>
-                 <div className="text-center relative z-10 w-full">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                          <span className="text-xs line-through text-slate-600">350 ₺</span>
-                          <span className="text-2xl font-black text-white">250 ₺</span>
-                      </div>
-                      <button className="w-full py-2 bg-purple-500/20 hover:bg-purple-600 rounded-lg text-[10px] font-bold text-purple-200 hover:text-white border border-purple-500/30 transition-colors uppercase tracking-widest">SATIN AL</button>
+             </motion.div>
+
+             {/* PRO Plan - Highlighted */}
+             <motion.div 
+                whileHover={{ y: -8 }}
+                className="relative group rounded-2xl p-0.5 overflow-hidden flex flex-col shadow-[0_0_40px_rgba(234,179,8,0.15)] z-10"
+             >
+                 {/* Animated Border Gradient */}
+                 <div className="absolute inset-0 bg-gradient-to-br from-yellow-500 via-orange-500 to-yellow-600 animate-gradient-xy"></div>
+                 
+                 <div className="relative bg-[#0f1115] rounded-[14px] h-full p-1 flex flex-col">
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-yellow-200/50 to-transparent"></div>
+                    
+                    <div className="bg-[#12141a] rounded-[12px] h-full p-5 flex flex-col relative overflow-hidden">
+                        <div className="absolute top-3 right-3">
+                            <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-orange-500/20">
+                                EN POPÜLER
+                            </span>
+                        </div>
+
+                        <div className="mb-4 mt-2">
+                             <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300 border border-yellow-500/20">
+                                 <Star className="text-yellow-500 fill-yellow-500" size={28} />
+                             </div>
+                             <h3 className="text-2xl font-black text-white mb-1">PROFESYONEL</h3>
+                             <p className="text-xs text-slate-400 font-medium leading-relaxed">Büyüyen işletmeler için gelişmiş özellikler.</p>
+                        </div>
+                        
+                        <div className="my-6 space-y-3">
+                            <div className="flex items-center gap-3 text-sm text-slate-200">
+                                <div className="p-0.5 rounded-full bg-yellow-500/20 text-yellow-500"><CheckCircle2 size={14} /></div>
+                                <span>Aylık <span className="text-white font-bold">500</span> Belge Limiti</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-sm text-slate-200">
+                                <div className="p-0.5 rounded-full bg-yellow-500/20 text-yellow-500"><CheckCircle2 size={14} /></div>
+                                <span>Tüm Sektörel Şablonlar</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-sm text-slate-200">
+                                <div className="p-0.5 rounded-full bg-yellow-500/20 text-yellow-500"><CheckCircle2 size={14} /></div>
+                                <span>Öncelikli Destek</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-sm text-slate-200">
+                                <div className="p-0.5 rounded-full bg-yellow-500/20 text-yellow-500"><CheckCircle2 size={14} /></div>
+                                <span>Şirket Logosu Ekleme</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-auto pt-6 border-t border-white/5 relative">
+                             <div className="flex items-end gap-1 mb-4">
+                                 <span className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">175 ₺</span>
+                                 <span className="text-xs text-slate-500 font-bold mb-1.5">/ AY</span>
+                             </div>
+                             <button className="w-full py-3.5 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-600 text-black font-black text-sm transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] hover:scale-[1.02] active:scale-[0.98]">
+                                 AVANTAJLI PAKETİ SEÇ
+                             </button>
+                        </div>
+                    </div>
                  </div>
-             </div>
+             </motion.div>
+
+             {/* Premium / Enterprise */}
+             <motion.div 
+                whileHover={{ y: -5 }}
+                className="relative group bg-[#161922] border border-white/10 rounded-2xl p-0.5 overflow-hidden flex flex-col"
+             >
+                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                 
+                 <div className="relative bg-[#0f1115]/90 backdrop-blur-xl rounded-[14px] h-full p-6 flex flex-col">
+                     <div className="mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <Zap className="text-purple-500" size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-1">PREMIUM</h3>
+                        <p className="text-xs text-slate-400 font-medium leading-relaxed">Büyük ölçekli operasyonlar ve sınırsız erişim.</p>
+                     </div>
+                     
+                     <div className="my-6 space-y-3">
+                         <div className="flex items-center gap-3 text-sm text-slate-300">
+                             <CheckCircle2 size={16} className="text-purple-500 shrink-0" />
+                             <span className="text-white font-bold shadow-purple-500/50 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]">SINIRSIZ Belge</span>
+                         </div>
+                         <div className="flex items-center gap-3 text-sm text-slate-300">
+                             <CheckCircle2 size={16} className="text-purple-500 shrink-0" />
+                             <span>Bütün Özellikler</span>
+                         </div>
+                         <div className="flex items-center gap-3 text-sm text-slate-300">
+                             <CheckCircle2 size={16} className="text-purple-500 shrink-0" />
+                             <span>7/24 Canlı Destek</span>
+                         </div>
+                         <div className="flex items-center gap-3 text-sm text-slate-300">
+                             <CheckCircle2 size={16} className="text-purple-500 shrink-0" />
+                             <span>Özel Entegrasyonlar</span>
+                         </div>
+                     </div>
+
+                     <div className="mt-auto pt-6 border-t border-white/5">
+                         <div className="flex items-end gap-2 mb-4">
+                             <span className="text-xs line-through text-slate-600 mb-1.5">350 ₺</span>
+                             <span className="text-3xl font-black text-white">250 ₺</span>
+                             <span className="text-xs text-slate-500 font-bold mb-1.5">/ AY</span>
+                         </div>
+                         <button className="w-full py-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 text-purple-300 font-bold text-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
+                             PREMIUM GEÇİŞ
+                         </button>
+                     </div>
+                 </div>
+             </motion.div>
+            </div>
         </div>
 
       </div>
