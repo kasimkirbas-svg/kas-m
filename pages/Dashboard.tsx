@@ -32,6 +32,8 @@ import {
   UserPlus,
   Megaphone,
   Crown,
+  Gem,
+  Crown,
   Gem
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
