@@ -4,7 +4,7 @@
       "id": "admin-001",
       "name": "Sistem Yöneticisi",
       "email": "admin@kirbas.com",
-      "password": "$2b$10$/jaxMQZlVcKqyBd45rAUH.UJj/JqZzhS/tnqk3K1DbU8HCtNqSxdG",
+      "password": "$2b$10$ERFSc.LUEXf2a7suWZ36d.m8G1ReBfkzBCrziOvvuZ/qoifHZOzYi",
       "companyName": "Yönetim Paneli",
       "role": "ADMIN",
       "plan": "YEARLY",
@@ -847,5 +847,6 @@
       ]
     }
   ],
-  "invoices": []
+  "invoices": [],
+  "bannedIps": []
 }
