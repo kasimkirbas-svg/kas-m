@@ -722,55 +722,89 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
         </div>
 
-        {/* 4. FOOTER: PACKAGES (Exact Re-creation) */}
-        <div className='shrink-0 h-[100px] md:h-[120px] pb-2'>
-            <div className='h-full grid grid-cols-1 md:grid-cols-3 gap-0.5 md:gap-3 px-1'>
+        {/* 4. FOOTER: PACKAGES (Enhanced with Precious Stones & Visuals) */}
+        <div className='shrink-0 pb-6 pt-2 px-2'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 items-center max-w-5xl mx-auto'>
                 
-                {/* STANDART */}
-                <div className='relative rounded-xl border-2 border-blue-900/50 bg-gradient-to-b from-[#0f172a] to-blue-950 flex flex-col items-center justify-center p-2 group cursor-pointer overflow-hidden'>
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10'></div>
+                {/* 1. SILVER (Was Standart) */}
+                <motion.div 
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    className='relative rounded-2xl bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 border border-slate-500/30 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-2xl h-[100px] md:h-[110px]'
+                >
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-20 mixed-blend-overlay'></div>
+                     <div className='absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-colors'></div>
+                     
                      <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Shield size={16} className='text-blue-400' fill='currentColor' />
-                        <span className='text-sm font-black text-blue-100 uppercase tracking-widest'>STANDART</span>
+                        <Shield size={18} className='text-slate-300 drop-shadow-md' fill='currentColor' />
+                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-slate-300 to-slate-100 uppercase tracking-widest drop-shadow-sm'>SILVER</span>
                      </div>
-                     <div className='text-2xl font-black text-white mb-1 z-10'>100 TL</div>
-                     <div className='text-[9px] text-blue-200 font-bold uppercase mb-2 z-10'>STANDART DOKÜMAN LİMİTİ</div>
-                     <button className='w-full max-w-[120px] py-1 rounded bg-gradient-to-r from-blue-600 to-blue-800 border border-blue-500 text-[10px] font-bold text-white shadow-lg hover:brightness-110 z-10'>
+                     <div className='text-xl font-black text-white mb-0.5 z-10 tracking-tight'>100 TL</div>
+                     <div className='text-[9px] text-slate-400 font-bold uppercase mb-2 z-10'>TEMEL LİMİT</div>
+                     <button className='w-24 py-1 rounded bg-slate-700 hover:bg-slate-600 border border-slate-500 text-[10px] font-bold text-white shadow-lg transition-all z-10'>
                         SATIN AL
                      </button>
-                </div>
+                </motion.div>
 
-                {/* GOLD (Orta) */}
-                <div className='relative rounded-xl border-2 border-yellow-600 bg-gradient-to-b from-amber-900/40 to-yellow-900/40 flex flex-col items-center justify-center p-2 scale-105 z-20 shadow-2xl shadow-amber-500/10 cursor-pointer group'>
-                     <div className='absolute -top-3 flex gap-1 text-amber-400'>
-                        <Star size={12} fill='currentColor' />
-                        <Star size={12} fill='currentColor' />
-                        <Star size={12} fill='currentColor' />
+                {/* 2. GOLD (Center - Highlights & "Recommended" Badge) */}
+                <motion.div 
+                    initial={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.15 }}
+                    animate={{ 
+                        boxShadow: ["0 0 20px rgba(245,158,11,0.3)", "0 0 40px rgba(245,158,11,0.6)", "0 0 20px rgba(245,158,11,0.3)"] 
+                    }}
+                    transition={{ 
+                        boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } 
+                    }}
+                    className='relative z-20 rounded-2xl border-2 border-amber-500/50 bg-gradient-to-b from-amber-900/80 via-yellow-900/60 to-amber-950 flex flex-col items-center justify-center p-4 shadow-[0_0_50px_rgba(245,158,11,0.4)] h-[120px] md:h-[130px] overflow-visible'
+                >
+                     {/* "ÖNERİLEN" Badge - Floating above */}
+                     <div className='absolute -top-7 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black text-[10px] font-black px-4 py-1 rounded-full shadow-[0_0_15px_rgba(251,191,36,0.8)] animate-pulse z-30 whitespace-nowrap border border-yellow-200'>
+                        🌟 ÖNERİLEN 🌟
                      </div>
-                     <div className='flex items-center gap-2 mb-1'>
-                        <Shield size={18} className='text-amber-400' fill='currentColor' />
-                        <span className='text-lg font-black text-amber-100 uppercase tracking-widest drop-shadow-md text-gold-glow'>GOLD</span>
-                     </div>
-                     <div className='text-3xl font-black text-amber-400 mb-1 drop-shadow-sm'>175 TL</div>
-                     <div className='text-[9px] text-amber-200 font-bold uppercase mb-2'>2 KAT DOKÜMAN LİMİTİ</div>
-                     <button className='w-full max-w-[140px] py-1.5 rounded bg-gradient-to-r from-amber-500 to-yellow-600 border border-yellow-400 text-[11px] font-black text-slate-900 shadow-xl hover:brightness-110'>
-                        ÖNERİLEN
-                     </button>
-                </div>
 
-                {/* PREMIUM */}
-                <div className='relative rounded-xl border-2 border-purple-900/50 bg-gradient-to-b from-[#0f172a] to-purple-950 flex flex-col items-center justify-center p-2 group cursor-pointer overflow-hidden'>
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10'></div>
-                     <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Shield size={16} className='text-purple-400' fill='currentColor' />
-                        <span className='text-sm font-black text-purple-100 uppercase tracking-widest'>PRO</span>
+                     <div className='absolute -top-3 flex gap-1 z-10'>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }}>
+                            <Star size={14} className="text-yellow-300 fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
+                        </motion.div>
+                        <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }}>
+                            <Star size={18} className="text-amber-400 fill-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] -mt-2" />
+                        </motion.div>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }}>
+                            <Star size={14} className="text-yellow-300 fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
+                        </motion.div>
                      </div>
-                     <div className='text-2xl font-black text-white mb-1 z-10'>250 TL</div>
-                     <div className='text-[9px] text-purple-200 font-bold uppercase mb-2 z-10'>3 KAT DOKÜMAN LİMİTİ</div>
-                      <button className='w-full max-w-[120px] py-1 rounded bg-gradient-to-r from-purple-600 to-purple-800 border border-purple-500 text-[10px] font-bold text-white shadow-lg hover:brightness-110 z-10'>
+
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/cubes.png)] opacity-20 mix-blend-overlay'></div>
+                     
+                     <div className='flex items-center gap-2 mb-1 mt-2 relative z-10'>
+                        <Crown size={22} className='text-amber-300 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]' fill='currentColor' />
+                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 via-yellow-400 to-amber-500 uppercase tracking-widest drop-shadow-sm filter custom-drop-shadow'>GOLD</span>
+                     </div>
+                     <div className='text-3xl font-black text-white mb-0.5 z-10 drop-shadow-md tracking-tighter'>175 TL</div>
+                     <div className='text-[10px] text-amber-200 font-bold uppercase mb-2 z-10 tracking-wide'>2 KAT AVANTAJ</div>
+                     <button className='w-32 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 border border-yellow-300/50 text-xs font-black text-black shadow-[0_5px_15px_rgba(245,158,11,0.4)] hover:shadow-[0_5px_20px_rgba(245,158,11,0.6)] transform active:scale-95 transition-all z-10'>
                         SATIN AL
                      </button>
-                </div>
+                </motion.div>
+
+                {/* 3. DIAMOND (Was Premium/Pro) */}
+                <motion.div 
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    className='relative rounded-2xl bg-gradient-to-b from-cyan-900 via-cyan-950 to-blue-950 border border-cyan-500/30 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-2xl h-[100px] md:h-[110px]'
+                >
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-20 mixed-blend-overlay'></div>
+                     <div className='absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-400/20 transition-colors'></div>
+
+                     <div className='flex items-center gap-2 mb-1 z-10'>
+                        <Gem size={18} className='text-cyan-300 drop-shadow-md' fill='currentColor' />
+                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-cyan-100 to-blue-200 uppercase tracking-widest drop-shadow-sm'>DIAMOND</span>
+                     </div>
+                     <div className='text-xl font-black text-white mb-0.5 z-10 tracking-tight'>250 TL</div>
+                     <div className='text-[9px] text-cyan-200 font-bold uppercase mb-2 z-10'>SINIRSIZ LİMİT</div>
+                      <button className='w-24 py-1 rounded bg-cyan-800 hover:bg-cyan-700 border border-cyan-500/50 text-[10px] font-bold text-white shadow-lg transition-all z-10'>
+                        SATIN AL
+                     </button>
+                </motion.div>
 
             </div>
         </div>
