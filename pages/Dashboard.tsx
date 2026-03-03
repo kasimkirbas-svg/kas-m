@@ -28,7 +28,9 @@ import {
   ClipboardList,
   Heart,
   ArrowUpDown,
-  Filter
+  Filter,
+  UserPlus,
+  Megaphone
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 import { PLANS } from '../constants';
@@ -587,59 +589,118 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             </div>
 
             {/* RIGHT: Quick Actions & Archive (Sidebar) - Updated Layout */}
-            <div className='lg:col-span-1 flex flex-col gap-3 overflow-hidden'>
+            <div className='lg:col-span-1 flex flex-col gap-4 overflow-hidden'>
                 
                 {/* 1. SERTİFİKA OLUŞTUR (Blue Button) - Main Action */}
-                <button 
+                <motion.button 
+                    whileHover={{ scale: 1.02, filter: "brightness(1.1)" }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                    className='group shrink-0 h-24 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 border border-blue-400/30 relative overflow-hidden shadow-lg shadow-blue-900/50 hover:brightness-110 transition-all flex items-center px-4 justify-between'
+                    className='group shrink-0 h-28 rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 border-2 border-blue-400/30 relative overflow-hidden shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] flex items-center px-5 justify-between ring-4 ring-blue-500/10'
                 >
-                    <div className='absolute right-[-10%] top-[-50%] w-32 h-32 bg-white/10 rounded-full blur-2xl'></div>
-                    <div className='flex flex-col items-start z-10'>
-                        <span className='bg-amber-400 text-black text-[9px] font-black px-1.5 py-0.5 rounded mb-1'>YENİ</span>
-                        <span className='text-lg font-black text-white leading-none tracking-tight'>SERTİFİKA<br/>OLUŞTUR</span>
-                    </div>
-                    <div className='w-16 h-16 relative z-10 drop-shadow-lg transform group-hover:scale-110 transition-transform'>
-                         <Award className="text-amber-300 w-full h-full" strokeWidth={1.5} />
-                    </div>
-                </button>
+                    <div className='absolute right-[-20%] top-[-50%] w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500'></div>
+                    <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 mix-blend-overlay'></div>
+                    
+                    {/* Shiny Line Effect */}
+                    <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-shine" />
 
-                {/* 2. DÖKÜMAN ARŞİVİ (Moved separate, smaller) */}
-                <button className='shrink-0 py-3 rounded-xl bg-indigo-900/80 hover:bg-indigo-800 border border-indigo-700/50 text-indigo-100 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg'>
-                    <Archive size={16} />
-                    DÖKÜMAN ARŞİVİ
-                </button>
+                    <div className='flex flex-col items-start z-10 gap-1'>
+                        <span className='bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-amber-500/20 animate-pulse'>YENİ</span>
+                        <span className='text-xl font-black text-white leading-none tracking-tight drop-shadow-md'>SERTİFİKA<br/>OLUŞTUR</span>
+                        <span className='text-[10px] text-blue-200 font-medium tracking-wide'>Profesyonel şablonlar ile</span>
+                    </div>
+                    <div className='w-16 h-16 relative z-10 drop-shadow-2xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300'>
+                         <Award className="text-amber-300 w-full h-full filter drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" strokeWidth={1.5} />
+                    </div>
+                </motion.button>
 
-                {/* 3. HIZLI İŞLEMLER LİSTESİ (Yellow Header) */}
-                <div className='flex-1 bg-[#15171e]/90 backdrop-blur rounded-xl border border-white/5 flex flex-col overflow-hidden shadow-2xl'>
+                {/* 2. HIZLI İŞLEMLER (Grid 2x2) */}
+                <div className='flex-1 bg-[#15171e]/90 backdrop-blur rounded-2xl border border-white/5 flex flex-col overflow-hidden shadow-2xl relative group/panel'>
                     
                     {/* Header */}
-                    <div className='bg-gradient-to-r from-amber-400 to-yellow-500 p-2 flex items-center justify-center shrink-0 shadow-md'>
-                        <span className='text-black font-black text-sm tracking-widest uppercase'>HIZLI İŞLEMLER</span>
+                    <div className='bg-gradient-to-r from-amber-500 to-orange-600 p-3 flex items-center justify-center shrink-0 shadow-lg z-10 relative overflow-hidden'>
+                        <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10"></div>
+                        <Zap size={16} className="text-black mr-2 animate-pulse" fill="currentColor" />
+                        <span className='text-black font-black text-sm tracking-widest uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
                     </div>
 
-                    <div className='flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2'>
-                        
-                        {/* Action Buttons */}
-                        <div className='flex flex-col gap-2'>
-                            <button className='flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-[#1e293b] to-[#0f172a] border border-white/10 hover:border-amber-500/50 hover:text-amber-400 text-slate-300 transition-all font-bold text-xs shadow group'>
-                                <div className='p-1.5 bg-white/5 rounded group-hover:bg-amber-500 group-hover:text-black transition-colors'>
-                                    <FileText size={16} />
-                                </div>
-                                <span className='tracking-wide'>TUTANAK TUT</span>
-                            </button>
+                    <div className='flex-1 p-3 grid grid-cols-2 gap-3 z-10'>
+                        {/* Button 1 */}
+                        <motion.button 
+                            whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            whileTap={{ scale: 0.95 }}
+                            className='aspect-square rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-amber-500/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] transition-all'
+                        >
+                            <div className='w-10 h-10 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300'>
+                                <FileText size={20} />
+                            </div>
+                            <span className='text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>TUTANAK<br/>TUT</span>
+                        </motion.button>
 
-                            <button className='flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-[#1e293b] to-[#0f172a] border border-white/10 hover:border-emerald-500/50 hover:text-emerald-400 text-slate-300 transition-all font-bold text-xs shadow group'>
-                                <div className='p-1.5 bg-white/5 rounded group-hover:bg-emerald-500 group-hover:text-black transition-colors'>
-                                    <ClipboardList size={16} />
-                                </div>
-                                <span className='tracking-wide'>GÜNLÜK RAPOR TUT</span>
-                            </button>
-                        </div>
+                        {/* Button 2 */}
+                        <motion.button 
+                            whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            whileTap={{ scale: 0.95 }}
+                            className='aspect-square rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all'
+                        >
+                            <div className='w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300'>
+                                <ClipboardList size={20} />
+                            </div>
+                            <span className='text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>GÜNLÜK<br/>RAPOR</span>
+                        </motion.button>
 
+                        {/* Button 3 */}
+                        <motion.button 
+                            whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            whileTap={{ scale: 0.95 }}
+                            className='aspect-square rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all'
+                        >
+                            <div className='w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300'>
+                                <UserPlus size={20} />
+                            </div>
+                            <span className='text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>PERSONEL<br/>EKLE</span>
+                        </motion.button>
+
+                        {/* Button 4 */}
+                        <motion.button 
+                            whileHover={{ scale: 1.05, backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            whileTap={{ scale: 0.95 }}
+                            className='aspect-square rounded-xl bg-slate-800/50 border border-white/10 flex flex-col items-center justify-center gap-2 group hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] transition-all'
+                        >
+                            <div className='w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300'>
+                                <Megaphone size={20} />
+                            </div>
+                            <span className='text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight'>DUYURU<br/>YAP</span>
+                        </motion.button>
                     </div>
+
+                    {/* Decorative Background Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent pointer-events-none" />
                 </div>
 
+                {/* 3. DÖKÜMAN ARŞİVİ (Enhanced Footer Button) */}
+                <motion.button 
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => onNavigate('documents')}
+                    className='shrink-0 h-20 rounded-2xl bg-[#0f172a] hover:bg-[#1e293b] border-2 border-indigo-500/30 hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300'
+                >
+                    <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                    
+                    <div className='flex items-center gap-4 z-10'>
+                        <div className='w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-inner'>
+                            <FolderOpen size={20} />
+                        </div>
+                        <div className='flex flex-col items-start'>
+                            <span className='text-sm font-black text-white tracking-tight group-hover:text-indigo-200 transition-colors'>DÖKÜMAN ARŞİVİ</span>
+                            <span className='text-[10px] text-slate-500 font-medium group-hover:text-slate-400'>Tüm dosyalarınızı görüntüleyin</span>
+                        </div>
+                    </div>
+
+                    <div className='z-10 bg-indigo-500/20 p-2 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-400'>
+                        <ArrowRight size={16} />
+                    </div>
+                </motion.button>
             </div>
 
         </div>
