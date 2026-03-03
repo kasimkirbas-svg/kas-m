@@ -320,6 +320,33 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
        { key: 'expenses', label: 'Harcırah / Avans', type: 'number' }
     ]
   },
+  {
+    id: 'corp-107',
+    title: 'Genel Duyuru Formu',
+    category: 'Yönetim',
+    description: 'Şirket içi genel duyuruların hazırlanması için şablon.',
+    isPremium: false,
+    fields: [
+       { key: 'subject', label: 'Duyuru Konusu', type: 'text', required: true },
+       { key: 'date', label: 'Tarih', type: 'date', required: true },
+       { key: 'content', label: 'Duyuru İçeriği', type: 'textarea', required: true },
+       { key: 'department', label: 'İlgili Departmanlar', type: 'text', placeholder: 'Tüm Personel' },
+       { key: 'approvedBy', label: 'Onaylayan', type: 'text' }
+    ]
+  },
+  {
+    id: 'corp-108',
+    title: 'Personel İlanı',
+    category: 'İK',
+    description: 'İşe alım veya iç transfer ilanı.',
+    isPremium: false,
+    fields: [
+       { key: 'position', label: 'Pozisyon', type: 'text', required: true },
+       { key: 'requirements', label: 'Gereklilikler', type: 'textarea', required: true },
+       { key: 'deadline', label: 'Son Başvuru Tarihi', type: 'date' },
+       { key: 'contact', label: 'İletişim', type: 'text' }
+    ]
+  },
 
   // --- YENİ EKLENEN MADEN ŞABLONLARI ---
   {

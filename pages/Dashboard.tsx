@@ -629,97 +629,87 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     </div>
                 </motion.button>
 
-                {/* 2. HIZLI İŞLEMLER (Grid 2x2) - Optimized Layout */}
-                <div className='flex-1 bg-white/5 dark:bg-slate-900/40 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-white/10 flex flex-col overflow-hidden shadow-2xl relative group/panel transition-all duration-300 min-h-[220px] hover:border-amber-500/30'>
+                {/* 2. HIZLI İŞLEMLER (Grid 2x2) - Optimized Layout - FIXED */}
+                <div className='bg-slate-100 dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col'>
                     
-                    {/* Header */}
-                    <div className='bg-gradient-to-r from-amber-600 to-orange-600 p-3 flex items-center justify-center shrink-0 shadow-lg z-10 relative overflow-hidden'>
+                    {/* Header - Compact */}
+                    <div className='bg-gradient-to-r from-amber-600 to-orange-700 py-2 px-3 flex items-center justify-between shrink-0 shadow-md relative overflow-hidden'>
                         <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10"></div>
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] animate-shimmer"></div>
-                        <Zap size={16} className="text-white mr-2 animate-pulse" fill="currentColor" />
-                        <span className='text-white font-black text-sm tracking-[0.2em] uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
+                        <div className='flex items-center gap-2 relative z-10'>
+                            <Zap size={14} className="text-white animate-pulse" fill="currentColor" />
+                            <span className='text-white font-black text-xs tracking-[0.15em] uppercase text-shadow-sm'>HIZLI İŞLEMLER</span>
+                        </div>
                     </div>
 
-                    <div className='flex-1 p-3 grid grid-cols-2 gap-3 z-10 relative'>
-                        {/* Decorative Background for Buttons Area */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-slate-100/50 dark:from-slate-800/20 dark:to-slate-900/40 -z-10"></div>
-
-                        {/* Button 1 */}
+                    <div className='p-3 grid grid-cols-2 gap-3 relative bg-slate-50/50 dark:bg-[#0f172a]'>
+                         {/* Button 1: Tutanak */}
                         <motion.button 
-                            whileHover={{ scale: 1.03, translateY: -2 }}
-                            whileTap={{ scale: 0.97 }}
+                            whileHover={{ scale: 1.02, translateY: -1 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => onNavigate('templates', { search: 'Tutanak' })}
-                            className='relative text-left p-3 rounded-xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-indigo-500/20 group flex flex-col justify-between overflow-hidden transition-all duration-300'
+                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-indigo-500/50 dark:hover:border-indigo-500/50 shadow-sm hover:shadow-indigo-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >   
-                            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-all group-hover:scale-110"></div>
-                            
-                            <div className='w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-colors duration-300 mb-2 shadow-inner'>
-                                <FileText size={18} />
+                            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-indigo-50/50 dark:from-indigo-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
+                            <div className='w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
+                                <FileText size={20} />
                             </div>
-                            <div>
-                                <span className='block text-xs font-black text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors uppercase tracking-tight'>TUTANAK</span>
-                                <span className='text-[10px] font-medium text-slate-500 dark:text-slate-500 leading-tight'>Oluştur</span>
+                            <div className='flex flex-col items-start z-10'>
+                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Hemen</span>
+                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 leading-none'>TUTANAK</span>
                             </div>
                         </motion.button>
 
-                        {/* Button 2 */}
+                        {/* Button 2: Günlük Rapor */}
                         <motion.button 
-                            whileHover={{ scale: 1.03, translateY: -2 }}
-                            whileTap={{ scale: 0.97 }}
+                            whileHover={{ scale: 1.02, translateY: -1 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => onNavigate('templates', { search: 'Günlük Rapor' })}
-                            className='relative text-left p-3 rounded-xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-emerald-500/20 group flex flex-col justify-between overflow-hidden transition-all duration-300'
+                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 shadow-sm hover:shadow-emerald-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
-                            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-all group-hover:scale-110"></div>
-                            
-                            <div className='w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition-colors duration-300 mb-2 shadow-inner'>
-                                <ClipboardList size={18} />
+                            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-emerald-50/50 dark:from-emerald-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
+                            <div className='w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
+                                <ClipboardList size={20} />
                             </div>
-                            <div>
-                                <span className='block text-xs font-black text-slate-700 dark:text-slate-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors uppercase tracking-tight'>GÜNLÜK</span>
-                                <span className='text-[10px] font-medium text-slate-500 dark:text-slate-500 leading-tight'>Rapor</span>
+                            <div className='flex flex-col items-start z-10'>
+                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Günlük</span>
+                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 leading-none'>RAPOR</span>
                             </div>
                         </motion.button>
 
-                        {/* Button 3 */}
+                        {/* Button 3: Personel */}
                         <motion.button 
-                            whileHover={{ scale: 1.03, translateY: -2 }}
-                            whileTap={{ scale: 0.97 }}
+                            whileHover={{ scale: 1.02, translateY: -1 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => onNavigate('templates', { search: 'Personel' })}
-                            className='relative text-left p-3 rounded-xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-blue-500/20 group flex flex-col justify-between overflow-hidden transition-all duration-300'
+                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-blue-500/50 dark:hover:border-blue-500/50 shadow-sm hover:shadow-blue-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
-                            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-all group-hover:scale-110"></div>
-
-                            <div className='w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-colors duration-300 mb-2 shadow-inner'>
-                                <UserPlus size={18} />
+                            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-blue-50/50 dark:from-blue-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
+                            <div className='w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
+                                <UserPlus size={20} />
                             </div>
-                            <div>
-                                <span className='block text-xs font-black text-slate-700 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors uppercase tracking-tight'>PERSONEL</span>
-                                <span className='text-[10px] font-medium text-slate-500 dark:text-slate-500 leading-tight'>Ekle</span>
+                            <div className='flex flex-col items-start z-10'>
+                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Yeni</span>
+                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-300 leading-none'>PERSONEL</span>
                             </div>
                         </motion.button>
 
-                        {/* Button 4 */}
+                        {/* Button 4: Duyuru */}
                         <motion.button 
-                            whileHover={{ scale: 1.03, translateY: -2 }}
-                            whileTap={{ scale: 0.97 }}
+                            whileHover={{ scale: 1.02, translateY: -1 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => onNavigate('templates', { search: 'Duyuru' })}
-                            className='relative text-left p-3 rounded-xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-white/5 shadow-sm hover:shadow-rose-500/20 group flex flex-col justify-between overflow-hidden transition-all duration-300'
+                            className='relative h-20 rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-rose-500/50 dark:hover:border-rose-500/50 shadow-sm hover:shadow-rose-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
-                             <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-rose-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-all group-hover:scale-110"></div>
-
-                            <div className='w-10 h-10 rounded-full bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 group-hover:bg-rose-600 group-hover:text-white flex items-center justify-center transition-colors duration-300 mb-2 shadow-inner'>
-                                <Megaphone size={18} />
+                            <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-rose-50/50 dark:from-rose-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
+                            <div className='w-10 h-10 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 group-hover:bg-rose-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
+                                <Megaphone size={20} />
                             </div>
-                            <div>
-                                <span className='block text-xs font-black text-slate-700 dark:text-slate-300 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors uppercase tracking-tight'>DUYURU</span>
-                                <span className='text-[10px] font-medium text-slate-500 dark:text-slate-500 leading-tight'>Oluştur</span>
+                            <div className='flex flex-col items-start z-10'>
+                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Genel</span>
+                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-rose-600 dark:group-hover:text-rose-300 leading-none'>DUYURU</span>
                             </div>
                         </motion.button>
                     </div>
-
-                    {/* Decorative Background Glows */}
-                    <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    <div className="absolute -top-10 -left-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none"></div>
                 </div>
 
                 {/* 3. DÖKÜMAN ARŞİVİ (Enhanced Footer Button) */}
