@@ -302,10 +302,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   };
 
   return (
-    <div className='h-screen w-screen overflow-hidden flex flex-col bg-[#0f172a] relative text-slate-200 font-sans selection:bg-amber-500/30'>
+    <div className='h-screen w-screen overflow-hidden flex flex-col bg-slate-50 dark:bg-[#0f172a] relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300'>
       
       {/* Background Ambience */}
-      <div className='absolute top-0 left-0 w-full h-[800px] bg-gradient-to-b from-slate-900/80 via-slate-900/50 to-[#0f172a] pointer-events-none z-0'></div>
+      <div className='absolute top-0 left-0 w-full h-[800px] bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-[#0f172a] pointer-events-none z-0 transition-colors duration-500'></div>
       <div className='absolute -top-[20%] right-[10%] w-[600px] h-[600px] bg-amber-500/5 blur-[120px] rounded-full pointer-events-none z-0 animate-pulse-slow'></div>
       <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.04] mix-blend-overlay pointer-events-none z-0'></div>
 
@@ -329,7 +329,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/10 blur-[50px] rounded-full pointer-events-none"></div>
 
                     <h1 className='text-3xl md:text-5xl font-black tracking-tighter relative z-10 select-none'>
-                        <span className='bg-gradient-to-br from-white via-indigo-100 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
+                        <span className='bg-gradient-to-br from-slate-800 via-slate-600 to-slate-500 dark:from-white dark:via-indigo-100 dark:to-slate-400 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
                             DOKÜMAN YÖNETİM MERKEZİ
                         </span>
                     </h1>
@@ -372,7 +372,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             className={`
                             relative rounded-xl cursor-pointer select-none h-full flex flex-col items-center justify-end overflow-hidden group
                             border transition-all duration-300
-                            ${isActive ? 'border-2 border-white shadow-[0_0_50px_rgba(255,255,255,0.5)] scale-105 -translate-y-2 z-20 ring-4 ring-white/10' : 'border-white/5 shadow-lg bg-slate-800/40 hover:border-white/30'}
+                            ${isActive 
+                                ? 'border-2 border-slate-600 dark:border-white shadow-[0_0_30px_rgba(15,23,42,0.3)] dark:shadow-[0_0_50px_rgba(255,255,255,0.5)] scale-105 -translate-y-2 z-20 ring-4 ring-slate-300 dark:ring-white/10' 
+                                : 'border-slate-200 dark:border-white/5 shadow-lg bg-white/60 dark:bg-slate-800/40 hover:border-slate-400 dark:hover:border-white/30'}
                             ${index === SECTORS.length - 1 ? 'col-span-2 md:col-span-1 lg:col-span-1' : ''}
                             `}
                         >   
@@ -384,25 +386,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                     transform: isActive ? 'scale(1.1)' : 'scale(1)'
                                 }}
                             >
-                                <div className={`absolute inset-0 bg-slate-900/60 transition-colors duration-300 ${isActive ? 'bg-slate-900/30' : 'group-hover:bg-slate-900/40'}`}></div>
+                                <div className={`absolute inset-0 transition-colors duration-300 ${isActive ? 'bg-slate-100/30 dark:bg-slate-900/30' : 'bg-slate-100/50 dark:bg-slate-900/60 group-hover:bg-slate-100/40 dark:group-hover:bg-slate-900/40'}`}></div>
                                 <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-overlay opacity-40 transition-opacity ${isActive ? 'opacity-60' : 'group-hover:opacity-60'}`}></div>
-                                <div className='absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90'></div>
+                                <div className='absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/50 to-transparent dark:from-slate-950 dark:via-transparent dark:to-transparent opacity-90'></div>
                             </div>
                             
                             {/* Content */}
                             <div className='relative z-10 p-4 w-full flex flex-col items-center transition-transform'>
                                 <div className={`
                                     mb-2 p-2.5 rounded-xl backdrop-blur-md border border-white/20 transition-all duration-300 shadow-lg
-                                    ${isActive ? 'bg-amber-500 text-slate-900 scale-110 rotate-3' : 'bg-white/10 text-white group-hover:bg-white/20'}
+                                    ${isActive ? 'bg-amber-500 text-slate-900 scale-110 rotate-3' : 'bg-white/80 dark:bg-white/10 text-slate-700 dark:text-white group-hover:bg-white dark:group-hover:bg-white/20'}
                                 `}>
                                     <sector.icon size={20} className="drop-shadow-sm" />
                                 </div>
-                                <span className={`text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 ${isActive ? 'text-amber-400' : 'text-slate-300 group-hover:text-white'}`}>
+                                <span className={`text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 drop-shadow-sm ${isActive ? 'text-amber-600 dark:text-amber-400' : 'text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white'}`}>
                                     {sector.name}
                                 </span>
                                 
                                 {/* Hover/Selected Indicator */}
-                                <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${isActive ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-white/50'}`}></div>
+                                <div className={`h-0.5 w-8 mt-2 rounded-full transition-all duration-300 ${isActive ? 'bg-amber-500 w-12' : 'bg-transparent group-hover:bg-slate-400 dark:group-hover:bg-white/50'}`}></div>
                             </div>
                             
                             {/* Selected Checkmark (Enhanced Animation) */}
@@ -443,12 +445,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-5 overflow-hidden pb-2'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col h-full bg-[#15171e]/80 backdrop-blur-sm rounded-2xl border border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
+            <div className='lg:col-span-3 flex flex-col h-full bg-white/70 dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300'>
                 
                 {/* Panel Header */}
-                <div className='p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
+                <div className='p-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
                     <div className='flex items-center gap-4 flex-1 min-w-0'>
-                        <div className={`w-12 h-12 shrink-0 rounded-lg bg-gradient-to-br border border-slate-700 flex items-center justify-center transition-colors duration-500 ${currentSector ? 'from-slate-800 to-slate-900' : 'from-amber-500/10 to-orange-500/10'}`}>
+                        <div className={`w-12 h-12 shrink-0 rounded-lg bg-gradient-to-br border border-slate-200 dark:border-slate-700 flex items-center justify-center transition-colors duration-500 ${currentSector ? 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900' : 'from-amber-500/10 to-orange-500/10'}`}>
                             {currentSector ? (
                                 <currentSector.icon className={currentSector.accent} size={24} />
                             ) : (
@@ -456,10 +458,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             )}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h2 className='text-xl font-bold text-white tracking-tight flex items-center gap-2 truncate'>
-                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'} <span className='text-slate-500 font-normal hidden sm:inline'>DOKÜMANLARI</span>
+                            <h2 className='text-xl font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-2 truncate'>
+                                {currentSector ? currentSector.name : 'TÜM SEKTÖRLER'} <span className='text-slate-400 dark:text-slate-500 font-normal hidden sm:inline'>DOKÜMANLARI</span>
                             </h2>
-                            <p className='text-xs text-slate-400 font-medium mt-0.5 tracking-wide truncate'>
+                            <p className='text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5 tracking-wide truncate'>
                                 {currentSector 
                                     ? `Bu sektör için önerilen ${currentSector.docs.length} adet doküman şablonu bulundu.`
                                     : `Sistemde kayıtlı toplam ${ALL_DOCS.length} adet doküman listeleniyor.`
@@ -477,13 +479,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Doküman ara..."
                                 className={`
-                                    w-full h-full bg-slate-950/50 border border-white/10 rounded-lg px-10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-all
+                                    w-full h-full bg-white dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 rounded-lg px-10 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-all
                                     ${isSearchActive ? 'opacity-100' : 'opacity-0'}
                                 `}
                             />
                             <button 
                                 onClick={() => setIsSearchActive(!isSearchActive)}
-                                className='absolute left-0 top-0 w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white transition-colors z-10'
+                                className='absolute left-0 top-0 w-10 h-10 flex items-center justify-center text-slate-400 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors z-10'
                             >
                                 <Search size={18} />
                             </button>
@@ -499,28 +501,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                          {/* Sort Button */}
                          <div className="relative group/sort">
-                            <button className='w-10 h-10 bg-slate-800/50 border border-white/5 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-all'>
+                            <button className='w-10 h-10 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-lg flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-all'>
                                 <ArrowUpDown size={18} />
                             </button>
                             {/* Sort Dropdown */}
-                            <div className="absolute right-0 top-full mt-2 w-40 bg-slate-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50 origin-top-right scale-0 group-hover/sort:scale-100 transition-transform duration-200">
+                            <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50 origin-top-right scale-0 group-hover/sort:scale-100 transition-transform duration-200">
                                 <button 
                                     onClick={() => setSortBy('default')}
-                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-white/5 flex items-center justify-between ${sortBy === 'default' ? 'text-amber-400 bg-white/5' : 'text-slate-300'}`}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'default' ? 'text-amber-500 dark:text-amber-400 bg-amber-50 dark:bg-white/5' : 'text-slate-600 dark:text-slate-300'}`}
                                 >
                                     Varsayılan
                                     {sortBy === 'default' && <CheckCircle2 size={12} />}
                                 </button>
                                 <button 
                                     onClick={() => setSortBy('az')}
-                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-white/5 flex items-center justify-between ${sortBy === 'az' ? 'text-amber-400 bg-white/5' : 'text-slate-300'}`}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'az' ? 'text-amber-500 dark:text-amber-400 bg-slate-50 dark:bg-white/5' : 'text-slate-600 dark:text-slate-300'}`}
                                 >
                                     A-Z Sırala
                                     {sortBy === 'az' && <CheckCircle2 size={12} />}
                                 </button>
                                 <button 
                                     onClick={() => setSortBy('favorites')}
-                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-white/5 flex items-center justify-between ${sortBy === 'favorites' ? 'text-amber-400 bg-white/5' : 'text-slate-300'}`}
+                                    className={`w-full text-left px-4 py-3 text-xs font-bold hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between ${sortBy === 'favorites' ? 'text-amber-500 dark:text-amber-400 bg-slate-50 dark:bg-white/5' : 'text-slate-600 dark:text-slate-300'}`}
                                 >
                                     Favoriler
                                     {sortBy === 'favorites' && <CheckCircle2 size={12} />}
@@ -548,23 +550,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.02 }}
                                     onClick={() => handleDocumentClick(item.doc, item.sector.id)}
-                                    className='group flex items-center gap-3 p-3 rounded-xl bg-slate-800/30 border border-white/5 hover:bg-slate-800/80 hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg hover:shadow-amber-500/10'
+                                    className='group flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-amber-500/40 dark:hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg hover:shadow-amber-500/10'
                                 >
                                     {/* Hover Highlight Gradient */}
-                                    <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000'></div>
+                                    <div className='absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/50 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000'></div>
 
                                     {/* Accent Bar */}
-                                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${currentSector ? 'from-transparent via-slate-500 to-transparent' : 'from-transparent via-amber-500/50 to-transparent group-hover:via-amber-500'} transition-colors`}></div>
+                                    <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${currentSector ? 'from-transparent via-slate-300 dark:via-slate-500 to-transparent' : 'from-transparent via-amber-500/50 to-transparent group-hover:via-amber-500'} transition-colors`}></div>
                                     
                                     {/* Icon */}
-                                    <div className={`w-10 h-10 rounded-lg bg-slate-900 border border-white/5 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner`}>
-                                        <FileText size={18} className='text-slate-500 group-hover:text-amber-400 transition-colors' />
+                                    <div className={`w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner`}>
+                                        <FileText size={18} className='text-slate-400 dark:text-slate-500 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors' />
                                     </div>
                                     
                                     <div className='flex-1 min-w-0'>
-                                        <h3 className='text-xs font-bold text-slate-300 truncate group-hover:text-white transition-colors'>{item.doc}</h3>
+                                        <h3 className='text-xs font-bold text-slate-700 dark:text-slate-300 truncate group-hover:text-slate-900 dark:group-hover:text-white transition-colors'>{item.doc}</h3>
                                         <div className='flex items-center gap-2 mt-1 opacity-60 group-hover:opacity-100 transition-opacity'>
-                                            <span className='text-[9px] text-slate-400 font-bold uppercase tracking-wider'>{item.sector.name}</span>
+                                            <span className='text-[9px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider'>{item.sector.name}</span>
                                         </div>
                                     </div>
 
@@ -579,7 +581,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                                 w-7 h-7 rounded-full flex items-center justify-center transition-all z-20 
                                                 ${favorites.includes(item.doc) 
                                                     ? 'text-rose-500 bg-rose-500/10 opacity-100' 
-                                                    : 'text-slate-500 hover:text-rose-400 hover:bg-slate-700 opacity-0 group-hover:opacity-100'}
+                                                    : 'text-slate-400 dark:text-slate-500 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-slate-700 opacity-0 group-hover:opacity-100'}
                                             `}
                                             title="Favorilere Ekle"
                                         >
@@ -624,7 +626,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 </motion.button>
 
                 {/* 2. HIZLI İŞLEMLER (Grid 2x2) */}
-                <div className='flex-1 bg-[#15171e]/90 backdrop-blur rounded-2xl border border-white/5 flex flex-col overflow-hidden shadow-2xl relative group/panel'>
+                <div className='flex-1 bg-white/90 dark:bg-[#15171e]/90 backdrop-blur rounded-2xl border border-slate-200 dark:border-white/5 flex flex-col overflow-hidden shadow-2xl relative group/panel transition-colors duration-300'>
                     
                     {/* Header */}
                     <div className='bg-gradient-to-r from-amber-500 to-orange-600 p-3 flex items-center justify-center shrink-0 shadow-lg z-10 relative overflow-hidden'>
@@ -639,52 +641,52 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/80 border border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-indigo-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-indigo-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all duration-300 relative overflow-hidden'
                         >   
                             <div className="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(99,102,241,0.5)] group-hover:scale-110'>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-500 dark:text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(99,102,241,0.5)] group-hover:scale-110'>
                                 <FileText size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight transition-colors z-10'>TUTANAK<br/>TUT</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>TUTANAK<br/>TUT</span>
                         </motion.button>
 
                         {/* Button 2 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/80 border border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
                             <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(16,185,129,0.5)] group-hover:scale-110'>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-emerald-50 dark:bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(16,185,129,0.5)] group-hover:scale-110'>
                                 <ClipboardList size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight transition-colors z-10'>GÜNLÜK<br/>RAPOR</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>GÜNLÜK<br/>RAPOR</span>
                         </motion.button>
 
                         {/* Button 3 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/80 border border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
                             <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-500/20 text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:scale-110'>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-blue-50 dark:bg-blue-500/20 text-blue-500 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:scale-110'>
                                 <UserPlus size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight transition-colors z-10'>PERSONEL<br/>EKLE</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>PERSONEL<br/>EKLE</span>
                         </motion.button>
 
                         {/* Button 4 */}
                         <motion.button 
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-800/80 border border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-rose-500 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300 relative overflow-hidden'
+                            className='w-full h-full min-h-[80px] rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 flex flex-col items-center justify-center gap-2 group hover:border-rose-500 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300 relative overflow-hidden'
                         >
                             <div className="absolute inset-0 bg-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-500/20 text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(244,63,94,0.5)] group-hover:scale-110'>
+                            <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-rose-50 dark:bg-rose-500/20 text-rose-500 dark:text-rose-400 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-inner group-hover:shadow-[0_0_10px_rgba(244,63,94,0.5)] group-hover:scale-110'>
                                 <Megaphone size={18} />
                             </div>
-                            <span className='text-[9px] md:text-[10px] font-bold text-slate-400 group-hover:text-white text-center leading-tight transition-colors z-10'>DUYURU<br/>YAP</span>
+                            <span className='text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight transition-colors z-10'>DUYURU<br/>YAP</span>
                         </motion.button>
                     </div>
 
@@ -697,7 +699,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('documents')}
-                    className='shrink-0 h-20 rounded-2xl bg-[#0f172a] hover:bg-[#1e293b] border-2 border-indigo-500/30 hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300'
+                    className='shrink-0 h-20 rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300'
                 >
                     <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
                     
@@ -705,16 +707,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     <div className="absolute right-[-20%] top-[-50%] w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl group-hover:animate-pulse"></div>
                     
                     <div className='flex items-center gap-4 z-10'>
-                        <div className='w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-inner ring-1 ring-indigo-500/30'>
+                        <div className='w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-500 dark:text-indigo-300 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-inner ring-1 ring-indigo-500/30'>
                             <FolderOpen size={24} />
                         </div>
                         <div className='flex flex-col items-start'>
-                            <span className='text-sm font-black text-white tracking-tight group-hover:text-indigo-200 transition-colors'>DÖKÜMAN ARŞİVİ</span>
-                            <span className='text-[10px] text-slate-500 font-medium group-hover:text-slate-400'>Tüm dosyalarınızı inceleyin</span>
+                            <span className='text-sm font-black text-slate-800 dark:text-white tracking-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-200 transition-colors'>DÖKÜMAN ARŞİVİ</span>
+                            <span className='text-[10px] text-slate-500 font-medium group-hover:text-slate-600 dark:group-hover:text-slate-400'>Tüm dosyalarınızı inceleyin</span>
                         </div>
                     </div>
 
-                    <div className='z-10 bg-indigo-500/10 p-2.5 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-400 group-hover:translate-x-1 duration-300 border border-indigo-500/20'>
+                    <div className='z-10 bg-indigo-50 dark:bg-indigo-500/10 p-2.5 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-400 group-hover:translate-x-1 duration-300 border border-indigo-200 dark:border-indigo-500/20'>
                         <ArrowRight size={18} />
                     </div>
                 </motion.button>
@@ -729,18 +731,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 {/* 1. SILVER (Was Standart) */}
                 <motion.div 
                     whileHover={{ scale: 1.05, y: -5 }}
-                    className='relative rounded-2xl bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 border border-slate-500/30 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-2xl h-[100px] md:h-[110px]'
+                    className='relative rounded-2xl bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 dark:from-slate-700 dark:via-slate-800 dark:to-slate-900 border border-slate-300 dark:border-slate-500/30 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-xl dark:shadow-2xl h-[100px] md:h-[110px]'
                 >
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-20 mixed-blend-overlay'></div>
-                     <div className='absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-colors'></div>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 dark:opacity-20 mixed-blend-overlay'></div>
+                     <div className='absolute top-0 right-0 w-24 h-24 bg-white/40 dark:bg-white/5 rounded-full blur-2xl group-hover:bg-white/50 dark:group-hover:bg-white/10 transition-colors'></div>
                      
                      <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Shield size={18} className='text-slate-300 drop-shadow-md' fill='currentColor' />
-                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-slate-300 to-slate-100 uppercase tracking-widest drop-shadow-sm'>SILVER</span>
+                        <Shield size={18} className='text-slate-600 dark:text-slate-300 drop-shadow-md' fill='currentColor' />
+                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-600 via-slate-800 to-slate-600 dark:from-slate-100 dark:via-slate-300 dark:to-slate-100 uppercase tracking-widest drop-shadow-sm'>SILVER</span>
                      </div>
-                     <div className='text-xl font-black text-white mb-0.5 z-10 tracking-tight'>100 TL</div>
-                     <div className='text-[9px] text-slate-400 font-bold uppercase mb-2 z-10'>TEMEL LİMİT</div>
-                     <button className='w-24 py-1 rounded bg-slate-700 hover:bg-slate-600 border border-slate-500 text-[10px] font-bold text-white shadow-lg transition-all z-10'>
+                     <div className='text-xl font-black text-slate-800 dark:text-white mb-0.5 z-10 tracking-tight'>100 TL</div>
+                     <div className='text-[9px] text-slate-600 dark:text-slate-400 font-bold uppercase mb-2 z-10'>TEMEL LİMİT</div>
+                     <button className='w-24 py-1 rounded bg-slate-300 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 border border-slate-400 dark:border-slate-500 text-[10px] font-bold text-slate-800 dark:text-white shadow-lg transition-all z-10'>
                         SATIN AL
                      </button>
                 </motion.div>
@@ -755,7 +757,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     transition={{ 
                         boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } 
                     }}
-                    className='relative z-20 rounded-2xl border-2 border-amber-500/50 bg-gradient-to-b from-amber-900/80 via-yellow-900/60 to-amber-950 flex flex-col items-center justify-center p-4 shadow-[0_0_50px_rgba(245,158,11,0.4)] h-[120px] md:h-[130px] overflow-visible'
+                    className='relative z-20 rounded-2xl border-2 border-amber-500/50 bg-gradient-to-b from-amber-100 via-yellow-100 to-amber-200 dark:from-amber-900/80 dark:via-yellow-900/60 dark:to-amber-950 flex flex-col items-center justify-center p-4 shadow-[0_0_50px_rgba(245,158,11,0.4)] h-[120px] md:h-[130px] overflow-visible'
                 >
                      {/* "ÖNERİLEN" Badge - Floating above */}
                      <div className='absolute -top-7 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-black text-[10px] font-black px-4 py-1 rounded-full shadow-[0_0_15px_rgba(251,191,36,0.8)] animate-pulse z-30 whitespace-nowrap border border-yellow-200'>
@@ -764,24 +766,24 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                      <div className='absolute -top-3 flex gap-1 z-10'>
                         <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }}>
-                            <Star size={14} className="text-yellow-300 fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
+                            <Star size={14} className="text-yellow-600 dark:text-yellow-300 fill-yellow-600 dark:fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
                         </motion.div>
                         <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }}>
-                            <Star size={18} className="text-amber-400 fill-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] -mt-2" />
+                            <Star size={18} className="text-amber-600 dark:text-amber-400 fill-amber-600 dark:fill-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] -mt-2" />
                         </motion.div>
                         <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }}>
-                            <Star size={14} className="text-yellow-300 fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
+                            <Star size={14} className="text-yellow-600 dark:text-yellow-300 fill-yellow-600 dark:fill-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]" />
                         </motion.div>
                      </div>
 
                      <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/cubes.png)] opacity-20 mix-blend-overlay'></div>
                      
                      <div className='flex items-center gap-2 mb-1 mt-2 relative z-10'>
-                        <Crown size={22} className='text-amber-300 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]' fill='currentColor' />
-                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 via-yellow-400 to-amber-500 uppercase tracking-widest drop-shadow-sm filter custom-drop-shadow'>GOLD</span>
+                        <Crown size={22} className='text-amber-600 dark:text-amber-300 drop-shadow-sm' fill='currentColor' />
+                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-600 via-yellow-600 to-amber-700 dark:from-yellow-200 dark:via-yellow-400 dark:to-amber-500 uppercase tracking-widest drop-shadow-sm filter custom-drop-shadow'>GOLD</span>
                      </div>
-                     <div className='text-3xl font-black text-white mb-0.5 z-10 drop-shadow-md tracking-tighter'>175 TL</div>
-                     <div className='text-[10px] text-amber-200 font-bold uppercase mb-2 z-10 tracking-wide'>2 KAT AVANTAJ</div>
+                     <div className='text-3xl font-black text-amber-900 dark:text-white mb-0.5 z-10 drop-shadow-md tracking-tighter'>175 TL</div>
+                     <div className='text-[10px] text-amber-800 dark:text-amber-200 font-bold uppercase mb-2 z-10 tracking-wide'>2 KAT AVANTAJ</div>
                      <button className='w-32 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 border border-yellow-300/50 text-xs font-black text-black shadow-[0_5px_15px_rgba(245,158,11,0.4)] hover:shadow-[0_5px_20px_rgba(245,158,11,0.6)] transform active:scale-95 transition-all z-10'>
                         SATIN AL
                      </button>
@@ -790,18 +792,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 {/* 3. DIAMOND (Was Premium/Pro) */}
                 <motion.div 
                     whileHover={{ scale: 1.05, y: -5 }}
-                    className='relative rounded-2xl bg-gradient-to-b from-cyan-900 via-cyan-950 to-blue-950 border border-cyan-500/30 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-2xl h-[100px] md:h-[110px]'
+                    className='relative rounded-2xl bg-gradient-to-b from-cyan-100 via-cyan-200 to-cyan-300 dark:from-cyan-900 dark:via-cyan-950 dark:to-blue-950 border border-cyan-300 dark:border-cyan-500/30 flex flex-col items-center justify-center p-4 group cursor-pointer overflow-hidden shadow-xl dark:shadow-2xl h-[100px] md:h-[110px]'
                 >
-                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-20 mixed-blend-overlay'></div>
+                     <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 dark:opacity-20 mixed-blend-overlay'></div>
                      <div className='absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-400/20 transition-colors'></div>
 
                      <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Gem size={18} className='text-cyan-300 drop-shadow-md' fill='currentColor' />
-                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-cyan-100 to-blue-200 uppercase tracking-widest drop-shadow-sm'>DIAMOND</span>
+                        <Gem size={18} className='text-cyan-600 dark:text-cyan-300 drop-shadow-md' fill='currentColor' />
+                        <span className='text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-cyan-500 to-blue-600 dark:from-cyan-200 dark:via-cyan-100 dark:to-blue-200 uppercase tracking-widest drop-shadow-sm'>DIAMOND</span>
                      </div>
-                     <div className='text-xl font-black text-white mb-0.5 z-10 tracking-tight'>250 TL</div>
-                     <div className='text-[9px] text-cyan-200 font-bold uppercase mb-2 z-10'>SINIRSIZ LİMİT</div>
-                      <button className='w-24 py-1 rounded bg-cyan-800 hover:bg-cyan-700 border border-cyan-500/50 text-[10px] font-bold text-white shadow-lg transition-all z-10'>
+                     <div className='text-xl font-black text-cyan-900 dark:text-white mb-0.5 z-10 tracking-tight'>250 TL</div>
+                     <div className='text-[9px] text-cyan-800 dark:text-cyan-200 font-bold uppercase mb-2 z-10'>SINIRSIZ LİMİT</div>
+                      <button className='w-24 py-1 rounded bg-cyan-200 hover:bg-cyan-100 dark:bg-cyan-800 dark:hover:bg-cyan-700 border border-cyan-400 dark:border-cyan-500/50 text-[10px] font-bold text-cyan-900 dark:text-white shadow-lg transition-all z-10'>
                         SATIN AL
                      </button>
                 </motion.div>

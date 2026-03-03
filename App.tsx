@@ -75,18 +75,24 @@ const App = () => {
     const savedUser = localStorage.getItem('currentUser');
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const savedLanguage = localStorage.getItem('language') as 'tr' | 'en' | 'ar' | null;
-    // Documents are loaded from API when user is logged in
-    // const loadedDocs = localStorage.getItem('generatedDocuments');
+    
+    if (savedTheme) setTheme(savedTheme);
+    if (savedLanguage) {
+        setLanguage(savedLanguage);
+        setT(getTranslation(savedLanguage));
+    }
 
-    /* if (loadedDocs) {
-      try {
-        setSavedDocuments(JSON.parse(loadedDocs));
-      } catch (e) {
-        console.error('Error loading documents', e);
-      }
-    } */
+    // Apply Theme to Document root
+    useEffect(() => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
-    if (savedUser) {
+    const savedUser = localStorage.getItem('currentUser');
       try {
         const parsedUser = JSON.parse(savedUser);
         setUser(parsedUser);
