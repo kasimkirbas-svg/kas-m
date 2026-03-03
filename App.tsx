@@ -23,7 +23,8 @@ const App = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
   const [templates, setTemplates] = useState<DocumentTemplate[]>(MOCK_TEMPLATES);
   const [isLoading, setIsLoading] = useState(true);
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  // Theme is strictly dark now
+  const [theme] = useState<'light' | 'dark'>('dark');
   const [language, setLanguage] = useState<'tr' | 'en' | 'ar'>('tr');
   const [t, setT] = useState(getTranslation('tr'));
   const [savedDocuments, setSavedDocuments] = useState<GeneratedDocument[]>([]);
@@ -221,20 +222,6 @@ const App = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  const applyTheme = (themeType: 'light' | 'dark') => {
-    const html = document.documentElement;
-    if (themeType === 'dark') {
-      html.classList.add('dark');
-    } else {
-      html.classList.remove('dark');
-    }
-  };
-
-  const handleThemeChange = (newTheme: 'light' | 'dark') => {
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    applyTheme(newTheme);
-  };
 
   const handleLanguageChange = (newLanguage: 'tr' | 'en' | 'ar') => {
     setLanguage(newLanguage);
@@ -485,7 +472,7 @@ const App = () => {
           theme={theme}
           language={language}
           t={t}
-          onThemeChange={handleThemeChange}
+          // Theme is locked
           onLanguageChange={handleLanguageChange}
         />
       );
@@ -521,7 +508,7 @@ const App = () => {
       language={language}
       onLanguageChange={handleLanguageChange}
       theme={theme}
-      onThemeChange={handleThemeChange}
+      // Theme is locked
       documentsCount={savedDocuments.length}
       t={t}
     >

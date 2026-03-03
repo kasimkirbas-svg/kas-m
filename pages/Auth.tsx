@@ -435,8 +435,12 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, t, language }) => {
       </div>
 
       {/* RIGHT SIDE - FORM CONTAINER */}
-      <div className="flex-1 w-full bg-slate-950 relative flex items-center justify-center p-4 sm:p-6 lg:border-l border-slate-800">
+      <div className="flex-1 w-full bg-gradient-to-tr from-[#020617] via-[#0f172a] to-[#0f1115] relative flex items-center justify-center p-4 sm:p-6 lg:border-l border-slate-800/50">
          
+         {/* Premium Glow Effect */}
+         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[120px] pointer-events-none opacity-40 animate-pulse-slow"></div>
+         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[120px] pointer-events-none opacity-30 animate-pulse-slow"></div>
+
          {/* Mobile Background Image (Subtle) */}
          <div className="absolute inset-0 lg:hidden overflow-hidden z-0">
             <img 

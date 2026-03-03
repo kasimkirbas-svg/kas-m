@@ -117,42 +117,6 @@ export const Settings: React.FC<SettingsProps> = ({
             </div>
         </section>
 
-        {/* Theme Settings */}
-        <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm hover:shadow-md dark:shadow-lg dark:shadow-black/40 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300">
-            <div className="flex items-center gap-3 mb-6">
-                <div className="p-2.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-blue-500 shadow-sm dark:shadow-inner dark:shadow-black/50">
-                    <Monitor className="w-6 h-6" />
-                </div>
-                <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
-                    {t?.settings?.appearance || 'Görünüm'}
-                </h2>
-            </div>
-            
-            <div className="flex flex-wrap gap-4">
-                <button 
-                    onClick={() => setSelectedTheme('dark')}
-                    className={`flex-1 min-w-[140px] p-4 rounded-xl border-2 flex flex-col items-center gap-3 transition-all duration-300 ${selectedTheme === 'dark' ? 'border-blue-600 bg-blue-50 dark:bg-blue-500/10 shadow-md shadow-blue-500/10 scale-105' : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-blue-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-900'}`}
-                >
-                    <div className={`p-3 rounded-full transition-colors ${selectedTheme === 'dark' ? 'bg-slate-900 text-blue-500 shadow-lg shadow-blue-500/20' : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-500'}`}>
-                        <Moon className={`w-6 h-6`} />
-                    </div>
-                    <span className={`font-black text-sm uppercase tracking-wider ${selectedTheme === 'dark' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-400'}`}>
-                        {t?.settings?.dark || 'Koyu Mod'}
-                    </span>
-                </button>
-                 <button 
-                    onClick={() => setSelectedTheme('light')}
-                    className={`flex-1 min-w-[140px] p-4 rounded-xl border-2 flex flex-col items-center gap-3 transition-all duration-300 ${selectedTheme === 'light' ? 'border-amber-500 bg-amber-50 dark:bg-blue-500/10 shadow-md shadow-amber-500/10 scale-105' : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-amber-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-900'}`}
-                >
-                    <div className={`p-3 rounded-full transition-colors ${selectedTheme === 'light' ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}>
-                         <Sun className={`w-6 h-6`} />
-                    </div>
-                    <span className={`font-black text-sm uppercase tracking-wider ${selectedTheme === 'light' ? 'text-amber-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-400'}`}>
-                        {t?.settings?.light || 'Açık Mod'}
-                    </span>
-                </button>
-            </div>
-        </section>
 
         {/* Notifications */}
         <section className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-6 shadow-sm hover:shadow-md dark:shadow-lg dark:shadow-black/40 hover:border-slate-400 dark:hover:border-slate-700 transition-all duration-300">

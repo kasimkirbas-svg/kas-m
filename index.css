@@ -13,10 +13,43 @@
   body {
     @apply antialiased overflow-hidden selection:bg-amber-500/30 selection:text-amber-800 dark:selection:text-amber-200 transition-colors duration-500 ease-in-out
            bg-slate-200 text-slate-900 
-           dark:bg-[#0f1115] dark:text-slate-200;
+           dark:bg-[#050508] dark:text-slate-200;
   }
 
-  /* Custom Scrollbar for Webkit */
+  /* Premium Animation Utilities */
+  .animate-fade-in-up {
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+  }
+
+  .animate-scale-in {
+      animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: scale(0.95);
+  }
+  
+  .glass-panel {
+      @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+  
+  .premium-gradient-text {
+      @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-600;
+  }
+
+  @keyframes fadeInUp {
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+
+  @keyframes scaleIn {
+      to {
+          opacity: 1;
+          transform: scale(1);
+      }
+  }
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

@@ -74,14 +74,17 @@ export const Layout: React.FC<LayoutProps> = ({
     <div className={`flex flex-col font-sans bg-slate-200 dark:bg-[#0f1115] text-slate-900 dark:text-slate-200 selection:bg-amber-500/30 min-h-screen transition-colors duration-300 relative overflow-hidden`}>
       
       {/* GLOBAL BACKGROUND EFFECTS (Added for Premium Feel) */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none bg-gradient-to-b from-slate-950 via-[#050508] to-black">
           {/* Subtle Grid Pattern */}
-          <div className="absolute inset-0 bg-grid-slate-900/[0.03] dark:bg-grid-white/[0.02] bg-[size:32px_32px] [mask-image:linear-gradient(to_bottom,transparent,black)]"></div>
+          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"></div>
           
-          {/* Animated Floating Color Blobs */}
-          <div className="absolute top-[-20%] left-[-10%] w-[700px] h-[700px] rounded-full bg-indigo-200/30 dark:bg-indigo-900/10 blur-[130px] animate-float mix-blend-multiply dark:mix-blend-screen opacity-60"></div>
-          <div className="absolute top-[20%] right-[-20%] w-[600px] h-[600px] rounded-full bg-amber-200/30 dark:bg-amber-800/10 blur-[120px] animate-float-delayed mix-blend-multiply dark:mix-blend-screen opacity-50"></div>
-          <div className="absolute bottom-[-20%] left-[30%] w-[800px] h-[800px] rounded-full bg-blue-200/30 dark:bg-blue-900/10 blur-[130px] animate-float-slow mix-blend-multiply dark:mix-blend-screen opacity-50"></div>
+          {/* Animated Floating Color Blobs - Premium Palette */}
+          <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full bg-purple-900/20 blur-[120px] animate-float mix-blend-screen opacity-40"></div>
+          <div className="absolute top-[10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-amber-600/10 blur-[100px] animate-float-delayed mix-blend-screen opacity-30"></div>
+          <div className="absolute bottom-[-20%] left-[20%] w-[900px] h-[900px] rounded-full bg-indigo-900/20 blur-[150px] animate-float-slow mix-blend-screen opacity-40"></div>
+          
+          {/* Moving sheen effect */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.01] to-transparent animate-pulse-slow"></div>
       </div>
 
       {/* INDUSTRIAL TOP NAVIGATION BAR - Now Transparent/Minimal */}
@@ -230,7 +233,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
       {/* Main Content Area */}
       <main className={`flex-1 w-full relative ${currentView === 'dashboard' ? 'p-0 overflow-x-hidden' : 'overflow-x-hidden p-4 md:p-6 lg:p-8'}`}>
-        <div className={`${currentView === 'dashboard' ? 'w-full h-full' : 'max-w-[1600px] mx-auto space-y-6 md:space-y-8 animate-fade-in pb-20 md:pb-0'}`}>
+        <div key={currentView} className={`${currentView === 'dashboard' ? 'w-full h-full' : 'max-w-[1600px] mx-auto space-y-6 md:space-y-8 animate-fade-in-up pb-20 md:pb-0'}`}>
              {children}
         </div>
       </main>
