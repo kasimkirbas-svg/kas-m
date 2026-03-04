@@ -401,8 +401,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             onMouseEnter={() => setHoveredSectorId(sector.id)}
                             onClick={() => toggleSector(sector.id)}
                             className={`
-                            relative rounded-xl cursor-pointer select-none h-28 md:h-32 flex flex-col items-center justify-end overflow-hidden
-                            w-[45%] md:w-[130px] lg:w-[140px] xl:w-[150px]
+                            relative rounded-xl cursor-pointer select-none h-32 md:h-40 flex flex-col items-center justify-end overflow-hidden
+                            w-[45%] md:w-[180px] lg:w-[200px]
                             border transition-colors duration-300
                             ${isActive 
                                 ? 'border-amber-500 dark:border-white shadow-2xl dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] ring-2 ring-amber-200 dark:ring-white/20' 
@@ -453,7 +453,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='flex-1 grid grid-cols-1 lg:grid-cols-4 gap-5 pb-2'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col min-h-[600px] h-auto bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
+            <div className='lg:col-span-3 flex flex-col min-h-[400px] h-auto bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
@@ -553,9 +553,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.98 }}
                             transition={{ duration: 0.3 }}
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-4 content-start"
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 pb-4 content-start"
                         >
-                            {displayDocs.slice(0, isDocsExpanded ? undefined : 8).map((item, idx) => (
+                            {/* Show only first 12 items if not expanded */}
+                            {displayDocs.slice(0, isDocsExpanded ? undefined : 12).map((item, idx) => (
                                 <motion.div 
                                     key={`${item.sector.id}-${idx}`}
                                     initial={{ opacity: 0, y: 10 }}
@@ -610,20 +611,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     </AnimatePresence>
 
                     {/* Show All Toggle Button */}
-                    {!isDocsExpanded && displayDocs.length > 8 && (
+                    {!isDocsExpanded && displayDocs.length > 12 && (
                         <div className="flex justify-center mt-2 border-t border-slate-100 dark:border-white/5 pt-4">
                             <button 
                                 onClick={() => setIsDocsExpanded(true)}
                                 className="group flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-wider"
                             >   
-                                <span>Tümünü Göster ({displayDocs.length - 8} Daha Fazla)</span>
+                                <span>Tümünü Göster ({displayDocs.length - 12} Daha Fazla)</span>
                                 <ChevronDown size={16} className="group-hover:translate-y-1 transition-transform" />
                             </button>
                         </div>
                     )}
                     
                     {/* Show Less Toggle Button */}
-                    {isDocsExpanded && displayDocs.length > 8 && (
+                    {isDocsExpanded && displayDocs.length > 12 && (
                          <div className="flex justify-center mt-6 border-t border-slate-100 dark:border-white/5 pt-4">
                             <button 
                                 onClick={() => setIsDocsExpanded(false)}
