@@ -1055,7 +1055,7 @@ export const ADMIN_USER = {
   password: 'Admin123456',
   companyName: 'Kırbaş Doküman Yazılımları',
   role: UserRole.ADMIN,
-  plan: SubscriptionPlan.YEARLY,
+  plan: 'DIAMOND',
   remainingDownloads: 'UNLIMITED' as const,
   subscriptionStartDate: new Date().toISOString(),
   isActive: true
