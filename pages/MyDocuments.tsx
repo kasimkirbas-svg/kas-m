@@ -242,7 +242,7 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                                     <motion.div 
                                        initial={{ opacity: 0, y: 10, scale: 0.9 }}
                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                       exit={{ opacity: 0, scale: 0.9, opacity: 0 }}
+                                       exit={{ opacity: 0, scale: 0.9 }}
                                        className="absolute right-0 top-10 z-50 w-48 bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-700 overflow-hidden origin-top-right p-1.5"
                                     >
                                        <button onClick={(e) => { e.stopPropagation(); onPreviewDocument(doc); setActiveMenuId(null); }} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-2 transition-colors">

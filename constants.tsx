@@ -1,4 +1,5 @@
-import { DocumentTemplate, UserRole, SubscriptionPlan } from './types';
+import { DocumentTemplate, UserRole } from './types';
+import type { SubscriptionPlan } from './types';
 
 export const APP_NAME = "Kırbaş Doküman";
 
