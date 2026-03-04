@@ -302,21 +302,6 @@ const App = () => {
     if (user && currentView === 'editor' && selectedTemplate) {
       return (
         <div className="space-y-4">
-          <button 
-            onClick={() => {
-              if (editingDocument || previewDocument) {
-                  setCurrentView('my-documents');
-              } else {
-                  setCurrentView('templates');
-              }
-              setEditingDocument(undefined);
-              setPreviewDocument(undefined);
-            }}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-4"
-          >
-            <ArrowLeft size={18} />
-            {t?.common?.back || 'Geri'}
-          </button>
           <DocumentEditor 
             template={selectedTemplate}
             initialData={editingDocument}
@@ -371,29 +356,50 @@ const App = () => {
     // 2. My Documents List
     if (user && currentView === 'my-documents') {
         return (
-            <MyDocuments 
-                templates={templates}
-                onEditDocument={handleEditDocument}
-                onPreviewDocument={handlePreviewDocument} 
-                documents={savedDocuments.filter(d => d.userId === user.id)}
-                onDeleteDocument={async (id) => {
-                    if (window.confirm(t?.common?.confirmDelete || 'Bu dokümanı silmek istediğinize emin misiniz?')) {
-                        // Optimistic Delete
-                        const newDocs = savedDocuments.filter(d => d.id !== id);
-                        setSavedDocuments(newDocs);
-                        
-                        try {
-                             await fetchApi(`/api/documents/${id}`, { method: 'DELETE' });
-                             localStorage.setItem('generatedDocuments', JSON.stringify(newDocs)); // Sync backup
-                        } catch (e) {
-                             console.error('Failed to delete document', e);
-                             alert('Doküman sunucudan silinemedi.');
-                             // Optionally revert?
+            <Layout 
+              user={user} 
+              currentView={currentView} 
+              onNavigate={handleNavigate} 
+              onLogout={handleLogout}
+              language={language}
+              onLanguageChange={handleLanguageChange}
+              theme={theme}
+              documentsCount={savedDocuments.length}
+              t={t}
+            >
+                <div className="mb-6">
+                    <button 
+                        onClick={() => setCurrentView('dashboard')}
+                        className="group flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all w-fit"
+                    >
+                        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                        {t?.common?.back || 'Ana Sayfaya Dön'}
+                    </button>
+                </div>
+                <MyDocuments 
+                    templates={templates}
+                    onEditDocument={handleEditDocument}
+                    onPreviewDocument={handlePreviewDocument} 
+                    documents={savedDocuments.filter(d => d.userId === user.id)}
+                    onDeleteDocument={async (id) => {
+                        if (window.confirm(t?.common?.confirmDelete || 'Bu dokümanı silmek istediğinize emin misiniz?')) {
+                            // Optimistic Delete
+                            const newDocs = savedDocuments.filter(d => d.id !== id);
+                            setSavedDocuments(newDocs);
+                            
+                            try {
+                                 await fetchApi(`/api/documents/${id}`, { method: 'DELETE' });
+                                 localStorage.setItem('generatedDocuments', JSON.stringify(newDocs)); // Sync backup
+                            } catch (e) {
+                                 console.error('Failed to delete document', e);
+                                 alert('Doküman sunucudan silinemedi.');
+                                 // Optionally revert?
+                            }
                         }
-                    }
-                }}
-                t={t}
-            />
+                    }}
+                    t={t}
+                />
+            </Layout>
         );
     }
 
@@ -412,13 +418,15 @@ const App = () => {
           t={t}
         >
           <div>
-            <button 
-              onClick={() => setCurrentView('dashboard')}
-              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium mb-6"
-            >
-              <ArrowLeft size={18} />
-              {t?.common?.back || 'Ana Sayfaya Dön'}
-            </button>
+            <div className="mb-6">
+               <button 
+                 onClick={() => setCurrentView('dashboard')}
+                 className="group flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all w-fit"
+               >
+                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                 {t?.common?.back || 'Ana Sayfaya Dön'}
+               </button>
+            </div>
             <DocumentsList 
               templates={templates}
               initialCategory={navParams.category}
@@ -488,6 +496,15 @@ const App = () => {
           documentsCount={savedDocuments.length}
           t={t}
         >
+          <div className="mb-6">
+             <button 
+                onClick={() => setCurrentView('dashboard')}
+                className="group flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all w-fit"
+             >
+                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                {t?.common?.back || 'Ana Sayfaya Dön'}
+             </button>
+          </div>
           <Profile user={user} t={t} onNavigate={setCurrentView} />
         </Layout>
       );
@@ -507,6 +524,15 @@ const App = () => {
           documentsCount={savedDocuments.length}
           t={t}
         >
+          <div className="mb-6">
+             <button 
+                onClick={() => setCurrentView('dashboard')}
+                className="group flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all w-fit"
+             >
+                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                {t?.common?.back || 'Ana Sayfaya Dön'}
+             </button>
+          </div>
           <Settings 
             user={user}
             theme={theme}

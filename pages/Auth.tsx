@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { 
   Key, Mail, Lock, User, ArrowRight, Loader2, 
-  ShieldCheck, Zap, Sparkles, Hexagon
+  ShieldCheck, Zap, Sparkles, Hexagon,
+  Instagram, Facebook, Twitter, Linkedin
 } from 'lucide-react';
 import { fetchApi } from '../src/utils/api';
 
@@ -363,6 +364,20 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
                              {view === 'login' ? "Hesap Oluşturun" : "Giriş Yapın"}
                           </button>
                       </p>
+                      
+                      {/* Social Media */}
+                      <div className="flex justify-center gap-4 mt-6">
+                        {[ 
+                           { icon: Instagram, href: "https://instagram.com" },
+                           { icon: Facebook, href: "https://facebook.com" },
+                           { icon: Twitter, href: "https://twitter.com" },
+                           { icon: Linkedin, href: "https://linkedin.com" }
+                        ].map((social, i) => (
+                            <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-amber-500 hover:text-white transition-all shadow-sm hover:shadow-amber-500/50 hover:scale-110">
+                                <social.icon size={14} />
+                            </a>
+                        ))}
+                      </div>
                   </div>
               </div>
           </div>

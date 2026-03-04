@@ -35,8 +35,10 @@ import {
   Box,
   Crown,
   Gem,
-  Crown,
-  Gem
+  Instagram,
+  Facebook,
+  Twitter,
+  Linkedin
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 import { PLANS } from '../constants';
@@ -378,8 +380,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                  </motion.div>
             </div>
             
-            {/* Right: Balance */}
-            <div className='w-1/4'></div>
+            {/* Right: Social Media */}
+            <div className='w-1/4 flex justify-end gap-3 px-4'>
+                {[ 
+                   { icon: Instagram, href: "https://instagram.com" },
+                   { icon: Facebook, href: "https://facebook.com" },
+                   { icon: Twitter, href: "https://twitter.com" },
+                   { icon: Linkedin, href: "https://linkedin.com" }
+                ].map((social, i) => (
+                    <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white transition-all shadow-sm hover:shadow-amber-500/50 hover:scale-110">
+                        <social.icon size={18} />
+                    </a>
+                ))}
+            </div>
         </header>
 
         {/* 2. Sectors Row: Responsive Grid (Wraps automatically) */}
@@ -453,7 +466,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='flex-1 grid grid-cols-1 lg:grid-cols-4 gap-5 pb-2 items-start'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col h-auto bg-white dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-indigo-500/30 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
+            <div className='lg:col-span-3 flex flex-col bg-white dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-indigo-500/30 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
                 {/* Vivid Background Pattern for Documents */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-indigo-50/20 to-purple-50/50 dark:from-blue-900/20 dark:via-[#0f172a] dark:to-purple-900/20 pointer-events-none"></div>
                 <div className="absolute right-0 top-0 w-[500px] h-[500px] bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
@@ -547,7 +560,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                 {/* List Body - Compact Default with Toggle */}
                 <div className={`
-                    flex-1 relative bg-white dark:bg-transparent rounded-2xl p-3
+                    relative bg-white dark:bg-transparent rounded-2xl p-4
                     ${(!user?.plan || user.plan === 'FREE' || user.plan === 'MONTHLY' && false) ? '' : 'shadow-inner dark:shadow-none'}
                 `}>
                     <AnimatePresence mode='wait'>
@@ -557,10 +570,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.98 }}
                             transition={{ duration: 0.3 }}
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 pb-4 content-start"
+                            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 content-start"
                         >
-                            {/* Show only first 8 items if not expanded */}
-                            {displayDocs.slice(0, isDocsExpanded ? undefined : 8).map((item, idx) => (
+                            {/* Show only first 12 items if not expanded */}
+                            {displayDocs.slice(0, isDocsExpanded ? undefined : 12).map((item, idx) => (
                                 <motion.div 
                                     key={`${item.sector.id}-${idx}`}
                                     initial={{ opacity: 0, y: 10 }}
@@ -615,24 +628,24 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     </AnimatePresence>
 
                     {/* Show All Toggle Button */}
-                    {!isDocsExpanded && displayDocs.length > 8 && (
-                        <div className="flex justify-center mt-2 border-t border-slate-100 dark:border-white/5 pt-4">
+                    {!isDocsExpanded && displayDocs.length > 12 && (
+                        <div className="flex justify-center mt-4 pt-4 border-t border-slate-100 dark:border-white/5">
                             <button 
                                 onClick={() => setIsDocsExpanded(true)}
-                                className="group flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-wider"
+                                className="group flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-wider bg-slate-50 dark:bg-slate-800/50 px-6 py-2 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm"
                             >   
-                                <span>Tümünü Göster ({displayDocs.length - 8} Daha Fazla)</span>
+                                <span>Tümünü Göster ({displayDocs.length - 12} Daha Fazla)</span>
                                 <ChevronDown size={16} className="group-hover:translate-y-1 transition-transform" />
                             </button>
                         </div>
                     )}
                     
                     {/* Show Less Toggle Button */}
-                    {isDocsExpanded && displayDocs.length > 8 && (
-                         <div className="flex justify-center mt-6 border-t border-slate-100 dark:border-white/5 pt-4">
+                    {isDocsExpanded && displayDocs.length > 12 && (
+                         <div className="flex justify-center mt-4 pt-4 border-t border-slate-100 dark:border-white/5">
                             <button 
                                 onClick={() => setIsDocsExpanded(false)}
-                                className="group flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors text-xs font-bold uppercase tracking-wider"
+                                className="group flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors text-xs font-bold uppercase tracking-wider bg-slate-50 dark:bg-slate-800/50 px-6 py-2 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm"
                             >   
                                 <ChevronDown size={16} className="rotate-180 group-hover:-translate-y-1 transition-transform" />
                                 <span>Daha Az Göster</span>
