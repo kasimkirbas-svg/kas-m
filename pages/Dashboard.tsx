@@ -747,27 +747,39 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='shrink-0 pb-4 pt-2 px-2 mt-2 bg-transparent'>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-3 items-center max-w-6xl mx-auto'>
                 
+
                 {/* 1. SILVER (Platinum/Industrial) - Sharp & Clean */}
                 <motion.div 
-                    whileHover={{ scale: 1.02, translateY: -5 }}
-                    className='relative rounded-xl bg-gradient-to-br from-slate-100 via-gray-200 to-slate-200 dark:from-slate-800 dark:via-gray-700 dark:to-slate-800 border border-slate-300 dark:border-slate-500 shadow-lg shadow-gray-200/50 dark:shadow-black/40 hover:shadow-2xl hover:shadow-slate-300/60 dark:hover:shadow-slate-700/50 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden h-[110px] transition-all duration-300'
+                    whileHover={{ scale: 1.05, translateY: -8, rotateX: 5 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20
+                    }}
+                    className='relative rounded-xl bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 dark:from-slate-800 dark:via-gray-800 dark:to-slate-900 border border-slate-300 dark:border-slate-600 shadow-xl shadow-slate-300/50 dark:shadow-black/60 hover:shadow-2xl hover:shadow-slate-400/70 dark:hover:shadow-slate-500/30 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden h-[110px] transform-gpu perspective-1000'
                 >
-                     {/* Glass/Metallic Effect Layers */}
-                     <div className="absolute inset-0 bg-white/40 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                     <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-70"></div>
+                     {/* Dynamic Light Sweep */}
+                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:animate-shine transition-transform duration-1000 pointer-events-none z-20"></div>
                      
-                     <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Shield size={16} className='text-slate-600 dark:text-slate-300 drop-shadow-sm' fill='currentColor' />
-                        <span className='text-lg font-black text-slate-700 dark:text-gray-100 uppercase tracking-[0.2em] drop-shadow-sm'>SILVER</span>
+                     {/* Subtle Pattern */}
+                     <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+
+                     <div className='flex items-center gap-2 mb-1 z-30 relative'>
+                        <div className="p-1.5 rounded-full bg-slate-200 dark:bg-slate-700 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                             <Shield size={16} className='text-slate-600 dark:text-slate-300' fill='currentColor' />
+                        </div>
+                        <span className='text-lg font-black text-slate-700 dark:text-gray-100 uppercase tracking-[0.2em] drop-shadow-sm group-hover:text-slate-900 dark:group-hover:text-white transition-colors'>SILVER</span>
                      </div>
-                     <div className='text-2xl font-black text-slate-800 dark:text-white mb-0.5 z-10 tracking-tighter'>100 TL</div>
-                     <div className='text-[8px] text-slate-600 dark:text-slate-400 font-bold uppercase mb-2 z-10 tracking-widest bg-slate-200/60 dark:bg-gray-700/60 px-3 py-0.5 rounded-sm border border-slate-300/30 dark:border-slate-600/30'>TEMEL LİMİT</div>
+                     
+                     <div className='text-3xl font-black text-slate-800 dark:text-white mb-0.5 z-30 tracking-tighter drop-shadow-md group-hover:scale-110 transition-transform'>100 TL</div>
+                     
+                     <div className='text-[8px] text-slate-600 dark:text-slate-400 font-bold uppercase mb-2 z-30 tracking-widest bg-slate-200/80 dark:bg-gray-700/80 px-3 py-0.5 rounded-sm border border-slate-300/50 dark:border-slate-600/50 backdrop-blur-sm'>TEMEL LİMİT</div>
+                     
                      <button 
-                        onClick={() => {
-                            // Gerçek ödeme simülasyonu - Burada normalde ödeme sayfasına yönlendirilir
-                            window.open('https://link-to-payment-gateway.com/buy/silver', '_blank');
-                        }}
-                        className='w-full max-w-[100px] py-1 rounded bg-gradient-to-b from-slate-700 to-slate-800 dark:from-gray-100 dark:to-gray-300 hover:from-slate-600 hover:to-slate-700 dark:hover:from-white dark:hover:to-gray-200 text-[9px] font-black text-white dark:text-gray-900 shadow-md transition-all z-10 active:scale-95 uppercase tracking-wide group-hover:shadow-slate-500/30'
+                        onClick={() => window.open('https://link-to-payment-gateway.com/buy/silver', '_blank')}
+                        className='w-full max-w-[100px] py-1 rounded bg-slate-800 dark:bg-slate-200 hover:bg-slate-700 dark:hover:bg-white text-[9px] font-black text-white dark:text-slate-900 shadow-lg shadow-slate-500/30 transition-all z-30 active:scale-95 uppercase tracking-wide group-hover:shadow-slate-600/50 group-hover:tracking-wider'
                      >
                         SATIN AL
                      </button>
@@ -775,39 +787,70 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                 {/* 2. GOLD (Center - Radiating) */}
                 <motion.div 
-                    initial={{ scale: 1.02 }}
-                    whileHover={{ scale: 1.05, translateY: -5 }}
-                    className='relative z-20 rounded-xl border border-yellow-500/50 dark:border-yellow-400/50 bg-gradient-to-br from-amber-100 via-yellow-200 to-amber-300 dark:from-yellow-900 dark:via-amber-800 dark:to-yellow-950 shadow-xl shadow-amber-500/20 dark:shadow-amber-900/30 hover:shadow-2xl hover:shadow-amber-500/40 flex flex-col items-center justify-center p-3 h-[125px] overflow-visible backdrop-blur-md transition-all duration-300'
+                    initial={{ scale: 1.05, opacity: 0, y: 20 }}
+                    animate={{ scale: 1.05, opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.08, translateY: -8, rotateX: 5, zIndex: 50 }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                        delay: 0.1
+                    }}
+                    className='relative z-20 rounded-xl border-2 border-yellow-400/40 dark:border-yellow-500/40 bg-gradient-to-b from-[#FFFBEB] via-[#FEF3C7] to-[#FDE68A] dark:from-[#451a03] dark:via-[#78350f] dark:to-[#b45309] shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_40px_rgba(245,158,11,0.5)] flex flex-col items-center justify-center p-3 h-[130px] overflow-visible backdrop-blur-md transform-gpu perspective-1000'
                 >
-                     {/* "EN ÇOK TERCİH EDİLEN" Badge */}
-                     <div className='absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-white text-[9px] font-black px-4 py-1 rounded-sm shadow-lg shadow-amber-600/40 z-30 whitespace-nowrap tracking-widest uppercase ring-1 ring-yellow-200/50'>
+                     {/* "EN ÇOK TERCİH EDİLEN" Badge with Pulse */}
+                     <div className='absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 text-white text-[9px] font-black px-4 py-1 rounded-sm shadow-xl shadow-amber-600/50 z-40 whitespace-nowrap tracking-widest uppercase ring-2 ring-yellow-200/50 animate-pulse-slow'>
                         EN ÇOK TERCİH EDİLEN
                      </div>
 
-                     <div className='absolute -top-5 flex gap-1 z-10 pointer-events-none opacity-80'>
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }}>
-                            <Star size={10} className="text-yellow-600 dark:text-yellow-400 fill-current drop-shadow-md" />
+                     {/* Floating Particles */}
+                      <div className="absolute inset-0 overflow-hidden rounded-xl">
+                        {[...Array(5)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                className="absolute bg-yellow-400 rounded-full blur-[1px] opacity-60"
+                                style={{
+                                    width: Math.random() * 4 + 2 + 'px',
+                                    height: Math.random() * 4 + 2 + 'px',
+                                    left: Math.random() * 100 + '%',
+                                    top: Math.random() * 100 + '%'
+                                }}
+                                animate={{
+                                    y: [0, -40],
+                                    opacity: [0, 1, 0]
+                                }}
+                                transition={{
+                                    duration: Math.random() * 2 + 2,
+                                    repeat: Infinity,
+                                    delay: Math.random() * 2
+                                }}
+                            />
+                        ))}
+                    </div>
+
+                     <div className='absolute -top-6 flex gap-1 z-10 pointer-events-none opacity-90'>
+                        <motion.div animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}>
+                            <Star size={12} className="text-yellow-500 dark:text-yellow-300 fill-current drop-shadow-[0_0_5px_rgba(245,158,11,0.8)]" />
                         </motion.div>
-                         <motion.div animate={{ rotate: -360, scale: [1, 1.2, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
-                            <Star size={14} className="text-amber-600 dark:text-amber-500 fill-current drop-shadow-lg -mt-1 mx-1" />
+                         <motion.div animate={{ rotate: -360, scale: [1, 1.4, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+                            <Star size={16} className="text-amber-500 dark:text-amber-400 fill-current drop-shadow-[0_0_8px_rgba(245,158,11,0.9)] -mt-2 mx-1" />
                         </motion.div>
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear", delay: 1 }}>
-                            <Star size={10} className="text-yellow-600 dark:text-yellow-400 fill-current drop-shadow-md" />
+                        <motion.div animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: 1 }}>
+                            <Star size={12} className="text-yellow-500 dark:text-yellow-300 fill-current drop-shadow-[0_0_5px_rgba(245,158,11,0.8)]" />
                         </motion.div>
                      </div>
                      
-                     <div className='flex items-center gap-2 mb-0.5 mt-2 relative z-10'>
-                        <Crown size={20} className='text-amber-700 dark:text-yellow-300 drop-shadow-md' fill='currentColor' />
-                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-700 to-orange-800 dark:from-yellow-200 dark:to-amber-400 uppercase tracking-[0.2em] drop-shadow-sm'>GOLD</span>
+                     <div className='flex items-center gap-2 mb-1 mt-2 relative z-30'>
+                        <Crown size={24} className='text-amber-600 dark:text-yellow-300 drop-shadow-md filter' fill='currentColor' />
+                        <span className='text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-700 to-orange-800 dark:from-yellow-100 dark:to-yellow-500 uppercase tracking-[0.2em] drop-shadow-sm'>GOLD</span>
                      </div>
-                     <div className='text-3xl font-black text-amber-900 dark:text-white mb-0.5 z-10 drop-shadow-sm tracking-tighter'>175 TL</div>
-                     <div className='text-[8px] text-amber-900 dark:text-amber-100 font-black uppercase mb-2 z-10 tracking-widest bg-gradient-to-r from-transparent via-amber-300/50 dark:via-amber-700/50 to-transparent px-4 py-0.5 rounded-full'>2 KAT AVANTAJ</div>
+                     <div className='text-4xl font-black text-amber-900 dark:text-white mb-1 z-30 drop-shadow-md tracking-tighter group-hover:scale-105 transition-transform duration-300'>175 TL</div>
+                     
+                     <div className='text-[9px] text-amber-900 dark:text-amber-100 font-black uppercase mb-3 z-30 tracking-widest bg-gradient-to-r from-transparent via-amber-200/80 dark:via-amber-700/50 to-transparent px-6 py-0.5 rounded-full shadow-sm'>2 KAT AVANTAJ</div>
+                     
                      <button 
-                         onClick={() => {
-                            // Gerçek ödeme simülasyonu - Burada normalde ödeme sayfasına yönlendirilir
-                            window.open('https://link-to-payment-gateway.com/buy/gold', '_blank');
-                        }}
-                        className='w-full max-w-[120px] py-1.5 rounded bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-[10px] font-black text-white shadow-lg shadow-amber-600/30 transform active:scale-95 transition-all z-10 uppercase tracking-wider'
+                         onClick={() => window.open('https://link-to-payment-gateway.com/buy/gold', '_blank')}
+                         className='w-full max-w-[140px] py-2 rounded bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-[11px] font-black text-white shadow-xl shadow-amber-600/40 transform hover:scale-105 active:scale-95 transition-all z-30 uppercase tracking-wider border border-white/20'
                      >
                         HEMEN AL
                      </button>
@@ -815,29 +858,44 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                 {/* 3. DIAMOND (Infinite/Prestige) - Magnificent & Neon */}
                 <motion.div 
-                    whileHover={{ scale: 1.02, translateY: -5 }}
-                    className='relative rounded-xl bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] border border-indigo-500/30 hover:border-indigo-400/60 shadow-xl shadow-indigo-900/40 hover:shadow-indigo-600/30 flex flex-col items-center justify-center p-3 group cursor-pointer overflow-hidden h-[110px] transition-all duration-300'
+                    whileHover={{ scale: 1.05, translateY: -8, rotateX: 5 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                        delay: 0.2
+                    }}
+                    className='relative rounded-xl bg-[#0a0a0a] border border-cyan-500/50 hover:border-cyan-400 group cursor-pointer overflow-hidden h-[110px] transform-gpu perspective-1000 shadow-[0_0_20px_rgba(6,182,212,0.2)] hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] flex flex-col items-center justify-center p-3'
                 >
-                    {/* Neon Glows */}
-                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/20 via-transparent to-transparent opacity-60"></div>
-                     <div className="absolute -inset-[1px] bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-xl opacity-20 blur-sm group-hover:opacity-40 transition-opacity duration-300"></div>
+                    {/* Animated Deep Space Background */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-[#0a0a0a] to-[#0a0a0a]"></div>
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 animate-pulse-slow"></div>
+                    
+                    {/* Neon Border Glow */}
+                    <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-cyan-500/30 group-hover:ring-cyan-400/70 transition-all duration-500"></div>
 
-                     <div className='flex items-center gap-2 mb-1 z-10'>
-                        <Gem size={16} className='text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]' fill='currentColor' />
-                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-purple-200 to-pink-300 uppercase tracking-[0.2em] drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]'>DIAMOND</span>
+                     {/* Rotating Glow Effect */}
+                     <div className="absolute -inset-[100%] bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent rotate-45 group-hover:animate-shine-slow transition-all duration-1000"></div>
+
+                     <div className='flex items-center gap-2 mb-1 z-30'>
+                        <Gem size={16} className='text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.9)] animate-pulse' fill='currentColor' />
+                        <span className='text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-200 to-purple-300 uppercase tracking-[0.2em] drop-shadow-[0_0_10px_rgba(6,182,212,0.6)] group-hover:from-white group-hover:via-cyan-200 group-hover:to-blue-200 transition-all'>DIAMOND</span>
                      </div>
-                     <div className='text-2xl font-black text-white mb-0.5 z-10 tracking-tighter drop-shadow-md text-shadow-glow'>250 TL</div>
-                     <div className='text-[8px] text-cyan-200 font-bold uppercase mb-2 z-10 tracking-widest bg-indigo-900/40 px-3 py-0.5 rounded border border-indigo-500/30 shadow-[0_0_10px_rgba(99,102,241,0.2)]'>SINIRSIZ LİMİT</div>
+                     
+                     <div className='text-3xl font-black text-white mb-0.5 z-30 tracking-tighter drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] group-hover:scale-110 transition-transform'>250 TL</div>
+                     
+                     <div className='text-[8px] text-cyan-100 font-bold uppercase mb-2 z-30 tracking-widest bg-cyan-900/40 px-3 py-0.5 rounded border border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.2)] backdrop-blur-md'>SINIRSIZ LİMİT</div>
+                     
                       <button 
-                        onClick={() => {
-                            // Gerçek ödeme simülasyonu - Burada normalde ödeme sayfasına yönlendirilir
-                            window.open('https://link-to-payment-gateway.com/buy/premium', '_blank');
-                        }}
-                        className='w-full max-w-[100px] py-1 rounded bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-[9px] font-bold shadow-lg shadow-indigo-500/30 hover:shadow-purple-500/50 transition-all z-10 active:scale-95 uppercase tracking-wide'
+                        onClick={() => window.open('https://link-to-payment-gateway.com/buy/premium', '_blank')}
+                        className='w-full max-w-[100px] py-1 rounded bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-[9px] font-bold shadow-lg shadow-cyan-500/40 hover:shadow-cyan-400/60 transition-all z-30 active:scale-95 uppercase tracking-wide border border-white/10 group-hover:tracking-wider'
                      >
                         SATIN AL
                      </button>
                 </motion.div>
+
 
             </div>
         </div>
