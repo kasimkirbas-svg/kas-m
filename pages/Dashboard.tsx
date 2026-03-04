@@ -37,11 +37,16 @@ import {
   Gem,
   Instagram,
   Facebook,
-  Twitter,
   Linkedin
 } from 'lucide-react';
 import { User, DocumentTemplate, GeneratedDocument } from '../types';
 import { PLANS } from '../constants';
+
+const XLogo = ({ size = 14, className = "" }: { size?: number, className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+  </svg>
+);
 
 import { PaymentPage } from './PaymentPage';
 
@@ -380,19 +385,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                  </motion.div>
             </div>
             
-            {/* Right: Social Media */}
-            <div className='w-1/4 flex justify-end gap-3 px-4'>
-                {[ 
-                   { icon: Instagram, href: "https://instagram.com" },
-                   { icon: Facebook, href: "https://facebook.com" },
-                   { icon: Twitter, href: "https://twitter.com" },
-                   { icon: Linkedin, href: "https://linkedin.com" }
-                ].map((social, i) => (
-                    <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white transition-all shadow-sm hover:shadow-amber-500/50 hover:scale-110">
-                        <social.icon size={18} />
-                    </a>
-                ))}
-            </div>
+            <div className='w-1/4'></div>
         </header>
 
         {/* 2. Sectors Row: Responsive Grid (Wraps automatically) */}
@@ -982,6 +975,24 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </div>
       </div>
      )}
+
+      {/* Social Media Footer Dashboard */}
+      <div className="mt-8 pb-8 pt-4 border-t border-slate-200 dark:border-slate-800/50 flex flex-col items-center gap-4 text-center">
+          <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-[0.2em]">Platformu Takip Edin</div>
+          <div className="flex justify-center gap-4">
+            {[ 
+               { icon: Instagram, href: "https://instagram.com" },
+               { icon: Facebook, href: "https://facebook.com" },
+               { icon: XLogo, href: "https://x.com" },
+               { icon: Linkedin, href: "https://linkedin.com" }
+            ].map((social, i) => (
+                <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white dark:hover:border-amber-400 transition-all shadow-sm hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:-translate-y-1">
+                    <social.icon size={16} />
+                </a>
+            ))}
+          </div>
+          <div className="text-xs text-slate-400 opacity-60 font-mono mt-2">© {new Date().getFullYear()} Kırbaş Platform. Tüm Hakları Saklıdır.</div>
+      </div>
 
       </div>
     </div>

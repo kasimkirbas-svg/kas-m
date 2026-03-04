@@ -3,9 +3,15 @@ import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from
 import { 
   Key, Mail, Lock, User, ArrowRight, Loader2, 
   ShieldCheck, Zap, Sparkles, Hexagon,
-  Instagram, Facebook, Twitter, Linkedin
+  Instagram, Facebook, Linkedin
 } from 'lucide-react';
 import { fetchApi } from '../src/utils/api';
+
+const XLogo = ({ size = 14, className = "" }: { size?: number, className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+  </svg>
+);
 
 interface AuthProps {
   onLoginSuccess: (userData: any) => void;
@@ -364,24 +370,27 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
                              {view === 'login' ? "Hesap Oluşturun" : "Giriş Yapın"}
                           </button>
                       </p>
-                      
-                      {/* Social Media */}
-                      <div className="flex justify-center gap-4 mt-6">
-                        {[ 
-                           { icon: Instagram, href: "https://instagram.com" },
-                           { icon: Facebook, href: "https://facebook.com" },
-                           { icon: Twitter, href: "https://twitter.com" },
-                           { icon: Linkedin, href: "https://linkedin.com" }
-                        ].map((social, i) => (
-                            <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-amber-500 hover:text-white transition-all shadow-sm hover:shadow-amber-500/50 hover:scale-110">
-                                <social.icon size={14} />
-                            </a>
-                        ))}
-                      </div>
                   </div>
               </div>
           </div>
       </motion.div>
+
+      {/* Social Media - Footer */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3">
+          <div className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mb-1">Bizi Takip Edin</div>
+          <div className="flex justify-center gap-4">
+            {[ 
+               { icon: Instagram, href: "https://instagram.com" },
+               { icon: Facebook, href: "https://facebook.com" },
+               { icon: XLogo, href: "https://x.com" },
+               { icon: Linkedin, href: "https://linkedin.com" }
+            ].map((social, i) => (
+                <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-amber-500 hover:text-white hover:border-amber-400 transition-all shadow-sm hover:shadow-[0_0_15px_rgba(245,158,11,0.5)] hover:-translate-y-1">
+                    <social.icon size={16} />
+                </a>
+            ))}
+          </div>
+      </div>
 
       {/* Toast Notification */}
       <AnimatePresence>
