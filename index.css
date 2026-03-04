@@ -344,7 +344,10 @@
     0% { transform: translateX(-150%) skewX(-25deg); }
     100% { transform: translateX(250%) skewX(-25deg); }
   }
-}
+  @keyframes sweep {
+    0% { transform: translateX(-100%) skewX(-35deg); }
+    100% { transform: translateX(200%) skewX(-35deg); }
+  }}
 
 .animate-shimmer { animation: shimmer 8s linear infinite; }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }

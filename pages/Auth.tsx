@@ -31,17 +31,20 @@ const InputGroup = ({ icon: Icon, ...props }: any) => (
 const SubmitButton = ({ children, isLoading }: any) => (
   <button 
     disabled={isLoading}
-    className="w-full relative overflow-hidden bg-white hover:bg-amber-500 text-black hover:text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 group hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)]"
+    className="w-full relative overflow-hidden bg-white text-slate-900 mt-2 py-4 rounded-xl font-black text-sm tracking-[0.2em] uppercase transition-all shadow-[0_10px_40px_rgba(255,255,255,0.2)] disabled:opacity-70 disabled:cursor-not-allowed group z-10 hover:shadow-[0_0_60px_rgba(255,255,255,0.6)] hover:scale-[1.02] active:scale-[0.98]"
   >
      {isLoading ? (
-       <Loader2 className="animate-spin" size={20} />
+       <div className="flex justify-center items-center">
+         <Loader2 className="animate-spin text-slate-900" size={20} />
+       </div>
      ) : (
-       <>
-         <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-white">{children}</span>
-         {/* Button inner shine */}
-         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
-       </>
+       <span className="relative z-10 flex items-center justify-center gap-3 mix-blend-difference text-white group-hover:text-amber-400 transition-colors duration-300">
+         {children}
+       </span>
      )}
+     {/* Animated Sweep within button */}
+     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 group-hover:transition-opacity duration-300 pointer-events-none transform -skew-x-[35deg] -translate-x-full group-hover:animate-[sweep_1.5s_ease-in-out_infinite]" />
+     <div className="absolute inset-0 bg-slate-900 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out z-0"></div>
   </button>
 );
 
@@ -152,40 +155,71 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
   };
 
   return (
-    <div className="relative w-full h-screen bg-[#050510] overflow-hidden flex items-center justify-center perspective-[1200px] selection:bg-amber-500/30 selection:text-white">
+    <div className="relative w-full h-screen bg-[#020205] overflow-hidden flex items-center justify-center perspective-[1200px] selection:bg-amber-500/30 selection:text-white">
       
-      {/* --- THE ROOM (Background Environment) --- */}
+      {/* --- THE PLATFORM (Background Environment) --- */}
       <div className="absolute inset-0 pointer-events-none transform-style-3d overflow-hidden">
           
+          {/* MASSIVE BRANDING TYPOGRAPHY IN BACKGROUND */}
+          <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-0 flex flex-col items-center justify-center">
+             <motion.h1 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 0.03, scale: 1 }}
+                transition={{ duration: 2 }}
+                className="text-[15vw] font-black text-white leading-none tracking-[0.05em] uppercase"
+             >
+                KIRBAŞ
+             </motion.h1>
+             <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 0.05, y: 0 }}
+                transition={{ duration: 2, delay: 0.5 }}
+                className="text-[3vw] font-bold text-amber-500 tracking-[0.5em] uppercase mt-[-2vw]"
+             >
+                Global Platform
+             </motion.h2>
+          </div>
+
           {/* GLOBAL CONSISTENT BACKGROUND (Blobs) */}
-          <div className="absolute top-[-20%] left-[-10%] w-[900px] h-[900px] rounded-full bg-[#3b82f6]/10 blur-[150px] animate-pulse z-0 transform translate-z-[-100px]"></div>
-          <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-[#f59e0b]/10 blur-[150px] animate-pulse-slow z-0 transform translate-z-[-100px]"></div>
+          <div className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] rounded-full bg-[#1e1b4b]/40 blur-[150px] animate-pulse z-0 transform translate-z-[-200px]"></div>
+          <div className="absolute bottom-[-20%] right-[-10%] w-[900px] h-[900px] rounded-full bg-[#f59e0b]/20 blur-[150px] animate-pulse-slow z-0 transform translate-z-[-200px]"></div>
           
-          {/* Animated Stars / Particles */}
-          <div className="absolute inset-0 bg-[#02040a] -z-10">
-              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_transparent_0%,_#000000_100%)] z-10"></div>
+          {/* Animated Platform Grid */}
+          <div className="absolute inset-0 bg-[#020308] -z-10 mix-blend-screen">
+              {/* Radial gradient fading to dark */}
+              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_transparent_0%,_#020205_80%)] z-10"></div>
               
-              {/* Floor Grid - The "Room" Floor */}
-              <div className="absolute bottom-[-20%] left-[-50%] right-[-50%] h-[80%] bg-[linear-gradient(transparent_0%,_rgba(60,20,100,0.1)_100%)] transform perspective-[1000px] rotate-x-60 origin-top opacity-40">
-                 <div className="w-full h-full bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+              {/* Floor Grid - The "Platform" Base */}
+              <div className="absolute bottom-[-20%] left-[-50%] right-[-50%] h-[80%] bg-[linear-gradient(transparent_0%,_rgba(245,158,11,0.15)_100%)] transform perspective-[1000px] rotate-x-[75deg] origin-top opacity-60">
+                 <div className="w-full h-full bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:80px_80px]"></div>
+                 {/* Moving light sweep on the floor */}
+                 <motion.div 
+                    animate={{ y: ['-100%', '200%'] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-x-0 h-[200px] bg-gradient-to-b from-transparent via-amber-500/20 to-transparent"
+                 />
               </div>
 
-               {/* Ceiling Grid - The "Room" Ceiling */}
-               <div className="absolute top-[-20%] left-[-50%] right-[-50%] h-[80%] bg-[linear-gradient(to_top,transparent_0%,_rgba(60,20,100,0.1)_100%)] transform perspective-[1000px] -rotate-x-60 origin-bottom opacity-20">
-                 <div className="w-full h-full bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+               {/* Ceiling Grid - The "Platform" Roof */}
+               <div className="absolute top-[-20%] left-[-50%] right-[-50%] h-[80%] bg-[linear-gradient(to_top,transparent_0%,_rgba(30,27,75,0.4)_100%)] transform perspective-[1000px] -rotate-x-[75deg] origin-bottom opacity-40">
+                 <div className="w-full h-full bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:80px_80px]"></div>
               </div>
           </div>
           
           {/* Dramatic Spotlight from Top - The Light Source */}
           <motion.div 
-             animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.1, 1] }}
-             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-             className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-500/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none"
+             animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.2, 1] }}
+             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+             className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-indigo-600/20 rounded-full blur-[150px] mix-blend-screen pointer-events-none"
           ></motion.div>
           
-          {/* Accents floating in the "air" */}
-           <motion.div animate={{ y: [0, -20, 0], opacity: [0.1, 0.3, 0.1] }} transition={{ duration: 5, repeat: Infinity }} className="absolute top-1/3 left-1/4 w-32 h-32 bg-amber-500/10 rounded-full blur-[40px]"></motion.div>
-           <motion.div animate={{ y: [0, 20, 0], opacity: [0.1, 0.3, 0.1] }} transition={{ duration: 7, repeat: Infinity }} className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-purple-500/10 rounded-full blur-[50px]"></motion.div>
+          {/* Accents floating in the "air" - High Tech Elements */}
+           <motion.div animate={{ y: [0, -30, 0], rotate: [0, 90, 0], opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 10, repeat: Infinity }} className="absolute top-1/4 left-1/4 w-48 h-48 border border-amber-500/10 rounded-full flex items-center justify-center pointer-events-none">
+             <div className="w-32 h-32 border border-indigo-500/10 rounded-full border-dashed"></div>
+           </motion.div>
+           <motion.div animate={{ y: [0, 30, 0], rotate: [0, -90, 0], opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 12, repeat: Infinity }} className="absolute bottom-1/4 right-1/4 w-64 h-64 border border-purple-500/10 rounded-full flex items-center justify-center pointer-events-none">
+              <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 to-transparent"></div>
+           </motion.div>
       </div>
 
       {/* --- THE PORTAL ANIMATION (Overlay when success) --- */}
@@ -209,21 +243,23 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
         initial={{ opacity: 0, scale: 0.8, y: 50 }}
         animate={{ opacity: doorOpen ? 0 : 1, scale: doorOpen ? 5 : 1, y: 0, filter: doorOpen ? "brightness(2) blur(10px)" : "none" }}
         transition={{ duration: doorOpen ? 1.5 : 0.8, type: doorOpen ? "tween" : "spring", ease: "easeInOut" }}
-        className="relative z-20 w-full max-w-[440px] px-6"
+        className="relative z-20 w-full max-w-[440px] px-6 group"
       >
           {/* Outer Glow (The Aura) */}
-          <div className="absolute -inset-4 bg-gradient-to-t from-amber-500/20 via-indigo-500/20 to-amber-500/20 rounded-[40px] opacity-40 blur-3xl group-hover:opacity-60 transition-opacity duration-1000 animate-pulse-slow pointer-events-none transform translate-z-[-50px]"></div>
+          <div className="absolute -inset-4 bg-gradient-to-t from-amber-500/40 via-indigo-500/40 to-amber-500/40 rounded-[40px] opacity-60 blur-3xl group-hover:opacity-80 transition-opacity duration-1000 animate-pulse pointer-events-none transform translate-z-[-50px]"></div>
           
-          {/* The Black Card Frame */}
-          <div className="relative bg-[#030305]/90 backdrop-blur-2xl border border-white/10 rounded-[30px] p-[1px] overflow-hidden shadow-2xl ring-1 ring-white/5 transform-style-3d">
+          {/* The Platform Access Panel */}
+          <div className="relative bg-[#05050a]/80 backdrop-blur-3xl border border-slate-800 rounded-[30px] p-[2px] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] ring-1 ring-white/10 transform-style-3d">
               
-              {/* Dynamic Shine Reflection */}
+              {/* Animated Border Sweep */}
               <motion.div 
-                 style={{ x: shineX, opacity: shineOpacity }}
-                 className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-30"
+                 animate={{ rotate: 360 }}
+                 transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[conic-gradient(from_0deg,transparent_0_300deg,rgba(245,158,11,0.6)_360deg)] pointer-events-none z-0"
               />
 
-              <div className="bg-[#080810] rounded-[29px] p-8 md:p-10 relative overflow-hidden h-full">
+              {/* Inner Card */}
+              <div className="bg-[#0a0a12] rounded-[28px] p-8 md:p-10 relative overflow-hidden h-full z-10 backdrop-blur-2xl">
                   
                   {/* Subtle Noise Texture */}
                   <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
@@ -234,27 +270,27 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
                          initial={{ y: -20, opacity: 0 }}
                          animate={{ y: 0, opacity: 1 }}
                          transition={{ delay: 0.2 }}
-                         className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/20 mb-5 relative group cursor-pointer transform transition-transform hover:scale-105"
+                         className="w-20 h-20 mx-auto bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.5)] mb-5 relative group cursor-pointer transform transition-all hover:scale-110 hover:rotate-6 ring-2 ring-amber-300/50"
                       >
-                         <div className="absolute inset-0 bg-amber-400 blur-lg opacity-40 rounded-2xl"></div>
-                         <Hexagon size={32} className="text-white fill-white/20 relative z-10" strokeWidth={2} />
+                         <div className="absolute inset-0 bg-amber-400 blur-xl opacity-60 rounded-2xl animate-pulse"></div>
+                         <Hexagon size={40} className="text-white fill-white/30 relative z-10 drop-shadow-md" strokeWidth={2} />
                       </motion.div>
 
                       <motion.h1 
                         initial={{ opacity: 0 }} 
                         animate={{ opacity: 1 }} 
                         transition={{ delay: 0.3 }}
-                        className="text-2xl font-bold text-white tracking-tight"
+                        className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-slate-400 tracking-tight"
                       >
-                          {view === 'login' ? 'Giriş Yap' : 'Hesap Oluştur'}
+                          {view === 'login' ? 'PLATFORM GİRİŞİ' : 'PLATFORMA KATILIN'}
                       </motion.h1>
                       <motion.p 
                         initial={{ opacity: 0 }} 
                         animate={{ opacity: 1 }} 
                         transition={{ delay: 0.4 }}
-                        className="text-slate-400 text-xs mt-2 font-medium tracking-wide uppercase"
+                        className="text-amber-500 text-[10px] mt-2 font-black tracking-[0.3em] uppercase bg-amber-500/10 inline-block px-3 py-1 rounded-full border border-amber-500/20"
                       >
-                          Panel Erişimi
+                          Güvenli Bağlantı
                       </motion.p>
                   </div>
 

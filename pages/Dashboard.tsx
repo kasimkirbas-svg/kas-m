@@ -450,13 +450,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </div>
 
         {/* 3. Main Content: Split Grid */}
-        <div className='flex-1 grid grid-cols-1 lg:grid-cols-4 gap-5 pb-2'>
+        <div className='flex-1 grid grid-cols-1 lg:grid-cols-4 gap-5 pb-2 items-start'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col h-auto bg-white dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-indigo-500/10 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
-                {/* Subtle Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-950/80 pointer-events-none"></div>
-                <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.05] dark:opacity-[0.1] pointer-events-none mix-blend-overlay"></div>
+            <div className='lg:col-span-3 flex flex-col h-auto bg-white dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-indigo-500/30 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
+                {/* Vivid Background Pattern for Documents */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-indigo-50/20 to-purple-50/50 dark:from-blue-900/20 dark:via-[#0f172a] dark:to-purple-900/20 pointer-events-none"></div>
+                <div className="absolute right-0 top-0 w-[500px] h-[500px] bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+                <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.03] dark:opacity-[0.1] pointer-events-none mix-blend-overlay"></div>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
@@ -649,27 +650,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     whileHover={{ scale: 1.02, filter: "brightness(1.1)" }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('templates', { search: 'Sertifika' })}
-                    className='group shrink-0 h-24 rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 border-2 border-blue-400/30 relative overflow-hidden shadow-lg shadow-blue-600/20 flex items-center px-5 justify-between ring-4 ring-blue-500/5'
+                    className='group shrink-0 h-24 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 border border-blue-400/50 relative overflow-hidden shadow-[0_0_20px_rgba(79,70,229,0.3)] flex items-center px-5 justify-between'
                 >
-                    <div className='absolute right-[-20%] top-[-50%] w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500'></div>
-                    <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-10 mix-blend-overlay'></div>
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
+                    <div className='absolute right-[-10%] top-[-50%] w-48 h-48 bg-white/20 rounded-full blur-3xl group-hover:bg-white/30 transition-colors duration-700 animate-pulse-slow'></div>
                     
                     {/* Shiny Line Effect */}
-                    <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover:animate-shine" />
+                    <motion.div 
+                        className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" 
+                        animate={{ left: ['-100%', '200%'] }} 
+                        transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }} 
+                    />
 
                     <div className='flex flex-col items-start z-10 gap-1'>
                         <span className='bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-amber-500/20 animate-pulse'>YENİ</span>
                         <span className='text-xl font-black text-white leading-none tracking-tight drop-shadow-md text-left'>SERTİFİKA<br/>OLUŞTUR</span>
-                        <span className='text-[10px] text-blue-200 font-medium tracking-wide'>Profesyonel şablonlar ile</span>
+                        <span className='text-[10px] text-indigo-100 font-medium tracking-wide'>Profesyonel şablonlar ile</span>
                     </div>
                     <div className='w-16 h-16 relative z-10 drop-shadow-2xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300'>
-                         <Award className="text-amber-300 w-full h-full filter drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" strokeWidth={1.5} />
+                         <Award className="text-amber-300 w-full h-full filter drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]" strokeWidth={1.5} />
                     </div>
                 </motion.button>
 
                 {/* 2. HIZLI İŞLEMLER (Grid 2x2) - Optimized Layout - FIXED */}
                 <div className='shrink-0 bg-slate-100 dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col relative'>
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-200/50 to-slate-300/50 dark:from-slate-800/50 dark:to-slate-900/50 pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-orange-500/5 to-rose-500/5 dark:from-amber-900/20 dark:via-[#0f172a] dark:to-rose-900/10 pointer-events-none"></div>
                     <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.05] dark:opacity-[0.1] pointer-events-none mix-blend-overlay"></div>
                     
                     {/* Header - Compact */}
@@ -757,24 +762,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('my-documents')}
-                    className='shrink-0 h-[4.5rem] rounded-2xl bg-gradient-to-r from-white to-slate-50 dark:from-[#0f172a] dark:to-[#1e293b] hover:bg-slate-50 border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-500/50 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20 ring-1 ring-transparent hover:ring-indigo-200 dark:hover:ring-indigo-900/30'
+                    className='shrink-0 h-[4.5rem] rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-900/40 hover:from-indigo-100 dark:hover:from-indigo-900/60 dark:hover:to-purple-800/60 border border-indigo-200 dark:border-indigo-800/50 hover:border-indigo-300 dark:hover:border-indigo-500/50 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20 ring-1 ring-transparent hover:ring-indigo-200 dark:hover:ring-indigo-900/30'
                 >
-                    <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                    <div className='absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/cubes.png)] opacity-[0.03] dark:opacity-10 mix-blend-overlay pointer-events-none'></div>
+                    <div className='absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-indigo-500/10 to-transparent pointer-events-none'></div>
                     
                     {/* Animated Pulse Ring */}
                     <div className="absolute right-[-20%] top-[-50%] w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl group-hover:animate-pulse"></div>
                     
                     <div className='flex items-center gap-4 z-10'>
-                        <div className='w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-500 dark:text-indigo-300 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-inner ring-1 ring-indigo-500/30'>
+                        <div className='w-12 h-12 rounded-xl bg-white dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-sm ring-1 ring-indigo-500/20'>
                             <FolderOpen size={24} />
                         </div>
                         <div className='flex flex-col items-start'>
-                            <span className='text-sm font-black text-slate-800 dark:text-white tracking-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-200 transition-colors'>DÖKÜMAN ARŞİVİ</span>
-                            <span className='text-[10px] text-slate-500 font-medium group-hover:text-slate-600 dark:group-hover:text-slate-400'>Tüm dosyalarınızı inceleyin</span>
+                            <span className='text-sm font-black text-indigo-950 dark:text-white tracking-tight group-hover:text-indigo-700 dark:group-hover:text-indigo-200 transition-colors'>DÖKÜMAN ARŞİVİ</span>
+                            <span className='text-[10px] text-indigo-700/70 dark:text-indigo-200/70 font-bold group-hover:text-indigo-600 dark:group-hover:text-indigo-300'>Tüm dosyalarınızı inceleyin</span>
                         </div>
                     </div>
 
-                    <div className='z-10 bg-indigo-50 dark:bg-indigo-500/10 p-2.5 rounded-full group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-400 group-hover:translate-x-1 duration-300 border border-indigo-200 dark:border-indigo-500/20'>
+                    <div className='z-10 bg-white/50 dark:bg-indigo-500/20 backdrop-blur-sm p-2.5 rounded-full group-hover:bg-indigo-600 group-hover:text-white transition-all text-indigo-500 dark:text-indigo-400 group-hover:translate-x-1 duration-300 border border-indigo-200 dark:border-indigo-500/30 shadow-sm'>
                         <ArrowRight size={18} />
                     </div>
                 </motion.button>
@@ -835,27 +841,34 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 {/* 1. SILVER (Modern & Elegant) */}
                 <motion.div 
                     whileHover={{ translateY: -5, scale: 1.02 }}
-                    className='relative h-[130px] rounded-xl bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-900 border-2 border-gray-300 dark:border-gray-600 shadow-xl flex flex-col items-center justify-center p-4 group overflow-hidden cursor-pointer'
+                    className='relative h-[130px] rounded-xl bg-gradient-to-br from-slate-200 via-white to-slate-400 dark:from-slate-700 dark:via-slate-600 dark:to-slate-900 border-2 border-slate-300 dark:border-slate-500 shadow-xl flex flex-col items-center justify-center p-4 group overflow-hidden cursor-pointer'
                 >
                      {/* Modern Accents */}
-                     <div className='absolute inset-0 bg-white/40 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
-                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/30 to-transparent rounded-bl-full"></div>
-                     {/* Silver Effects */}
-                     <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/aluminum.png)] opacity-30 mix-blend-overlay"></div>
-                     <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-white/40 rounded-full blur-2xl group-hover:bg-white/60 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
+                     <div className='absolute inset-0 bg-white/40 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0'></div>
+                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/30 to-transparent rounded-bl-full z-0"></div>
+                     
+                     {/* Dynamic Animated Shine for Silver Effect */}
+                     <motion.div 
+                        className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-white/80 dark:via-white/30 to-transparent skew-x-[30deg] z-0 pointer-events-none"
+                        animate={{ left: ['-100%', '200%'] }}
+                        transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 1.5 }}
+                     />
+
+                     {/* Silver Texture */}
+                     <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/aluminum.png)] opacity-30 mix-blend-overlay z-0 pointer-events-none"></div>
 
                      <div className='flex items-center gap-2 mb-2 z-10'>
-                        <Shield size={18} className='text-gray-600 dark:text-gray-300 drop-shadow-sm group-hover:text-gray-800 dark:group-hover:text-white transition-colors animate-pulse' />
-                        <span className='text-lg font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors'>SILVER</span>
+                        <Shield size={18} className='text-slate-500 dark:text-slate-300 drop-shadow-sm group-hover:text-slate-800 dark:group-hover:text-white transition-colors animate-pulse' />
+                        <span className='text-lg font-black text-slate-700 dark:text-white uppercase tracking-widest group-hover:text-slate-900 transition-colors drop-shadow-sm'>SILVER</span>
                      </div>
-                     <div className='text-3xl font-black text-gray-800 dark:text-white mb-1 z-10'>
+                     <div className='text-3xl font-black text-slate-900 dark:text-white mb-1 z-10 drop-shadow-sm'>
                         {billingCycle === 'MONTHLY' ? '100 TL' : '1000 TL'}
                      </div>
-                     <div className='text-[9px] font-bold uppercase bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-3 py-0.5 mb-3 rounded-full z-10 border border-gray-400/30'>TEMEL LİMİT</div>
+                     <div className='text-[9px] font-bold uppercase bg-slate-300/80 dark:bg-slate-700/80 text-slate-700 dark:text-slate-200 px-3 py-0.5 mb-3 rounded-full z-10 border border-slate-400/50 shadow-inner backdrop-blur-sm'>TEMEL LİMİT</div>
                      
                      <button 
                         onClick={() => setSelectedPlanForPayment({ plan: 'SILVER', price: billingCycle === 'MONTHLY' ? '100 TL' : '1000 TL' })}
-                        className='w-full max-w-[100px] py-1 bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white text-[10px] font-bold uppercase tracking-wide transition-colors z-10 rounded-lg shadow-md'
+                        className='w-full max-w-[100px] py-1 bg-gradient-to-r from-slate-400 to-slate-500 hover:from-slate-500 hover:to-slate-600 text-white text-[10px] font-bold uppercase tracking-wide transition-colors z-10 rounded-lg shadow-lg border border-slate-300/50'
                      >
                         SATIN AL
                      </button>
