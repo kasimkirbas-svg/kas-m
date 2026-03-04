@@ -384,7 +384,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
         {/* 2. Sectors Row: Responsive Grid (Wraps automatically) */}
         <div className='shrink-0 h-auto z-20 relative px-4' onMouseLeave={() => setHoveredSectorId(null)}>
-            <div className='flex flex-wrap items-center justify-center gap-4 md:gap-6 w-full'>
+            <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 w-full px-2'>
                 {SECTORS.map((sector, index) => {
                     const isSelected = selectedSectorIds.includes(sector.id);
                     const isHovered = hoveredSectorId === sector.id;
@@ -402,7 +402,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             onClick={() => toggleSector(sector.id)}
                             className={`
                             relative rounded-xl cursor-pointer select-none h-32 md:h-40 flex flex-col items-center justify-end overflow-hidden
-                            w-[45%] md:w-[180px] lg:w-[200px]
+                            w-full
                             border transition-colors duration-300
                             ${isActive 
                                 ? 'border-amber-500 dark:border-white shadow-2xl dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] ring-2 ring-amber-200 dark:ring-white/20' 
@@ -453,7 +453,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='flex-1 grid grid-cols-1 lg:grid-cols-4 gap-5 pb-2'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col min-h-[400px] h-auto bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
+            <div className='lg:col-span-3 flex flex-col min-h-[400px] h-auto bg-white dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-indigo-500/10 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
+                {/* Subtle Background Pattern */}
+                <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.03] dark:opacity-[0.05] pointer-events-none"></div>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
@@ -555,8 +557,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             transition={{ duration: 0.3 }}
                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 pb-4 content-start"
                         >
-                            {/* Show only first 12 items if not expanded */}
-                            {displayDocs.slice(0, isDocsExpanded ? undefined : 12).map((item, idx) => (
+                            {/* Show only first 8 items if not expanded */}
+                            {displayDocs.slice(0, isDocsExpanded ? undefined : 8).map((item, idx) => (
                                 <motion.div 
                                     key={`${item.sector.id}-${idx}`}
                                     initial={{ opacity: 0, y: 10 }}
@@ -611,20 +613,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     </AnimatePresence>
 
                     {/* Show All Toggle Button */}
-                    {!isDocsExpanded && displayDocs.length > 12 && (
+                    {!isDocsExpanded && displayDocs.length > 8 && (
                         <div className="flex justify-center mt-2 border-t border-slate-100 dark:border-white/5 pt-4">
                             <button 
                                 onClick={() => setIsDocsExpanded(true)}
                                 className="group flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-wider"
                             >   
-                                <span>Tümünü Göster ({displayDocs.length - 12} Daha Fazla)</span>
+                                <span>Tümünü Göster ({displayDocs.length - 8} Daha Fazla)</span>
                                 <ChevronDown size={16} className="group-hover:translate-y-1 transition-transform" />
                             </button>
                         </div>
                     )}
                     
                     {/* Show Less Toggle Button */}
-                    {isDocsExpanded && displayDocs.length > 12 && (
+                    {isDocsExpanded && displayDocs.length > 8 && (
                          <div className="flex justify-center mt-6 border-t border-slate-100 dark:border-white/5 pt-4">
                             <button 
                                 onClick={() => setIsDocsExpanded(false)}
@@ -665,7 +667,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 </motion.button>
 
                 {/* 2. HIZLI İŞLEMLER (Grid 2x2) - Optimized Layout - FIXED */}
-                <div className='shrink-0 bg-slate-100 dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col'>
+                <div className='shrink-0 bg-slate-100 dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col relative'>
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-200/50 dark:to-slate-900/50 pointer-events-none"></div>
                     
                     {/* Header - Compact */}
                     <div className='bg-gradient-to-r from-amber-600 to-orange-700 py-2.5 px-3 flex items-center justify-between shrink-0 shadow-md relative overflow-hidden'>
@@ -752,7 +755,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => onNavigate('my-documents')}
-                    className='shrink-0 h-[4.5rem] rounded-2xl bg-white dark:bg-[#0f172a] hover:bg-slate-50 dark:hover:bg-[#1e293b] border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20'
+                    className='shrink-0 h-[4.5rem] rounded-2xl bg-gradient-to-r from-white to-slate-50 dark:from-[#0f172a] dark:to-[#1e293b] hover:bg-slate-50 border-2 border-slate-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-500/50 w-full relative overflow-hidden group shadow-lg shadow-indigo-500/10 dark:shadow-indigo-900/40 flex items-center justify-between px-5 transition-all duration-300 z-20 ring-1 ring-transparent hover:ring-indigo-200 dark:hover:ring-indigo-900/30'
                 >
                     <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
                     
@@ -835,10 +838,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                      {/* Modern Accents */}
                      <div className='absolute inset-0 bg-white/40 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
                      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gray-300/20 to-transparent rounded-bl-full"></div>
-                     
+                     {/* Silver Effects */}
+                     <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/aluminum.png)] opacity-30 mix-blend-overlay"></div>
+                     <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-white/40 rounded-full blur-2xl group-hover:bg-white/60 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
+
                      <div className='flex items-center gap-2 mb-2 z-10'>
-                        <Shield size={18} className='text-gray-500 dark:text-gray-400' />
-                        <span className='text-lg font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest'>SILVER</span>
+                        <Shield size={18} className='text-gray-500 dark:text-gray-400 drop-shadow-sm group-hover:text-gray-800 dark:group-hover:text-white transition-colors animate-pulse' />
+                        <span className='text-lg font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors'>SILVER</span>
                      </div>
                      <div className='text-3xl font-black text-gray-800 dark:text-white mb-1 z-10'>
                         {billingCycle === 'MONTHLY' ? '100 TL' : '1000 TL'}
@@ -858,8 +864,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     whileHover={{ translateY: -10, scale: 1.05 }}
                     className='relative h-[150px] rounded-xl bg-gradient-to-b from-amber-50 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40 border-2 border-amber-400/50 dark:border-amber-500/30 flex flex-col items-center justify-center p-4 shadow-2xl shadow-amber-500/10 z-10'
                 >
-                     <div className="absolute -top-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-[10px] font-black px-4 py-1 rounded-full shadow-lg uppercase tracking-wider">
+                     <div className="absolute -top-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-[10px] font-black px-4 py-1 rounded-full shadow-lg uppercase tracking-wider flex items-center gap-1 z-20">
+                         <Star size={10} fill="currentColor" className="animate-spin-slow" />
                          EN ÇOK TERCİH EDİLEN
+                         <Star size={10} fill="currentColor" className="animate-spin-slow" />
                      </div>
                      
                      {/* Amber Particles */}
@@ -898,7 +906,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     className='relative h-[160px] rounded-xl bg-gradient-to-b from-[#0f172a] to-[#1e1b4b] border border-indigo-500/50 hover:border-indigo-400 shadow-2xl shadow-indigo-900/50 flex flex-col items-center justify-center p-4 overflow-hidden group'
                 >
                     {/* Royal Background */}
-                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-20"></div>
                      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
                      <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
 
