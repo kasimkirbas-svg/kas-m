@@ -331,7 +331,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   };
 
   return (
-    <div className='w-full min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-transparent relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300 overflow-y-auto'>
+    <div className='w-full min-h-screen flex flex-col bg-transparent relative text-slate-900 dark:text-slate-200 font-sans selection:bg-amber-500/30 transition-colors duration-300'>
       
       <div className='flex-1 flex flex-col p-4 md:p-6 w-full max-w-[1920px] mx-auto z-10 h-full gap-5'>
         
@@ -468,10 +468,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </div>
 
         {/* 3. Main Content: Split Grid */}
-        <div className='flex-1 md:min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-5 md:overflow-hidden pb-2'>
+        <div className='flex-1 grid grid-cols-1 lg:grid-cols-4 gap-5 pb-2'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col h-[600px] md:h-full bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
+            <div className='lg:col-span-3 flex flex-col min-h-[600px] h-auto bg-white dark:bg-[#15171e]/80 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-white/5 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
@@ -768,37 +768,54 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
         </div>
 
-        {/* 4. FOOTER: PACKAGES (Hidden for Premium Users) */}
-        {(!user?.plan || user.plan === 'FREE' || user.plan === 'MONTHLY' && false) && (
-        <div className='shrink-0 pb-4 pt-2 px-2 mt-2 bg-transparent'>
-            {/* Toggle Switch */}
-            <div className='flex justify-center mb-6 z-20 relative'>
-                <div className='bg-white dark:bg-gray-800 p-1.5 rounded-full flex relative shadow-sm border border-gray-200 dark:border-gray-700'>
-                    <motion.div 
-                        className='absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-indigo-600 rounded-full'
-                        initial={false}
-                        animate={{ x: billingCycle === 'MONTHLY' ? 0 : '100%' }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                    <button 
-                        onClick={() => setBillingCycle('MONTHLY')}
-                        className={`relative z-10 w-24 py-1.5 text-xs font-bold rounded-full transition-colors ${billingCycle === 'MONTHLY' ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}
-                    >
-                        AYLIK
-                    </button>
-                    <button 
-                        onClick={() => setBillingCycle('YEARLY')}
-                        className={`relative z-10 w-24 py-1.5 text-xs font-bold rounded-full transition-colors ${billingCycle === 'YEARLY' ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}
-                    >
-                        YILLIK
-                        <span className="absolute -top-3 -right-2 bg-red-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full animate-pulse shadow-sm">
-                            %20 İNDİRİM
-                        </span>
-                    </button>
-                </div>
-            </div>
+        {/* 4. FOOTER: PACKAGES (Integrated into Design) */}
+        {(!user?.plan || user.plan === 'FREE' || ((user.plan === 'MONTHLY' || user.plan === 'SILVER') && false)) && (
+        <div className='shrink-0 pb-8 pt-4 px-1 mt-4'>
+            
+            <div className='relative max-w-6xl mx-auto rounded-3xl bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 backdrop-blur-xl p-6 md:p-8 overflow-hidden shadow-2xl'>
+                
+                {/* Background Ambient Glow */}
+                <div className='absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-indigo-500/5 via-amber-500/5 to-transparent blur-[100px] pointer-events-none'></div>
 
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-3 items-center max-w-6xl mx-auto'>
+                {/* Section Header */}
+                <div className='relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 mb-10'>
+                    <div className='text-center md:text-left'>
+                        <h3 className='text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center justify-center md:justify-start gap-3'>
+                            <Crown className="text-amber-500" fill="currentColor" size={28} />
+                            PREMIUM <span className='text-slate-400 font-light'>AYRICALIKLARI</span>
+                        </h3>
+                        <p className='text-sm text-slate-500 dark:text-slate-400 font-medium mt-1 max-w-md'>
+                            Sınırsız doküman erişimi ve gelişmiş özellikler için planınızı yükseltin.
+                        </p>
+                    </div>
+
+                    {/* Toggle Switch */}
+                    <div className='bg-white dark:bg-slate-900 p-1.5 rounded-full flex relative shadow-lg shadow-indigo-500/5 border border-slate-200 dark:border-slate-800'>
+                        <motion.div 
+                            className='absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-indigo-600 rounded-full shadow-md'
+                            initial={false}
+                            animate={{ x: billingCycle === 'MONTHLY' ? 0 : '100%' }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        />
+                        <button 
+                            onClick={() => setBillingCycle('MONTHLY')}
+                            className={`relative z-10 px-6 py-2 text-xs font-black rounded-full transition-colors tracking-wide ${billingCycle === 'MONTHLY' ? 'text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                        >
+                            AYLIK
+                        </button>
+                        <button 
+                            onClick={() => setBillingCycle('YEARLY')}
+                            className={`relative z-10 px-6 py-2 text-xs font-black rounded-full transition-colors tracking-wide ${billingCycle === 'YEARLY' ? 'text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                        >
+                            YILLIK
+                            <span className="absolute -top-3 -right-2 bg-gradient-to-r from-rose-500 to-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-bounce shadow-lg shadow-rose-500/30">
+                                %20 İNDİRİM
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch relative z-10'>
                 
 
                 {/* 1. SILVER (Modern & Elegant) */}
@@ -918,7 +935,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
             </div>
         </div>
-        )}
+      </div>
+     )}
 
       </div>
     </div>
