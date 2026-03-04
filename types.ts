@@ -4,14 +4,9 @@ export enum UserRole {
   ADMIN = 'ADMIN'
 }
 
-export enum SubscriptionPlan {
-  FREE = 'FREE',
-  STANDART = 'STANDART',
-  GOLD = 'GOLD',
-  PREMIUM = 'PREMIUM',
-  YEARLY = 'YEARLY',
-  MONTHLY = 'MONTHLY'
-}
+export type SubscriptionPlan = 'FREE' | 'SILVER' | 'GOLD' | 'DIAMOND' | 'STANDART' | 'PREMIUM';
+
+export type BillingPeriod = 'MONTHLY' | 'YEARLY';
 
 export interface User {
   id: string;
@@ -19,6 +14,7 @@ export interface User {
   email: string;
   role: UserRole;
   plan: SubscriptionPlan;
+  billingPeriod?: BillingPeriod;
   remainingDownloads: number | 'UNLIMITED';
   companyName?: string;
   subscriptionStartDate?: string;

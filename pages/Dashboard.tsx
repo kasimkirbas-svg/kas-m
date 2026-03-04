@@ -274,12 +274,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   
   // Payment State
   const [selectedPlanForPayment, setSelectedPlanForPayment] = useState<{ plan: 'SILVER' | 'GOLD' | 'DIAMOND', price: string } | null>(null);
+  const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('YEARLY');
 
   if (selectedPlanForPayment) {
     return (
       <PaymentPage 
         plan={selectedPlanForPayment.plan} 
         price={selectedPlanForPayment.price} 
+        period={billingCycle}
         onBack={() => setSelectedPlanForPayment(null)}
         onSuccess={() => {
             alert('Ödeme başarıyla alındı! (Demo)');
@@ -769,6 +771,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         {/* 4. FOOTER: PACKAGES (Hidden for Premium Users) */}
         {(!user?.plan || user.plan === 'FREE' || user.plan === 'MONTHLY' && false) && (
         <div className='shrink-0 pb-4 pt-2 px-2 mt-2 bg-transparent'>
+            {/* Toggle Switch */}
+            <div className='flex justify-center mb-6 z-20 relative'>
+                <div className='bg-white dark:bg-gray-800 p-1.5 rounded-full flex relative shadow-sm border border-gray-200 dark:border-gray-700'>
+                    <motion.div 
+                        className='absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-indigo-600 rounded-full'
+                        initial={false}
+                        animate={{ x: billingCycle === 'MONTHLY' ? 0 : '100%' }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                    <button 
+                        onClick={() => setBillingCycle('MONTHLY')}
+                        className={`relative z-10 w-24 py-1.5 text-xs font-bold rounded-full transition-colors ${billingCycle === 'MONTHLY' ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}
+                    >
+                        AYLIK
+                    </button>
+                    <button 
+                        onClick={() => setBillingCycle('YEARLY')}
+                        className={`relative z-10 w-24 py-1.5 text-xs font-bold rounded-full transition-colors ${billingCycle === 'YEARLY' ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}
+                    >
+                        YILLIK
+                        <span className="absolute -top-3 -right-2 bg-red-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full animate-pulse shadow-sm">
+                            %20 İNDİRİM
+                        </span>
+                    </button>
+                </div>
+            </div>
+
             <div className='grid grid-cols-1 md:grid-cols-3 gap-3 items-center max-w-6xl mx-auto'>
                 
 
@@ -785,11 +814,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <Shield size={18} className='text-gray-500 dark:text-gray-400' />
                         <span className='text-lg font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest'>SILVER</span>
                      </div>
-                     <div className='text-3xl font-black text-gray-800 dark:text-white mb-1 z-10'>100 TL</div>
+                     <div className='text-3xl font-black text-gray-800 dark:text-white mb-1 z-10'>
+                        {billingCycle === 'MONTHLY' ? '100 TL' : '1000 TL'}
+                     </div>
                      <div className='text-[9px] font-bold uppercase bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-3 py-0.5 mb-3 rounded-full z-10'>TEMEL LİMİT</div>
                      
                      <button 
-                        onClick={() => setSelectedPlanForPayment({ plan: 'SILVER', price: '100 TL' })}
+                        onClick={() => setSelectedPlanForPayment({ plan: 'SILVER', price: billingCycle === 'MONTHLY' ? '100 TL' : '1000 TL' })}
                         className='w-full max-w-[100px] py-1 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-700 dark:text-white text-[10px] font-bold uppercase tracking-wide transition-colors z-10 rounded-lg'
                      >
                         SATIN AL
@@ -822,11 +853,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <Crown size={24} className='text-amber-600 dark:text-amber-400 drop-shadow-sm' />
                         <span className='text-2xl font-black text-amber-700 dark:text-amber-300 uppercase tracking-widest'>GOLD</span>
                      </div>
-                     <div className='text-4xl font-black text-amber-900 dark:text-white mb-1 z-10 drop-shadow-sm'>175 TL</div>
+                     <div className='text-4xl font-black text-amber-900 dark:text-white mb-1 z-10 drop-shadow-sm'>
+                        {billingCycle === 'MONTHLY' ? '175 TL' : '1750 TL'}
+                     </div>
                      <div className='text-[9px] font-bold uppercase text-amber-800 dark:text-amber-200 bg-amber-200/50 dark:bg-amber-800/30 px-3 py-0.5 rounded-full mb-3 z-10'>2 KAT AVANTAJ</div>
                      
                      <button 
-                         onClick={() => setSelectedPlanForPayment({ plan: 'GOLD', price: '175 TL' })}
+                         onClick={() => setSelectedPlanForPayment({ plan: 'GOLD', price: billingCycle === 'MONTHLY' ? '175 TL' : '1750 TL' })}
                          className='w-full max-w-[120px] py-1.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white text-[10px] font-black uppercase tracking-wider rounded shadow-lg shadow-amber-500/30 transition-all transform active:scale-95'
                      >
                         HEMEN AL
@@ -864,7 +897,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <span className='text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 uppercase tracking-widest'>DIAMOND</span>
                      </div>
                      
-                     <div className='text-5xl font-black text-white mb-2 z-10 drop-shadow-md'>250 TL</div>
+                     <div className='text-5xl font-black text-white mb-2 z-10 drop-shadow-md'>
+                        {billingCycle === 'MONTHLY' ? '250 TL' : '2500 TL'}
+                     </div>
                      
                      <div className='text-[10px] text-indigo-200 font-bold uppercase mb-4 z-10 tracking-[0.2em] flex items-center gap-2'>
                         <span className="w-1 h-1 bg-cyan-400 rounded-full animate-pulse"></span>
@@ -873,7 +908,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                      </div>
                      
                       <button 
-                         onClick={() => setSelectedPlanForPayment({ plan: 'DIAMOND', price: '250 TL' })}
+                         onClick={() => setSelectedPlanForPayment({ plan: 'DIAMOND', price: billingCycle === 'MONTHLY' ? '250 TL' : '2500 TL' })}
                          className='w-full max-w-[140px] py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-[11px] font-bold shadow-lg shadow-indigo-500/50 transition-all z-10 active:scale-95 uppercase tracking-wide border border-indigo-400/30'
                      >
                         SATIN AL

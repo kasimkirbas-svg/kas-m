@@ -379,7 +379,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Bypass-Tunnel-Reminder']
 })); 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Increase limit for PDF base64 uploads
 
 // --- BANNED IP CHECK ---
 app.use((req, res, next) => {
@@ -1530,8 +1530,8 @@ app.post('/api/invoices/send', async (req, res) => {
 // Upgrade & Invoice (Combined Action for Payment Page - Auto Mail)
 app.post('/api/users/upgrade-and-invoice', async (req, res) => {
     try {
-        const { userId, plan, invoiceData, billingInfo } = req.body;
-        console.log(`[UPGRADE] Kullanıcı ${userId} için ${plan} planı aktifleştiriliyor...`);
+        const { userId, plan, invoiceData, billingInfo, period, startDate, endDate, invoicePdf } = req.body;
+        console.log(`[UPGRADE] Kullanıcı ${userId} için ${plan} (${period}) planı aktifleştiriliyor...`);
         
         // 1. Update User
         // Find user first to get email if not in body
@@ -1546,27 +1546,48 @@ app.post('/api/users/upgrade-and-invoice', async (req, res) => {
         const updateData = {
             plan: plan,
             remainingDownloads: limit,
-            subscriptionStartDate: new Date().toISOString(),
+            subscriptionStartDate: startDate || new Date().toISOString(),
+            subscriptionEndDate: endDate,
+            billingPeriod: period,
             billingInfo: billingInfo
         };
         
         await dbAdapter.updateUser(userId, updateData);
 
-        // 2. Auto-Send Email (Reuse logic via internal fetch or direct call)
-        // Since we are in the same process, let's just trigger the mail logic directly
-        // We need the invoice data passed from frontend
-        if (invoiceData && currentUser.email) {
-            // Re-use logic: Request forwarded manually to the handler we just wrote?
-            // No, cleaner to just duplicate the transporter call here for simplicity
-            
+        // 2. Auto-Send Email
+        if (currentUser.email) {
             if (transporter) {
-                // Quick text email for speed, reliable
-                 transporter.sendMail({
-                    from: `"Kirbas Panel" <${process.env.EMAIL_USER}>`,
+                 const mailOptions = {
+                    from: `"Kırbaş Panel" <${process.env.EMAIL_USER}>`,
                     to: currentUser.email,
-                    subject: 'Paketiniz Aktif Edildi',
-                    text: `Tebrikler, ${plan} paketiniz hesabınıza tanımlandı. İyi çalışmalar. \n\n(Detaylı faturanız profil sayfanızdadır)`
-                 }).catch(e => console.error("Auto-mail warning", e));
+                    subject: `Faturanız ve ${plan} Üyelik Aktivasyonu`,
+                    text: `Sayın ${currentUser.name || 'Kullanıcımız'},\n\n${plan} paket üyeliğiniz başarıyla aktif edilmiştir.\n\nFaturanız ektedir.\n\nİyi çalışmalar dileriz.`,
+                    attachments: []
+                 };
+
+                 if (invoicePdf && typeof invoicePdf === 'string' && invoicePdf.startsWith('data:')) {
+                     try {
+                         // Extract Base64 content after the comma
+                         const base64Content = invoicePdf.split(',')[1];
+                         
+                         mailOptions.attachments.push({
+                             filename: `Fatura_${invoiceData?.invoiceNumber || 'TR'}.pdf`,
+                             content: base64Content,
+                             encoding: 'base64'
+                         });
+                         console.log("✅ PDF Fatura maile eklendi.");
+                     } catch(pdfErr) {
+                         console.error("PDF attachment error", pdfErr);
+                     }
+                 } else {
+                     console.log("⚠️ PDF Fatura verisi eksik veya hatalı format.");
+                 }
+
+                 transporter.sendMail(mailOptions)
+                    .then(info => console.log(`📧 Fatura maili gönderildi: ${info.messageId}`))
+                    .catch(e => console.error("❌ Auto-mail error", e));
+            } else {
+                 console.log("⚠️ Transporter yok, mail gönderilmiyor (Simulation Mode)");
             }
         }
 

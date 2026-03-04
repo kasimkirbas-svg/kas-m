@@ -3,16 +3,19 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CreditCard, Shield, CheckCircle2, Lock, Calendar, User, Zap, Star, Gem, FileText, Building2, MapPin, Hash, Phone } from 'lucide-react';
 import { fetchApi } from '../src/utils/api';
+import { generateInvoicePDF } from '../src/utils/pdfGenerator';
+import { jsPDF } from 'jspdf';
 import { SubscriptionPlan, BillingInfo, User as UserType, Invoice } from '../types';
 
 interface PaymentPageProps {
   plan: 'SILVER' | 'GOLD' | 'DIAMOND';
   price: string;
+  period: 'MONTHLY' | 'YEARLY';
   onBack: () => void;
   onSuccess: () => void;
 }
 
-export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, onSuccess }) => {
+export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, period, onBack, onSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
     cardNumber: '',
@@ -67,17 +70,29 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
         if (storedUser) {
             const user: UserType = JSON.parse(storedUser);
             
+            // Calculate Dates based on Period
+            const startDate = new Date();
+            const endDate = new Date(startDate);
+            if (period === 'YEARLY') {
+                endDate.setFullYear(endDate.getFullYear() + 1);
+            } else {
+                endDate.setMonth(endDate.getMonth() + 1);
+            }
+            
             // 1. Update User Plan (Local)
             // ... (keep local update for immediate UI feedback)
             user.plan = plan as SubscriptionPlan;
-            user.subscriptionStartDate = new Date().toISOString();
+            user.subscriptionStartDate = startDate.toISOString();
+            user.subscriptionEndDate = endDate.toISOString();
+            user.billingPeriod = period;
             user.billingInfo = billingData;
+
             if (plan === 'SILVER') user.remainingDownloads = 10;
             if (plan === 'GOLD') user.remainingDownloads = 30;
             if (plan === 'DIAMOND') user.remainingDownloads = 'UNLIMITED';
             localStorage.setItem('currentUser', JSON.stringify(user));
 
-            // 2. Create Invoice Ojbect
+            // 2. Create Invoice Object
             const newInvoice: Invoice = {
                 id: 'INV-' + Math.floor(Math.random() * 1000000),
                 userId: user.id || 'unknown',
@@ -86,22 +101,38 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
                 amount: parseInt(price.replace(/\D/g, '')),
                 planType: plan as SubscriptionPlan,
                 status: 'PAID',
-                period: new Date().toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' }),
+                period: period === 'YEARLY' ? 'Yıllık Abonelik' : new Date().toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' }),
                 billingDetails: billingData
             };
 
+            // Generate PDF on Client for Email Attachment
+            let pdfDataUri = '';
+            try {
+                // generateInvoicePDF returns jsPDF instance when second arg is true
+                // We cast to any because TS might complain about jsPDF return type if not fully typed
+                const doc = generateInvoicePDF(newInvoice, true) as any;
+                if (doc && typeof doc.output === 'function') {
+                    pdfDataUri = doc.output('datauristring');
+                }
+            } catch (e) {
+                console.error("Client PDF Gen failed", e);
+            }
+
             // 3. SERVER CALL: Upgrade User & Send Invoice Email
             // Note: We send the invoice data because we want the server to email THIS invoice immediately
-            // In a real app, server would generate the invoice ID.
             fetchApi('/api/users/upgrade-and-invoice', {
                 method: 'POST',
                 body: JSON.stringify({
                     userId: user.id,
                     plan: plan,
+                    period: period,
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
                     invoiceData: newInvoice,
-                    billingInfo: billingData
+                    billingInfo: billingData,
+                    invoicePdf: pdfDataUri // <--- The generated PDF
                 })
-            }).catch(console.error); // Fire and forget to not block UI success
+            }).catch(console.error); // Fire and forget
             
             // Save Invoice to LocalStorage (as fallback for Profile)
             const existingInvoices = JSON.parse(localStorage.getItem('localInvoices') || '[]');
@@ -204,7 +235,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
              
              <h2 className="text-3xl font-black text-white tracking-tight mb-2 uppercase">{plan} PAKET</h2>
              <div className="text-4xl font-bold text-white mb-6 flex items-baseline gap-1">
-               {price} <span className="text-lg text-white/70 font-normal">/ ay</span>
+               {price} <span className="text-lg text-white/70 font-normal">{period === 'YEARLY' ? '/ yıl' : '/ ay'}</span>
              </div>
              
              <ul className="space-y-3">
@@ -213,6 +244,9 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
                    <CheckCircle2 size={16} className="mr-3 text-white" /> {feature}
                  </li>
                ))}
+               <li className="flex items-center text-white/90 text-sm font-medium">
+                   <CheckCircle2 size={16} className="mr-3 text-white" /> {period === 'YEARLY' ? '12 Ay Kesintisiz Erişim' : 'Aylık Yenilenen Plan'}
+               </li>
              </ul>
            </div>
            

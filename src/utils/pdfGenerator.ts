@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
 import { Invoice } from '../../types';
 
-export const generateInvoicePDF = (invoice: Invoice): void => {
+export const generateInvoicePDF = (invoice: Invoice, returnInstance: boolean = false): jsPDF | void => {
   // Create PDF document
   const doc = new jsPDF();
   
@@ -120,6 +120,8 @@ export const generateInvoicePDF = (invoice: Invoice): void => {
   doc.text(tr("Isbu belge elektronik ortamda duzenlenmistir."), 105, footerY, { align: "center" });
   doc.text("www.kirbas-panel.com", 105, footerY + 5, { align: "center" });
 
-  // Save
+  if (returnInstance) {
+      return doc;
+  }
   doc.save(`Fatura_${invoice.invoiceNumber}.pdf`);
 };
