@@ -556,8 +556,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     </div>
                 </div>
 
-                {/* List Body */}
-                <div className='flex-1 overflow-y-auto custom-scrollbar p-3 relative bg-white dark:bg-transparent'>
+
+                {/* List Body - Enhanced Layout Flexibility */}
+                <div className={`
+                    flex-1 overflow-y-auto custom-scrollbar p-3 relative bg-white dark:bg-transparent rounded-2xl
+                    ${(!user?.plan || user.plan === 'FREE' || user.plan === 'MONTHLY' && false) ? '' : 'h-full shadow-inner dark:shadow-none'}
+                `}>
                     <AnimatePresence mode='wait'>
                         <motion.div 
                             key={currentSector ? currentSector.id : 'all'}
@@ -565,7 +569,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.98 }}
                             transition={{ duration: 0.3 }}
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pb-4"
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-4 content-start"
                         >
                             {displayDocs.map((item, idx) => (
                                 <motion.div 

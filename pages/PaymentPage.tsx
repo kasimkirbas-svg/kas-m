@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CreditCard, Shield, CheckCircle2, Lock, Calendar, User, Zap, Star, Gem, FileText, Building2, MapPin, Hash, Phone } from 'lucide-react';
+import { fetchApi } from '../src/utils/api';
 import { SubscriptionPlan, BillingInfo, User as UserType, Invoice } from '../types';
 
 interface PaymentPageProps {
@@ -66,19 +67,17 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
         if (storedUser) {
             const user: UserType = JSON.parse(storedUser);
             
-            // 1. Update User Plan
+            // 1. Update User Plan (Local)
+            // ... (keep local update for immediate UI feedback)
             user.plan = plan as SubscriptionPlan;
             user.subscriptionStartDate = new Date().toISOString();
             user.billingInfo = billingData;
-            
-            // Set limits based on plan
             if (plan === 'SILVER') user.remainingDownloads = 10;
             if (plan === 'GOLD') user.remainingDownloads = 30;
             if (plan === 'DIAMOND') user.remainingDownloads = 'UNLIMITED';
-
             localStorage.setItem('currentUser', JSON.stringify(user));
 
-            // 2. Create Invoice
+            // 2. Create Invoice Ojbect
             const newInvoice: Invoice = {
                 id: 'INV-' + Math.floor(Math.random() * 1000000),
                 userId: user.id || 'unknown',
@@ -91,6 +90,19 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
                 billingDetails: billingData
             };
 
+            // 3. SERVER CALL: Upgrade User & Send Invoice Email
+            // Note: We send the invoice data because we want the server to email THIS invoice immediately
+            // In a real app, server would generate the invoice ID.
+            fetchApi('/api/users/upgrade-and-invoice', {
+                method: 'POST',
+                body: JSON.stringify({
+                    userId: user.id,
+                    plan: plan,
+                    invoiceData: newInvoice,
+                    billingInfo: billingData
+                })
+            }).catch(console.error); // Fire and forget to not block UI success
+            
             // Save Invoice to LocalStorage (as fallback for Profile)
             const existingInvoices = JSON.parse(localStorage.getItem('localInvoices') || '[]');
             localStorage.setItem('localInvoices', JSON.stringify([newInvoice, ...existingInvoices]));

@@ -9,6 +9,8 @@ import {
 import { Invoice, GeneratedDocument, SubscriptionPlan } from '../types';
 import { fetchApi } from '../src/utils/api';
 
+import { generateInvoicePDF } from '../src/utils/pdfGenerator';
+
 interface ProfileProps {
   user?: any;
   t?: any;
@@ -708,7 +710,28 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                                             </td>
                                                             <td className="p-4 text-right pr-6 flex justify-end gap-2">
                                                                 <button
-                                                                    onClick={() => alert(`Fatura #${invoice.invoiceNumber} başarıyla ${user?.email} adresine gönderildi.`)} 
+                                                                    onClick={async () => {
+                                                                        // Real API Call to send email
+                                                                        try {
+                                                                            setNotification({ type: 'success', message: 'E-posta gönderiliyor...' });
+                                                                            const res = await fetchApi('/api/invoices/send', {
+                                                                                method: 'POST',
+                                                                                body: JSON.stringify({ 
+                                                                                    invoiceId: invoice.id,
+                                                                                    email: user?.email,
+                                                                                    invoiceData: invoice // Full data in case backend doesn't have it synced yet
+                                                                                })
+                                                                            });
+                                                                            const data = await res.json();
+                                                                            if (data.success) {
+                                                                                alert(`Fatura #${invoice.invoiceNumber} başarıyla ${user?.email} adresine gönderildi.`);
+                                                                            } else {
+                                                                                alert('Gönderim başarısız: ' + data.message);
+                                                                            }
+                                                                        } catch (e) {
+                                                                            alert('Sunucu hatası: E-posta gönderilemedi.');
+                                                                        }
+                                                                    }} 
                                                                     className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-slate-400 hover:text-indigo-400 rounded-lg transition-colors group-hover:scale-110 active:scale-95"
                                                                     title="E-posta ile Gönder"
                                                                 >
@@ -716,19 +739,11 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                                                 </button>
                                                                 <button 
                                                                     onClick={() => {
-                                                                        // Mock PDF Download
-                                                                        const element = document.createElement("a");
-                                                                        const file = new Blob([
-                                                                            `FATURA DETAYI\n\nFatura No: ${invoice.invoiceNumber}\nTarih: ${new Date(invoice.date).toLocaleDateString()}\nAlıcı: ${invoice.billingDetails?.name || user?.name}\nPlan: ${invoice.planType}\nTutar: ${invoice.amount} TL\n\nBu belge bilgilendirme amaçlıdır.`
-                                                                        ], {type: 'text/plain'});
-                                                                        element.href = URL.createObjectURL(file);
-                                                                        element.download = `Fatura_${invoice.invoiceNumber}.txt`;
-                                                                        document.body.appendChild(element); // Required for this to work in FireFox
-                                                                        element.click();
-                                                                        alert("Fatura indiriliyor...");
+                                                                        // Generate Real PDF
+                                                                        generateInvoicePDF(invoice);
                                                                     }}
                                                                     className="p-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-500 hover:text-indigo-400 rounded-lg transition-colors group-hover:scale-110 active:scale-95 shadow-sm border border-indigo-500/20"
-                                                                    title="İndir"
+                                                                    title="PDF Olarak İndir"
                                                                 >
                                                                     <Download size={18} />
                                                                 </button>
