@@ -1,8 +1,8 @@
 // pages/PaymentPage.tsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CreditCard, Shield, CheckCircle2, Lock, Calendar, User, Zap, Star, Gem } from 'lucide-react';
-import { SubscriptionPlan } from '../types';
+import { ArrowLeft, CreditCard, Shield, CheckCircle2, Lock, Calendar, User, Zap, Star, Gem, FileText, Building2, MapPin, Hash, Phone } from 'lucide-react';
+import { SubscriptionPlan, BillingInfo, User as UserType, Invoice } from '../types';
 
 interface PaymentPageProps {
   plan: 'SILVER' | 'GOLD' | 'DIAMOND';
@@ -18,6 +18,18 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
     expiry: '',
     cvc: ''
   });
+
+  const [billingData, setBillingData] = useState<BillingInfo>({
+    type: 'INDIVIDUAL',
+    name: '',
+    taxId: '',
+    taxOffice: '',
+    address: '',
+    city: '',
+    country: 'Türkiye',
+    phone: ''
+  });
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [step, setStep] = useState<'form' | 'success'>('form');
 
@@ -36,12 +48,60 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
     setFormData(prev => ({ ...prev, [name]: formattedValue }));
   };
 
+  const handleBillingChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setBillingData(prev => ({ ...prev, [name]: value as any }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
     
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // --- LOGIC: Update User & Create Invoice ---
+    try {
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+            const user: UserType = JSON.parse(storedUser);
+            
+            // 1. Update User Plan
+            user.plan = plan as SubscriptionPlan;
+            user.subscriptionStartDate = new Date().toISOString();
+            user.billingInfo = billingData;
+            
+            // Set limits based on plan
+            if (plan === 'SILVER') user.remainingDownloads = 10;
+            if (plan === 'GOLD') user.remainingDownloads = 30;
+            if (plan === 'DIAMOND') user.remainingDownloads = 'UNLIMITED';
+
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
+            // 2. Create Invoice
+            const newInvoice: Invoice = {
+                id: 'INV-' + Math.floor(Math.random() * 1000000),
+                userId: user.id || 'unknown',
+                invoiceNumber: 'TR' + new Date().getFullYear() + Math.floor(Math.random() * 10000),
+                date: new Date().toISOString(),
+                amount: parseInt(price.replace(/\D/g, '')),
+                planType: plan as SubscriptionPlan,
+                status: 'PAID',
+                period: new Date().toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' }),
+                billingDetails: billingData
+            };
+
+            // Save Invoice to LocalStorage (as fallback for Profile)
+            const existingInvoices = JSON.parse(localStorage.getItem('localInvoices') || '[]');
+            localStorage.setItem('localInvoices', JSON.stringify([newInvoice, ...existingInvoices]));
+            
+            // Trigger storage event for Dashboard update
+            window.dispatchEvent(new Event('storage'));
+        }
+    } catch (err) {
+        console.error("Payment processing error", err);
+    }
+
     setStep('success');
     setIsProcessing(false);
     
@@ -159,88 +219,240 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, onBack, o
            
            <form onSubmit={handleSubmit} className="space-y-6">
               
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-slate-500 tracking-wider">Kart Üzerindeki İsim</label>
-                <div className="relative">
-                  <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-                  <input 
-                    type="text" 
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="Ad Soyad"
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-medium"
-                  />
-                </div>
+              {/* --- 1. BILLING INFO SECTION --- */}
+              <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 mb-6">
+                  <h4 className="text-sm font-bold text-slate-300 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2 flex items-center gap-2">
+                      <FileText size={14} className="text-cyan-400" />
+                      Fatura Bilgileri
+                  </h4>
+
+                  {/* Type Toggle */}
+                  <div className="flex gap-4 mb-4">
+                      <label 
+                        className={`flex-1 py-2 px-4 rounded-lg border cursor-pointer transition-all text-center text-xs font-bold uppercase
+                          ${billingData.type === 'INDIVIDUAL' 
+                            ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)]' 
+                            : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700'}
+                        `}
+                      >
+                          <input 
+                            type="radio" 
+                            name="type" 
+                            value="INDIVIDUAL" 
+                            checked={billingData.type === 'INDIVIDUAL'} 
+                            onChange={() => setBillingData(prev => ({ ...prev, type: 'INDIVIDUAL' }))}
+                            className="hidden" 
+                          />
+                          Bireysel
+                      </label>
+                      <label 
+                        className={`flex-1 py-2 px-4 rounded-lg border cursor-pointer transition-all text-center text-xs font-bold uppercase
+                          ${billingData.type === 'CORPORATE' 
+                            ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)]' 
+                            : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700'}
+                        `}
+                      >
+                          <input 
+                            type="radio" 
+                            name="type" 
+                            value="CORPORATE" 
+                            checked={billingData.type === 'CORPORATE'} 
+                            onChange={() => setBillingData(prev => ({ ...prev, type: 'CORPORATE' }))}
+                            className="hidden" 
+                          />
+                          Kurumsal
+                      </label>
+                  </div>
+
+                  {/* Dynamic Fields */}
+                  <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold uppercase text-slate-500 pl-1">{billingData.type === 'INDIVIDUAL' ? 'Ad Soyad' : 'Şirket Ünvanı'}</label>
+                            <div className="relative">
+                                {billingData.type === 'CORPORATE' ? <Building2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" /> : <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />}
+                                <input 
+                                    type="text" 
+                                    name="name"
+                                    required
+                                    value={billingData.name}
+                                    onChange={handleBillingChange}
+                                    placeholder={billingData.type === 'INDIVIDUAL' ? 'Ad Soyad' : 'Firma tam adı'}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-500/50"
+                                />
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold uppercase text-slate-500 pl-1">{billingData.type === 'INDIVIDUAL' ? 'TC Kimlik No' : 'Vergi No'}</label>
+                            <div className="relative">
+                                <Hash size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                                <input 
+                                    type="text" 
+                                    name="taxId"
+                                    required
+                                    value={billingData.taxId}
+                                    onChange={handleBillingChange}
+                                    placeholder={billingData.type === 'INDIVIDUAL' ? '11 Haneli TCKN' : '10 Haneli Vergi No'}
+                                    maxLength={11}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-500/50"
+                                />
+                            </div>
+                          </div>
+                      </div>
+
+                      {billingData.type === 'CORPORATE' && (
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold uppercase text-slate-500 pl-1">Vergi Dairesi</label>
+                            <input 
+                                type="text" 
+                                name="taxOffice"
+                                required
+                                value={billingData.taxOffice}
+                                onChange={handleBillingChange}
+                                placeholder="Vergi Dairesi"
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-sm text-white focus:outline-none focus:border-cyan-500/50"
+                            />
+                          </div>
+                      )}
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold uppercase text-slate-500 pl-1">Fatura Adresi</label>
+                        <div className="relative">
+                            <MapPin size={14} className="absolute left-3 top-3 text-slate-500" />
+                            <textarea 
+                                name="address"
+                                required
+                                value={billingData.address}
+                                onChange={handleBillingChange}
+                                placeholder="Tam adres..."
+                                rows={2}
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-500/50 resize-none"
+                            />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold uppercase text-slate-500 pl-1">Şehir</label>
+                            <input 
+                                type="text" 
+                                name="city"
+                                required
+                                value={billingData.city}
+                                onChange={handleBillingChange}
+                                placeholder="İstanbul"
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 px-3 text-sm text-white focus:outline-none focus:border-cyan-500/50"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold uppercase text-slate-500 pl-1">Telefon (Opsiyonel)</label>
+                            <div className="relative">
+                                <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                                <input 
+                                    type="tel" 
+                                    name="phone"
+                                    value={billingData.phone}
+                                    onChange={handleBillingChange}
+                                    placeholder="05XX XXX XX XX"
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-cyan-500/50"
+                                />
+                            </div>
+                          </div>
+                      </div>
+                  </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase text-slate-500 tracking-wider">Kart Numarası</label>
-                <div className="relative">
-                  <CreditCard size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-                  <input 
-                    type="text" 
-                    name="cardNumber"
-                    required
-                    value={formData.cardNumber}
-                    onChange={handleInputChange}
-                    placeholder="0000 0000 0000 0000"
-                    maxLength={19}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-mono"
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
-                    <div className="w-8 h-5 bg-slate-600 rounded opacity-50"></div>
-                    <div className="w-8 h-5 bg-slate-600 rounded opacity-50"></div>
+              {/* --- 2. PAYMENT INFO SECTION --- */}
+              <div className="space-y-4 pt-4 border-t border-slate-800">
+                <h4 className="text-sm font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <CreditCard size={14} className="text-amber-400" />
+                    Kart Bilgileri
+                </h4>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Kart üzerindeki İsim</label>
+                  <div className="relative">
+                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input 
+                      type="text" 
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="Kart üzerindeki isim"
+                      className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-medium"
+                    />
                   </div>
                 </div>
-              </div>
 
-              <div className="flex gap-4">
-                 <div className="space-y-2 w-1/2">
-                    <label className="text-xs font-bold uppercase text-slate-500 tracking-wider">Son Kullanma</label>
-                    <div className="relative">
-                      <Calendar size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-                      <input 
-                        type="text" 
-                        name="expiry"
-                        required
-                        value={formData.expiry}
-                        onChange={handleInputChange}
-                        placeholder="MM/YY"
-                        maxLength={5}
-                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-mono"
-                      />
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Kart Numarası</label>
+                  <div className="relative">
+                    <CreditCard size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input 
+                      type="text" 
+                      name="cardNumber"
+                      required
+                      value={formData.cardNumber}
+                      onChange={handleInputChange}
+                      placeholder="0000 0000 0000 0000"
+                      maxLength={19}
+                      className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-mono"
+                    />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
+                      <div className="w-8 h-5 bg-slate-600 rounded opacity-50"></div>
+                      <div className="w-8 h-5 bg-slate-600 rounded opacity-50"></div>
                     </div>
-                 </div>
-                 <div className="space-y-2 w-1/2">
-                    <label className="text-xs font-bold uppercase text-slate-500 tracking-wider">CVC / CVV</label>
-                    <div className="relative">
-                      <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-                      <input 
-                        type="text" 
-                        name="cvc"
-                        required
-                        value={formData.cvc}
-                        onChange={handleInputChange}
-                        placeholder="123"
-                        maxLength={3}
-                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-mono"
-                      />
-                    </div>
-                 </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="space-y-2 w-1/2">
+                      <label className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Son Kullanma</label>
+                      <div className="relative">
+                        <Calendar size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                        <input 
+                          type="text" 
+                          name="expiry"
+                          required
+                          value={formData.expiry}
+                          onChange={handleInputChange}
+                          placeholder="MM/YY"
+                          maxLength={5}
+                          className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-mono"
+                        />
+                      </div>
+                  </div>
+                  <div className="space-y-2 w-1/2">
+                      <label className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">CVC / CVV</label>
+                      <div className="relative">
+                        <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                        <input 
+                          type="text" 
+                          name="cvc"
+                          required
+                          value={formData.cvc}
+                          onChange={handleInputChange}
+                          placeholder="123"
+                          maxLength={3}
+                          className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all font-mono"
+                        />
+                      </div>
+                  </div>
+                </div>
               </div>
 
               <button 
                 type="submit"
                 disabled={isProcessing}
-                className={`w-full py-4 rounded-xl font-bold uppercase tracking-wide shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2
+                className={`w-full py-4 mt-6 rounded-xl font-bold uppercase tracking-wide shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2
                   ${isProcessing ? 'bg-slate-700 cursor-not-allowed text-slate-400' : `bg-gradient-to-r ${planInfo.color} hover:shadow-${planInfo.color.split('-')[1]}/50 text-white`}
                 `}
               >
                 {isProcessing ? 'İşleniyor...' : (
                   <>
-                    <Lock size={16} /> Güvenli Öde
+                    <Lock size={16} /> {price} Öde ve Tamamla
                   </>
                 )}
               </button>

@@ -33,6 +33,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
   
   // UI State
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'billing'>('profile');
+  const [showAllHistory, setShowAllHistory] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -86,8 +87,20 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
         let newInvoices: Invoice[] = [];
         if (invoicesData.success && Array.isArray(invoicesData.invoices)) {
             newInvoices = invoicesData.invoices;
-            setInvoices(newInvoices);
         }
+        
+        // MERGE LOCAL INVOICES (From PaymentPage)
+        const localInvoices = JSON.parse(localStorage.getItem('localInvoices') || '[]');
+        if (Array.isArray(localInvoices)) {
+            // Avoid duplicates if API returns same ID
+            const apiIds = new Set(newInvoices.map(i => i.id));
+            const uniqueLocal = localInvoices.filter(i => !apiIds.has(i.id));
+            newInvoices = [...uniqueLocal, ...newInvoices];
+        }
+
+        // Sort by date desc
+        newInvoices.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setInvoices(newInvoices);
 
         let newDocs: GeneratedDocument[] = [];
         // Note: Check if docsData is array directly or inside a property based on API
@@ -148,7 +161,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
 
         // Sort descending by date
         events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        setTimeline(events.slice(0, 5)); // Keep top 5 latest
+        setTimeline(events); // Keep all events, filter in render
 
     } catch (err) {
         console.error('Failed to fetch profile data', err);
@@ -693,8 +706,30 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Ödendi
                                                                 </span>
                                                             </td>
-                                                            <td className="p-4 text-right pr-6">
-                                                                <button className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg transition-colors group-hover:scale-110 active:scale-95">
+                                                            <td className="p-4 text-right pr-6 flex justify-end gap-2">
+                                                                <button
+                                                                    onClick={() => alert(`Fatura #${invoice.invoiceNumber} başarıyla ${user?.email} adresine gönderildi.`)} 
+                                                                    className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-slate-400 hover:text-indigo-400 rounded-lg transition-colors group-hover:scale-110 active:scale-95"
+                                                                    title="E-posta ile Gönder"
+                                                                >
+                                                                    <Mail size={18} />
+                                                                </button>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        // Mock PDF Download
+                                                                        const element = document.createElement("a");
+                                                                        const file = new Blob([
+                                                                            `FATURA DETAYI\n\nFatura No: ${invoice.invoiceNumber}\nTarih: ${new Date(invoice.date).toLocaleDateString()}\nAlıcı: ${invoice.billingDetails?.name || user?.name}\nPlan: ${invoice.planType}\nTutar: ${invoice.amount} TL\n\nBu belge bilgilendirme amaçlıdır.`
+                                                                        ], {type: 'text/plain'});
+                                                                        element.href = URL.createObjectURL(file);
+                                                                        element.download = `Fatura_${invoice.invoiceNumber}.txt`;
+                                                                        document.body.appendChild(element); // Required for this to work in FireFox
+                                                                        element.click();
+                                                                        alert("Fatura indiriliyor...");
+                                                                    }}
+                                                                    className="p-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-500 hover:text-indigo-400 rounded-lg transition-colors group-hover:scale-110 active:scale-95 shadow-sm border border-indigo-500/20"
+                                                                    title="İndir"
+                                                                >
                                                                     <Download size={18} />
                                                                 </button>
                                                             </td>
@@ -730,7 +765,11 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                 <div>
                                     <p className="text-xs font-black text-indigo-300 uppercase tracking-widest mb-1">Mevcut Plan</p>
                                     <h3 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                                        {user?.plan === 'YEARLY' ? 'Business Pro' : user?.plan === 'MONTHLY' ? 'Aylık Standart' : 'Başlangıç Planı'}
+                                        {user?.plan === 'DIAMOND' ? 'DIAMOND' : 
+                                         user?.plan === 'GOLD' ? 'GOLD' : 
+                                         user?.plan === 'SILVER' ? 'SILVER' : 
+                                         user?.plan === 'YEARLY' ? 'Business Pro' : 
+                                         user?.plan === 'MONTHLY' ? 'Aylık Standart' : 'Başlangıç Planı'}
                                     </h3>
                                 </div>
                                 <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-lg group-hover:rotate-12 transition-transform duration-500">
@@ -751,6 +790,12 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                                         <span className="text-sm font-bold text-slate-400">Yenileme</span>
                                         <span className="text-white font-mono font-medium">
                                             {user?.subscriptionEndDate ? new Date(user.subscriptionEndDate).toLocaleDateString() : 'Süresiz'}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center mt-3 pt-3 border-t border-white/10">
+                                        <span className="text-sm font-bold text-slate-400">Kalan Hak</span>
+                                        <span className="text-amber-400 font-mono font-black text-lg drop-shadow-md">
+                                            {user?.remainingDownloads === 'UNLIMITED' ? '∞ SINIRSIZ' : user?.remainingDownloads + ' ADET'}
                                         </span>
                                     </div>
                                 </div>
@@ -783,7 +828,7 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                              </div>
                         ) : timeline.length > 0 ? (
                             <div className="relative pl-4 space-y-6 border-l-2 border-slate-200/20 dark:border-white/10">
-                                {timeline.map((item, idx) => (
+                                {timeline.slice(0, showAllHistory ? undefined : 5).map((item, idx) => (
                                     <motion.div 
                                         key={item.id}
                                         initial={{ opacity: 0, x: 20 }}
@@ -823,8 +868,11 @@ export const Profile: React.FC<ProfileProps> = ({ user: initialUser, t, onNaviga
                         )}
                         
                         <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-center">
-                            <button className="text-xs font-bold text-slate-400 hover:text-indigo-500 flex items-center gap-1 transition-colors">
-                                Tüm Geçmişi Görüntüle <ChevronRight size={14} />
+                            <button 
+                                onClick={() => setShowAllHistory(!showAllHistory)}
+                                className="text-xs font-bold text-slate-400 hover:text-indigo-500 flex items-center gap-1 transition-colors"
+                            >
+                                {showAllHistory ? 'Daha Az Göster' : 'Tüm Geçmişi Görüntüle'} <ChevronRight size={14} className={`transform transition-transform ${showAllHistory ? '-rotate-90' : 'rotate-0'}`} />
                             </button>
                         </div>
                      </div>

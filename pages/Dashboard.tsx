@@ -762,7 +762,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
         </div>
 
-        {/* 4. FOOTER: PACKAGES (Enhanced with Previous Stones & Visuals) */}
+        {/* 4. FOOTER: PACKAGES (Hidden for Premium Users) */}
+        {(!user?.plan || user.plan === 'FREE' || user.plan === 'MONTHLY' && false) && (
         <div className='shrink-0 pb-4 pt-2 px-2 mt-2 bg-transparent'>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-3 items-center max-w-6xl mx-auto'>
                 
@@ -878,6 +879,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
             </div>
         </div>
+        )}
 
       </div>
     </div>

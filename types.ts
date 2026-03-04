@@ -29,6 +29,18 @@ export interface User {
   isBanned?: boolean;
   banReason?: string;
   banExpiresAt?: string;
+  billingInfo?: BillingInfo;
+}
+
+export interface BillingInfo {
+  type: 'INDIVIDUAL' | 'CORPORATE';
+  name: string; // Ad Soyad veya Şirket Adı
+  taxId: string; // TCKN veya Vergi Numarası
+  taxOffice?: string; // Vergi Dairesi (Opsiyonel - Bireysel için)
+  address: string;
+  city?: string; // Şehir eklenebilir
+  country?: string; // Ülke eklenebilir
+  phone?: string;
 }
 
 export interface Subscription {
@@ -99,6 +111,7 @@ export interface Invoice {
   status: 'PAID' | 'PENDING' | 'CANCELLED';
   period: string; // "Ocak 2026" gibi
   downloadLink?: string;
+  billingDetails?: BillingInfo;
 }
 
 export interface SystemLog {
