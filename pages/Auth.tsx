@@ -31,15 +31,15 @@ const InputGroup = ({ icon: Icon, ...props }: any) => (
 const SubmitButton = ({ children, isLoading }: any) => (
   <button 
     disabled={isLoading}
-    className="w-full relative overflow-hidden bg-white text-black font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 group hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+    className="w-full relative overflow-hidden bg-white hover:bg-amber-500 text-black hover:text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 group hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)]"
   >
      {isLoading ? (
        <Loader2 className="animate-spin" size={20} />
      ) : (
        <>
-         <span className="relative z-10 flex items-center gap-2">{children}</span>
+         <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-white">{children}</span>
          {/* Button inner shine */}
-         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/80 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
+         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
        </>
      )}
   </button>
@@ -155,10 +155,14 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
     <div className="relative w-full h-screen bg-[#050510] overflow-hidden flex items-center justify-center perspective-[1200px] selection:bg-amber-500/30 selection:text-white">
       
       {/* --- THE ROOM (Background Environment) --- */}
-      <div className="absolute inset-0 pointer-events-none transform-style-3d">
+      <div className="absolute inset-0 pointer-events-none transform-style-3d overflow-hidden">
+          
+          {/* GLOBAL CONSISTENT BACKGROUND (Blobs) */}
+          <div className="absolute top-[-20%] left-[-10%] w-[900px] h-[900px] rounded-full bg-[#3b82f6]/10 blur-[150px] animate-pulse z-0 transform translate-z-[-100px]"></div>
+          <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-[#f59e0b]/10 blur-[150px] animate-pulse-slow z-0 transform translate-z-[-100px]"></div>
           
           {/* Animated Stars / Particles */}
-          <div className="absolute inset-0 bg-[#000000]">
+          <div className="absolute inset-0 bg-[#02040a] -z-10">
               <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_transparent_0%,_#000000_100%)] z-10"></div>
               
               {/* Floor Grid - The "Room" Floor */}
@@ -242,7 +246,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
                         transition={{ delay: 0.3 }}
                         className="text-2xl font-bold text-white tracking-tight"
                       >
-                          {view === 'login' ? 'Yönetici Girişi' : 'Yeni Kayıt'}
+                          {view === 'login' ? 'Giriş Yap' : 'Hesap Oluştur'}
                       </motion.h1>
                       <motion.p 
                         initial={{ opacity: 0 }} 
@@ -250,7 +254,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
                         transition={{ delay: 0.4 }}
                         className="text-slate-400 text-xs mt-2 font-medium tracking-wide uppercase"
                       >
-                          Güvenli Sanal Ağ Geçidi
+                          Panel Erişimi
                       </motion.p>
                   </div>
 

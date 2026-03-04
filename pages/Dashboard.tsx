@@ -380,9 +380,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             <div className='w-1/4'></div>
         </header>
 
-        {/* 2. Sectors Row: Animated & Detailed */}
-        <div className='shrink-0 h-auto md:h-48 z-20' onMouseLeave={() => setHoveredSectorId(null)}>
-            <div className='flex overflow-x-auto snap-x md:overflow-visible md:grid md:grid-cols-7 gap-3 h-40 md:h-full p-4 scrollbar-hide items-center'>
+        {/* 2. Sectors Row: Animated & Detailed with Navigation */}
+        <div className='shrink-0 h-auto md:h-48 z-20 relative group/sector-nav' onMouseLeave={() => setHoveredSectorId(null)}>
+            
+            {/* Scroll Buttons (Desktop) */}
+            <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-slate-200 dark:from-[#0f1115] to-transparent z-30 hidden md:flex items-center justify-start pl-1 opacity-0 group-hover/sector-nav:opacity-100 transition-opacity pointer-events-none">
+                 <button 
+                    onClick={() => document.getElementById('sector-scroll-container')?.scrollBy({ left: -300, behavior: 'smooth' })}
+                    className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-white hover:bg-amber-500 hover:text-white pointer-events-auto transition-all transform hover:scale-110"
+                 >
+                     <ChevronRight size={20} className="rotate-180" />
+                 </button>
+            </div>
+            <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-slate-200 dark:from-[#0f1115] to-transparent z-30 hidden md:flex items-center justify-end pr-1 opacity-0 group-hover/sector-nav:opacity-100 transition-opacity pointer-events-none">
+                 <button 
+                    onClick={() => document.getElementById('sector-scroll-container')?.scrollBy({ left: 300, behavior: 'smooth' })}
+                    className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-white hover:bg-amber-500 hover:text-white pointer-events-auto transition-all transform hover:scale-110"
+                 >
+                     <ChevronRight size={20} />
+                 </button>
+            </div>
+
+            <div id="sector-scroll-container" className='flex overflow-x-auto snap-x gap-3 h-40 md:h-full p-4 scrollbar-hide items-center md:px-4'>
                 {SECTORS.map((sector, index) => {
                     const isSelected = selectedSectorIds.includes(sector.id);
                     const isHovered = hoveredSectorId === sector.id;
@@ -400,7 +419,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             onMouseEnter={() => setHoveredSectorId(sector.id)}
                             onClick={() => toggleSector(sector.id)}
                             className={`
-                            relative rounded-xl cursor-pointer select-none h-32 md:h-36 flex flex-col items-center justify-end overflow-hidden shrink-0 w-[140px] md:w-auto snap-center
+                            relative rounded-xl cursor-pointer select-none h-32 md:h-36 flex flex-col items-center justify-end overflow-hidden shrink-0 w-[140px] md:w-[160px] snap-center
                             border transition-colors duration-300 origin-bottom md:origin-center
                             ${isActive 
                                 ? 'border-amber-500 dark:border-white shadow-2xl dark:shadow-[0_0_40px_rgba(255,255,255,0.3)] ring-2 ring-amber-200 dark:ring-white/20' 
