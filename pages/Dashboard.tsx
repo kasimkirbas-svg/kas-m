@@ -401,7 +401,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             onMouseEnter={() => setHoveredSectorId(sector.id)}
                             onClick={() => toggleSector(sector.id)}
                             className={`
-                            relative rounded-xl cursor-pointer select-none h-32 md:h-40 flex flex-col items-center justify-end overflow-hidden
+                            relative rounded-xl cursor-pointer select-none h-32 md:h-40 flex flex-col items-center justify-center overflow-hidden
                             w-full
                             border transition-colors duration-300
                             ${isActive 
@@ -453,9 +453,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='flex-1 grid grid-cols-1 lg:grid-cols-4 gap-5 pb-2'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col min-h-[400px] h-auto bg-white dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-indigo-500/10 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
+            <div className='lg:col-span-3 flex flex-col h-auto bg-white dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-indigo-500/10 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
                 {/* Subtle Background Pattern */}
-                <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.03] dark:opacity-[0.05] pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-950/80 pointer-events-none"></div>
+                <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.05] dark:opacity-[0.1] pointer-events-none mix-blend-overlay"></div>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
@@ -668,7 +669,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
                 {/* 2. HIZLI İŞLEMLER (Grid 2x2) - Optimized Layout - FIXED */}
                 <div className='shrink-0 bg-slate-100 dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col relative'>
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-200/50 dark:to-slate-900/50 pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-200/50 to-slate-300/50 dark:from-slate-800/50 dark:to-slate-900/50 pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.05] dark:opacity-[0.1] pointer-events-none mix-blend-overlay"></div>
                     
                     {/* Header - Compact */}
                     <div className='bg-gradient-to-r from-amber-600 to-orange-700 py-2.5 px-3 flex items-center justify-between shrink-0 shadow-md relative overflow-hidden'>
@@ -833,27 +835,27 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 {/* 1. SILVER (Modern & Elegant) */}
                 <motion.div 
                     whileHover={{ translateY: -5, scale: 1.02 }}
-                    className='relative h-[130px] rounded-xl bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl flex flex-col items-center justify-center p-4 group overflow-hidden cursor-pointer'
+                    className='relative h-[130px] rounded-xl bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-900 border-2 border-gray-300 dark:border-gray-600 shadow-xl flex flex-col items-center justify-center p-4 group overflow-hidden cursor-pointer'
                 >
                      {/* Modern Accents */}
                      <div className='absolute inset-0 bg-white/40 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
-                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gray-300/20 to-transparent rounded-bl-full"></div>
+                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/30 to-transparent rounded-bl-full"></div>
                      {/* Silver Effects */}
                      <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/aluminum.png)] opacity-30 mix-blend-overlay"></div>
                      <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-white/40 rounded-full blur-2xl group-hover:bg-white/60 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
 
                      <div className='flex items-center gap-2 mb-2 z-10'>
-                        <Shield size={18} className='text-gray-500 dark:text-gray-400 drop-shadow-sm group-hover:text-gray-800 dark:group-hover:text-white transition-colors animate-pulse' />
-                        <span className='text-lg font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors'>SILVER</span>
+                        <Shield size={18} className='text-gray-600 dark:text-gray-300 drop-shadow-sm group-hover:text-gray-800 dark:group-hover:text-white transition-colors animate-pulse' />
+                        <span className='text-lg font-black text-gray-700 dark:text-gray-200 uppercase tracking-widest group-hover:text-gray-900 dark:group-hover:text-white transition-colors'>SILVER</span>
                      </div>
                      <div className='text-3xl font-black text-gray-800 dark:text-white mb-1 z-10'>
                         {billingCycle === 'MONTHLY' ? '100 TL' : '1000 TL'}
                      </div>
-                     <div className='text-[9px] font-bold uppercase bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-3 py-0.5 mb-3 rounded-full z-10'>TEMEL LİMİT</div>
+                     <div className='text-[9px] font-bold uppercase bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-3 py-0.5 mb-3 rounded-full z-10 border border-gray-400/30'>TEMEL LİMİT</div>
                      
                      <button 
                         onClick={() => setSelectedPlanForPayment({ plan: 'SILVER', price: billingCycle === 'MONTHLY' ? '100 TL' : '1000 TL' })}
-                        className='w-full max-w-[100px] py-1 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-700 dark:text-white text-[10px] font-bold uppercase tracking-wide transition-colors z-10 rounded-lg'
+                        className='w-full max-w-[100px] py-1 bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white text-[10px] font-bold uppercase tracking-wide transition-colors z-10 rounded-lg shadow-md'
                      >
                         SATIN AL
                      </button>
@@ -927,15 +929,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                      </div>
 
                      <div className='flex items-center gap-2 mb-1 mt-4 z-10'>
-                        <Gem size={28} className='text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]' />
-                        <span className='text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 uppercase tracking-widest'>DIAMOND</span>
+                        <Gem size={24} className='text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]' />
+                        <span className='text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 uppercase tracking-widest'>DIAMOND</span>
                      </div>
                      
-                     <div className='text-5xl font-black text-white mb-2 z-10 drop-shadow-md'>
+                     <div className='text-4xl font-black text-white mb-2 z-10 drop-shadow-md'>
                         {billingCycle === 'MONTHLY' ? '250 TL' : '2500 TL'}
                      </div>
                      
-                     <div className='text-[10px] text-indigo-200 font-bold uppercase mb-4 z-10 tracking-[0.2em] flex items-center gap-2'>
+                     <div className='text-[9px] text-indigo-200 font-bold uppercase mb-3 z-10 tracking-[0.2em] flex items-center gap-2'>
                         <span className="w-1 h-1 bg-cyan-400 rounded-full animate-pulse"></span>
                         SINIRSIZ ERİŞİM
                         <span className="w-1 h-1 bg-cyan-400 rounded-full animate-pulse"></span>
@@ -943,7 +945,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                      
                       <button 
                          onClick={() => setSelectedPlanForPayment({ plan: 'DIAMOND', price: billingCycle === 'MONTHLY' ? '250 TL' : '2500 TL' })}
-                         className='w-full max-w-[140px] py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-[11px] font-bold shadow-lg shadow-indigo-500/50 transition-all z-10 active:scale-95 uppercase tracking-wide border border-indigo-400/30'
+                         className='w-full max-w-[140px] py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-[10px] font-bold shadow-lg shadow-indigo-500/50 transition-all z-10 active:scale-95 uppercase tracking-wide border border-indigo-400/30'
                      >
                         SATIN AL
                      </button>
