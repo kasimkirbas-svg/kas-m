@@ -767,27 +767,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             <div className='grid grid-cols-1 md:grid-cols-3 gap-3 items-center max-w-6xl mx-auto'>
                 
 
-                {/* 1. SILVER (Industrial/Sharp) */}
+                {/* 1. SILVER (Modern & Elegant) */}
                 <motion.div 
                     whileHover={{ translateY: -5, scale: 1.02 }}
-                    className='relative h-[130px] rounded-xl bg-slate-200 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-xl flex flex-col items-center justify-center p-4 group overflow-hidden cursor-pointer'
-                    style={{ clipPath: 'polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%)' }}
+                    className='relative h-[130px] rounded-xl bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl flex flex-col items-center justify-center p-4 group overflow-hidden cursor-pointer'
                 >
-                     {/* Industrial Accents */}
-                     <div className="absolute top-0 right-0 w-8 h-8 bg-slate-300 dark:bg-slate-700 transform rotate-45 translate-x-4 -translate-y-4"></div>
-                     <div className="absolute bottom-0 left-0 w-8 h-8 bg-slate-300 dark:bg-slate-700 transform rotate-45 -translate-x-4 translate-y-4"></div>
-                     <div className='absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,rgba(0,0,0,0.05)_5px,rgba(0,0,0,0.05)_10px)] opacity-20'></div>
-
+                     {/* Modern Accents */}
+                     <div className='absolute inset-0 bg-white/40 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gray-300/20 to-transparent rounded-bl-full"></div>
+                     
                      <div className='flex items-center gap-2 mb-2 z-10'>
-                        <Shield size={18} className='text-slate-600 dark:text-slate-400' />
-                        <span className='text-lg font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest'>SILVER</span>
+                        <Shield size={18} className='text-gray-500 dark:text-gray-400' />
+                        <span className='text-lg font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest'>SILVER</span>
                      </div>
-                     <div className='text-3xl font-black text-slate-800 dark:text-white mb-1 z-10'>100 TL</div>
-                     <div className='text-[9px] font-bold uppercase bg-slate-300 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-0.5 mb-3 rounded-sm z-10'>TEMEL LİMİT</div>
+                     <div className='text-3xl font-black text-gray-800 dark:text-white mb-1 z-10'>100 TL</div>
+                     <div className='text-[9px] font-bold uppercase bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-3 py-0.5 mb-3 rounded-full z-10'>TEMEL LİMİT</div>
                      
                      <button 
                         onClick={() => setSelectedPlanForPayment({ plan: 'SILVER', price: '100 TL' })}
-                        className='w-full max-w-[100px] py-1 bg-slate-700 hover:bg-slate-600 text-white text-[10px] font-bold uppercase tracking-wide transition-colors z-10'
+                        className='w-full max-w-[100px] py-1 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-700 dark:text-white text-[10px] font-bold uppercase tracking-wide transition-colors z-10 rounded-lg'
                      >
                         SATIN AL
                      </button>
@@ -830,58 +828,48 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                      </button>
                 </motion.div>
 
-                {/* 3. DIAMOND (Cosmic/Ultimate) */}
+                {/* 3. DIAMOND (Royal/Prestige) */}
                 <motion.div 
-                    whileHover={{ translateY: -15, scale: 1.08 }}
-                    className='relative h-[160px] rounded-xl bg-[#050b14] border border-cyan-500/50 hover:border-cyan-400 shadow-[0_0_30px_rgba(6,182,212,0.15)] flex flex-col items-center justify-center p-4 overflow-hidden group'
+                    whileHover={{ translateY: -12, scale: 1.05 }}
+                    className='relative h-[160px] rounded-xl bg-gradient-to-b from-[#0f172a] to-[#1e1b4b] border border-indigo-500/50 hover:border-indigo-400 shadow-2xl shadow-indigo-900/50 flex flex-col items-center justify-center p-4 overflow-hidden group'
                 >
-                    {/* Cosmic Background */}
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-[#050b14] to-[#050b14]"></div>
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 animate-pulse-slow"></div>
-                    
-                    {/* Ultimate Badge with Glow */}
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
-                         <div className="bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white text-[10px] font-black px-5 py-1 rounded shadow-[0_0_15px_rgba(6,182,212,0.6)] uppercase tracking-widest whitespace-nowrap border border-white/20">
-                             SINIRSIZ GÜÇ
-                         </div>
-                    </div>
+                    {/* Royal Background */}
+                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                     <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+                     <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
 
-                    {/* Blue Star Particles */}
+                     {/* Floating Gems */}
                      <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
-                        {[...Array(12)].map((_, i) => (
+                        {[...Array(6)].map((_, i) => (
                            <motion.div
                              key={i}
-                             initial={{ opacity: 0, scale: 0 }}
-                             animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0], y: -30, x: Math.random() * 20 - 10 }}
-                             transition={{ duration: 2 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2 }}
-                             className="absolute"
-                             style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+                             initial={{ opacity: 0, scale: 0, rotate: 0 }}
+                             animate={{ opacity: [0, 1, 0], scale: [0.5, 1, 0.5], rotate: 360, y: -40 }}
+                             transition={{ duration: 4 + Math.random() * 3, repeat: Infinity, delay: Math.random() * 5 }}
+                             className="absolute text-cyan-500/30"
+                             style={{ left: `${Math.random() * 80 + 10}%`, top: `${Math.random() * 80 + 10}%` }}
                            >
-                              <Star size={Math.random() > 0.5 ? 8 : 4} className="text-cyan-400 fill-id-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" />
+                              <Gem size={Math.random() * 10 + 8} />
                            </motion.div>
                         ))}
                      </div>
-                     
-                     {/* Rotating Neon Border */}
-                     <div className="absolute inset-0 rounded-xl ring-1 ring-cyan-500/30 group-hover:ring-cyan-400/80 transition-all duration-500"></div>
-                     <div className="absolute -inset-[150%] bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent rotate-45 group-hover:animate-shine-slow transition-all duration-1000"></div>
 
                      <div className='flex items-center gap-2 mb-1 mt-4 z-10'>
-                        <Gem size={28} className='text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,1)] animate-pulse' />
-                        <span className='text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-200 to-indigo-300 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]'>DIAMOND</span>
+                        <Gem size={28} className='text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]' />
+                        <span className='text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 uppercase tracking-widest'>DIAMOND</span>
                      </div>
                      
-                     <div className='text-5xl font-black text-white mb-2 z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]'>250 TL</div>
+                     <div className='text-5xl font-black text-white mb-2 z-10 drop-shadow-md'>250 TL</div>
                      
-                     <div className='text-[10px] text-cyan-200 font-bold uppercase mb-4 z-10 tracking-[0.2em] flex items-center gap-2'>
-                        <span className="w-1 h-1 bg-cyan-400 rounded-full"></span>
-                        PLANLARIN EFENDİSİ
-                        <span className="w-1 h-1 bg-cyan-400 rounded-full"></span>
+                     <div className='text-[10px] text-indigo-200 font-bold uppercase mb-4 z-10 tracking-[0.2em] flex items-center gap-2'>
+                        <span className="w-1 h-1 bg-cyan-400 rounded-full animate-pulse"></span>
+                        SINIRSIZ ERİŞİM
+                        <span className="w-1 h-1 bg-cyan-400 rounded-full animate-pulse"></span>
                      </div>
                      
                       <button 
                          onClick={() => setSelectedPlanForPayment({ plan: 'DIAMOND', price: '250 TL' })}
-                        className='w-full max-w-[140px] py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white text-[11px] font-bold shadow-lg shadow-cyan-500/40 hover:shadow-cyan-400/60 transition-all z-10 active:scale-95 uppercase tracking-wide border border-cyan-400/30'
+                         className='w-full max-w-[140px] py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-[11px] font-bold shadow-lg shadow-indigo-500/50 transition-all z-10 active:scale-95 uppercase tracking-wide border border-indigo-400/30'
                      >
                         SATIN AL
                      </button>
