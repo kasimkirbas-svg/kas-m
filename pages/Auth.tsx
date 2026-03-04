@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { 
-  Mail, Lock, User, Building2, Eye, EyeOff, 
-  ArrowRight, Check, AlertCircle, Loader2, Sparkles, Hexagon, Star, Crown, Zap, Shield
+  Key, Mail, Lock, User, ArrowRight, Loader2, 
+  ShieldCheck, Zap, Sparkles, Hexagon
 } from 'lucide-react';
 import { fetchApi } from '../src/utils/api';
 
@@ -11,57 +12,70 @@ interface AuthProps {
   t?: any;
 }
 
-// --- Ultra Premium Input (Glassmorphism + Neon Glow - Preserved & Enhanced) ---
-const FloatingInput = ({ label, icon: Icon, type = "text", ...props }: any) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [hasValue, setHasValue] = useState(false);
+// -- Components --
 
-  return (
-    <div className="relative group mt-6">
-      <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-all duration-300 z-20 ${isFocused ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110' : 'text-slate-500'}`}>
-        <Icon size={20} strokeWidth={isFocused ? 2.5 : 2} />
-      </div>
-      <input
+const InputGroup = ({ icon: Icon, ...props }: any) => (
+  <div className="relative group">
+     <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-amber-400 transition-colors duration-300 pointer-events-none z-10">
+        <Icon size={18} />
+     </div>
+     <input 
         {...props}
-        type={type}
-        className={`w-full bg-[#030610]/40 border backdrop-blur-xl rounded-2xl pl-12 pr-10 py-5 text-white placeholder-transparent outline-none transition-all duration-300 font-medium tracking-wide
-          ${isFocused 
-            ? 'border-amber-500/60 shadow-[0_0_30px_-5px_rgba(245,158,11,0.15),inset_0_0_20px_rgba(245,158,11,0.05)] ring-1 ring-amber-500/30' 
-            : 'border-slate-800/60 hover:border-slate-700 hover:bg-[#030610]/60'
-          }
-        `}
-        onFocus={() => setIsFocused(true)}
-        onBlur={(e) => {
-          setIsFocused(false);
-          setHasValue(e.target.value.length > 0);
-        }}
-        onChange={(e) => {
-          if (props.onChange) props.onChange(e);
-          setHasValue(e.target.value.length > 0);
-        }}
-      />
-      <label className={`absolute left-11 transition-all duration-300 pointer-events-none font-bold z-20
-        ${(isFocused || hasValue || props.value) 
-          ? '-top-3 left-4 text-[10px] uppercase tracking-[0.2em] bg-gradient-to-r from-amber-500 to-amber-700 text-transparent bg-clip-text drop-shadow-sm border border-amber-900/40 bg-[#02040a] px-2 rounded-full' 
-          : 'top-1/2 -translate-y-1/2 text-sm text-slate-500'
-        }
-      `}>
-        {label}
-      </label>
-      
-      {/* Input Bottom Glow Bar - Active State Animation */}
-      <div className={`absolute bottom-0 left-4 right-4 h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent transition-all duration-500 ${isFocused ? 'opacity-100 w-[calc(100%-32px)]' : 'opacity-0 w-0 left-1/2'}`}></div>
-    </div>
-  );
-};
+        className="w-full bg-[#050510] border border-slate-800 rounded-xl py-3.5 pl-11 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/30 transition-all duration-300 group-hover:border-slate-700 font-medium"
+     />
+     {/* Glowing Border Bottom */}
+     <div className="absolute bottom-0 left-2 right-2 h-[1px] bg-amber-500 scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 origin-center opacity-70 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+  </div>
+);
 
-export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language, t }) => {
+const SubmitButton = ({ children, isLoading }: any) => (
+  <button 
+    disabled={isLoading}
+    className="w-full relative overflow-hidden bg-white text-black font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 group hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+  >
+     {isLoading ? (
+       <Loader2 className="animate-spin" size={20} />
+     ) : (
+       <>
+         <span className="relative z-10 flex items-center gap-2">{children}</span>
+         {/* Button inner shine */}
+         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/80 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
+       </>
+     )}
+  </button>
+);
+
+export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
   const [view, setView] = useState<'login' | 'signup'>('login');
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error', message: string } | null>(null);
-  const [animate, setAnimate] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [doorOpen, setDoorOpen] = useState(false);
+  
+  // Mouse 3D Perspective Logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseX = useSpring(x, { stiffness: 40, damping: 25 });
+  const mouseY = useSpring(y, { stiffness: 40, damping: 25 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const xPct = (e.clientX / innerWidth) - 0.5;
+      const yPct = (e.clientY / innerHeight) - 0.5;
+      x.set(xPct); 
+      y.set(yPct);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Subtle rotation based on mouse position
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [3, -3]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-3, 3]);
+  
+  // Shine layer moves opposite to mouse for reflection effect
+  const shineX = useTransform(mouseX, [-0.5, 0.5], ['0%', '100%']);
+  const shineOpacity = useTransform(mouseX, [-0.5, 0, 0.5], [0, 0.1, 0]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -72,23 +86,10 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language, t }) => {
     confirmPassword: ''
   });
 
-  useEffect(() => {
-    setAnimate(true);
-    
-    // Mouse Move Effect Background
-    const handleMouseMove = (e: MouseEvent) => {
-        setMousePos({
-            x: (e.clientX / window.innerWidth) * 20 - 10,
-            y: (e.clientY / window.innerHeight) * 20 - 10
-        });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
+  // Toast Logic
   useEffect(() => {
     if (toast) {
-      const timer = setTimeout(() => setToast(null), 3500);
+      const timer = setTimeout(() => setToast(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [toast]);
@@ -101,23 +102,37 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language, t }) => {
     setToast({ type, message });
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const performLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) { showToast('error', 'Lütfen tüm alanları doldurun.'); return; }
+    
     setIsLoading(true);
     try {
         const res = await fetchApi('/api/auth/login', { method: 'POST', body: JSON.stringify({ email: formData.email, password: formData.password }) });
         const text = await res.text();
         let data; try { data = JSON.parse(text); } catch(e) { throw new Error('Sunucu hatası.'); }
+        
         if (res.ok && data.success) {
             if (data.token) localStorage.setItem('authToken', data.token);
-            showToast('success', 'Giriş Onaylandı. Yönlendiriliyorsunuz...');
-            setTimeout(() => onLoginSuccess(data.user), 1500);
-        } else { throw new Error(data.message || 'Giriş Başarısız.'); }
-    } catch (err: any) { showToast('error', err.message || 'Sunucu Hatası.'); } finally { setIsLoading(false); }
+            
+            // Success! Trigger The "Door Opening" Effect
+            setDoorOpen(true);
+            
+            // Wait for animation before actually switching view
+            setTimeout(() => {
+                onLoginSuccess(data.user);
+            }, 1800); // Wait for the "suck in" animation
+        } else { 
+            throw new Error(data.message || 'Giriş Başarısız.'); 
+        }
+    } catch (err: any) { 
+        showToast('error', err.message || 'Sunucu Hatası.'); 
+    } finally { 
+        setIsLoading(false); 
+    }
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const performSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) { showToast('error', 'Şifreler eşleşmiyor.'); return; }
     setIsLoading(true);
@@ -126,268 +141,212 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language, t }) => {
         const data = await res.json();
         if (res.ok && data.success) {
             if (data.token) localStorage.setItem('authToken', data.token);
-            showToast('success', 'Hesap Oluşturuldu!');
-            setTimeout(() => onLoginSuccess(data.user), 1500);
+            showToast('success', 'Hesap Oluşturuldu! Yönlendiriliyorsunuz...');
+            
+            setDoorOpen(true);
+            setTimeout(() => {
+                onLoginSuccess(data.user);
+            }, 1800);
         } else { throw new Error(data.message || 'Kayıt Başarısız.'); }
     } catch (err: any) { showToast('error', err.message); } finally { setIsLoading(false); }
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] flex items-center justify-center relative overflow-hidden font-sans selection:bg-amber-500/40 selection:text-white">
+    <div className="relative w-full h-screen bg-[#050510] overflow-hidden flex items-center justify-center perspective-[1200px] selection:bg-amber-500/30 selection:text-white">
       
-      {/* 1. CINEMATIC BACKGROUND (Dynamic) */}
-      <div className="absolute inset-0 z-0 overflow-hidden transform scale-105" style={{ transform: `translate(${mousePos.x * -1}px, ${mousePos.y * -1}px) scale(1.05)` }}>
-          {/* Deep Space Gradient */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-[#0f172a] via-[#020617] to-black opacity-90"></div>
+      {/* --- THE ROOM (Background Environment) --- */}
+      <div className="absolute inset-0 pointer-events-none transform-style-3d">
           
-          {/* Animated Nebula Effects */}
-          <div className="absolute top-[-20%] left-[-10%] w-[1200px] h-[1200px] bg-amber-600/10 rounded-full blur-[180px] animate-pulse-slow mix-blend-screen"></div>
-          <div className="absolute bottom-[-20%] right-[-10%] w-[1000px] h-[1000px] bg-indigo-900/20 rounded-full blur-[180px] animate-float mix-blend-screen"></div>
-          
-          {/* Subtle Grid - High Tech Feel */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] opacity-20 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]"></div>
-          
-          {/* Floating Particles */}
-          <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-amber-400 rounded-full blur-[2px] animate-ping opacity-20"></div>
-              <div className="absolute bottom-1/3 right-1/4 w-3 h-3 bg-blue-500 rounded-full blur-[4px] animate-pulse opacity-20 delay-1000"></div>
+          {/* Animated Stars / Particles */}
+          <div className="absolute inset-0 bg-[#000000]">
+              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_transparent_0%,_#000000_100%)] z-10"></div>
+              
+              {/* Floor Grid - The "Room" Floor */}
+              <div className="absolute bottom-[-20%] left-[-50%] right-[-50%] h-[80%] bg-[linear-gradient(transparent_0%,_rgba(60,20,100,0.1)_100%)] transform perspective-[1000px] rotate-x-60 origin-top opacity-40">
+                 <div className="w-full h-full bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+              </div>
+
+               {/* Ceiling Grid - The "Room" Ceiling */}
+               <div className="absolute top-[-20%] left-[-50%] right-[-50%] h-[80%] bg-[linear-gradient(to_top,transparent_0%,_rgba(60,20,100,0.1)_100%)] transform perspective-[1000px] -rotate-x-60 origin-bottom opacity-20">
+                 <div className="w-full h-full bg-[linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+              </div>
           </div>
+          
+          {/* Dramatic Spotlight from Top - The Light Source */}
+          <motion.div 
+             animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.1, 1] }}
+             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+             className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-500/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none"
+          ></motion.div>
+          
+          {/* Accents floating in the "air" */}
+           <motion.div animate={{ y: [0, -20, 0], opacity: [0.1, 0.3, 0.1] }} transition={{ duration: 5, repeat: Infinity }} className="absolute top-1/3 left-1/4 w-32 h-32 bg-amber-500/10 rounded-full blur-[40px]"></motion.div>
+           <motion.div animate={{ y: [0, 20, 0], opacity: [0.1, 0.3, 0.1] }} transition={{ duration: 7, repeat: Infinity }} className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-purple-500/10 rounded-full blur-[50px]"></motion.div>
       </div>
 
-      {/* 2. MAIN LAYOUT - Split Screen Grandeur */}
-      <div className="relative z-10 w-full h-screen md:h-auto md:min-h-[750px] max-w-[1600px] flex flex-col md:flex-row overflow-hidden shadow-2xl md:rounded-[30px] border border-white/5 backdrop-blur-sm bg-black/40">
-           
-           {/* LEFT SIDE: The Experience (Marketing) */}
-           <div className="hidden md:flex w-full md:w-1/2 relative flex-col justify-between p-12 lg:p-16 overflow-hidden group">
-               {/* Background Image/Video Placeholder with Overlay */}
-               <div className="absolute inset-0 bg-[#050508] z-0">
-                    <div className="absolute inset-0 bg-grid-premium opacity-30 animate-scan"></div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/80"></div>
-                    {/* Glowing Orb Center */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-amber-500/20 to-purple-600/10 rounded-full blur-[100px] animate-pulse-slow"></div>
-               </div>
+      {/* --- THE PORTAL ANIMATION (Overlay when success) --- */}
+      <AnimatePresence>
+        {doorOpen && (
+            <motion.div 
+               initial={{ scale: 0, opacity: 0, borderRadius: "100%" }}
+               animate={{ scale: 30, opacity: 1, borderRadius: "0%" }}
+               transition={{ duration: 1.5, ease: [0.6, 0.05, -0.01, 0.9] }}
+               className="fixed inset-0 z-[100] bg-white pointer-events-none flex items-center justify-center origin-center"
+            >
+               {/* Inner blinding light */}
+               <div className="absolute inset-0 bg-white"></div>
+            </motion.div>
+        )}
+      </AnimatePresence>
 
-               {/* Top Brand */}
-               <div className={`relative z-10 flex items-center gap-4 transition-all duration-1000 ${animate ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-                   <div className="w-14 h-14 relative flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                       <div className="absolute inset-0 bg-amber-500 blur-lg opacity-40 rounded-full"></div>
-                       <div className="relative w-full h-full bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-2xl border border-amber-300/30">
-                           <Hexagon size={28} className="text-white fill-white/20" strokeWidth={1.5} />
-                       </div>
-                   </div>
-                   <div>
-                       <h2 className="text-2xl font-bold text-white tracking-widest uppercase font-['Cinzel']">KIRBAŞ</h2>
-                       <p className="text-[10px] text-amber-500 font-mono tracking-[0.4em] uppercase">Enterprise Suite</p>
-                   </div>
-               </div>
+      {/* --- THE DOOR (Main Card) --- */}
+      <motion.div 
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        initial={{ opacity: 0, scale: 0.8, y: 50 }}
+        animate={{ opacity: doorOpen ? 0 : 1, scale: doorOpen ? 5 : 1, y: 0, filter: doorOpen ? "brightness(2) blur(10px)" : "none" }}
+        transition={{ duration: doorOpen ? 1.5 : 0.8, type: doorOpen ? "tween" : "spring", ease: "easeInOut" }}
+        className="relative z-20 w-full max-w-[440px] px-6"
+      >
+          {/* Outer Glow (The Aura) */}
+          <div className="absolute -inset-4 bg-gradient-to-t from-amber-500/20 via-indigo-500/20 to-amber-500/20 rounded-[40px] opacity-40 blur-3xl group-hover:opacity-60 transition-opacity duration-1000 animate-pulse-slow pointer-events-none transform translate-z-[-50px]"></div>
+          
+          {/* The Black Card Frame */}
+          <div className="relative bg-[#030305]/90 backdrop-blur-2xl border border-white/10 rounded-[30px] p-[1px] overflow-hidden shadow-2xl ring-1 ring-white/5 transform-style-3d">
+              
+              {/* Dynamic Shine Reflection */}
+              <motion.div 
+                 style={{ x: shineX, opacity: shineOpacity }}
+                 className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-30"
+              />
 
-               {/* Center Hero Message */}
-               <div className={`relative z-10 space-y-8 max-w-lg transition-all duration-1000 delay-300 ${animate ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-                   
-                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md animate-fade-in-up">
-                        <Crown size={14} className="text-amber-400" />
-                        <span className="text-[10px] font-bold text-slate-300 tracking-wider uppercase">Endüstri Standartlarının Ötesinde</span>
-                   </div>
+              <div className="bg-[#080810] rounded-[29px] p-8 md:p-10 relative overflow-hidden h-full">
+                  
+                  {/* Subtle Noise Texture */}
+                  <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
+                  
+                  {/* Header: Brand Icon */}
+                  <div className="text-center mb-8 relative z-20">
+                      <motion.div 
+                         initial={{ y: -20, opacity: 0 }}
+                         animate={{ y: 0, opacity: 1 }}
+                         transition={{ delay: 0.2 }}
+                         className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/20 mb-5 relative group cursor-pointer transform transition-transform hover:scale-105"
+                      >
+                         <div className="absolute inset-0 bg-amber-400 blur-lg opacity-40 rounded-2xl"></div>
+                         <Hexagon size={32} className="text-white fill-white/20 relative z-10" strokeWidth={2} />
+                      </motion.div>
 
-                   <h1 className="text-5xl lg:text-7xl font-bold text-white leading-[0.9]">
-                       Geleceği <br />
-                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-700 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">
-                           Yönetin.
-                       </span>
-                   </h1>
-                   
-                   <p className="text-lg text-slate-400 font-light leading-relaxed border-l-4 border-amber-500/50 pl-6">
-                       Kırbaş Panel ile işletmenizin tüm süreçlerini tek bir merkezden, 
-                       benzersiz bir hız ve güvenle kontrol altına alın.
-                   </p>
+                      <motion.h1 
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        transition={{ delay: 0.3 }}
+                        className="text-2xl font-bold text-white tracking-tight"
+                      >
+                          {view === 'login' ? 'Yönetici Girişi' : 'Yeni Kayıt'}
+                      </motion.h1>
+                      <motion.p 
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        transition={{ delay: 0.4 }}
+                        className="text-slate-400 text-xs mt-2 font-medium tracking-wide uppercase"
+                      >
+                          Güvenli Sanal Ağ Geçidi
+                      </motion.p>
+                  </div>
 
-                   {/* Features List */}
-                   <div className="grid grid-cols-2 gap-4 pt-4">
-                       {[
-                           { icon: Zap, text: "Yıldırım Hızında İşlem" },
-                           { icon: Shield, text: "Askeri Düzey Güvenlik" },
-                           { icon: Star, text: "Premium Destek" },
-                           { icon: Building2, text: "Sınırsız Ölçekleme" }
-                       ].map((feat, i) => (
-                           <div key={i} className="flex items-center gap-3 text-sm text-slate-400 group/item hover:text-white transition-colors">
-                               <div className="p-2 rounded-lg bg-white/5 group-hover/item:bg-amber-500/20 group-hover/item:text-amber-400 transition-colors">
-                                   <feat.icon size={16} />
-                                </div>
-                               {feat.text}
-                           </div>
-                       ))}
-                   </div>
-               </div>
+                  {/* Form Container */}
+                  <div className="relative z-20 min-h-[300px]">
+                      <AnimatePresence mode="wait">
+                          {view === 'login' ? (
+                              <motion.form
+                                key="login-form"
+                                initial={{ opacity: 0, x: -30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 30 }}
+                                transition={{ duration: 0.3 }}
+                                onSubmit={performLogin}
+                                className="space-y-5"
+                              >
+                                  <InputGroup icon={Mail} type="email" name="email" placeholder="E-Posta Adresi" value={formData.email} onChange={handleInputChange} autoFocus />
+                                  <InputGroup icon={Lock} type="password" name="password" placeholder="Şifre" value={formData.password} onChange={handleInputChange} />
+                                  
+                                  <div className="flex justify-between items-center px-1">
+                                      <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer hover:text-slate-300">
+                                          <input type="checkbox" className="rounded border-slate-700 bg-slate-800 text-amber-500 focus:ring-amber-500/50" />
+                                          Beni Hatırla
+                                      </label>
+                                      <button type="button" className="text-xs text-amber-500 hover:text-amber-400 transition-colors font-medium">Şifremi Unuttum?</button>
+                                  </div>
 
-               {/* Bottom Stats/Testimonial */}
-               <div className={`relative z-10 flex items-center justify-between border-t border-white/10 pt-8 transition-all duration-1000 delay-500 ${animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                   <div>
-                       <div className="text-3xl font-bold text-white">500+</div>
-                       <div className="text-xs text-slate-500 uppercase tracking-wider">Kurumsal Müşteri</div>
-                   </div>
-                   <div>
-                       <div className="text-3xl font-bold text-white">99.9%</div>
-                       <div className="text-xs text-slate-500 uppercase tracking-wider">Uptime Garantisi</div>
-                   </div>
-                   <div className="h-10 w-[1px] bg-white/10"></div>
-                   <div className="text-right">
-                       <div className="flex text-amber-500 mb-1 justify-end">
-                           {[1,2,3,4,5].map(s => <Star key={s} size={12} fill="currentColor" />)}
-                       </div>
-                       <div className="text-[10px] text-slate-400">"Sektörün en iyisi."</div>
-                   </div>
-               </div>
-           </div>
+                                  <div className="pt-2">
+                                    <SubmitButton isLoading={isLoading}>
+                                        Giriş Yap <ArrowRight size={18} />
+                                    </SubmitButton>
+                                  </div>
+                              </motion.form>
+                          ) : (
+                              <motion.form
+                                key="signup-form"
+                                initial={{ opacity: 0, x: 30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -30 }}
+                                transition={{ duration: 0.3 }}
+                                onSubmit={performSignup}
+                                className="space-y-4"
+                              >
+                                  <InputGroup icon={User} type="text" name="name" placeholder="Ad Soyad" value={formData.name} onChange={handleInputChange} />
+                                  <InputGroup icon={Sparkles} type="text" name="companyName" placeholder="Şirket Adı" value={formData.companyName} onChange={handleInputChange} />
+                                  <InputGroup icon={Mail} type="email" name="email" placeholder="E-Posta" value={formData.email} onChange={handleInputChange} />
+                                  <div className="grid grid-cols-2 gap-3">
+                                    <InputGroup icon={Lock} type="password" name="password" placeholder="Şifre" value={formData.password} onChange={handleInputChange} />
+                                    <InputGroup icon={ShieldCheck} type="password" name="confirmPassword" placeholder="Tekrar" value={formData.confirmPassword} onChange={handleInputChange} />
+                                  </div>
 
-           {/* RIGHT SIDE: The Gateway (Form) */}
-           <div className="w-full md:w-1/2 relative bg-[#000000] flex items-center justify-center p-8 md:p-12 lg:p-20">
-               
-               {/* Decorative Background Elements for Form Side */}
-               <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-slate-800/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
-               </div>
+                                  <div className="pt-2">
+                                    <SubmitButton isLoading={isLoading}>
+                                        Kayıt Ol <Zap size={18} />
+                                    </SubmitButton>
+                                  </div>
+                              </motion.form>
+                          )}
+                      </AnimatePresence>
+                  </div>
 
-               <div className={`relative z-10 w-full max-w-md transition-all duration-700 delay-200 ${animate ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-                   
-                   {/* Mobile Header (Only visible on small screens) */}
-                   <div className="md:hidden text-center mb-10">
-                        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-900/40 mb-4">
-                            <Hexagon size={32} className="text-white" />
-                        </div>
-                        <h1 className="text-3xl font-bold text-white mb-2">Hoş Geldiniz</h1>
-                        <p className="text-slate-500 text-sm">Devam etmek için giriş yapın.</p>
-                   </div>
+                  {/* Footer Toggle */}
+                  <div className="mt-6 pt-6 border-t border-white/5 text-center relative z-20">
+                      <p className="text-slate-500 text-xs font-medium">
+                          {view === 'login' ? "Henüz bir hesabınız yok mu?" : "Zaten hesabınız var mı?"}{" "}
+                          <button 
+                             onClick={() => setView(view === 'login' ? 'signup' : 'login')}
+                             className="text-white hover:text-amber-400 font-bold transition-all ml-1 hover:underline decoration-amber-500 underline-offset-4"
+                          >
+                             {view === 'login' ? "Hesap Oluşturun" : "Giriş Yapın"}
+                          </button>
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </motion.div>
 
-                   {/* Toggle Tabs - Premium Pill Style */}
-                   <div className="flex p-1.5 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-800 mb-10 relative">
-                       <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-slate-800 rounded-full transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-lg border border-slate-700 ${view === 'login' ? 'left-1.5' : 'left-[calc(50%+4px)]'}`}>
-                           {/* Active Glow */}
-                           <div className="absolute inset-0 bg-gradient-to-r from-slate-700 to-slate-800 rounded-full opacity-50"></div>
-                       </div>
-                       
-                       <button onClick={() => setView('login')} className={`flex-1 relative z-10 py-3 text-sm font-bold uppercase tracking-wider transition-colors duration-300 ${view === 'login' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}>
-                           Giriş
-                       </button>
-                       <button onClick={() => setView('signup')} className={`flex-1 relative z-10 py-3 text-sm font-bold uppercase tracking-wider transition-colors duration-300 ${view === 'signup' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}>
-                           Kayıt Ol
-                       </button>
-                   </div>
-
-                   {/* Form Content */}
-                   <div className="relative min-h-[400px]">
-                       
-                       {/* LOGIN FORM */}
-                       {view === 'login' && (
-                           <form onSubmit={handleLogin} className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500 fill-mode-forwards">
-                               <div className="space-y-2">
-                                   <p className="text-slate-400 text-sm mb-6">Hesabınıza erişmek için bilgilerinizi giriniz.</p>
-                                   
-                                   <FloatingInput 
-                                      label="E-Posta Adresi" 
-                                      icon={Mail} 
-                                      name="email"
-                                      value={formData.email}
-                                      onChange={handleInputChange}
-                                   />
-                                   
-                                   <div className="relative">
-                                       <FloatingInput 
-                                          label="Şifre" 
-                                          icon={Lock} 
-                                          type={showPassword ? "text" : "password"}
-                                          name="password"
-                                          value={formData.password}
-                                          onChange={handleInputChange}
-                                       />
-                                       <button 
-                                           type="button" 
-                                           onClick={() => setShowPassword(!showPassword)}
-                                           className="absolute right-5 top-[50px] text-slate-500 hover:text-amber-500 transition-colors z-30">
-                                           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                       </button>
-                                   </div>
-                               </div>
-
-                               <div className="flex justify-between items-center pt-2">
-                                  <label className="flex items-center gap-2 cursor-pointer group">
-                                      <div className="w-5 h-5 rounded border border-slate-700 bg-slate-900/50 flex items-center justify-center transition-all group-hover:border-amber-500 group-[.checked]:bg-amber-500 group-[.checked]:border-amber-500">
-                                          <Check size={12} className="text-black opacity-0 group-[.checked]:opacity-100 font-bold" />
-                                      </div>
-                                      <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">Beni Hatırla</span>
-                                  </label>
-
-                                  <button type="button" onClick={() => showToast('success', 'Sıfırlama bağlantısı gönderildi.')} className="text-sm text-amber-500 hover:text-amber-400 transition-colors font-medium hover:underline underline-offset-4 decoration-amber-500/50">
-                                     Şifremi Unuttum?
-                                  </button>
-                               </div>
-
-                               <button 
-                                  disabled={isLoading}
-                                  className="w-full mt-8 group relative overflow-hidden bg-white text-black font-black text-lg py-5 rounded-2xl shadow-[0_10px_40px_-10px_rgba(255,255,255,0.3)] hover:shadow-[0_20px_60px_-15px_rgba(255,255,255,0.5)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95">
-                                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200 to-transparent -translate-x-full group-hover:animate-[shine_1s_ease-in-out]"></div>
-                                  <span className="relative flex items-center justify-center gap-3">
-                                      {isLoading ? <Loader2 className="animate-spin" /> : (
-                                          <>PANEL'E GİRİŞ YAP <ArrowRight className="group-hover:translate-x-1 transition-transform" strokeWidth={3} /></>
-                                      )}
-                                  </span>
-                               </button>
-                           </form>
-                       )}
-
-                       {/* SIGNUP FORM */}
-                       {view === 'signup' && (
-                          <form onSubmit={handleSignup} className="space-y-5 animate-in fade-in slide-in-from-left-8 duration-500">
-                               <p className="text-slate-400 text-sm mb-6">Profesyonel dünyaya ilk adımınızı atın.</p>
-                               <div className="grid grid-cols-2 gap-4">
-                                  <FloatingInput label="İsim Soyisim" icon={User} name="name" value={formData.name} onChange={handleInputChange} />
-                                  <FloatingInput label="Şirket Adı" icon={Building2} name="companyName" value={formData.companyName} onChange={handleInputChange} />
-                               </div>
-                               <FloatingInput label="E-Posta" icon={Mail} name="email" value={formData.email} onChange={handleInputChange} />
-                               <div className="grid grid-cols-2 gap-4">
-                                  <FloatingInput label="Şifre" icon={Lock} type="password" name="password" value={formData.password} onChange={handleInputChange} />
-                                  <FloatingInput label="Tekrar" icon={Lock} type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} />
-                               </div>
-
-                               <button 
-                                  disabled={isLoading}
-                                  className="w-full mt-8 group relative overflow-hidden bg-gradient-to-r from-amber-600 to-amber-700 text-white font-black text-lg py-5 rounded-2xl shadow-[0_10px_40px_-10px_rgba(245,158,11,0.5)] hover:shadow-[0_20px_60px_-15px_rgba(245,158,11,0.6)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95">
-                                  <span className="relative flex items-center justify-center gap-3">
-                                      {isLoading ? <Loader2 className="animate-spin" /> : 'KAYIT OL VE BAŞLA'}
-                                  </span>
-                               </button>
-                          </form>
-                       )}
-
-                   </div>
-               </div>
-               
-               {/* Footer Credits */}
-               <div className="absolute bottom-8 text-center text-[10px] text-slate-700">
-                   &copy; 2026 KIRBAŞ YAZILIM A.Ş. <span className="mx-2">•</span> <a href="#" className="hover:text-slate-500">GİZLİLİK</a> <span className="mx-2">•</span> <a href="#" className="hover:text-slate-500">ŞARTLAR</a>
-               </div>
-           </div>
-      </div>
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div 
+            initial={{ opacity: 0, y: 50, scale: 0.5 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.8 }}
+            className={`fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 backdrop-blur-md border z-[999]
+              ${toast.type === 'error' 
+                ? 'bg-rose-500/20 border-rose-500/50 text-rose-200 shadow-rose-900/20' 
+                : 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200 shadow-emerald-900/20'
+              }`}
+          >
+            {toast.type === 'error' ? <ShieldCheck size={18} /> : <Sparkles size={18} />}
+            <span className="font-semibold text-sm">{toast.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
-      {/* Toast Notification Container */}
-      {toast && (
-        <div className={`fixed bottom-10 inset-x-0 flex justify-center z-50 pointer-events-none`}>
-            <div className={`
-                flex items-center gap-4 py-4 px-8 rounded-2xl shadow-2xl backdrop-blur-xl border pointer-events-auto animate-in slide-in-from-bottom-10 duration-500
-                ${toast.type === 'success' 
-                    ? 'bg-black/80 border-emerald-500/30 text-emerald-400 shadow-[0_0_30px_-5px_rgba(16,185,129,0.2)]' 
-                    : 'bg-black/80 border-rose-500/30 text-rose-400 shadow-[0_0_30px_-5px_rgba(243,20,50,0.2)]'
-                }
-            `}>
-                <div className={`p-2 rounded-full ${toast.type === 'success' ? 'bg-emerald-500/10' : 'bg-rose-500/10'}`}>
-                    {toast.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
-                </div>
-                <div className="flex flex-col">
-                    <span className="font-bold text-sm tracking-wide">{toast.type === 'success' ? 'BAŞARILI' : 'HATA'}</span>
-                    <span className="text-xs opacity-80 font-medium">{toast.message}</span>
-                </div>
-            </div>
-        </div>
-      )}
     </div>
   );
 };
