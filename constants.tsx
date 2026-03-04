@@ -1,11 +1,13 @@
-import { DocumentTemplate, SubscriptionPlan, UserRole } from './types';
+import { DocumentTemplate, UserRole, SubscriptionPlan } from './types';
 
 export const APP_NAME = "Kırbaş Doküman";
 
+export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = ['FREE', 'SILVER', 'GOLD', 'DIAMOND', 'STANDART', 'PREMIUM'];
+
 export const PLANS = [
   {
-    id: SubscriptionPlan.STANDART,
-    name: "Standart Paket",
+    id: "SILVER", // Updated to match new plan structure
+    name: "Silver Paket",
     price: "100 TL",
     period: "/ay",
     features: ["Standart Doküman Limiti", "PDF Çıktısı", "Temel Şablonlar"],
@@ -13,7 +15,7 @@ export const PLANS = [
     color: "slate"
   },
   {
-    id: SubscriptionPlan.GOLD,
+    id: "GOLD",
     name: "Gold Paket",
     price: "175 TL",
     period: "/ay",
@@ -23,8 +25,8 @@ export const PLANS = [
     color: "amber"
   },
   {
-    id: SubscriptionPlan.PREMIUM,
-    name: "Premium Paket",
+    id: "DIAMOND", // Updated to match new plan structure
+    name: "Diamond Paket",
     price: "250 TL",
     period: "/ay",
     features: ["3 Kat Doküman Limiti", "Tüm Premium Şablonlar", "VIP Destek", "Fatura Entegrasyonu"],

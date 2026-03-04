@@ -7,7 +7,7 @@ import {
   Terminal as TerminalIcon, Globe, Key, UserCheck, AlertTriangle, Plus
 } from 'lucide-react';
 import { User, SubscriptionPlan, UserRole } from '../types';
-import { PLANS as DEFAULT_PLANS } from '../constants';
+import { PLANS as DEFAULT_PLANS, SUBSCRIPTION_PLANS } from '../constants';
 import { fetchApi } from '../src/utils/api';
 
 // --- Types ---
@@ -112,7 +112,7 @@ const UserEditModal = ({ user, onClose, onSave, isSelf }: { user: User, onClose:
                                 disabled={isSelf}
                                 className={`w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-amber-500 outline-none mt-1 ${isSelf ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                {Object.values(SubscriptionPlan).map(p => (
+                                {SUBSCRIPTION_PLANS.map(p => (
                                     <option key={p} value={p}>{p}</option>
                                 ))}
                             </select>
@@ -276,7 +276,7 @@ const NewUserModal = ({ onClose, onSave }: { onClose: () => void, onSave: (u: an
         email: '',
         password: '',
         role: UserRole.SUBSCRIBER,
-        subscriptionType: SubscriptionPlan.FREE
+        subscriptionType: 'FREE'
     });
 
     const isValid = formData.name && formData.email && formData.password.length >= 6;
@@ -344,7 +344,7 @@ const NewUserModal = ({ onClose, onSave }: { onClose: () => void, onSave: (u: an
                                 onChange={e => setFormData({...formData, subscriptionType: e.target.value as SubscriptionPlan})}
                                 className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white focus:border-emerald-500 outline-none mt-1 appearance-none"
                             >
-                                {Object.values(SubscriptionPlan).map(p => (
+                                {SUBSCRIPTION_PLANS.map(p => (
                                     <option key={p} value={p}>{p}</option>
                                 ))}
                             </select>

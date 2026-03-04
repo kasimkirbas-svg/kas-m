@@ -28,5 +28,7 @@
     "noEmit": true
   },
   "include": ["src", "pages", "components", "constants.tsx", "i18n.ts", "types.ts", "App.tsx", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", "build", "pages/_backups"]
+}
   "exclude": ["pages/_backups/**/*"]
 }
