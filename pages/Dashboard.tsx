@@ -361,23 +361,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     {/* Ambient Glow behind Title */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/5 blur-[50px] rounded-full pointer-events-none"></div>
 
-                    <h1 className='text-3xl md:text-5xl font-black tracking-tight relative z-10 select-none drop-shadow-2xl'>
+                    <h1 className='text-3xl sm:text-4xl md:text-5xl font-black tracking-tight relative z-10 select-none drop-shadow-2xl leading-tight'>
                         <span className='bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-indigo-100 dark:to-slate-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)] animate-pulse'>
                             YILLIK DOKÜMANLAR
                         </span>
                     </h1>
                  </motion.div>
 
-                 <div className="text-amber-500/80 text-xl font-bold my-[-5px] z-20 relative">&</div>
+                 <div className="text-amber-500/80 text-lg md:text-xl font-bold my-1 md:my-[-5px] z-20 relative">&</div>
 
                  <motion.div 
                     initial={{ width: 0, opacity: 0 }} 
                     animate={{ width: "auto", opacity: 1 }} 
                     transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                    className="relative mt-0 overflow-hidden px-8 py-2"
+                    className="relative mt-0 overflow-hidden px-4 md:px-8 py-2"
                  >
                      
-                     <span className='relative z-10 text-xs md:text-sm font-black tracking-[1em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-slate-600 via-slate-800 to-slate-600 dark:from-amber-200 dark:via-amber-100 dark:to-amber-200 drop-shadow-sm whitespace-nowrap animate-pulse'>
+                     <span className='relative z-10 text-[10px] md:text-sm font-black tracking-[0.5em] md:tracking-[1em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-slate-600 via-slate-800 to-slate-600 dark:from-amber-200 dark:via-amber-100 dark:to-amber-200 drop-shadow-sm whitespace-nowrap animate-pulse'>
                             İŞ TAKİP PANELİ
                      </span>
                      
@@ -389,8 +389,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </header>
 
         {/* 2. Sectors Row: Responsive Grid (Wraps automatically) */}
-        <div className='shrink-0 h-auto z-20 relative px-4' onMouseLeave={() => setHoveredSectorId(null)}>
-            <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 w-full px-2'>
+        <div className='shrink-0 h-auto z-20 relative px-0 md:px-4' onMouseLeave={() => setHoveredSectorId(null)}>
+            <div className='flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-4 lg:grid-cols-7 gap-3 w-full px-4 md:px-2 pb-2 md:pb-0 scrollbar-hide' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {SECTORS.map((sector, index) => {
                     const isSelected = selectedSectorIds.includes(sector.id);
                     const isHovered = hoveredSectorId === sector.id;
@@ -407,8 +407,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             onMouseEnter={() => setHoveredSectorId(sector.id)}
                             onClick={() => toggleSector(sector.id)}
                             className={`
-                            relative rounded-xl cursor-pointer select-none h-32 md:h-40 flex flex-col items-center justify-center overflow-hidden
-                            w-full
+                            shrink-0 snap-center relative rounded-xl cursor-pointer select-none h-32 md:h-40 flex flex-col items-center justify-center overflow-hidden
+                            w-[140px] md:w-full
                             border transition-colors duration-300
                             ${isActive 
                                 ? 'border-amber-500 dark:border-white shadow-2xl dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] ring-2 ring-amber-200 dark:ring-white/20' 

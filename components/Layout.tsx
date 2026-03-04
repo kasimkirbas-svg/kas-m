@@ -97,15 +97,6 @@ export const Layout: React.FC<LayoutProps> = ({
         
         {/* Left: Branding */}
         <div className="flex items-center gap-4">
-            {/* Mobile Menu Toggle */}
-            <button 
-                onClick={() => setMobileMenuOpen(true)}
-                className="md:hidden p-2 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                aria-label="Menüyü Aç"
-            >
-                <Menu size={24} />
-            </button>
-
             {/* Logo */}
             <div 
                 className="flex items-center gap-3 cursor-pointer group select-none"
