@@ -11,6 +11,7 @@ import {
   FileCheck, 
   AlertTriangle,
   ChevronRight,
+  ChevronDown,
   Archive,
   Download,
   Shield,
@@ -275,6 +276,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
   // Payment State
   const [selectedPlanForPayment, setSelectedPlanForPayment] = useState<{ plan: 'SILVER' | 'GOLD' | 'DIAMOND', price: string } | null>(null);
   const [billingCycle, setBillingCycle] = useState<'MONTHLY' | 'YEARLY'>('YEARLY');
+  const [isDocsExpanded, setIsDocsExpanded] = useState(false); // Controls "Show All" toggle
 
   if (selectedPlanForPayment) {
     return (
@@ -380,28 +382,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             <div className='w-1/4'></div>
         </header>
 
-        {/* 2. Sectors Row: Animated & Detailed with Navigation */}
-        <div className='shrink-0 h-auto md:h-48 z-20 relative group/sector-nav' onMouseLeave={() => setHoveredSectorId(null)}>
-            
-            {/* Scroll Buttons (Desktop) */}
-            <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-slate-200 dark:from-[#0f1115] to-transparent z-30 hidden md:flex items-center justify-start pl-1 opacity-0 group-hover/sector-nav:opacity-100 transition-opacity pointer-events-none">
-                 <button 
-                    onClick={() => document.getElementById('sector-scroll-container')?.scrollBy({ left: -300, behavior: 'smooth' })}
-                    className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-white hover:bg-amber-500 hover:text-white pointer-events-auto transition-all transform hover:scale-110"
-                 >
-                     <ChevronRight size={20} className="rotate-180" />
-                 </button>
-            </div>
-            <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-slate-200 dark:from-[#0f1115] to-transparent z-30 hidden md:flex items-center justify-end pr-1 opacity-0 group-hover/sector-nav:opacity-100 transition-opacity pointer-events-none">
-                 <button 
-                    onClick={() => document.getElementById('sector-scroll-container')?.scrollBy({ left: 300, behavior: 'smooth' })}
-                    className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-white hover:bg-amber-500 hover:text-white pointer-events-auto transition-all transform hover:scale-110"
-                 >
-                     <ChevronRight size={20} />
-                 </button>
-            </div>
-
-            <div id="sector-scroll-container" className='flex overflow-x-auto snap-x gap-3 h-40 md:h-full p-4 scrollbar-hide items-center md:px-4'>
+        {/* 2. Sectors Row: Responsive Grid (Wraps automatically) */}
+        <div className='shrink-0 h-auto z-20 relative px-4' onMouseLeave={() => setHoveredSectorId(null)}>
+            <div className='flex flex-wrap items-center justify-center gap-4 md:gap-6 w-full'>
                 {SECTORS.map((sector, index) => {
                     const isSelected = selectedSectorIds.includes(sector.id);
                     const isHovered = hoveredSectorId === sector.id;
@@ -411,75 +394,55 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.div 
                             key={sector.id}
                             animate={{ 
-                                scale: isHovered ? 1.15 : (isSelected ? 1.05 : 1),
-                                y: isHovered ? -10 : (isSelected ? -5 : 0),
-                                zIndex: isHovered ? 50 : (isSelected ? 20 : 0)
+                                scale: isHovered ? 1.05 : 1,
+                                y: isHovered ? -5 : 0,
                             }}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
                             onMouseEnter={() => setHoveredSectorId(sector.id)}
                             onClick={() => toggleSector(sector.id)}
                             className={`
-                            relative rounded-xl cursor-pointer select-none h-32 md:h-36 flex flex-col items-center justify-end overflow-hidden shrink-0 w-[140px] md:w-[160px] snap-center
-                            border transition-colors duration-300 origin-bottom md:origin-center
+                            relative rounded-xl cursor-pointer select-none h-28 md:h-32 flex flex-col items-center justify-end overflow-hidden
+                            w-[45%] md:w-[130px] lg:w-[140px] xl:w-[150px]
+                            border transition-colors duration-300
                             ${isActive 
-                                ? 'border-amber-500 dark:border-white shadow-2xl dark:shadow-[0_0_40px_rgba(255,255,255,0.3)] ring-2 ring-amber-200 dark:ring-white/20' 
+                                ? 'border-amber-500 dark:border-white shadow-2xl dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] ring-2 ring-amber-200 dark:ring-white/20' 
                                 : 'border-slate-300 dark:border-white/10 shadow-md bg-white dark:bg-slate-800/40 hover:border-slate-400'}
                             `}
                         >   
                             {/* Background Image */}
-                            <motion.div 
-                                className='absolute inset-0 bg-cover bg-center'
-                                animate={{ scale: isActive ? 1.2 : 1 }}
-                                transition={{ duration: 0.5 }}
-                                style={{ backgroundImage: `url(${sector.image})` }}
+                            <div 
+                                className='absolute inset-0 bg-cover bg-center transition-transform duration-500'
+                                style={{ 
+                                    backgroundImage: `url(${sector.image})`,
+                                    transform: isActive ? 'scale(1.1)' : 'scale(1)'
+                                }}
                             >
                                 <div className={`absolute inset-0 transition-colors duration-300 ${isActive ? 'bg-slate-900/10 dark:bg-slate-900/20' : 'bg-slate-100/50 dark:bg-slate-900/60'}`}></div>
                                 <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-overlay opacity-40 transition-opacity ${isActive ? 'opacity-80' : 'opacity-60'}`}></div>
                                 <div className='absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-950 dark:via-transparent dark:to-transparent opacity-90'></div>
-                            </motion.div>
-                            
-                            {/* Content */}
-                            <div className='relative z-10 p-3 w-full flex flex-col items-center'>
-                                <motion.div 
-                                    className={`
-                                    mb-2 p-2 rounded-xl backdrop-blur-md border border-white/20 shadow-sm
-                                    ${isActive ? 'bg-amber-500 text-slate-900 shadow-amber-500/50' : 'bg-white/80 dark:bg-white/10 text-slate-700 dark:text-slate-200'}
-                                    `}
-                                    animate={{ 
-                                        scale: isActive ? 1.1 : 1,
-                                        rotate: isActive ? 5 : 0
-                                    }}
-                                >
-                                    <sector.icon size={22} className="drop-shadow-sm" />
-                                </motion.div>
-                                <span className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 drop-shadow-sm ${isActive ? 'text-slate-900 dark:text-amber-400' : 'text-slate-700 dark:text-slate-300'}`}>
-                                    {sector.name}
-                                </span>
-                                
-                                {/* Hover/Selected Indicator */}
-                                <motion.div 
-                                    className={`h-0.5 rounded-full mt-2 ${isActive ? 'bg-amber-500' : 'bg-slate-300 dark:bg-white/20'}`}
-                                    animate={{ width: isActive ? 40 : 20 }}
-                                />
                             </div>
                             
-                            {/* Selected Checkmark (Enhanced Animation) */}
-                            <AnimatePresence>
-                                {isSelected && (
-                                    <motion.div 
-                                        initial={{ scale: 0, rotate: -180, opacity: 0 }}
-                                        animate={{ 
-                                            scale: 1, 
-                                            rotate: 0, 
-                                            opacity: 1
-                                        }}
-                                        exit={{ scale: 0, opacity: 0 }}
-                                        className='absolute top-2 right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg z-30'
-                                    >
-                                        <CheckCircle2 size={14} strokeWidth={3} />
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                            {/* Content */}
+                            <div className='relative z-10 p-2 w-full flex flex-col items-center'>
+                                <div 
+                                    className={`
+                                    mb-1 p-1.5 rounded-lg backdrop-blur-md border border-white/20 shadow-sm transition-all duration-300
+                                    ${isActive ? 'bg-amber-500 text-slate-900 shadow-amber-500/50 scale-110' : 'bg-white/80 dark:bg-white/10 text-slate-700 dark:text-slate-200'}
+                                    `}
+                                >
+                                    <sector.icon size={20} className="drop-shadow-sm" />
+                                </div>
+                                <span className={`text-[10px] md:text-[11px] font-black uppercase tracking-widest text-center transition-colors duration-300 drop-shadow-sm leading-tight ${isActive ? 'text-slate-900 dark:text-amber-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                                    {sector.name}
+                                </span>
+                            </div>
+                            
+                            {/* Selected Checkmark */}
+                            {isSelected && (
+                                <div className='absolute top-2 right-2 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg z-30 animate-in zoom-in duration-200'>
+                                    <CheckCircle2 size={12} strokeWidth={3} />
+                                </div>
+                            )}
 
                         </motion.div>
                 )})}
@@ -578,10 +541,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 </div>
 
 
-                {/* List Body - Enhanced Layout Flexibility */}
+                {/* List Body - Compact Default with Toggle */}
                 <div className={`
-                    flex-1 overflow-y-auto custom-scrollbar p-3 relative bg-white dark:bg-transparent rounded-2xl
-                    ${(!user?.plan || user.plan === 'FREE' || user.plan === 'MONTHLY' && false) ? '' : 'h-full shadow-inner dark:shadow-none'}
+                    flex-1 relative bg-white dark:bg-transparent rounded-2xl p-3
+                    ${(!user?.plan || user.plan === 'FREE' || user.plan === 'MONTHLY' && false) ? '' : 'shadow-inner dark:shadow-none'}
                 `}>
                     <AnimatePresence mode='wait'>
                         <motion.div 
@@ -592,7 +555,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             transition={{ duration: 0.3 }}
                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-4 content-start"
                         >
-                            {displayDocs.map((item, idx) => (
+                            {displayDocs.slice(0, isDocsExpanded ? undefined : 8).map((item, idx) => (
                                 <motion.div 
                                     key={`${item.sector.id}-${idx}`}
                                     initial={{ opacity: 0, y: 10 }}
@@ -645,6 +608,32 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             ))}
                         </motion.div>
                     </AnimatePresence>
+
+                    {/* Show All Toggle Button */}
+                    {!isDocsExpanded && displayDocs.length > 8 && (
+                        <div className="flex justify-center mt-2 border-t border-slate-100 dark:border-white/5 pt-4">
+                            <button 
+                                onClick={() => setIsDocsExpanded(true)}
+                                className="group flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 transition-colors text-xs font-bold uppercase tracking-wider"
+                            >   
+                                <span>Tümünü Göster ({displayDocs.length - 8} Daha Fazla)</span>
+                                <ChevronDown size={16} className="group-hover:translate-y-1 transition-transform" />
+                            </button>
+                        </div>
+                    )}
+                    
+                    {/* Show Less Toggle Button */}
+                    {isDocsExpanded && displayDocs.length > 8 && (
+                         <div className="flex justify-center mt-6 border-t border-slate-100 dark:border-white/5 pt-4">
+                            <button 
+                                onClick={() => setIsDocsExpanded(false)}
+                                className="group flex flex-col items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors text-xs font-bold uppercase tracking-wider"
+                            >   
+                                <ChevronDown size={16} className="rotate-180 group-hover:-translate-y-1 transition-transform" />
+                                <span>Daha Az Göster</span>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
