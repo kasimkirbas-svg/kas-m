@@ -99,10 +99,9 @@ export const Layout: React.FC<LayoutProps> = ({
       <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-4 bg-transparent shrink-0 pointer-events-auto">
         
         {/* Left: Branding */}
-        <div className="flex items-center gap-4">
-            {/* Logo */}
+        <div className="flex flex-col items-end gap-2 relative z-[100]">
             <div 
-                className="flex items-center gap-3 cursor-pointer group select-none"
+                className="flex items-center gap-3 cursor-pointer group select-none pointer-events-auto"
                 onClick={() => onNavigate('dashboard')}
             >
                 <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-700 rounded-lg flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform border border-amber-400/20">
@@ -115,17 +114,19 @@ export const Layout: React.FC<LayoutProps> = ({
                 </div>
             </div>
             
-            {/* Geri Dön Tuşu */}
+            {/* Geri Dön Tuşu (Logonun altında sağa dayalı) */}
             {onGoBack && canGoBack && currentView !== 'dashboard' && currentView !== 'auth' && (
                 <button 
                     onClick={onGoBack} 
-                    className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-slate-500 text-slate-200 rounded-lg transition-all ml-4"
+                    className="flex items-center gap-1.5 px-3 py-1 bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-slate-500 text-slate-200 hover:text-white rounded-lg transition-all shadow-md cursor-pointer pointer-events-auto z-[100] active:scale-95"
                 >
-                    <ArrowLeft size={16} />
-                    <span className="text-sm font-medium">Geri Dön</span>
+                    <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Geri Dön</span>
                 </button>
             )}
+        </div>
 
+        <div className="flex items-center gap-4">
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-1 ml-8">
                 {menuItems.map(item => {
@@ -245,17 +246,6 @@ export const Layout: React.FC<LayoutProps> = ({
       {/* Main Content Area */}
       <main className={`flex-1 w-full relative z-10 ${currentView === 'dashboard' ? 'p-0 overflow-x-hidden' : 'overflow-x-hidden p-4 md:p-6 lg:p-8 pt-24 md:pt-28'}`}>
         <div key={currentView} className={`${currentView === 'dashboard' ? 'w-full h-full' : 'max-w-[1600px] mx-auto space-y-6 md:space-y-8 animate-fade-in-up pb-20 md:pb-0'}`}>
-            {currentView !== 'dashboard' && currentView !== 'auth' && onGoBack && (
-                <div className="mb-4 relative z-50 pointer-events-auto flex">
-                    <button 
-                        onClick={(e) => { e.preventDefault(); onGoBack(); }}
-                        className="group flex items-center gap-2 px-4 py-2 bg-slate-900/50 hover:bg-slate-800 backdrop-blur-md border border-slate-700/50 hover:border-slate-500 rounded-xl text-slate-300 hover:text-white font-bold text-sm shadow-lg transition-all cursor-pointer pointer-events-auto"
-                    >
-                        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                        {_t('common.back', 'Geri Dön')}
-                    </button>
-                </div>
-            )}
              {children}
         </div>
       </main>
