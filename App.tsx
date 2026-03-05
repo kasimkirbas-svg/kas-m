@@ -40,7 +40,7 @@ const App = () => {
       setSelectedTemplate(template);
       setEditingDocument(doc);
       setPreviewDocument(undefined); // Ensure preview is off
-      setCurrentView('editor');
+      navigateWithHistory('editor');
     } else {
       alert('Bu dokümana ait şablon bulunamadı. (ID: ' + doc.templateId + ')');
     }
@@ -48,8 +48,45 @@ const App = () => {
 
   const handleNavigate = (view: string, params?: { category?: string, search?: string }) => {
     setNavParams(params || {});
-    setCurrentView(view);
+    navigateWithHistory(view);
   };
+
+  const navigateWithHistory = (view: string, replace = false) => {
+    setCurrentView((prevView) => {
+        if (prevView !== view) {
+            if (replace) {
+                window.history.replaceState({ view }, '', `?view=${view}`);
+            } else {
+                window.history.pushState({ view }, '', `?view=${view}`);
+            }
+        }
+        return view;
+    });
+  };
+
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        navigateWithHistory('dashboard', true);
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.view) {
+        setCurrentView(event.state.view);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    
+    // Initialize without overwriting if there's already state
+    if (!window.history.state || !window.history.state.view) {
+        window.history.replaceState({ view: currentView }, '', `?view=${currentView}`);
+    }
+    
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
 
   const handlePreviewDocument = (doc: GeneratedDocument) => {
@@ -58,7 +95,7 @@ const App = () => {
        setSelectedTemplate(template);
        setPreviewDocument(doc); // Turn on preview mode
        setEditingDocument(doc); // Still need data to populate fields
-       setCurrentView('editor');
+       navigateWithHistory('editor');
     } else {
        alert('Bu dokümana ait şablon bulunamadı. (ID: ' + doc.templateId + ')');
     }
@@ -87,7 +124,7 @@ const App = () => {
       try {
         const parsedUser = JSON.parse(savedUserStr);
         setUser(parsedUser);
-        if (currentView === 'auth') setCurrentView('dashboard');
+        if (currentView === 'auth') navigateWithHistory('dashboard', true);
         
         // Validate user session
         fetchApi('/api/auth/me')
@@ -102,7 +139,7 @@ const App = () => {
           .catch(() => {
             console.warn('Session expired. Logging out.');
             setUser(null);
-            setCurrentView('auth');
+            navigateWithHistory('auth', true);
             localStorage.removeItem('currentUser');
             localStorage.removeItem('authToken');
           });
@@ -186,12 +223,12 @@ const App = () => {
              setUser(newUser);
          } else {
              setUser(null);
-             setCurrentView('auth');
+             navigateWithHistory('auth', true);
          }
       }
       if (e.key === 'authToken' && !e.newValue) {
           setUser(null);
-          setCurrentView('auth');
+          navigateWithHistory('auth', true);
       }
       if (e.key === 'language' && e.newValue) {
           const lang = e.newValue as 'tr' | 'en' | 'ar';
@@ -218,15 +255,15 @@ const App = () => {
     
     // Belirle admin mi user mi
     if (userData.role === UserRole.ADMIN) {
-      setCurrentView('admin');
+      navigateWithHistory('admin', true);
     } else {
-      setCurrentView('dashboard');
+      navigateWithHistory('dashboard', true);
     }
   };
 
   const handleLogout = () => {
     setUser(null);
-    setCurrentView('auth');
+    navigateWithHistory('auth', true);
     setSelectedTemplate(null);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('authToken'); // Clear auth token
@@ -264,7 +301,7 @@ const App = () => {
         // I will keep it for session persistence but the main source is now the backend response.
 
         alert(t?.subscription?.successMessage || 'Aboneliğiniz başarıyla başlatıldı.');
-        setCurrentView('profile');
+        navigateWithHistory('profile');
 
     } catch (apiError: any) {
         console.error('Upgrade API error:', apiError); 
@@ -312,9 +349,9 @@ const App = () => {
             preparedBy={user.name}
             onClose={() => {
               if (editingDocument || previewDocument) {
-                  setCurrentView('my-documents');
+                  navigateWithHistory('my-documents');
               } else {
-                  setCurrentView('templates');
+                  navigateWithHistory('templates');
               }
               setEditingDocument(undefined);
               setPreviewDocument(undefined); 
@@ -345,7 +382,7 @@ const App = () => {
               setEditingDocument(undefined);
               
               alert(`✓ ${selectedTemplate.title} ${t?.editor?.photoSuccess || 'dokümanı başarıyla oluşturuldu ve kaydedildi.'}`);
-              setCurrentView('my-documents');
+              navigateWithHistory('my-documents');
             }}
             t={t}
           />
@@ -369,11 +406,11 @@ const App = () => {
             >
                 <div className="mb-6 relative z-50">
                     <button 
-                        onClick={(e) => { e.preventDefault(); handleNavigate('dashboard'); }}
+                        onClick={(e) => { e.preventDefault(); handleGoBack(); }}
                         className="group flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all w-fit cursor-pointer pointer-events-auto"
                     >
                         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                        {t?.common?.back || 'Ana Sayfaya Dön'}
+                        {t?.common?.back || 'Geri Dön'}
                     </button>
                 </div>
                 <MyDocuments 
@@ -420,11 +457,11 @@ const App = () => {
           <div>
           <div className="mb-6 relative z-50">
              <button 
-                onClick={(e) => { e.preventDefault(); handleNavigate('dashboard'); }}
+                onClick={(e) => { e.preventDefault(); handleGoBack(); }}
                 className="group flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all w-fit cursor-pointer pointer-events-auto"
              >
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                {t?.common?.back || 'Ana Sayfaya Dön'}
+                {t?.common?.back || 'Geri Dön'}
              </button>
           </div>
           <DocumentsList
@@ -434,7 +471,7 @@ const App = () => {
               userIsPremium={user.plan === 'YEARLY'}
               onSelectTemplate={(template) => {
                 setSelectedTemplate(template);
-                setCurrentView('editor');
+                navigateWithHistory('editor');
               }}
               t={t}
             />
@@ -469,7 +506,7 @@ const App = () => {
                   } else {
                       // If it's a template object
                       setSelectedTemplate(tag as any);
-                      setCurrentView('editor');
+                      navigateWithHistory('editor');
                   }
               }
             }}
@@ -498,14 +535,14 @@ const App = () => {
         >
           <div className="mb-6 relative z-50">
              <button 
-                onClick={(e) => { e.preventDefault(); handleNavigate('dashboard'); }}
+                onClick={(e) => { e.preventDefault(); handleGoBack(); }}
                 className="group flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all w-fit cursor-pointer pointer-events-auto"
              >
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                {t?.common?.back || 'Ana Sayfaya Dön'}
+                {t?.common?.back || 'Geri Dön'}
              </button>
           </div>
-          <Profile user={user} t={t} onNavigate={setCurrentView} />
+          <Profile user={user} t={t} onNavigate={handleNavigate} />
         </Layout>
       );
     }
@@ -526,11 +563,11 @@ const App = () => {
         >
           <div className="mb-6 relative z-50">
              <button 
-                onClick={(e) => { e.preventDefault(); handleNavigate('dashboard'); }}
+                onClick={(e) => { e.preventDefault(); handleGoBack(); }}
                 className="group flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all w-fit cursor-pointer pointer-events-auto"
              >
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                {t?.common?.back || 'Ana Sayfaya Dön'}
+                {t?.common?.back || 'Geri Dön'}
              </button>
           </div>
           <Settings 
@@ -562,7 +599,7 @@ const App = () => {
               user={user}
               t={t}
               onUpgrade={handleUpgrade}
-              onBack={() => setCurrentView('profile')}
+              onBack={handleGoBack}
            />
          </Layout>
       );
