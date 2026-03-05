@@ -559,19 +559,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     <AnimatePresence mode='wait'>
                         <motion.div 
                             key={currentSector ? currentSector.id : 'all'}
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.98 }}
-                            transition={{ duration: 0.3 }}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            variants={{
+                                hidden: { opacity: 0, scale: 0.98 },
+                                visible: { 
+                                    opacity: 1, 
+                                    scale: 1,
+                                    transition: { staggerChildren: 0.02, duration: 0.3 } 
+                                },
+                                exit: { opacity: 0, scale: 0.98, transition: { duration: 0.2 } }
+                            }}
                             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 content-start"
                         >
                             {/* Show only first 12 items if not expanded */}
                             {displayDocs.slice(0, isDocsExpanded ? undefined : 12).map((item, idx) => (
                                 <motion.div 
                                     key={`${item.sector.id}-${idx}`}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: idx * 0.02 }}
+                                    variants={{
+                                        hidden: { opacity: 0, y: 10 },
+                                        visible: { opacity: 1, y: 0 }
+                                    }}
                                     onClick={() => handleDocumentClick(item.doc, item.sector.id)}
                                     className='group flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 hover:bg-white dark:hover:bg-slate-800/80 hover:border-amber-500 dark:hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg'
                                 >
