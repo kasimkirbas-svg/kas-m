@@ -230,17 +230,6 @@ export const Layout: React.FC<LayoutProps> = ({
       {/* Main Content Area */}
       <main className={`flex-1 w-full relative z-10 ${currentView === 'dashboard' ? 'p-0 overflow-x-hidden' : 'overflow-x-hidden p-4 md:p-6 lg:p-8 pt-24 md:pt-28'}`}>
         <div key={currentView} className={`${currentView === 'dashboard' ? 'w-full h-full' : 'max-w-[1600px] mx-auto space-y-6 md:space-y-8 animate-fade-in-up pb-20 md:pb-0'}`}>
-            {currentView !== 'dashboard' && onGoBack && (
-                <div className="mb-6 relative z-50 pointer-events-auto flex">
-                    <button 
-                        onClick={(e) => { e.preventDefault(); onGoBack(); }}
-                        className="group flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 rounded-xl text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white font-bold text-sm shadow-sm transition-all cursor-pointer pointer-events-auto"
-                    >
-                        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                        {_t('common.back', 'Geri Dön')}
-                    </button>
-                </div>
-            )}
              {children}
         </div>
       </main>
