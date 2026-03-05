@@ -184,22 +184,16 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
           
           {/* MASSIVE BRANDING TYPOGRAPHY IN BACKGROUND */}
           <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-0 flex flex-col items-center justify-center">
-             <motion.h1 
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 0.03, scale: 1 }}
-                transition={{ duration: 2 }}
-                className="text-[15vw] font-black text-white leading-none tracking-[0.05em] uppercase"
+             <h1 
+                className="text-[15vw] font-black text-white leading-none tracking-[0.05em] uppercase opacity-[0.03]"
              >
                 KIRBAŞ
-             </motion.h1>
-             <motion.h2 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 0.05, y: 0 }}
-                transition={{ duration: 2, delay: 0.5 }}
-                className="text-[3vw] font-bold text-amber-500 tracking-[0.5em] uppercase mt-[-2vw]"
+             </h1>
+             <h2 
+                className="text-[3vw] font-bold text-amber-500 tracking-[0.5em] uppercase mt-[-2vw] opacity-[0.05]"
              >
                 Global Platform
-             </motion.h2>
+             </h2>
           </div>
 
           {/* GLOBAL CONSISTENT BACKGROUND (Blobs) Optimized for performance */}
@@ -258,7 +252,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
       {/* --- THE DOOR (Main Card) --- */}
       <motion.div 
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        initial={{ opacity: 0, scale: 0.8, y: 50 }}
+        initial={false}
         animate={{ opacity: doorOpen ? 0 : 1, scale: doorOpen ? 5 : 1, y: 0, filter: doorOpen ? "brightness(2) blur(10px)" : "none" }}
         transition={{ duration: doorOpen ? 1.5 : 0.8, type: doorOpen ? "tween" : "spring", ease: "easeInOut" }}
         className="relative z-20 w-full max-w-[440px] px-6 group"
@@ -284,46 +278,32 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
                   
                   {/* Header: Brand Icon */}
                   <div className="text-center mb-8 relative z-20">
-                      <motion.div 
-                         initial={{ y: -20, opacity: 0 }}
-                         animate={{ y: 0, opacity: 1 }}
-                         transition={{ delay: 0.2 }}
+                      <div 
                          className="w-20 h-20 mx-auto bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.5)] mb-5 relative group cursor-pointer transform transition-all hover:scale-110 hover:rotate-6 ring-2 ring-amber-300/50"
                       >
                          <div className="absolute inset-0 bg-amber-400 blur-xl opacity-60 rounded-2xl animate-pulse"></div>
                          <Hexagon size={40} className="text-white fill-white/30 relative z-10 drop-shadow-md" strokeWidth={2} />
-                      </motion.div>
+                      </div>
 
-                      <motion.h1 
-                        initial={{ opacity: 0 }} 
-                        animate={{ opacity: 1 }} 
-                        transition={{ delay: 0.3 }}
+                      <h1 
                         className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-slate-400 tracking-tight"
                       >
                           {view === 'login' ? 'PLATFORM GİRİŞİ' : 'PLATFORMA KATILIN'}
-                      </motion.h1>
-                      <motion.p 
-                        initial={{ opacity: 0 }} 
-                        animate={{ opacity: 1 }} 
-                        transition={{ delay: 0.4 }}
+                      </h1>
+                      <p 
                         className="text-amber-500 text-[10px] mt-2 font-black tracking-[0.3em] uppercase bg-amber-500/10 inline-block px-3 py-1 rounded-full border border-amber-500/20"
                       >
                           Güvenli Bağlantı
-                      </motion.p>
+                      </p>
                   </div>
 
                   {/* Form Container */}
                   <div className="relative z-20 min-h-[300px]">
-                      <AnimatePresence mode="wait">
                           {view === 'login' ? (
-                              <motion.form
+                              <form
                                 key="login-form"
-                                initial={{ opacity: 0, x: -30 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 30 }}
-                                transition={{ duration: 0.3 }}
                                 onSubmit={performLogin}
-                                className="space-y-5"
+                                className="space-y-5 animate-in fade-in slide-in-from-left-4 duration-300"
                               >
                                   <InputGroup icon={Mail} type="email" name="email" placeholder="E-Posta Adresi" value={formData.email} onChange={handleInputChange} autoFocus />
                                   <InputGroup icon={Lock} type="password" name="password" placeholder="Şifre" value={formData.password} onChange={handleInputChange} />
@@ -348,16 +328,12 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
                                         Kayıt Ol
                                     </button>
                                   </div>
-                              </motion.form>
+                              </form>
                           ) : (
-                              <motion.form
+                              <form
                                 key="signup-form"
-                                initial={{ opacity: 0, x: 30 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -30 }}
-                                transition={{ duration: 0.3 }}
                                 onSubmit={performSignup}
-                                className="space-y-4"
+                                className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300"
                               >
                                   <InputGroup icon={User} type="text" name="name" placeholder="Ad Soyad" value={formData.name} onChange={handleInputChange} />
                                   <InputGroup icon={Sparkles} type="text" name="companyName" placeholder="Şirket Adı" value={formData.companyName} onChange={handleInputChange} />
@@ -379,9 +355,8 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
                                         Giriş Yap
                                     </button>
                                   </div>
-                              </motion.form>
+                              </form>
                           )}
-                      </AnimatePresence>
                   </div>
 
                   {/* Footer Toggle */}
