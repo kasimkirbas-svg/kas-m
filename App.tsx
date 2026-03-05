@@ -17,9 +17,19 @@ import { Check, Lock, Shield, Star, Users, FileText, DollarSign, TrendingUp, Sea
 import { getTranslation } from './i18n';
 
 const App = () => {
+  // Get initial view from URL
+  const getInitialView = () => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const viewOpt = params.get('view');
+      if (viewOpt) return viewOpt;
+    }
+    return 'auth';
+  };
+
   // State
   const [user, setUser] = useState<User | null>(null);
-  const [currentView, setCurrentView] = useState('auth');
+  const [currentView, setCurrentView] = useState(getInitialView);
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
   const [templates, setTemplates] = useState<DocumentTemplate[]>(MOCK_TEMPLATES);
   const [isLoading, setIsLoading] = useState(true);

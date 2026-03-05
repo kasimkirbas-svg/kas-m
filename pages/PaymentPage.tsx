@@ -225,6 +225,9 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({ plan, price, period, o
            <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
            
            <div className="relative z-[100] pointer-events-auto">
+             <button onClick={(e) => { e.preventDefault(); onBack(); }} className="flex items-center text-white/80 hover:text-white mb-6 transition-colors text-sm font-medium cursor-pointer pointer-events-auto group bg-black/20 p-2.5 rounded-xl backdrop-blur-md border border-white/10 hover:bg-black/40 w-fit">
+               <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Geri Dön
+             </button>
              
              <div className="bg-white/10 w-16 h-16 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 mb-6 shadow-lg">
                 <planInfo.icon size={32} className={`text-white drop-shadow-md`} />
