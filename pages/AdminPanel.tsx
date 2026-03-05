@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, ShoppingBag, FileText, Server, 
-  LogOut, Menu, X,
+  LogOut, Menu, X, ArrowLeft,
   Activity, DollarSign, Upload, Edit3, Trash2, Eye, 
   RefreshCw, Database, Lock, Unlock, CheckCircle,
   Terminal as TerminalIcon, Globe, Key, UserCheck, AlertTriangle, Plus
@@ -14,6 +14,7 @@ import { fetchApi } from '../src/utils/api';
 interface AdminProps {
   user?: User;
   onLogout?: () => void;
+  onNavigate?: (view: string) => void;
 }
 
 interface SystemLog {
@@ -1128,7 +1129,13 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
             ))}
          </nav>
 
-         <div className="p-4 border-t border-slate-800 bg-[#0B0F19]">
+         <div className="p-4 border-t border-slate-800 bg-[#0B0F19] space-y-2">
+            {onNavigate && (
+               <button onClick={() => onNavigate('dashboard')} className="w-full flex items-center gap-3 px-3 py-3 text-slate-300 hover:text-amber-500 hover:bg-amber-500/10 rounded-xl transition-all border border-transparent hover:border-amber-500/20">
+                  <ArrowLeft size={20} />
+                  {sidebarOpen && <span className="text-sm font-medium">Platforma Dön</span>}
+               </button>
+            )}
             <button onClick={handleAdminLogout} className="w-full flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all border border-transparent hover:border-rose-500/20">
                <LogOut size={20} />
                {sidebarOpen && <span className="text-sm font-medium">Güvenli Çıkış</span>}

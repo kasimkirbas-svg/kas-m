@@ -520,6 +520,7 @@ const App = () => {
     if (user && currentView === 'profile') {
       return (
         <Layout onGoBack={handleGoBack} 
+          canGoBack={window.history.length > 1 && currentView !== 'dashboard'}
           user={user} 
           currentView={currentView} 
           onNavigate={handleNavigate} 
@@ -540,6 +541,7 @@ const App = () => {
     if (user && currentView === 'settings') {
       return (
         <Layout onGoBack={handleGoBack} 
+          canGoBack={window.history.length > 1 && currentView !== 'dashboard'}
           user={user} 
           currentView={currentView} 
           onNavigate={handleNavigate} 
@@ -566,6 +568,7 @@ const App = () => {
     if (user && currentView === 'subscription') {
       return (
          <Layout onGoBack={handleGoBack} 
+            canGoBack={window.history.length > 1 && currentView !== 'dashboard'}
             user={user} 
             currentView={currentView} 
             onNavigate={handleNavigate} 
@@ -588,12 +591,13 @@ const App = () => {
     
     // 7. Admin Panel (Handles all admin-related views)
     if (user?.role === UserRole.ADMIN && ['admin', 'subscribers', 'users', 'admin-templates', 'admin-packages'].includes(currentView)) {
-      return <AdminPanel user={user} onLogout={handleLogout} />
+      return <AdminPanel user={user} onLogout={handleLogout} onNavigate={handleNavigate} />
     }
 
     // Default Fallback
     return (
       <Layout onGoBack={handleGoBack} 
+        canGoBack={window.history.length > 1 && currentView !== 'dashboard'}
         user={user} 
         currentView={currentView} 
         onNavigate={handleNavigate} 

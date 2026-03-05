@@ -275,8 +275,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           </div>
           <div className="flex gap-2 shrink-0">
              {onClose && (
-                <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors active:scale-95 z-50 pointer-events-auto">
-                    <ArrowLeft className="text-slate-500 dark:text-slate-400" size={24} />
+                <button onClick={onClose} className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-gradient-to-r from-slate-800 to-slate-900 border-2 border-slate-700 hover:border-amber-500/50 text-white rounded-xl transition-all active:scale-95 z-50 pointer-events-auto hover:shadow-lg hover:shadow-amber-500/20 group">
+                    <ArrowLeft className="text-amber-500 group-hover:-translate-x-1 transition-transform" size={18} />
+                    <span className="hidden md:inline text-sm font-black uppercase tracking-widest text-slate-100 group-hover:text-white">Geri Dön</span>
                 </button>
              )}
           </div>
@@ -588,8 +589,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
          </div>
 
          {isReadOnly && onClose && (
-            <button onClick={onClose} className="absolute top-6 right-6 z-[60] p-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all shadow-lg pointer-events-auto">
-                <ArrowLeft size={24} />
+            <button onClick={onClose} className="absolute top-6 left-6 md:right-auto md:left-6 z-[60] flex items-center gap-2 px-4 py-2 bg-slate-900/80 hover:bg-slate-800 backdrop-blur-md border-2 border-slate-700 hover:border-amber-500/50 rounded-xl text-white transition-all shadow-lg hover:shadow-amber-500/20 pointer-events-auto group active:scale-95">
+                <ArrowLeft size={18} className="text-amber-500 group-hover:-translate-x-1.5 transition-transform" />
+                <span className="text-sm font-black uppercase tracking-widest">Geri Dön</span>
             </button>
          )}
 

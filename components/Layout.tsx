@@ -118,10 +118,10 @@ export const Layout: React.FC<LayoutProps> = ({
             {onGoBack && canGoBack && currentView !== 'dashboard' && currentView !== 'auth' && (
                 <button 
                     onClick={onGoBack} 
-                    className="flex items-center gap-1.5 px-3 py-1 bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-slate-500 text-slate-200 hover:text-white rounded-lg transition-all shadow-md cursor-pointer pointer-events-auto z-[100] active:scale-95"
+                    className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 border-2 border-slate-700 hover:border-amber-500/50 text-slate-100 hover:text-white rounded-xl transition-all shadow-lg hover:shadow-amber-500/20 cursor-pointer pointer-events-auto z-[100] active:scale-95 group"
                 >
-                    <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                    <span className="text-xs font-bold uppercase tracking-wider">Geri Dön</span>
+                    <ArrowLeft size={16} className="group-hover:-translate-x-1.5 transition-transform text-amber-500" />
+                    <span className="text-xs md:text-sm font-black uppercase tracking-widest">Geri Dön</span>
                 </button>
             )}
         </div>
