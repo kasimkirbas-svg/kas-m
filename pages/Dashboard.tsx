@@ -730,23 +730,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                             </div>
                         </motion.button>
 
-                        {/* Button 4: Zimmet/Teslim */}
+                        {/* Button 4: CV Oluştur */}
                         <motion.button 
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => {
                                 window.scrollTo({ top: document.getElementById('search-section')?.offsetTop, behavior: 'smooth' });
-                                setSearchQuery('Zimmet');
+                                setSearchQuery('CV');
                             }}
                             className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 shadow-sm hover:shadow-violet-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-violet-50/50 dark:from-violet-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
                             <div className='w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600 group-hover:text-white flex items-center justify-center transition-colors duration-200 shrink-0 shadow-sm'>
-                                <Box size={20} />
+                                <UserPlus size={20} />
                             </div>
                             <div className='flex flex-col items-start z-10'>
-                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Demirbaş</span>
-                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-violet-600 dark:group-hover:text-violet-300 leading-none'>ZİMMETLE</span>
+                                <span className='text-[10px] uppercase font-black text-slate-400 dark:text-slate-500 leading-none mb-1'>Personel</span>
+                                <span className='text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-violet-600 dark:group-hover:text-violet-300 leading-none'>CV OLUŞTUR</span>
                             </div>
                         </motion.button>
                     </div>
