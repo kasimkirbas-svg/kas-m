@@ -556,33 +556,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     relative bg-white dark:bg-transparent rounded-2xl p-4
                     ${(!user?.plan || user.plan === 'FREE' || user.plan === 'MONTHLY' && false) ? '' : 'shadow-inner dark:shadow-none'}
                 `}>
-                    <AnimatePresence mode='wait'>
-                        <motion.div 
-                            key={currentSector ? currentSector.id : 'all'}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            variants={{
-                                hidden: { opacity: 0, scale: 0.98 },
-                                visible: { 
-                                    opacity: 1, 
-                                    scale: 1,
-                                    transition: { staggerChildren: 0.02, duration: 0.3 } 
-                                },
-                                exit: { opacity: 0, scale: 0.98, transition: { duration: 0.2 } }
-                            }}
-                            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 content-start"
-                        >
-                            {/* Show only first 12 items if not expanded */}
-                            {displayDocs.slice(0, isDocsExpanded ? undefined : 12).map((item, idx) => (
-                                <motion.div 
-                                    key={`${item.sector.id}-${idx}`}
-                                    variants={{
-                                        hidden: { opacity: 0, y: 10 },
-                                        visible: { opacity: 1, y: 0 }
-                                    }}
-                                    onClick={() => handleDocumentClick(item.doc, item.sector.id)}
-                                    className='group flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 hover:bg-white dark:hover:bg-slate-800/80 hover:border-amber-500 dark:hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg'
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 content-start">
+                        {/* Show only first 12 items if not expanded */}
+                        {displayDocs.slice(0, isDocsExpanded ? undefined : 12).map((item, idx) => (
+                            <motion.div 
+                                key={`${item.sector.id}-${idx}`}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.2, delay: idx * 0.02 }}
+                                onClick={() => handleDocumentClick(item.doc, item.sector.id)}
+                                className='group flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 hover:bg-white dark:hover:bg-slate-800/80 hover:border-amber-500 dark:hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg'
                                 >
                                     {/* Hover Highlight Gradient */}
                                     <div className='absolute inset-0 bg-gradient-to-r from-transparent via-amber-50/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000'></div>
@@ -626,8 +609,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                     </div>
                                 </motion.div>
                             ))}
-                        </motion.div>
-                    </AnimatePresence>
+                        </div>
 
                     {/* Show All Toggle Button */}
                     {!isDocsExpanded && displayDocs.length > 12 && (
