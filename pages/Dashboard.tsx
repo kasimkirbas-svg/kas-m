@@ -98,10 +98,10 @@ const SECTORS = [
         'Masraf Bildirim Formu',
         'Toplantı Tutanağı',
         'Zimmet Tutanağı',
-        'Eğitim Katılım Formu',
-        'Müşteri Ziyaret Raporu',
-        'Proje Durum Raporu',
-        'İş Seyahati Bildirim Formu'
+        'Katılım Sertifikası',
+        'Genel Tutanak',
+        'Yıllık İzin Formu',
+        'Proje Durum Raporu'
     ]
   },
   { 
@@ -193,7 +193,7 @@ const SECTORS = [
     accent: 'text-purple-400',
     docs: [
         'Günlük Kasa Raporu', 
-        'Veresiye Defteri', 
+        'Günlük Rapor', 
         'Müşteri Sipariş Formu', 
         'Fiyat Teklif Şablonu',
         'Stok Sayım Listesi',

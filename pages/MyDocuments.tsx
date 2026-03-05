@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FileText, Calendar, Trash2, Search, Eye, Edit, MoreVertical, 
   Building2, Clock, Filter, ChevronDown, CheckCircle2, 
@@ -199,20 +198,14 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
       {/* 3. Documents Grid */}
       {filteredDocs.length > 0 ? (
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-            <AnimatePresence mode="popLayout">
                {filteredDocs.map((doc, idx) => {
                   const { title: templateTitle, category } = getTemplateInfo(doc.templateId);
                   const status = getStatusInfo(doc.status || 'DRAFT');
                   
                   return (
-                     <motion.div
-                        layout
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                        transition={{ duration: 0.4, delay: idx * 0.05, type: "spring", stiffness: 100 }}
+                     <div
                         key={doc.id}
-                        className="group relative bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1"
+                        className="group relative bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-4"
                      >
                         {/* Interactive Overlay for Quick Actions (Desktop) */}
                         <div className="absolute inset-0 z-0 bg-gradient-to-br from-indigo-500/0 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] pointer-events-none" />
@@ -237,27 +230,22 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                               </button>
                               
                               {/* Dropdown Menu */}
-                              <AnimatePresence>
-                                 {activeMenuId === doc.id && (
-                                    <motion.div 
-                                       initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                                       exit={{ opacity: 0, scale: 0.9 }}
-                                       className="absolute right-0 top-10 z-50 w-48 bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-700 overflow-hidden origin-top-right p-1.5"
-                                    >
-                                       <button onClick={(e) => { e.stopPropagation(); onPreviewDocument(doc); setActiveMenuId(null); }} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-2 transition-colors">
-                                          <Eye size={16} /> Önizle
-                                       </button>
-                                       <button onClick={(e) => { e.stopPropagation(); onEditDocument(doc); setActiveMenuId(null); }} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/20 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-2 transition-colors">
-                                          <Edit size={16} /> Düzenle
-                                       </button>
-                                       <div className="h-px bg-slate-100 dark:bg-slate-700 my-1" />
-                                       <button onClick={(e) => { e.stopPropagation(); onDeleteDocument(doc.id); setActiveMenuId(null); }} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-sm font-bold text-red-600 dark:text-red-400 flex items-center gap-2 transition-colors">
-                                          <Trash2 size={16} /> Sil
-                                       </button>
-                                    </motion.div>
-                                 )}
-                              </AnimatePresence>
+                              {activeMenuId === doc.id && (
+                                 <div
+                                    className="absolute right-0 top-10 z-50 w-48 bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-700 overflow-hidden origin-top-right p-1.5 animate-in zoom-in-95 duration-200"
+                                 >
+                                    <button onClick={(e) => { e.stopPropagation(); onPreviewDocument(doc); setActiveMenuId(null); }} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-2 transition-colors">
+                                       <Eye size={16} /> Önizle
+                                    </button>
+                                    <button onClick={(e) => { e.stopPropagation(); onEditDocument(doc); setActiveMenuId(null); }} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/20 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-2 transition-colors">
+                                       <Edit size={16} /> Düzenle
+                                    </button>
+                                    <div className="h-px bg-slate-100 dark:bg-slate-700 my-1" />
+                                    <button onClick={(e) => { e.stopPropagation(); onDeleteDocument(doc.id); setActiveMenuId(null); }} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-sm font-bold text-red-600 dark:text-red-400 flex items-center gap-2 transition-colors">
+                                       <Trash2 size={16} /> Sil
+                                    </button>
+                                 </div>
+                              )}
                            </div>
                         </div>
 
@@ -307,22 +295,19 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                               <Edit size={18} />
                            </button>
                         </div>
-                     </motion.div>
+                     </div>
                   );
                })}
-            </AnimatePresence>
          </div>
       ) : (
          /* Empty State */
-         <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center py-24 text-center"
+         <div
+            className="flex flex-col items-center justify-center py-24 text-center animate-in fade-in slide-in-from-bottom-4"
          >
             <div className="w-40 h-40 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-6 relative group cursor-pointer border border-slate-200 dark:border-slate-800">
                <div className="absolute inset-0 bg-indigo-500/5 rounded-full animate-ping opacity-75" />
                <FileText size={64} className="text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 transition-colors duration-500" />
-               
+
                <div className="absolute -right-2 -bottom-0 w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl border-4 border-white dark:border-slate-950 group-hover:scale-110 transition-transform">
                   <Plus size={24} />
                </div>
@@ -336,7 +321,7 @@ export const MyDocuments: React.FC<MyDocumentsProps> = ({
                   : 'Henüz profesyonel bir belge oluşturmadınız. Hemen bir şablon seçerek başlayın.'
                }
             </p>
-         </motion.div>
+         </div>
       )}
     </div>
   );
