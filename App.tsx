@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Layout } from './components/Layout';
 import { DocumentEditor } from './pages/DocumentEditor';
 import { DocumentsList } from './pages/DocumentsList';
@@ -361,7 +362,7 @@ const App = () => {
               if (editingDocument || previewDocument) {
                   navigateWithHistory('my-documents');
               } else {
-                  navigateWithHistory('templates');
+                  navigateWithHistory('dashboard');
               }
               setEditingDocument(undefined);
               setPreviewDocument(undefined); 
@@ -443,40 +444,6 @@ const App = () => {
         );
     }
 
-    // 3. Template List (Documents)
-    if (user && currentView === 'templates') {
-      return (
-        <Layout 
-          user={user} 
-          currentView={currentView} 
-          onNavigate={handleNavigate} 
-          onGoBack={handleGoBack}
-          canGoBack={window.history.length > 1 && currentView !== 'dashboard'}
-          onLogout={handleLogout}
-          language={language}
-          onLanguageChange={handleLanguageChange}
-          theme={theme}
-          documentsCount={savedDocuments.length}
-          t={t}
-        >
-          <div>
-
-          <DocumentsList
-              templates={templates}
-              initialCategory={navParams.category}
-              initialSearchQuery={navParams.search}
-              userIsPremium={user.plan === 'YEARLY'}
-              onSelectTemplate={(template) => {
-                setSelectedTemplate(template);
-                navigateWithHistory('editor');
-              }}
-              t={t}
-            />
-          </div>
-        </Layout>
-      );
-    }
-
     // 4. Dashboard (Home)
     if (user && currentView === 'dashboard') {
       return (
@@ -497,11 +464,8 @@ const App = () => {
             onNavigate={handleNavigate}
             onTemplateSelect={(tag) => {
               if (tag) {
-                  // If tag is a string (category), navigate to templates with category
-                  if (typeof tag === 'string') {
-                      handleNavigate('templates', { category: tag });
-                  } else {
-                      // If it's a template object
+                  // If it's a template object
+                  if (typeof tag !== 'string') {
                       setSelectedTemplate(tag as any);
                       navigateWithHistory('editor');
                   }
@@ -615,28 +579,37 @@ const App = () => {
   };
 
   return (
-    <>
-      {renderContent()}
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={user ? currentView : 'auth'}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.3 }}
+        className="min-h-screen"
+      >
+        {renderContent()}
 
-      {/* Floating Buttons: General */}
-      {user && currentView !== 'editor' && (
-        <>
-          {/* 24/7 Live Support Floating Button (Bottom Right) */}
-          <button 
-            onClick={() => alert('7/24 Canlı destek hattımız yapım aşamasındadır. En kısa sürede aktif olacaktır!')} // Can integrate Intercom, Tawk.to etc.
-            className="fixed bottom-6 right-6 z-[100] group flex items-center gap-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-5 rounded-full shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-105 hover:-translate-y-1 transition-all"
-          >
-            <MessageCircle size={22} className="animate-pulse" />
-            <span className="hidden md:block">7/24 Canlı Destek</span>
-            {/* Ping dot */}
-            <span className="absolute -top-1 -right-1 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-slate-900"></span>
-            </span>
-          </button>
-        </>
-      )}
-    </>
+        {/* Floating Buttons: General */}
+        {user && currentView !== 'editor' && (
+          <>
+            {/* 24/7 Live Support Floating Button (Bottom Right) */}
+            <button 
+              onClick={() => alert('7/24 Canlı destek hattımız yapım aşamasındadır. En kısa sürede aktif olacaktır!')} // Can integrate Intercom, Tawk.to etc.
+              className="fixed bottom-6 right-6 z-[100] group flex items-center gap-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-5 rounded-full shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-105 hover:-translate-y-1 transition-all"
+            >
+              <MessageCircle size={22} className="animate-pulse" />
+              <span className="hidden md:block">7/24 Canlı Destek</span>
+              {/* Ping dot */}
+              <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-slate-900"></span>
+              </span>
+            </button>
+          </>
+        )}
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

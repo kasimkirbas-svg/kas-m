@@ -629,7 +629,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                 <motion.button 
                     whileHover={{ scale: 1.02, filter: "brightness(1.1)" }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => onNavigate('templates', { search: 'Sertifika' })}
+                    onClick={() => {
+                        window.scrollTo({ top: document.getElementById('search-section')?.offsetTop, behavior: 'smooth' });
+                        setSearchQuery('Sertifika');
+                    }}
                     className='group shrink-0 h-24 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 border border-blue-400/50 relative overflow-hidden shadow-[0_0_20px_rgba(79,70,229,0.3)] flex items-center px-5 justify-between'
                 >
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
@@ -671,7 +674,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => onNavigate('templates', { search: 'Tutanak' })}
+                            onClick={() => {
+                                window.scrollTo({ top: document.getElementById('search-section')?.offsetTop, behavior: 'smooth' });
+                                setSearchQuery('Tutanak');
+                            }}
                             className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-indigo-500/50 dark:hover:border-indigo-500/50 shadow-sm hover:shadow-indigo-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >   
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-indigo-50/50 dark:from-indigo-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
@@ -688,7 +694,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => onNavigate('templates', { search: 'Günlük Rapor' })}
+                            onClick={() => {
+                                window.scrollTo({ top: document.getElementById('search-section')?.offsetTop, behavior: 'smooth' });
+                                setSearchQuery('Günlük Rapor');
+                            }}
                             className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 shadow-sm hover:shadow-emerald-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-emerald-50/50 dark:from-emerald-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
@@ -705,7 +714,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => onNavigate('templates', { search: 'İzin' })}
+                            onClick={() => {
+                                window.scrollTo({ top: document.getElementById('search-section')?.offsetTop, behavior: 'smooth' });
+                                setSearchQuery('İzin');
+                            }}
                             className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-blue-500/50 dark:hover:border-blue-500/50 shadow-sm hover:shadow-blue-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-blue-50/50 dark:from-blue-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
@@ -722,7 +734,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                         <motion.button 
                             whileHover={{ scale: 1.02, translateY: -1 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => onNavigate('templates', { search: 'Zimmet' })}
+                            onClick={() => {
+                                window.scrollTo({ top: document.getElementById('search-section')?.offsetTop, behavior: 'smooth' });
+                                setSearchQuery('Zimmet');
+                            }}
                             className='relative h-[4.5rem] rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 hover:border-violet-500/50 dark:hover:border-violet-500/50 shadow-sm hover:shadow-violet-500/10 group flex items-center px-3 gap-3 overflow-hidden transition-all duration-200'
                         >
                             <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-violet-50/50 dark:from-violet-900/10 to-transparent group-hover:w-full transition-all duration-300"></div>
@@ -790,22 +805,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     </div>
 
                     {/* Toggle Switch */}
-                    <div className='bg-white dark:bg-slate-900 p-1.5 rounded-full flex relative shadow-lg shadow-indigo-500/5 border border-slate-200 dark:border-slate-800'>
-                        <motion.div 
-                            className='absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-indigo-600 rounded-full shadow-md'
-                            initial={false}
-                            animate={{ x: billingCycle === 'MONTHLY' ? 0 : '100%' }}
-                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    <div className='bg-white dark:bg-slate-900 p-1.5 rounded-full flex relative shadow-lg shadow-indigo-500/5 border border-slate-200 dark:border-slate-800 w-fit mx-auto'>
+                        <div 
+                            className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-indigo-600 rounded-full shadow-md transition-transform duration-300 ease-out ${billingCycle === 'MONTHLY' ? 'translate-x-0' : 'translate-x-[calc(100%+6px)]'}`}
                         />
                         <button 
                             onClick={() => setBillingCycle('MONTHLY')}
-                            className={`relative z-10 px-6 py-2 text-xs font-black rounded-full transition-colors tracking-wide ${billingCycle === 'MONTHLY' ? 'text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                            className={`relative z-10 w-28 py-2 text-xs font-black rounded-full transition-colors tracking-wide ${billingCycle === 'MONTHLY' ? 'text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                         >
                             AYLIK
                         </button>
                         <button 
                             onClick={() => setBillingCycle('YEARLY')}
-                            className={`relative z-10 px-6 py-2 text-xs font-black rounded-full transition-colors tracking-wide ${billingCycle === 'YEARLY' ? 'text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+                            className={`relative z-10 w-28 py-2 text-xs font-black rounded-full transition-colors tracking-wide ${billingCycle === 'YEARLY' ? 'text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                         >
                             YILLIK
                             <span className="absolute -top-3 -right-2 bg-gradient-to-r from-rose-500 to-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full animate-bounce shadow-lg shadow-rose-500/30">
