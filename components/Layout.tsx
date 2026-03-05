@@ -146,10 +146,13 @@ export const Layout: React.FC<LayoutProps> = ({
             <div className="relative">
                 <button 
                     onClick={() => setNotificationsOpen(!notificationsOpen)}
-                    className="p-2 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all relative group"
+                    className="flex items-center gap-2 p-2 bg-gradient-to-r from-amber-500/10 to-amber-600/10 hover:from-amber-600/20 hover:to-amber-700/20 text-amber-600 dark:text-amber-500 rounded-xl transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 group relative"
                 >
-                    <Bell size={20} />
-                    <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50"></span>
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-500 font-bold backdrop-blur-sm group-hover:bg-amber-500/20 dark:group-hover:bg-amber-500/30 transition-colors">
+                        <Bell size={18} className="origin-top group-hover:animate-wiggle" />
+                    </div>
+                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping opacity-75"></span>
+                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-slate-100 dark:border-slate-900"></span>
                 </button>
 
                 {notificationsOpen && (
