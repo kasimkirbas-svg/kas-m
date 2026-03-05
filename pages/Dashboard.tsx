@@ -352,37 +352,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
 
             {/* Center: Title (High Contrast) */}
             <div className='flex-1 flex flex-col items-center justify-center text-center relative z-20'>
-                 <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="relative"
-                 >
+                 <div className="relative">
                     {/* Ambient Glow behind Title */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-blue-500/5 blur-[30px] md:blur-[50px] rounded-full pointer-events-none will-change-transform"></div>
 
-                    <h1 className='text-3xl sm:text-4xl md:text-5xl font-black tracking-tight relative z-10 select-none drop-shadow-lg leading-tight'>
-                        <span className='bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-indigo-100 dark:to-slate-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)] md:animate-pulse'>
-                            YILLIK DOKÜMANLAR
-                        </span>
+                    <h1 className='text-3xl sm:text-4xl md:text-5xl font-black tracking-tight relative z-10 select-none drop-shadow-lg leading-tight text-white'>
+                         YILLIK DOKÜMANLAR
                     </h1>
-                 </motion.div>
+                 </div>
 
                  <div className="text-amber-500/80 text-lg md:text-xl font-bold my-1 md:my-[-5px] z-20 relative">&</div>
 
-                 <motion.div 
-                    initial={{ width: 0, opacity: 0 }} 
-                    animate={{ width: "auto", opacity: 1 }} 
-                    transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                    className="relative mt-0 overflow-hidden px-4 md:px-8 py-2"
-                 >
-                     
-                     <span className='relative z-10 text-[10px] md:text-sm font-black tracking-[0.5em] md:tracking-[1em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-slate-600 via-slate-800 to-slate-600 dark:from-amber-200 dark:via-amber-100 dark:to-amber-200 drop-shadow-sm whitespace-nowrap animate-pulse'>
+                 <div className="relative mt-0 overflow-hidden px-4 md:px-8 py-2">
+                     <span className='relative z-10 text-[10px] md:text-sm font-black tracking-[0.5em] md:tracking-[1em] uppercase text-amber-400 drop-shadow-sm whitespace-nowrap animate-pulse'>
                             İŞ TAKİP PANELİ
                      </span>
-                     
-                     {/* Decorative lines - Removed as requested */}
-                 </motion.div>
+                 </div>
             </div>
             
             <div className='w-1/4'></div>
@@ -559,11 +544,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 content-start">
                         {/* Show only first 12 items if not expanded */}
                         {displayDocs.slice(0, isDocsExpanded ? undefined : 12).map((item, idx) => (
-                            <motion.div 
+                            <div 
                                 key={`${item.sector.id}-${idx}`}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.2, delay: idx * 0.02 }}
                                 onClick={() => handleDocumentClick(item.doc, item.sector.id)}
                                 className='group flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 hover:bg-white dark:hover:bg-slate-800/80 hover:border-amber-500 dark:hover:border-amber-500/40 transition-all cursor-pointer relative overflow-hidden shadow-sm hover:shadow-lg'
                                 >
@@ -607,7 +589,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                                             <ArrowRight size={14} />
                                         </div>
                                     </div>
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
 
