@@ -15,6 +15,7 @@ interface LayoutProps {
   theme?: 'light' | 'dark';
   onThemeChange?: (theme: 'light' | 'dark') => void;
   onGoBack?: () => void;
+  canGoBack?: boolean;
   documentsCount?: number;
   t?: any;
   children: React.ReactNode;
@@ -24,7 +25,7 @@ export const Layout: React.FC<LayoutProps> = ({
   user, currentView, onNavigate, onLogout, 
   language = 'tr', onLanguageChange, 
   theme = 'light', onThemeChange,
-  onGoBack,
+  onGoBack, canGoBack,
   documentsCount = 0,
   t, children 
 }) => {
@@ -114,6 +115,17 @@ export const Layout: React.FC<LayoutProps> = ({
                 </div>
             </div>
             
+            {/* Geri Dön Tuşu */}
+            {onGoBack && canGoBack && currentView !== 'dashboard' && currentView !== 'auth' && (
+                <button 
+                    onClick={onGoBack} 
+                    className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-slate-500 text-slate-200 rounded-lg transition-all ml-4"
+                >
+                    <ArrowLeft size={16} />
+                    <span className="text-sm font-medium">Geri Dön</span>
+                </button>
+            )}
+
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-1 ml-8">
                 {menuItems.map(item => {

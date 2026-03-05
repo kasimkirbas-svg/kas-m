@@ -141,8 +141,8 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
         className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full relative z-10"
       >
         {filteredPlans.map((plan) => {
-          const mkt = getMarketingStyles(plan.id);
-          const Icon = mkt.icon;
+          const planIdTyped = plan.id as SubscriptionPlan;
+          const mkt = getMarketingStyles(planIdTyped);
           const isGold = plan.id === 'GOLD';
           const isCurrentPlan = user?.plan === plan.id;
 
@@ -168,16 +168,16 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
               {/* Plan Header */}
               <div className="mb-8">
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br ${mkt.grad} shadow-lg text-white`}>
-                    <Icon size={28} />
+                    <mkt.icon size={28} />
                 </div>
                 <h3 className={`text-2xl font-black mb-2 uppercase ${isGold ? 'text-white' : ''}`}>{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-3">
                   <span className={`text-4xl font-black tracking-tight ${isGold ? 'text-white' : ''}`}>
-                    {plan.price === 0 ? 'Ücretsiz' : `₺${plan.price}`}
+                    {plan.price === "0" || plan.price === "0 " ? 'Ücretsiz' : `₺${plan.price.split(' ')[0]}`}
                   </span>
-                  {plan.price > 0 && <span className={`text-sm font-medium ${isGold ? 'text-slate-400' : 'text-slate-500 dark:text-slate-400'}`}>/ay</span>}
+                  {plan.price !== "0" && plan.price !== "0 " && <span className={`text-sm font-medium ${isGold ? 'text-slate-400' : 'text-slate-500 dark:text-slate-400'}`}>/ay</span>}
                 </div>
-                <p className={`text-sm ${isGold ? 'text-slate-400' : 'text-slate-500 dark:text-slate-400'}`}>{plan.credits} Doküman Kredisi</p>
+                <p className={`text-sm ${isGold ? 'text-slate-400' : 'text-slate-500 dark:text-slate-400'}`}>{plan.limit} Doküman Kredisi</p>
               </div>
 
               {/* Features List */}
@@ -192,7 +192,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
 
               {/* Action Button */}
               <button
-                onClick={() => handleSelectPlan(plan.id)}
+                onClick={() => handleSelectPlan(planIdTyped)}
                 disabled={isCurrentPlan}
                 className={`w-full py-4 rounded-xl font-bold tracking-wide transition-all shadow-sm flex items-center justify-center gap-2
                   ${isCurrentPlan 
@@ -231,7 +231,6 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
              </div>
            </div>
         </motion.div>
-      </div>
 
       {/* Payment Modal */}
       <AnimatePresence>
@@ -279,7 +278,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ user, t, onU
                     </div>
                     <div className="text-right relative z-10">
                        <p className="text-xs font-black text-indigo-500 dark:text-indigo-400 uppercase tracking-wider mb-1">Tutar</p>
-                       <p className="font-black text-indigo-600 dark:text-indigo-400 text-2xl">{selectedPlanDetails.price === 0 ? '₺0' : `₺${selectedPlanDetails.price}`}</p>
+                       <p className="font-black text-indigo-600 dark:text-indigo-400 text-2xl">{selectedPlanDetails.price === "0" || selectedPlanDetails.price === "0 " ? '₺0' : `₺${selectedPlanDetails.price}`}</p>
                     </div>
                     {/* Decor */}
                     <div className="absolute right-0 top-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>

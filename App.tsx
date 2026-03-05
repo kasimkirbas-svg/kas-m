@@ -403,11 +403,12 @@ const App = () => {
     // 2. My Documents List
     if (user && currentView === 'my-documents') {
         return (
-            <Layout onGoBack={handleGoBack} 
+            <Layout 
               user={user} 
               currentView={currentView} 
               onNavigate={handleNavigate} 
               onGoBack={handleGoBack}
+              canGoBack={window.history.length > 1 && currentView !== 'dashboard'}
               onLogout={handleLogout}
               language={language}
               onLanguageChange={handleLanguageChange}
@@ -445,10 +446,12 @@ const App = () => {
     // 3. Template List (Documents)
     if (user && currentView === 'templates') {
       return (
-        <Layout onGoBack={handleGoBack} 
+        <Layout 
           user={user} 
           currentView={currentView} 
           onNavigate={handleNavigate} 
+          onGoBack={handleGoBack}
+          canGoBack={window.history.length > 1 && currentView !== 'dashboard'}
           onLogout={handleLogout}
           language={language}
           onLanguageChange={handleLanguageChange}
