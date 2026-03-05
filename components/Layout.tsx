@@ -185,13 +185,13 @@ export const Layout: React.FC<LayoutProps> = ({
             <div className="relative">
                 <button 
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                    className="flex items-center gap-2 pl-2 pr-1 py-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors text-left group"
+                    className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl transition-all shadow-lg shadow-amber-500/40 hover:shadow-amber-600/60 hover:-translate-y-0.5 group animate-pulse-slow"
                 >
-                   <div className="hidden md:block text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors px-2">
+                   <div className="hidden md:block text-sm font-bold text-white transition-colors drop-shadow-sm">
                        Menü
                    </div>
-                   <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold shadow-sm group-hover:border-amber-500/50 transition-colors">
-                        <Menu size={20} />
+                   <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white font-bold backdrop-blur-sm shadow-inner group-hover:bg-white/30 transition-colors">
+                        <Menu size={18} />
                    </div>
                 </button>
 
