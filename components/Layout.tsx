@@ -183,16 +183,14 @@ export const Layout: React.FC<LayoutProps> = ({
             <div className="relative">
                 <button 
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                    className="flex items-center gap-3 pl-2 py-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors text-left group"
+                    className="flex items-center gap-2 pl-2 pr-1 py-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors text-left group"
                 >
-                   <div className="text-right hidden md:block leading-tight">
-                       <div className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">{user.name}</div>
-                       <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{user.role === 'ADMIN' ? 'YÖNETİCİ' : 'KULLANICI'}</div>
+                   <div className="hidden md:block text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors px-2">
+                       Menü
                    </div>
-                   <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold shadow-sm group-hover:border-amber-500/50 transition-colors text-sm">
-                        {user.name.charAt(0).toUpperCase()}
+                   <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold shadow-sm group-hover:border-amber-500/50 transition-colors">
+                        <Menu size={20} />
                    </div>
-                   <ChevronDown size={14} className="text-slate-500 hidden sm:block" />
                 </button>
 
                 {profileMenuOpen && (

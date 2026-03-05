@@ -1170,13 +1170,12 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                         className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-slate-800 hover:bg-slate-800/50 rounded-lg p-1 md:p-2 transition-colors cursor-pointer outline-none group"
                    >
                       <div className="text-right">
-                         <div className="text-xs md:text-sm font-bold text-white group-hover:text-amber-500 transition-colors max-w-[100px] md:max-w-[150px] truncate">
-                            {user?.name || 'Administrator'}
+                         <div className="text-xs md:text-sm font-bold text-white group-hover:text-amber-500 transition-colors">
+                            Menü
                          </div>
-                         <div className="text-[9px] md:text-[10px] text-amber-500/80 font-bold tracking-wider group-hover:text-amber-500">ROOT</div>
                       </div>
                       <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center text-white font-bold shadow-lg shadow-black/50 group-hover:shadow-amber-900/20 transition-all">
-                         {(user?.name || 'A').charAt(0)}
+                         <Menu size={20} />
                       </div>
                    </button>
                    

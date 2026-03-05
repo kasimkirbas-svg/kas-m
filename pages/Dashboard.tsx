@@ -389,8 +389,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         </header>
 
         {/* 2. Sectors Row: Responsive Grid (Wraps automatically) */}
-        <div className='shrink-0 h-auto z-20 relative px-0 md:px-4' onMouseLeave={() => setHoveredSectorId(null)}>
-            <div className='flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-4 lg:grid-cols-7 gap-3 w-full px-4 md:px-2 pb-2 md:pb-0 scrollbar-hide' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className='shrink-0 h-auto z-20 relative px-0 md:px-4 py-4 md:py-6' onMouseLeave={() => setHoveredSectorId(null)}>
+            <div className='flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-4 lg:grid-cols-7 gap-3 w-full px-4 md:px-2 py-4 md:py-6 scrollbar-hide' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {SECTORS.map((sector, index) => {
                     const isSelected = selectedSectorIds.includes(sector.id);
                     const isHovered = hoveredSectorId === sector.id;
