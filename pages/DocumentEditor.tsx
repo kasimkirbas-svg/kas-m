@@ -275,7 +275,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
           </div>
           <div className="flex gap-2 shrink-0">
              {onClose && (
-                <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors active:scale-95">
+                <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors active:scale-95 z-50 pointer-events-auto">
                     <ArrowLeft className="text-slate-500 dark:text-slate-400" size={24} />
                 </button>
              )}
@@ -588,7 +588,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
          </div>
 
          {isReadOnly && onClose && (
-            <button onClick={onClose} className="absolute top-6 right-6 z-30 p-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all shadow-lg">
+            <button onClick={onClose} className="absolute top-6 right-6 z-[60] p-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all shadow-lg pointer-events-auto">
                 <ArrowLeft size={24} />
             </button>
          )}
