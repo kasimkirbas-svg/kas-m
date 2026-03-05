@@ -4,7 +4,8 @@ import {
   LogOut, Menu, X, ArrowLeft,
   Activity, DollarSign, Upload, Edit3, Trash2, Eye, 
   RefreshCw, Database, Lock, Unlock, CheckCircle,
-  Terminal as TerminalIcon, Globe, Key, UserCheck, AlertTriangle, Plus
+  Terminal as TerminalIcon, Globe, Key, UserCheck, AlertTriangle, Plus,
+  Settings, DownloadCloud
 } from 'lucide-react';
 import { User, SubscriptionPlan, UserRole } from '../types';
 import { PLANS as DEFAULT_PLANS, SUBSCRIPTION_PLANS } from '../constants';
@@ -443,11 +444,87 @@ const BanUserModal = ({ user, onClose, onConfirm }: { user: User, onClose: () =>
     );
 };
 
+const PackageEditModal = ({ plan, onClose, onSave }: { plan: any, onClose: () => void, onSave: (p: any) => void }) => {
+    const [formData, setFormData] = useState({...plan});
+
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+            <GlassCard className="w-full max-w-md p-6 animate-in zoom-in duration-300 border-amber-500/20">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <ShoppingBag size={20} className="text-amber-500" />
+                        Paketi Yapılandır
+                    </h3>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white"><X size={24}/></button>
+                </div>
+                <div className="space-y-4">
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Paket Adı</label>
+                        <input value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white mt-1 outline-none focus:border-amber-500" />
+                    </div>
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Aylık Fiyat (₺)</label>
+                        <input value={formData.price || ''} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white mt-1 outline-none focus:border-amber-500" />
+                    </div>
+                </div>
+                <div className="flex justify-end gap-3 mt-8">
+                    <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800">İptal</button>
+                    <button onClick={() => onSave(formData)} className="px-6 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold">Kaydet</button>
+                </div>
+            </GlassCard>
+        </div>
+    );
+};
+
+const TemplateEditModal = ({ template, onClose, onSave }: { template?: any, onClose: () => void, onSave: (t: any) => void }) => {
+    const [formData, setFormData] = useState(template || { title: '', category: 'Genel', monthlyLimit: 1 });
+
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+            <GlassCard className="w-full max-w-lg p-6 animate-in zoom-in duration-300 border-indigo-500/20">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <FileText size={20} className="text-indigo-500" />
+                        {template ? 'Doküman Düzenle' : 'Yeni Merkez Dokümanı'}
+                    </h3>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white"><X size={24}/></button>
+                </div>
+                <div className="space-y-4">
+                    {!template && (
+                        <div className="border-2 border-dashed border-slate-700 p-6 rounded-lg text-center cursor-pointer hover:border-indigo-500 hover:bg-indigo-500/5 transition-all">
+                            <Upload size={24} className="mx-auto text-slate-400 mb-2" />
+                            <span className="text-sm text-slate-300">Dosya Seçin (.DOCX, .PDF)</span>
+                        </div>
+                    )}
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 uppercase">Doküman Başlığı</label>
+                        <input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white mt-1 outline-none focus:border-indigo-500" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-xs font-bold text-slate-500 uppercase">Kategori / Etiket</label>
+                            <input value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white mt-1 outline-none focus:border-indigo-500" />
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-slate-500 uppercase">İndirme Ücreti (Puan)</label>
+                            <input type="number" min={0} value={formData.monthlyLimit} onChange={e => setFormData({...formData, monthlyLimit: parseInt(e.target.value)})} className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white mt-1 outline-none focus:border-indigo-500" />
+                        </div>
+                    </div>
+                </div>
+                <div className="flex justify-end gap-3 mt-8">
+                    <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:bg-slate-800">İptal</button>
+                    <button onClick={() => onSave(formData)} className="px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold">{template ? 'Güncelle' : 'Dosyayı Sisteme Ekle'}</button>
+                </div>
+            </GlassCard>
+        </div>
+    );
+};
+
 // --- Main Admin Component ---
 
 export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   // State
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'packages' | 'templates' | 'system' | 'security'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'packages' | 'templates' | 'system' | 'security' | 'settings'>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   
@@ -477,6 +554,11 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
   const [showNewUserModal, setShowNewUserModal] = useState(false);
   const [showBanModal, setShowBanModal] = useState(false);
   const [banModalUser, setBanModalUser] = useState<User | null>(null);
+  
+  const [showPackageModal, setShowPackageModal] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<any>(null);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
 
 
   const [maintenanceMode, setMaintenanceMode] = useState(false);
@@ -886,7 +968,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                        </li>
                     ))}
                  </ul>
-                 <button className="w-full py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 font-medium transition-colors border border-slate-700">Düzenle</button>
+                 <button onClick={() => { setSelectedPackage(plan); setShowPackageModal(true); }} className="w-full py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 font-medium transition-colors border border-slate-700">Düzenle</button>
               </GlassCard>
            ))}
         </div>
@@ -897,7 +979,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
      <div className="space-y-6 animate-in fade-in duration-300">
         <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-white">Şablon Merkezi</h2>
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20">
+            <button onClick={() => { setSelectedTemplate(null); setShowTemplateModal(true); }} className="bg-indigo-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20">
                <Upload size={18} /> Şablon Yükle
             </button>
         </div>
@@ -924,7 +1006,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                         <div className="text-xs text-slate-500">{t.category} • {t.monthlyLimit} Limit</div>
                     </div>
                     <div className="flex gap-1">
-                        <button className="p-2 text-slate-500 hover:text-white rounded hover:bg-slate-800"><Edit3 size={16} /></button>
+                        <button onClick={() => { setSelectedTemplate(t); setShowTemplateModal(true); }} className="p-2 text-slate-500 hover:text-white rounded hover:bg-slate-800"><Edit3 size={16} /></button>
                         <button className="p-2 text-rose-500 hover:text-rose-400 rounded hover:bg-slate-800"><Trash2 size={16} /></button>
                     </div>
                 </div>
@@ -1080,6 +1162,46 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
       </div>
   );
 
+  const SettingsView = () => (
+      <div className="space-y-6 animate-in fade-in duration-300">
+          <h2 className="text-2xl font-bold text-white">Sistem & Yedekleme Ayarları</h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <GlassCard className="p-6 space-y-4">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><Settings size={18} className="text-amber-500"/> Genel Yapılandırma</h3>
+                  <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase">Site Başlığı / Logo Metni</label>
+                      <input defaultValue="Kırbaş Doküman ve Abonelik Sistemi" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white mt-1 focus:border-amber-500 outline-none" />
+                  </div>
+                  <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase">Sistem Uyarı/Destek E-Postası</label>
+                      <input defaultValue="destek@kirbas.com" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 text-white mt-1 focus:border-amber-500 outline-none" />
+                  </div>
+                  <div className="pt-4 border-t border-slate-800">
+                      <button className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold w-full transition-all">Ayarları Kaydet</button>
+                  </div>
+              </GlassCard>
+
+              <GlassCard className="p-6 space-y-4 flex flex-col">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><DownloadCloud size={18} className="text-blue-500"/> Otomatik Yedekleme (Backup)</h3>
+                  <p className="text-sm text-slate-400">Veritabanı yapılandırmasını, üye loglarını ve sistem metadatalarını JSON olarak anlık dışa aktarabilirsiniz.</p>
+                  
+                  <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl mt-4">
+                      <div className="flex justify-between items-center">
+                          <div>
+                              <div className="font-bold text-blue-400">Tam Sistem SQL / JSON Yedeği</div>
+                              <div className="text-xs text-blue-500/70 mt-1">Son yedekleme: Bugün 03:00</div>
+                          </div>
+                          <button onClick={() => alert('Yedek ZIP halinde indiriliyor...')} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 shadow-lg shadow-blue-900/20 transition-all hover:scale-105">
+                              <DownloadCloud size={16} /> İndir
+                          </button>
+                      </div>
+                  </div>
+              </GlassCard>
+          </div>
+      </div>
+  );
+
 
   return (
     <div className="flex h-screen bg-[#02040a] text-white font-sans overflow-hidden fixed inset-0 z-[100]">
@@ -1112,6 +1234,8 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
               { id: 'packages', label: 'Paket Yönetimi', icon: ShoppingBag },
               { id: 'templates', label: 'Şablonlar', icon: FileText },
               { id: 'system', label: 'DevOps & Logs', icon: TerminalIcon },
+              { id: 'security', label: 'Güvenlik Duvarı', icon: Lock },
+              { id: 'settings', label: 'Sistem Ayarları', icon: Settings },
             ].map(item => (
                <button
                  key={item.id}
@@ -1247,6 +1371,7 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
                {activeTab === 'templates' && <TemplatesView />}
                {activeTab === 'system' && <SystemView />}
                {activeTab === 'security' && <SecurityView />}
+               {activeTab === 'settings' && <SettingsView />}
             </div>
          </div>
       </main>
@@ -1288,6 +1413,13 @@ export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
              onClose={() => setShowPasswordModal(false)}
              onSave={handlePasswordReset}
           />
+      )}
+      
+      {showPackageModal && selectedPackage && (
+          <PackageEditModal plan={selectedPackage} onClose={() => setShowPackageModal(false)} onSave={() => setShowPackageModal(false)} />
+      )}
+      {showTemplateModal && (
+          <TemplateEditModal template={selectedTemplate} onClose={() => setShowTemplateModal(false)} onSave={() => setShowTemplateModal(false)} />
       )}
     </div>
   );
