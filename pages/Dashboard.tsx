@@ -353,16 +353,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
             {/* Center: Title (High Contrast) */}
             <div className='flex-1 flex flex-col items-center justify-center text-center relative z-20'>
                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
-                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                    transition={{ duration: 1, ease: 'backOut' }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
                     className="relative"
                  >
                     {/* Ambient Glow behind Title */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/5 blur-[50px] rounded-full pointer-events-none"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-blue-500/5 blur-[30px] md:blur-[50px] rounded-full pointer-events-none will-change-transform"></div>
 
-                    <h1 className='text-3xl sm:text-4xl md:text-5xl font-black tracking-tight relative z-10 select-none drop-shadow-2xl leading-tight'>
-                        <span className='bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-indigo-100 dark:to-slate-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)] animate-pulse'>
+                    <h1 className='text-3xl sm:text-4xl md:text-5xl font-black tracking-tight relative z-10 select-none drop-shadow-lg leading-tight'>
+                        <span className='bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-indigo-100 dark:to-slate-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)] md:animate-pulse'>
                             YILLIK DOKÜMANLAR
                         </span>
                     </h1>
@@ -459,11 +459,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         <div className='flex-1 grid grid-cols-1 lg:grid-cols-4 gap-5 pb-2 items-start'>
             
             {/* LEFT/CENTER: Dynamic Document List (Takes 3 cols on large screens) */}
-            <div className='lg:col-span-3 flex flex-col bg-white dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-2xl border border-slate-300 dark:border-indigo-500/30 relative overflow-hidden shadow-2xl transition-all duration-300 z-10'>
+            <div className='lg:col-span-3 flex flex-col bg-white dark:bg-[#0f172a]/90 backdrop-blur-md rounded-2xl border border-slate-300 dark:border-indigo-500/30 relative overflow-hidden shadow-xl transition-all duration-300 z-10'>
                 {/* Vivid Background Pattern for Documents */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-indigo-50/20 to-purple-50/50 dark:from-blue-900/20 dark:via-[#0f172a] dark:to-purple-900/20 pointer-events-none"></div>
-                <div className="absolute right-0 top-0 w-[500px] h-[500px] bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
-                <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.03] dark:opacity-[0.1] pointer-events-none mix-blend-overlay"></div>
+                <div className="absolute right-0 top-0 w-[300px] h-[300px] bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-[60px] md:blur-[100px] pointer-events-none will-change-transform"></div>
+                <div className="absolute inset-0 bg-[url(https://www.transparenttextures.com/patterns/carbon-fibre.png)] opacity-[0.03] dark:opacity-[0.05] pointer-events-none mix-blend-overlay"></div>
                 
                 {/* Panel Header */}
                 <div className='p-5 border-b border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-white/[0.02] flex items-center justify-between shrink-0 gap-4'>
@@ -659,7 +659,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
                     className='group shrink-0 h-24 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 border border-blue-400/50 relative overflow-hidden shadow-[0_0_20px_rgba(79,70,229,0.3)] flex items-center px-5 justify-between'
                 >
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
-                    <div className='absolute right-[-10%] top-[-50%] w-48 h-48 bg-white/20 rounded-full blur-3xl group-hover:bg-white/30 transition-colors duration-700 animate-pulse-slow'></div>
+                    <div className='absolute right-[-10%] top-[-50%] w-32 md:w-48 h-32 md:h-48 bg-white/10 md:bg-white/20 rounded-full blur-[40px] group-hover:bg-white/30 transition-colors duration-700 md:animate-pulse-slow will-change-transform'></div>
                     
                     {/* Shiny Line Effect */}
                     <motion.div 
@@ -798,10 +798,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onTempla
         {(!user?.plan || user.plan === 'FREE' || ((user.plan === 'MONTHLY' || user.plan === 'SILVER') && false)) && (
         <div className='shrink-0 pb-8 pt-4 px-1 mt-4'>
             
-            <div className='relative max-w-6xl mx-auto rounded-3xl bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 backdrop-blur-xl p-6 md:p-8 overflow-hidden shadow-2xl'>
+            <div className='relative max-w-6xl mx-auto rounded-3xl bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 backdrop-blur-md p-6 md:p-8 overflow-hidden shadow-xl'>
                 
                 {/* Background Ambient Glow */}
-                <div className='absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-indigo-500/5 via-amber-500/5 to-transparent blur-[100px] pointer-events-none'></div>
+                <div className='absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-indigo-500/5 via-amber-500/5 to-transparent blur-[60px] md:blur-[100px] pointer-events-none will-change-transform'></div>
 
                 {/* Section Header */}
                 <div className='relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 mb-10'>

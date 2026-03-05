@@ -187,9 +187,9 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
              </motion.h2>
           </div>
 
-          {/* GLOBAL CONSISTENT BACKGROUND (Blobs) */}
-          <div className="absolute top-[-20%] left-[-10%] w-[1000px] h-[1000px] rounded-full bg-[#1e1b4b]/40 blur-[150px] animate-pulse z-0 transform translate-z-[-200px]"></div>
-          <div className="absolute bottom-[-20%] right-[-10%] w-[900px] h-[900px] rounded-full bg-[#f59e0b]/20 blur-[150px] animate-pulse-slow z-0 transform translate-z-[-200px]"></div>
+          {/* GLOBAL CONSISTENT BACKGROUND (Blobs) Optimized for performance */}
+          <div className="absolute top-[-20%] left-[-10%] w-[500px] md:w-[1000px] h-[500px] md:h-[1000px] rounded-full bg-[#1e1b4b]/20 md:bg-[#1e1b4b]/40 blur-[80px] md:blur-[150px] z-0 will-change-transform"></div>
+          <div className="absolute bottom-[-20%] right-[-10%] w-[400px] md:w-[900px] h-[400px] md:h-[900px] rounded-full bg-[#f59e0b]/10 md:bg-[#f59e0b]/20 blur-[80px] md:blur-[150px] z-0 will-change-transform"></div>
           
           {/* Animated Platform Grid */}
           <div className="absolute inset-0 bg-[#020308] -z-10 mix-blend-screen">
@@ -214,11 +214,7 @@ export const Auth: React.FC<AuthProps> = ({ onLoginSuccess, language }) => {
           </div>
           
           {/* Dramatic Spotlight from Top - The Light Source */}
-          <motion.div 
-             animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.2, 1] }}
-             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-             className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-indigo-600/20 rounded-full blur-[150px] mix-blend-screen pointer-events-none"
-          ></motion.div>
+          <div className="hidden md:block absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-indigo-600/10 rounded-full blur-[150px] mix-blend-screen pointer-events-none will-change-transform"></div>
           
           {/* Accents floating in the "air" - High Tech Elements */}
            <motion.div animate={{ y: [0, -30, 0], rotate: [0, 90, 0], opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 10, repeat: Infinity }} className="absolute top-1/4 left-1/4 w-48 h-48 border border-amber-500/10 rounded-full flex items-center justify-center pointer-events-none">

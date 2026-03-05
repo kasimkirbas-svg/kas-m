@@ -76,23 +76,23 @@ export const Layout: React.FC<LayoutProps> = ({
   return (
     <div className={`flex flex-col font-sans bg-slate-200 dark:bg-[#0f1115] text-slate-900 dark:text-slate-200 selection:bg-amber-500/30 min-h-screen transition-colors duration-300 relative overflow-x-hidden`}>
       
-      {/* GLOBAL BACKGROUND EFFECTS (Added for Premium Feel) */}
+      {/* GLOBAL BACKGROUND EFFECTS (Optimized for Performance) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none bg-[#050510]">
           
-          {/* 1. Base Gradient & Grid - Adjusted Opacity for Visibility */}
+          {/* 1. Base Gradient & Grid */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#000000_100%)] z-10 opacity-70"></div>
           <div className="absolute inset-0 bg-grid-premium opacity-[0.4] z-0"></div>
 
-          {/* 2. Floating Blobs (Matches Auth Page) - Increased Opacity & Scale */}
-          <div className="absolute top-[-20%] left-[-10%] w-[900px] h-[900px] rounded-full bg-[#3b82f6]/20 blur-[150px] animate-pulse transform translate-z-0"></div>
-          <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-[#f59e0b]/20 blur-[150px] animate-pulse-slow transform translate-z-0"></div>
+          {/* 2. Floating Blobs (Reduced opacity/blur on mobile, removed heavy CSS animations) */}
+          <div className="absolute top-[-20%] left-[-10%] w-[400px] md:w-[900px] h-[400px] md:h-[900px] rounded-full bg-[#3b82f6]/10 md:bg-[#3b82f6]/15 blur-[80px] md:blur-[150px] mix-blend-screen will-change-transform"></div>
+          <div className="absolute bottom-[-20%] right-[-10%] w-[400px] md:w-[800px] h-[400px] md:h-[800px] rounded-full bg-[#f59e0b]/10 md:bg-[#f59e0b]/15 blur-[80px] md:blur-[150px] mix-blend-screen will-change-transform"></div>
           
-          {/* 3. Spotlight (Matches Auth Page) */}
-           <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-indigo-500/10 rounded-full blur-[140px] mix-blend-screen pointer-events-none animate-pulse-slow"></div>
+          {/* 3. Spotlight */}
+           <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-indigo-500/10 rounded-full blur-[80px] md:blur-[140px] pointer-events-none will-change-transform"></div>
 
-          {/* 4. Accents (Matches Auth Page) - More Vivid */}
-           <div className="absolute top-1/3 left-1/4 w-32 h-32 bg-amber-500/20 rounded-full blur-[50px] animate-bounce-slow"></div>
-           <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-purple-500/20 rounded-full blur-[60px] animate-bounce-slow delay-1000"></div>
+          {/* 4. Accents (Hidden on mobile to save GPU) */}
+           <div className="hidden md:block absolute top-1/3 left-1/4 w-32 h-32 bg-amber-500/10 rounded-full blur-[50px]"></div>
+           <div className="hidden md:block absolute bottom-1/3 right-1/4 w-40 h-40 bg-purple-500/10 rounded-full blur-[60px]"></div>
       </div>
 
       {/* INDUSTRIAL TOP NAVIGATION BAR - Improved Visibility */}
