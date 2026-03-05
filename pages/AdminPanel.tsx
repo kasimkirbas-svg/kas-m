@@ -522,7 +522,7 @@ const TemplateEditModal = ({ template, onClose, onSave }: { template?: any, onCl
 
 // --- Main Admin Component ---
 
-export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout }) => {
+export const AdminPanel: React.FC<AdminProps> = ({ user, onLogout, onNavigate }) => {
   // State
   const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'packages' | 'templates' | 'system' | 'security' | 'settings'>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
