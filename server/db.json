@@ -18,6 +18,83 @@
   "documents": [],
   "templates": [
     {
+      "id": "cv-101",
+      "title": "CV Oluşturma",
+      "category": "İK",
+      "description": "Profesyonel bir formatta özgeçmiş (CV) oluşturma.",
+      "isPremium": false,
+      "fields": [
+        {
+          "key": "fullName",
+          "label": "Ad Soyad",
+          "type": "text",
+          "required": true,
+          "placeholder": "Örn: Musa Kırbaş"
+        },
+        {
+          "key": "personalInfo",
+          "label": "Kişisel Bilgiler",
+          "type": "text",
+          "placeholder": "Örn: 10.01.1982 - Evli, 4 Çocuk"
+        },
+        {
+          "key": "address",
+          "label": "Adres",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "key": "phone",
+          "label": "Telefon",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "email",
+          "label": "Mail",
+          "type": "email"
+        },
+        {
+          "key": "profile",
+          "label": "Profil / Hakkımda",
+          "type": "textarea",
+          "placeholder": "Kendinizi kısaca tanıtın..."
+        },
+        {
+          "key": "fieldExperience",
+          "label": "Saha ve Operasyon Deneyimi",
+          "type": "textarea"
+        },
+        {
+          "key": "coordExperience",
+          "label": "Koordinatörlük ve Organizasyon Görevleri",
+          "type": "textarea"
+        },
+        {
+          "key": "education",
+          "label": "Eğitim",
+          "type": "text",
+          "placeholder": "Örn: Lise Mezunu"
+        },
+        {
+          "key": "certificates",
+          "label": "Sertifika ve Belgeler",
+          "type": "textarea"
+        },
+        {
+          "key": "skills",
+          "label": "Yetkinlikler",
+          "type": "textarea"
+        },
+        {
+          "key": "workExperience",
+          "label": "İş Deneyimi",
+          "type": "textarea"
+        }
+      ],
+      "content": "<div style=\"font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; line-height: 1.6; color: #333;\">\n  <h1 style=\"text-align: center; color: #2C3E50; margin-bottom: 5px;\">{{fullName}}</h1>\n  <p style=\"text-align: center; margin-top: 0; color: #7F8C8D;\">{{personalInfo}}</p>\n  \n  <div style=\"text-align: center; margin-bottom: 20px; font-size: 0.9em;\">\n    <p style=\"margin: 2px 0;\"><strong>Adres:</strong> {{address}}</p>\n    <p style=\"margin: 2px 0;\"><strong>Telefon:</strong> {{phone}} | <strong>Mail:</strong> {{email}}</p>\n  </div>\n\n  <div style=\"margin-bottom: 20px;\">\n    <h3 style=\"border-bottom: 2px solid #2980B9; color: #2980B9; padding-bottom: 5px; margin-bottom: 10px;\">PROFİL</h3>\n    <p style=\"margin: 0; white-space: pre-wrap;\">{{profile}}</p>\n  </div>\n\n  <div style=\"margin-bottom: 20px;\">\n    <h3 style=\"border-bottom: 2px solid #2980B9; color: #2980B9; padding-bottom: 5px; margin-bottom: 10px;\">SAHA VE OPERASYON DENEYİMİ</h3>\n    <p style=\"margin: 0; white-space: pre-wrap;\">{{fieldExperience}}</p>\n  </div>\n\n  <div style=\"margin-bottom: 20px;\">\n    <h3 style=\"border-bottom: 2px solid #2980B9; color: #2980B9; padding-bottom: 5px; margin-bottom: 10px;\">KOORDİNATÖRLÜK VE ORGANİZASYON GÖREVLERİ</h3>\n    <p style=\"margin: 0; white-space: pre-wrap;\">{{coordExperience}}</p>\n  </div>\n\n  <div style=\"margin-bottom: 20px;\">\n    <h3 style=\"border-bottom: 2px solid #2980B9; color: #2980B9; padding-bottom: 5px; margin-bottom: 10px;\">EĞİTİM</h3>\n    <p style=\"margin: 0; white-space: pre-wrap;\">{{education}}</p>\n  </div>\n\n  <div style=\"margin-bottom: 20px;\">\n    <h3 style=\"border-bottom: 2px solid #2980B9; color: #2980B9; padding-bottom: 5px; margin-bottom: 10px;\">SERTİFİKA VE BELGELER</h3>\n    <p style=\"margin: 0; white-space: pre-wrap;\">{{certificates}}</p>\n  </div>\n\n  <div style=\"margin-bottom: 20px;\">\n    <h3 style=\"border-bottom: 2px solid #2980B9; color: #2980B9; padding-bottom: 5px; margin-bottom: 10px;\">YETKİNLİKLER</h3>\n    <p style=\"margin: 0; white-space: pre-wrap;\">{{skills}}</p>\n  </div>\n\n  <div style=\"margin-bottom: 20px;\">\n    <h3 style=\"border-bottom: 2px solid #2980B9; color: #2980B9; padding-bottom: 5px; margin-bottom: 10px;\">İŞ DENEYİMİ</h3>\n    <p style=\"margin: 0; white-space: pre-wrap;\">{{workExperience}}</p>\n  </div>\n</div>"
+    },
+    {
       "id": "prod-1",
       "title": "Üretim İş Emri Formu",
       "category": "Üretim",
