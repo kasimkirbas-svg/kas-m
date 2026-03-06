@@ -97,7 +97,7 @@ const SECTORS = [
         'Satın Alma Talep Formu', 
         'Masraf Bildirim Formu',
         'Toplantı Tutanağı',
-        'Zimmet Tutanağı',
+        'CV Oluşturma',
         'Katılım Sertifikası',
         'Genel Tutanak',
         'Yıllık İzin Formu',
