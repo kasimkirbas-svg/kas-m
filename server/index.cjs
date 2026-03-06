@@ -2944,38 +2944,150 @@ app.post('/api/generate-pdf', authenticateToken, async (req, res) => {
                     .replace(/ü/g, 'u').replace(/Ü/g, 'U');
               };
 
-              doc.moveDown(1);
-              doc.font('Helvetica-Bold').fontSize(24).fillColor('#2c3e50').text(tr(data.fullName) || 'Isimsiz', { align: 'center' });
-              doc.moveDown(0.2);
-              doc.font('Helvetica').fontSize(12).fillColor('#7f8c8d').text(tr(data.personalInfo) || '', { align: 'center' });
-              doc.moveDown(1);
-              
-              doc.fontSize(10).fillColor('#333333');
-              if (data.address) doc.text('Adres: ' + tr(data.address), { align: 'center' });
-              
-              const contactInfo = [];
-              if (data.phone) contactInfo.push('Telefon: ' + tr(data.phone));
-              if (data.email) contactInfo.push('Mail: ' + data.email);
-              if (contactInfo.length > 0) doc.text(contactInfo.join(' | '), { align: 'center' });
-              doc.moveDown(2);
+              // Document boundaries
+              const docWidth = doc.page.width;
+              const docHeight = doc.page.height;
+              const leftColWidth = 190;
+              const rightColX = leftColWidth + 30;
+              const rightColWidth = docWidth - rightColX - 30;
 
-              const renderSection = (title, contentField) => {
-                  const content = data[contentField];
-                  if (!content) return;
-                  doc.font('Helvetica-Bold').fontSize(14).fillColor('#2980b9').text(title);
-                  doc.moveTo(doc.x, doc.y).lineTo(545, doc.y).lineWidth(1).strokeColor('#2980b9').stroke();
-                  doc.moveDown(0.5);
-                  doc.font('Helvetica').fontSize(10).fillColor('#333333').text(tr(content), { align: 'left', lineGap: 3 });
-                  doc.moveDown(1.5);
+              // Draw Left Column Background
+              doc.rect(0, 0, leftColWidth, docHeight).fill('#EAECEE');
+              
+              // Colors
+              const primaryColor = '#1F3864'; // Dark Blue
+              const darkText = '#333333';
+              const lightText = '#555555';
+              const lineColor = '#B0B8C1';
+
+              // Helper for Titles in Left Column
+              const leftTitle = (yPos, title) => {
+                  doc.font('Helvetica-Bold').fontSize(11).fillColor(primaryColor).text(tr(title), 20, yPos);
+                  doc.moveTo(20, yPos + 14).lineTo(leftColWidth - 20, yPos + 14).lineWidth(1).strokeColor(lineColor).stroke();
+                  return yPos + 22;
               };
 
-              renderSection('PROFIL', 'profile');
-              renderSection('SAHA VE OPERASYON DENEYIMI', 'fieldExperience');
-              renderSection('KOORDINATORLUK VE ORGANIZASYON GOREVLERI', 'coordExperience');
-              renderSection('EGITIM', 'education');
-              renderSection('SERTIFIKA VE BELGELER', 'certificates');
-              renderSection('YETKINLIKLER', 'skills');
-              renderSection('IS DENEYIMI', 'workExperience');
+              // Helper for Titles in Right Column
+              const rightTitle = (yPos, title) => {
+                  doc.font('Helvetica-Bold').fontSize(12).fillColor(darkText).text(tr(title), rightColX, yPos);
+                  doc.moveTo(rightColX, yPos + 14).lineTo(docWidth - 30, yPos + 14).lineWidth(1).strokeColor(lineColor).stroke();
+                  return yPos + 22;
+              };
+
+              let leftY = 200; // Start below the photo area (we leave space for a photo)
+
+              // Photo Placeholder Area (Grey box)
+              
+              // Photo Placeholder Area
+              const photos = req.body.photos || [];
+              if (photos && photos.length > 0 && photos[0]) {
+                  try {
+                      const imgBuf = Buffer.from(photos[0].split(',')[1], 'base64');
+                      doc.image(imgBuf, 35, 40, { width: 120, height: 140, fit: [120, 140], align: 'center', valign: 'center' });
+                      // Add border stroke
+                      doc.rect(35, 40, 120, 140).lineWidth(1).strokeColor('#888').stroke();
+                  } catch(e) {
+                      doc.rect(35, 40, 120, 140).fill('#D1D5DB');
+                  }
+              } else {
+                  doc.rect(35, 40, 120, 140).fill('#D1D5DB');
+              }
+
+
+              // LEFT COLUMN CONTENT
+              // Kisisel Bilgiler
+              if (data.personalInfo) {
+                  leftY = leftTitle(leftY, 'KISISEL BILGILER');
+                  
+                  // Try to split logic if it contains ' - ' like "10.01.1982 - Evli, 4 Cocuk"
+                  const parts = data.personalInfo.split('-');
+                  if(parts.length >= 2) {
+                      doc.font('Helvetica-Bold').fontSize(9).fillColor(darkText).text('Dogum Tarihi', 20, leftY);
+                      leftY += 12;
+                      doc.font('Helvetica').fontSize(9).fillColor(lightText).text(tr(parts[0].trim()), 20, leftY);
+                      leftY += 18;
+                      
+                      doc.font('Helvetica-Bold').fontSize(9).fillColor(darkText).text('Medeni Durum', 20, leftY);
+                      leftY += 12;
+                      doc.font('Helvetica').fontSize(9).fillColor(lightText).text(tr(parts.slice(1).join('-').trim()), 20, leftY);
+                      leftY += 25;
+                  } else {
+                      doc.font('Helvetica').fontSize(9).fillColor(lightText).text(tr(data.personalInfo), 20, leftY, { width: leftColWidth - 40 });
+                      leftY = doc.y + 20;
+                  }
+              }
+
+              // Iletisim
+              leftY = leftTitle(leftY, 'ILETISIM');
+              doc.font('Helvetica-Bold').fontSize(9).fillColor(darkText);
+              
+              if(data.phone) {
+                  doc.text('Tel: ' + tr(data.phone), 20, leftY);
+                  leftY += 16;
+              }
+              if(data.email) {
+                  doc.text('E-posta: ' + tr(data.email), 20, leftY, { width: leftColWidth - 40 });
+                  leftY = doc.y + 8;
+              }
+              if(data.address) {
+                  doc.text('Adres:', 20, leftY);
+                  leftY += 12;
+                  doc.font('Helvetica').fontSize(8).fillColor(lightText).text(tr(data.address), 20, leftY, { width: leftColWidth - 40 });
+                  leftY = doc.y + 20;
+              }
+
+              // Yetkinlikler
+              if (data.skills) {
+                  leftY = leftTitle(leftY, 'YETKINLIKLER');
+                  const skillsList = data.skills.split('\n');
+                  doc.font('Helvetica').fontSize(9).fillColor(darkText);
+                  skillsList.forEach(s => {
+                      if(s.trim()) {
+                          doc.circle(23, leftY + 4, 2).fill(darkText);
+                          doc.text(tr(s.trim()), 30, leftY, { width: leftColWidth - 50 });
+                          leftY += 14;
+                      }
+                  });
+              }
+
+              // RIGHT COLUMN CONTENT
+              let rightY = 40;
+              doc.font('Helvetica-Bold').fontSize(32).fillColor(primaryColor).text(tr(data.fullName) || 'ISIMSIZ', rightColX, rightY, { width: rightColWidth });
+              rightY = doc.y + 4;
+              
+              const jobTitle = "BELEDIYE SAHA VE KOORDINASYON UZMANI"; // we can hardcode for this example or take from a field
+              doc.font('Helvetica').fontSize(11).fillColor(darkText).text(tr(jobTitle), rightColX, rightY);
+              rightY += 30;
+
+              const renderRightSection = (title, content, bullet = false) => {
+                  if(!content) return;
+                  rightY = rightTitle(rightY, title);
+                  
+                  doc.font('Helvetica').fontSize(10).fillColor(darkText);
+                  if (bullet) {
+                      const lines = content.split('\n');
+                      lines.forEach(l => {
+                          if (l.trim()) {
+                              // If it already has an asterisk, remote it
+                              let txt = l.replace(/^\*/, '').trim();
+                              doc.circle(rightColX + 3, rightY + 4, 2).fill(darkText);
+                              doc.text(tr(txt), rightColX + 10, rightY, { width: rightColWidth - 10, align: 'justify' });
+                              rightY = doc.y + 4;
+                          }
+                      });
+                  } else {
+                      doc.text(tr(content), rightColX, rightY, { width: rightColWidth, align: 'justify' });
+                      rightY = doc.y;
+                  }
+                  rightY += 15;
+              };
+
+              renderRightSection('PROFIL', data.profile, false);
+              renderRightSection('SAHA VE OPERASYON DENEYIMI', data.fieldExperience, true);
+              renderRightSection('KOORDINATORLUK VE ORGANIZASYON GOREVLERI', data.coordExperience, true);
+              renderRightSection('EGITIM', data.education, false);
+              renderRightSection('SERTIFIKA VE BELGELER', data.certificates, true);
+              renderRightSection('IS DENEYIMI', data.workExperience, false);
 
               doc.end();
               return;
