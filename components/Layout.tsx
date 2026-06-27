@@ -1,6 +1,6 @@
 import React from 'react';
 import { User } from '../types';
-import { Bell, Menu, Crown } from 'lucide-react';
+import { Bell, Menu, Crown, Instagram, Twitter, Linkedin, HeadphonesIcon } from 'lucide-react';
 import { APP_NAME } from '../constants';
 
 interface LayoutProps {
@@ -82,21 +82,32 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
           const w = window.open('', '_blank', 'width=400,height=500');
           if (w) w.document.write('<html><body style="font-family:sans-serif;padding:20px;text-align:center;"><h2>Canlı Destek</h2><p>Müşteri hizmetleri yetkilimiz birazdan size katılacak...</p></body></html>');
         }}
-        className="fixed bottom-14 right-8 bg-orange-500 hover:bg-orange-400 text-[#0A0C10] px-6 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:scale-105 transition-all flex items-center gap-2 z-50 text-sm cursor-pointer border border-[#0A0C10]">
-        <Crown size={18} />
+        className="fixed bottom-20 right-8 bg-orange-500 hover:bg-orange-400 text-white px-5 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:scale-105 transition-transform flex items-center gap-2 z-50 text-sm cursor-pointer border border-transparent">
+        <HeadphonesIcon size={20} />
         7/24 Canlı Destek
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#0A0C10]"></span>
+        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#0A0C10] animate-pulse"></span>
       </button>
       
       {/* Footer Text Fixed to Layout */}
-      <footer className="w-full bg-[#0A0C10] border-t border-white/5 py-4 z-40 fixed bottom-0 left-0">
-        <div className="max-w-[1400px] mx-auto px-8 flex justify-between items-center text-[10px] text-slate-600 uppercase tracking-widest font-semibold flex-col md:flex-row gap-2">
-          <div>© 2026 KIRBAŞ PLATFORM. TÜM HAKLARI SAKLIDIR.</div>
-          <div className="flex gap-4">
-             <a href="#" className="cursor-pointer hover:text-orange-500 transition-colors">INSTAGRAM</a>
-             <a href="#" className="cursor-pointer hover:text-orange-500 transition-colors">TWITTER</a>
-             <a href="#" className="cursor-pointer hover:text-orange-500 transition-colors">LINKEDIN</a>
+      <footer className="w-full bg-[#07090E] border-t border-white/5 py-3 z-40 fixed bottom-0 left-0 text-slate-500">
+        <div className="max-w-[1400px] mx-auto px-8 flex justify-center items-center flex-col gap-2">
+          
+          <div className="flex gap-4 mb-1">
+             <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center cursor-pointer hover:bg-orange-500 hover:text-white transition-colors">
+               <Instagram size={14} />
+             </a>
+             <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center cursor-pointer hover:bg-orange-500 hover:text-white transition-colors">
+               <Twitter size={14} />
+             </a>
+             <a href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center cursor-pointer hover:bg-orange-500 hover:text-white transition-colors">
+               <Linkedin size={14} />
+             </a>
           </div>
+
+          <div className="text-[10px] uppercase tracking-widest font-semibold text-center">
+            © 2026 KIRBAŞ PLATFORM. TÜM HAKLARI SAKLIDIR.
+          </div>
+
         </div>
       </footer>
     </div>
