@@ -197,8 +197,8 @@ const App = () => {
 
             </div>
           </div>
-          
-        </div>
+          </div>
+        </Layout>
       );
     }
 
@@ -206,9 +206,9 @@ const App = () => {
   };
 
   return (
-    <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
+    <>
       {renderContent()}
-    </Layout>
+    </>
   );
 };
 
