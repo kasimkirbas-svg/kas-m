@@ -287,6 +287,102 @@ const App = () => {
              </div>
           </div>
 
+          <div className="mt-14 mb-8">
+            <div className="flex flex-col items-center mb-8">
+              <h2 className="text-white font-black text-2xl uppercase tracking-wider flex items-center gap-3">
+                <Crown className="text-orange-500" />
+                PREMIUM AYRICALIKLARI
+              </h2>
+              <p className="text-slate-400 text-sm mt-2">Sınırsız doküman erişimi ve gelişmiş özellikler için planınızı yükseltin.</p>
+            </div>
+
+            {/* Toggle Switch */}
+            <div className="flex justify-center mb-10">
+              <div className="bg-[#151921] border border-[#2A3143] p-1.5 rounded-full flex relative">
+                <button className="px-8 py-2.5 rounded-full text-slate-400 text-sm font-bold hover:text-white transition-colors relative z-10 w-32">AYLIK</button>
+                <button className="px-8 py-2.5 bg-indigo-600 rounded-full text-white text-sm font-bold  transition-all relative z-10 w-32 shadow-[0_0_15px_rgba(79,70,229,0.5)]">
+                  YILLIK
+                  <span className="absolute -top-3 -right-2 bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full">%20 İNDİRİM</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Pricing Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto items-center">
+              
+              {/* SILVER CARD */}
+              <div className="bg-[#151921]/80 backdrop-blur-sm border border-slate-700/50 rounded-3xl p-8 flex flex-col items-center shadow-lg transition-transform hover:-translate-y-2">
+                <div className="text-slate-400 mb-2 font-bold tracking-widest text-sm flex items-center justify-center gap-2">
+                  <div className="w-8 h-[1px] bg-slate-400/30"></div>
+                  SILVER
+                  <div className="w-8 h-[1px] bg-slate-400/30"></div>
+                </div>
+                <div className="text-3xl font-black text-white mb-2">1000 TL</div>
+                <div className="bg-slate-800 text-slate-300 text-[10px] uppercase font-bold py-1 px-3 rounded-full mb-8 tracking-wider">TEMEL LİMİT</div>
+                
+                <div className="flex-1 w-full space-y-4 mb-8">
+                  {/* Dinamik veriyle dolacak liste iskeleti */}
+                  <div className="h-4 bg-slate-800 rounded w-full skeleton-pulse m-auto"></div>
+                  <div className="h-4 bg-slate-800 rounded w-5/6 m-auto"></div>
+                  <div className="h-4 bg-slate-800 rounded w-4/6 m-auto"></div>
+                </div>
+
+                <button className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-all shadow-md text-sm">
+                  SATIN AL
+                </button>
+              </div>
+
+              {/* GOLD CARD - Center/Popular */}
+              <div className="bg-gradient-to-b from-orange-900/40 to-[#151921] border border-orange-500/50 rounded-3xl p-8 flex flex-col items-center shadow-[0_0_30px_rgba(249,115,22,0.15)] relative scale-105 z-10">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest shadow-lg flex items-center gap-1 uppercase">
+                  ★ EN ÇOK TERCİH EDİLEN ★
+                </div>
+
+                <div className="text-amber-500 mb-2 font-black tracking-widest text-lg flex items-center justify-center gap-2 mt-4 text-shadow-sm">
+                  <Crown size={20} className="text-amber-500" />
+                  GOLD
+                </div>
+                <div className="text-4xl font-black text-white mb-2 drop-shadow-md">1750 TL</div>
+                <div className="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] uppercase font-bold py-1 px-3 rounded-full mb-8 tracking-wider">2 KAT AVANTAJ</div>
+                
+                <div className="flex-1 w-full space-y-4 mb-8">
+                  <div className="h-4 bg-orange-900/40 rounded w-full skeleton-pulse m-auto"></div>
+                  <div className="h-4 bg-orange-900/40 rounded w-full m-auto"></div>
+                  <div className="h-4 bg-orange-900/40 rounded w-5/6 m-auto"></div>
+                </div>
+
+                <button className="w-full py-3.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-slate-900 font-extrabold rounded-xl transition-all shadow-[0_0_20px_rgba(249,115,22,0.4)] text-sm">
+                  HEMEN AL
+                </button>
+              </div>
+
+              {/* DIAMOND CARD */}
+              <div className="bg-[#151921]/80 backdrop-blur-sm border border-indigo-500/30 rounded-3xl p-8 flex flex-col items-center shadow-[0_0_20px_rgba(79,70,229,0.1)] transition-transform hover:-translate-y-2">
+                <div className="text-indigo-400 mb-2 font-black tracking-widest text-lg flex items-center justify-center gap-2 text-shadow-sm">
+                  <Pickaxe size={20} className="text-indigo-400" />
+                  DIAMOND
+                </div>
+                <div className="text-3xl font-black text-white mb-2">2500 TL</div>
+                <div className="bg-indigo-900/40 border border-indigo-500/30 text-indigo-300 text-[10px] uppercase font-bold py-1 px-3 rounded-full mb-8 tracking-wider drop-shadow-sm flex items-center justify-center gap-1">
+                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                   SINIRSIZ ERİŞİM
+                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                </div>
+                
+                <div className="flex-1 w-full space-y-4 mb-8">
+                  <div className="h-4 bg-indigo-900/40 rounded w-full skeleton-pulse m-auto"></div>
+                  <div className="h-4 bg-indigo-900/40 rounded w-full m-auto"></div>
+                  <div className="h-4 bg-indigo-900/40 rounded w-4/6 m-auto"></div>
+                </div>
+
+                <button className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(79,70,229,0.4)] text-sm">
+                  SATIN AL
+                </button>
+              </div>
+
+            </div>
+          </div>
+
           </div>
         </Layout>
       );
