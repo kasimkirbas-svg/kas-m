@@ -154,28 +154,45 @@ const App = () => {
                    </div>
                    <div>
                      <h2 className="text-white font-bold text-lg uppercase tracking-wider">TÜM SEKTÖRLER <span className="text-slate-500">DOKÜMANLARI</span></h2>
-                     <p className="text-slate-500 text-xs">Sistemde kayıtlı toplam 70 adet doküman listeleniyor.</p>
                    </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="p-2.5 text-slate-400 hover:text-white bg-[#1A1F2B] rounded-lg border border-[#2A3143] hover:border-orange-500/30 transition-colors">
-                    <Search size={18} />
-                  </button>
-                  <button className="p-2.5 text-slate-400 hover:text-white bg-[#1A1F2B] rounded-lg border border-[#2A3143] hover:border-orange-500/30 transition-colors">
-                    <ArrowDownAz size={18} />
+                  <button className="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg border border-orange-500 transition-colors text-xs font-bold uppercase tracking-wider">
+                    Yeni Ekle
                   </button>
                 </div>
               </div>
 
-              {/* Documents Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                 <p className="text-white text-sm col-span-full">Dokümanlar (Veritabanından Gelecek)</p>
+              {/* Data Table Skeleton */}
+              <div className="w-full overflow-x-auto">
+                <table className="w-full text-left min-w-[600px]">
+                  <thead>
+                    <tr className="text-[#64748b] text-[10px] uppercase tracking-wider border-b border-[#2A3143]">
+                      <th className="pb-3 font-semibold">Dosya Adı</th>
+                      <th className="pb-3 font-semibold">Sektör</th>
+                      <th className="pb-3 font-semibold">Oluşturma Tarihi</th>
+                      <th className="pb-3 font-semibold">Durum</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Empty State / Backend Integration Point */}
+                    <tr>
+                      <td colSpan={4} className="py-16 text-center">
+                        <div className="flex flex-col items-center justify-center opacity-50">
+                           <FolderOpen size={48} className="text-slate-500 mb-3" />
+                           <p className="text-slate-400 text-sm">Henüz doküman bulunmamaktadır.</p>
+                        </div>
+                      </td>
+                    </tr>
+                    {/* Real rows will map here */}
+                  </tbody>
+                </table>
               </div>
 
               {/* View More Button Centered at Bottom */}
-              <div className="mt-auto flex justify-center pb-2">
+              <div className="mt-auto flex justify-center pb-2 pt-6">
                 <button className="px-6 py-3 bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/30 text-slate-400 hover:text-white text-xs font-bold tracking-widest uppercase rounded-full transition-all flex flex-col items-center gap-1 group">
-                  TÜMÜNÜ GÖSTER (58 DAHA FAZLA)
+                  TÜMÜNÜ GÖSTER
                   <div className="w-4 h-1 border-b-2 border-r-2 border-slate-500 group-hover:border-orange-500 rotate-45 transform translate-y-[-2px]"></div>
                 </button>
               </div>
@@ -258,15 +275,18 @@ const App = () => {
                   <ArrowRight size={16} />
                 </div>
               </button>
-
-              {/* Archive Data Placeholder ID */}
-              <div id="archive-panel" className="bg-[#151921] border border-[#2A3143] rounded-3xl overflow-hidden shadow-xl p-6 mt-4">
-                 <h3 className="text-white text-sm font-bold tracking-widest uppercase border-b border-[#2A3143] pb-3 mb-4">DOKÜMAN ARŞİVİ (VERİLER)</h3>
-                 <p className="text-slate-400 text-xs">Arşivdeki dosyalar backend servisine bağlandığında burada listelenecektir.</p>
-              </div>
-
             </div>
           </div>
+          
+          {/* Archive Data Placeholder ID */}
+          <div id="archive-panel" className="bg-[#151921] border border-[#2A3143] rounded-3xl overflow-hidden shadow-xl p-6 mt-6">
+             <h3 className="text-white text-sm font-bold tracking-widest uppercase border-b border-[#2A3143] pb-3 mb-4">DOKÜMAN ARŞİVİ</h3>
+             <div className="flex flex-col items-center justify-center opacity-50 py-10">
+                <FolderOpen size={48} className="text-slate-500 mb-3" />
+                <p className="text-slate-400 text-sm">Gelen dosyalar ve arşiv veritabanı bağlandığında burada listelenecektir.</p>
+             </div>
+          </div>
+
           </div>
         </Layout>
       );
