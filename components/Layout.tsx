@@ -36,9 +36,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
         </div>
 
         {/* Center decorative - from the image there is a small '&' icon / decoration in center top? */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-orange-500 font-bold opacity-80 select-none">
-          &amp;
-        </div>
+        {/* User requested to remove this independent & sign floating around top. So removing it from header. */}
 
           {/* User / Actions Right */}
           <div className="flex items-center gap-4 md:gap-6">
@@ -80,8 +78,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
 
       {/* Floating 7/24 Destek Button */}
       <button 
-        onClick={() => alert("Canlı destek sistemine bağlanılıyor...")}
-        className="fixed bottom-10 right-8 bg-orange-500 hover:bg-orange-400 text-[#0A0C10] px-6 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:scale-105 transition-all flex items-center gap-2 z-50 text-sm cursor-pointer border border-[#0A0C10]">
+        onClick={() => {
+          const w = window.open('', '_blank', 'width=400,height=500');
+          if (w) w.document.write('<html><body style="font-family:sans-serif;padding:20px;text-align:center;"><h2>Canlı Destek</h2><p>Müşteri hizmetleri yetkilimiz birazdan size katılacak...</p></body></html>');
+        }}
+        className="fixed bottom-14 right-8 bg-orange-500 hover:bg-orange-400 text-[#0A0C10] px-6 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:scale-105 transition-all flex items-center gap-2 z-50 text-sm cursor-pointer border border-[#0A0C10]">
         <Crown size={18} />
         7/24 Canlı Destek
         <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#0A0C10]"></span>
@@ -89,12 +90,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
       
       {/* Footer Text Fixed to Layout */}
       <footer className="w-full bg-[#0A0C10] border-t border-white/5 py-4 z-40 fixed bottom-0 left-0">
-        <div className="max-w-[1400px] mx-auto px-8 flex justify-between items-center text-[10px] text-slate-600 uppercase tracking-widest font-semibold">
-          <div>© 2026 Kırbaş Platform. Tüm Hakları Saklıdır.</div>
+        <div className="max-w-[1400px] mx-auto px-8 flex justify-between items-center text-[10px] text-slate-600 uppercase tracking-widest font-semibold flex-col md:flex-row gap-2">
+          <div>© 2026 KIRBAŞ PLATFORM. TÜM HAKLARI SAKLIDIR.</div>
           <div className="flex gap-4">
-             <span className="cursor-pointer hover:text-orange-500 transition-colors">Instagram</span>
-             <span className="cursor-pointer hover:text-orange-500 transition-colors">Twitter</span>
-             <span className="cursor-pointer hover:text-orange-500 transition-colors">LinkedIn</span>
+             <a href="#" className="cursor-pointer hover:text-orange-500 transition-colors">INSTAGRAM</a>
+             <a href="#" className="cursor-pointer hover:text-orange-500 transition-colors">TWITTER</a>
+             <a href="#" className="cursor-pointer hover:text-orange-500 transition-colors">LINKEDIN</a>
           </div>
         </div>
       </footer>
