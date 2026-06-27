@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Lock, User as UserIcon, Building, ArrowRight, ShieldCheck, CheckCircle, Crown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, Lock, User as UserIcon, CheckCircle, ShieldCheck, ArrowRight, Instagram, Facebook, Twitter, Linkedin, MessageCircle, Hexagon } from 'lucide-react';
 import { APP_NAME } from '../constants';
 import { UserRole, SubscriptionPlan } from '../types';
 
@@ -12,25 +12,12 @@ interface AuthProps {
 
 export const Auth: React.FC<AuthProps> = ({ onAuthSuccess, onBack }) => {
   const [mode, setMode] = useState<AuthMode>('login');
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', companyName: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', companyName: '', rememberMe: false });
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
-  
-  // Background slow float effect states
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 20 - 10,
-        y: (e.clientY / window.innerHeight) * 20 - 10
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -43,14 +30,14 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess, onBack }) => {
         return;
       }
       setTimeout(() => {
-        setMessage({ type: 'success', text: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.' });
+        setMessage({ type: 'success', text: 'Şifre sıfırlama bağlantısı gönderildi.' });
       }, 500);
       return;
     }
 
     if (mode === 'login') {
       if (!formData.email || !formData.password) {
-        setMessage({ type: 'error', text: 'Lütfen e-posta ve şifrenizi giriniz.' });
+        setMessage({ type: 'error', text: 'E-posta ve şifrenizi giriniz.' });
         return;
       }
       onAuthSuccess({
@@ -64,7 +51,7 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess, onBack }) => {
       });
     } else {
       if (!formData.email || !formData.password || !formData.name) {
-        setMessage({ type: 'error', text: 'Lütfen tüm zorunlu alanları doldurunuz.' });
+        setMessage({ type: 'error', text: 'Tüm zorunlu alanları doldurunuz.' });
         return;
       }
       onAuthSuccess({
@@ -80,150 +67,136 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess, onBack }) => {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#07090E] flex flex-col justify-center items-center font-sans overflow-hidden selection:bg-amber-500/30 selection:text-white px-4">
+    <div className="relative min-h-screen bg-[#0A0B10] flex flex-col justify-center items-center font-sans overflow-hidden selection:bg-orange-500/30 selection:text-white px-4">
       
-      {/* Immersive Dark Premium Background with Subtle Floating Orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Subtle Gradient Base */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0f16] via-[#07090E] to-black z-0" />
+      {/* Immersive Dark Background with Watermark and Central Glow */}
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+        {/* Soft glowing orb directly behind the card */}
+        <div className="w-[500px] h-[500px] bg-orange-600/10 rounded-full mix-blend-screen filter blur-[100px] opacity-60"></div>
+        <div className="absolute w-[800px] h-[800px] bg-amber-600/5 rounded-full mix-blend-screen filter blur-[150px] opacity-40"></div>
         
-        {/* Soft Glowing Orbs moving slightly with cursor for 3D feel */}
-        <div 
-          className="absolute w-[800px] h-[800px] bg-amber-600/10 rounded-full mix-blend-screen filter blur-[150px] transition-transform duration-1000 ease-out"
-          style={{ 
-            top: '-20%', right: '-10%',
-            transform: `translate(${mousePos.x}px, ${mousePos.y}px)` 
-          }}
-        />
-        <div 
-          className="absolute w-[600px] h-[600px] bg-yellow-700/5 rounded-full mix-blend-screen filter blur-[120px] transition-transform duration-1000 ease-out"
-          style={{ 
-            bottom: '-20%', left: '-10%',
-            transform: `translate(${-mousePos.x}px, ${-mousePos.y}px)` 
-          }}
-        />
-
         {/* Giant Watermark Text Centered */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] select-none">
-          <h1 className="text-[15vw] font-black text-amber-500 whitespace-nowrap tracking-tighter mix-blend-plus-lighter">
-            {APP_NAME.toUpperCase()}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none">
+          <h1 className="text-[12vw] font-black text-white whitespace-nowrap tracking-widest text-center mt-[-10vh]">
+            KIRBAŞ<br />
+            <span className="text-[6vw] tracking-[0.5em] text-orange-500">PLATFORM</span>
           </h1>
         </div>
       </div>
 
-      {/* Centered Auth Card Container */}
-      <div className="relative z-10 w-full max-w-md">
+      {/* The Auth Card Component */}
+      <div className="relative z-10 w-full max-w-[420px] mb-8">
         
-        {/* Top Logo / Welcome Area */}
-        <div className="flex flex-col items-center mb-8 cursor-pointer group" onClick={onBack}>
-          <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center text-slate-950 font-bold shadow-xl shadow-amber-500/20 mb-6 group-hover:scale-105 transition-transform duration-300">
-            <Crown size={32} strokeWidth={2} />
+        <div className="bg-[#12141D] border border-white/5 p-10 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] shadow-orange-900/10">
+          
+          <div className="flex flex-col items-center mb-10">
+            {/* The Icon */}
+            <div className="w-[72px] h-[72px] bg-gradient-to-b from-orange-400 to-orange-600 rounded-[20px] flex items-center justify-center text-white mb-6 shadow-[0_0_30px_rgba(245,158,11,0.3)] cursor-pointer" onClick={onBack}>
+              <Hexagon size={36} fill="white" stroke="white" strokeWidth={1} />
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white tracking-wide uppercase mb-3">
+              {mode === 'login' ? 'PLATFORM GİRİŞİ' : mode === 'register' ? 'HESAP OLUŞTUR' : 'ŞİFRE KURTARMA'}
+            </h2>
+            
+            {/* Pill */}
+            <div className="px-4 py-1 rounded-full border border-orange-500/30 text-orange-400 text-[10px] font-bold tracking-widest uppercase bg-orange-500/5">
+              Güvenli Bağlantı
+            </div>
           </div>
-          <h2 className="text-3xl font-extrabold text-white tracking-tight drop-shadow-sm text-center">
-            {mode === 'login' && 'Kurumsal Portal'}
-            {mode === 'register' && 'Ayrıcalığa Katılın'}
-            {mode === 'forgot_password' && 'Hesabınızı Kurtarın'}
-          </h2>
-          <p className="mt-3 text-sm text-slate-400 font-medium text-center">
-            {mode === 'login' && 'Sisteme giriş yaparak işlemlerinize devam edin'}
-            {mode === 'register' && 'Hemen ücretsiz premium şablonlara erişin'}
-            {mode === 'forgot_password' && 'Şifrenizi güvenli sıfırlama bağlantısıyla yenileyin'}
-          </p>
-        </div>
-
-        {/* Glassmorphism Form Card */}
-        <div className="bg-[#0f131a]/80 backdrop-blur-2xl border border-slate-800/80 p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
           
           {message && (
-            <div className={`p-4 rounded-2xl mb-6 flex items-start gap-3 border ${message.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
-              {message.type === 'success' ? <CheckCircle size={20} className="mt-0.5 flex-shrink-0" /> : <ShieldCheck size={20} className="mt-0.5 flex-shrink-0" />}
+            <div className={`p-4 rounded-xl mb-6 flex items-start gap-3 border ${message.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
               <p className="font-medium text-sm leading-relaxed">{message.text}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5 relative">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'register' && (
-              <div className="space-y-5 animate-in fade-in zoom-in-95 duration-300">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 px-1">Ad Soyad</label>
-                  <div className="relative rounded-2xl shadow-sm group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <UserIcon className="h-5 w-5 text-slate-500 group-focus-within:text-amber-500 transition-colors" />
-                    </div>
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} className="block w-full pl-12 bg-black/40 border border-slate-800 text-white placeholder-slate-600 rounded-2xl py-3.5 outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:bg-black/60 transition-all font-medium" placeholder="Adınız Soyadınız" />
+              <div className="space-y-4 animate-in fade-in duration-300">
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <UserIcon className="h-5 w-5 text-slate-500 group-focus-within:text-orange-400 transition-colors" />
                   </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 px-1">Firma Adı <span className="opacity-50 lowercase tracking-normal font-medium">(Opsiyonel)</span></label>
-                  <div className="relative rounded-2xl shadow-sm group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Building className="h-5 w-5 text-slate-500 group-focus-within:text-amber-500 transition-colors" />
-                    </div>
-                    <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} className="block w-full pl-12 bg-black/40 border border-slate-800 text-white placeholder-slate-600 rounded-2xl py-3.5 outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:bg-black/60 transition-all font-medium" placeholder="Kurumunuz" />
-                  </div>
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} className="block w-full pl-12 bg-[#1A1D27] border border-white/5 text-slate-200 placeholder-slate-500 rounded-xl py-4 outline-none focus:border-orange-500/50 focus:bg-[#1f2230] transition-all text-sm" placeholder="Ad Soyad" />
                 </div>
               </div>
             )}
 
-            <div className="animate-in fade-in zoom-in-95 duration-300">
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 px-1">E-posta Adresi</label>
-              <div className="relative rounded-2xl shadow-sm group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-slate-500 group-focus-within:text-amber-500 transition-colors" />
-                </div>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} className="block w-full pl-12 bg-black/40 border border-slate-800 text-white placeholder-slate-600 rounded-2xl py-3.5 outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:bg-black/60 transition-all font-medium" placeholder="kurumsal@sirket.com" />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-slate-500 group-focus-within:text-orange-400 transition-colors" />
               </div>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} className="block w-full pl-12 bg-[#1A1D27] border border-white/5 text-slate-200 placeholder-slate-500 rounded-xl py-4 outline-none focus:border-orange-500/50 focus:bg-[#1f2230] transition-all text-sm" placeholder="E-Posta Adresi" />
             </div>
 
             {mode !== 'forgot_password' && (
-              <div className="animate-in fade-in zoom-in-95 duration-300">
-                <div className="flex items-center justify-between mb-2 px-1">
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest">Şifre</label>
-                  {mode === 'login' && (
-                    <button type="button" onClick={() => setMode('forgot_password')} className="text-xs font-semibold text-amber-500 hover:text-amber-400 transition-colors">
-                      Şifremi Unuttum
-                    </button>
-                  )}
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-slate-500 group-focus-within:text-orange-400 transition-colors" />
                 </div>
-                <div className="relative rounded-2xl shadow-sm group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-slate-500 group-focus-within:text-amber-500 transition-colors" />
-                  </div>
-                  <input type="password" name="password" value={formData.password} onChange={handleChange} className="block w-full pl-12 bg-black/40 border border-slate-800 text-white placeholder-slate-600 rounded-2xl py-3.5 outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 focus:bg-black/60 transition-all font-medium tracking-widest" placeholder="••••••••" />
-                </div>
+                <input type="password" name="password" value={formData.password} onChange={handleChange} className="block w-full pl-12 bg-[#1A1D27] border border-white/5 text-slate-200 placeholder-slate-500 rounded-xl py-4 outline-none focus:border-orange-500/50 focus:bg-[#1f2230] transition-all text-sm tracking-widest" placeholder="Şifre" />
               </div>
             )}
 
-            <div className="pt-3 flex flex-col gap-5">
-              <button type="submit" className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:to-amber-500 text-slate-950 font-extrabold py-4 px-4 rounded-2xl shadow-[0_0_20px_rgba(245,158,11,0.15)] hover:shadow-[0_0_25px_rgba(245,158,11,0.25)] transition-all duration-300 hover:-translate-y-0.5 mt-2">
-                {mode === 'login' && 'Sisteme Giriş Yap'}
-                {mode === 'register' && 'Hesap Oluştur'}
-                {mode === 'forgot_password' && 'Bağlantı Gönder'}
-                <ArrowRight size={20} strokeWidth={2.5} />
-              </button>
-              
-              <div className="text-center pt-2 text-sm text-slate-400">
-                {mode === 'login' && (
-                  <span>Hesabınız yok mu? <button type="button" onClick={() => setMode('register')} className="font-bold text-amber-500 hover:text-amber-400 transition-colors ml-1">Kayıt Ol</button></span>
-                )}
-                {mode === 'register' && (
-                  <span>Zaten üye misiniz? <button type="button" onClick={() => setMode('login')} className="font-bold text-amber-500 hover:text-amber-400 transition-colors ml-1">Giriş Yap</button></span>
-                )}
-                {mode === 'forgot_password' && (
-                  <span>Giriş yapmaya hazır mısınız? <button type="button" onClick={() => setMode('login')} className="font-bold text-amber-500 hover:text-amber-400 transition-colors ml-1">Dön Geri</button></span>
-                )}
+            {mode === 'login' && (
+              <div className="flex items-center justify-between pt-1 pb-2">
+                <div className="flex items-center">
+                  <input id="remember-me" name="rememberMe" type="checkbox" onChange={handleChange} checked={formData.rememberMe} className="h-4 w-4 rounded border-slate-700 bg-[#1A1D27] text-orange-500 focus:ring-orange-500 focus:ring-offset-[#12141D]" />
+                  <label htmlFor="remember-me" className="ml-2 block text-xs text-slate-400">
+                    Beni Hatırla
+                  </label>
+                </div>
+                <button type="button" onClick={() => setMode('forgot_password')} className="text-xs font-semibold text-orange-500 hover:text-orange-400 transition-colors">
+                  Şifremi Unuttum?
+                </button>
               </div>
+            )}
+
+            <button type="submit" className="w-full flex justify-center items-center gap-2 bg-[#1E2536] hover:bg-[#252c40] border border-white/5 text-slate-200 font-bold py-4 px-4 rounded-xl shadow-lg transition-all duration-300 mt-2 hover:border-orange-500/30">
+              {mode === 'login' && 'GİRİŞ YAP'}
+              {mode === 'register' && 'KAYIT OL'}
+              {mode === 'forgot_password' && 'BAĞLANTI GÖNDER'}
+              <ArrowRight size={18} />
+            </button>
+            
+            <div className="text-center pt-8">
+              {mode === 'login' && (
+                <span className="text-xs text-slate-500">Henüz bir hesabınız yok mu? <button type="button" onClick={() => setMode('register')} className="font-bold text-slate-300 hover:text-white transition-colors ml-1">Hesap Oluşturun</button></span>
+              )}
+              {mode === 'register' && (
+                <span className="text-xs text-slate-500">Zaten bir hesabınız var mı? <button type="button" onClick={() => setMode('login')} className="font-bold text-slate-300 hover:text-white transition-colors ml-1">Giriş Yapın</button></span>
+              )}
+              {mode === 'forgot_password' && (
+                <span className="text-xs text-slate-500">Giriş yapmaya hazır mısınız? <button type="button" onClick={() => setMode('login')} className="font-bold text-slate-300 hover:text-white transition-colors ml-1">Giriş Yapın</button></span>
+              )}
             </div>
           </form>
         </div>
-        
-        {/* Footer info text */}
-        <div className="mt-10 text-center flex flex-col items-center gap-2 opacity-50">
-           <ShieldCheck size={20} className="text-slate-500" />
-           <p className="text-xs text-slate-500 font-semibold tracking-wide">UÇTAN UCA GÜVENLİ KURUMSAL ALTYAPI</p>
+      </div>
+
+      {/* Footer Social Text */}
+      <div className="relative z-10 text-center flex flex-col items-center">
+        <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] mb-4">Bizi Takip Edin</p>
+        <div className="flex items-center gap-3">
+          <a href="#" className="w-10 h-10 rounded-full bg-[#12141D] border border-white/5 flex items-center justify-center text-slate-400 hover:text-orange-400 hover:border-orange-500/30 transition-all">
+            <Instagram size={16} />
+          </a>
+          <a href="#" className="w-10 h-10 rounded-full bg-[#12141D] border border-white/5 flex items-center justify-center text-slate-400 hover:text-orange-400 hover:border-orange-500/30 transition-all">
+            <Facebook size={16} />
+          </a>
+          <a href="#" className="w-10 h-10 rounded-full bg-[#12141D] border border-white/5 flex items-center justify-center text-slate-400 hover:text-orange-400 hover:border-orange-500/30 transition-all">
+            <Twitter size={16} />
+          </a>
+          <a href="#" className="w-10 h-10 rounded-full bg-[#12141D] border border-white/5 flex items-center justify-center text-slate-400 hover:text-orange-400 hover:border-orange-500/30 transition-all">
+            <Linkedin size={16} />
+          </a>
+          <a href="#" className="w-10 h-10 rounded-full bg-[#12141D] border border-white/5 flex items-center justify-center text-slate-400 hover:text-orange-400 hover:border-orange-500/30 transition-all">
+            <MessageCircle size={16} />
+          </a>
         </div>
       </div>
+
     </div>
   );
 };
