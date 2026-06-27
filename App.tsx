@@ -59,18 +59,88 @@ const App = () => {
         <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
           <div className="w-full max-w-[1400px] mx-auto p-6 md:p-10 animate-in fade-in duration-500">
             {/* Header Title (Centered in the layout historically) */}
-            <div className="text-center mb-10 mt-6 relative">
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-100 uppercase tracking-widest drop-shadow-md">
+            <div className="text-center mb-16 mt-4 relative flex flex-col items-center justify-center">
+              <h1 className="text-2xl md:text-4xl font-black text-slate-100 uppercase tracking-widest drop-shadow-md">
                 YILLIK DOKÜMANLAR
               </h1>
-              <p className="text-sm font-bold text-orange-500 tracking-[0.2em] mt-1 hidden md:block">İ Ş &nbsp;&nbsp; T A K İ P &nbsp;&nbsp; P A N E L İ</p>
-              <div className="absolute top-0 right-0 md:hidden text-orange-500 opacity-80 text-xl font-bold">&amp;</div>
+              <div className="flex items-center justify-center gap-3 mt-2">
+                <span className="text-orange-500 font-bold text-xl">&amp;</span>
+              </div>
+              <p className="text-sm font-bold text-orange-500/90 tracking-[0.3em] mt-2">İ Ş &nbsp; T A K İ P &nbsp; P A N E L İ</p>
             </div>
 
           {/* Sectors Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-10">
-             {/* You may want to map your actual sectors here or implement logic */}
-             <p className="text-white text-sm col-span-full text-center">Sektör kartları (Veritabanından Gelecek)</p>
+             {/* Temporary disabled dummy buttons for visual representation */}
+             <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
+               <div className="absolute inset-0 bg-gradient-to-t from-pink-900/80 to-purple-900/80 mix-blend-multiply opacity-80" />
+               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
+                 <div className="mb-2 opacity-80">
+                   <Factory size={32} strokeWidth={1.5} />
+                 </div>
+                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">FABRİKA</h3>
+               </div>
+             </div>
+             
+             <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
+               <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-indigo-900/80 mix-blend-multiply opacity-80" />
+               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
+                 <div className="mb-2 opacity-80">
+                   <Building2 size={32} strokeWidth={1.5} />
+                 </div>
+                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">KURUMSAL</h3>
+               </div>
+             </div>
+             
+              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
+               <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 to-orange-900/80 mix-blend-multiply opacity-80" />
+               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
+                 <div className="mb-2 opacity-80">
+                   <Pickaxe size={32} strokeWidth={1.5} />
+                 </div>
+                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">MADEN</h3>
+               </div>
+             </div>
+             
+              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
+               <div className="absolute inset-0 bg-gradient-to-t from-red-900/80 to-rose-900/80 mix-blend-multiply opacity-80" />
+               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
+                 <div className="mb-2 opacity-80">
+                   <HardHat size={32} strokeWidth={1.5} />
+                 </div>
+                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">İNŞAAT</h3>
+               </div>
+             </div>
+             
+              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
+               <div className="absolute inset-0 bg-gradient-to-t from-yellow-900/80 to-amber-900/80 mix-blend-multiply opacity-80" />
+               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
+                 <div className="mb-2 opacity-80">
+                   <Zap size={32} strokeWidth={1.5} />
+                 </div>
+                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">ENERJİ</h3>
+               </div>
+             </div>
+             
+              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
+               <div className="absolute inset-0 bg-gradient-to-t from-teal-900/80 to-emerald-900/80 mix-blend-multiply opacity-80" />
+               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
+                 <div className="mb-2 opacity-80">
+                   <FlaskConical size={32} strokeWidth={1.5} />
+                 </div>
+                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">KİMYA</h3>
+               </div>
+             </div>
+             
+              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
+               <div className="absolute inset-0 bg-gradient-to-t from-violet-900/80 to-fuchsia-900/80 mix-blend-multiply opacity-80" />
+               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
+                 <div className="mb-2 opacity-80">
+                   <Briefcase size={32} strokeWidth={1.5} />
+                 </div>
+                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">KOBİ</h3>
+               </div>
+             </div>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6">
