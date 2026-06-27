@@ -9,7 +9,7 @@ import { Button } from './components/Button';
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [currentView, setCurrentView] = useState('auth'); 
+  const [currentView, setCurrentView] = useState('landing'); 
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
 
   const handleAuthSuccess = (userData: User) => {
@@ -19,7 +19,7 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null);
-    setCurrentView('auth');
+    setCurrentView('landing');
     setSelectedTemplate(null);
   };
 
@@ -28,7 +28,7 @@ const App = () => {
       return (
         <Auth 
           onAuthSuccess={handleAuthSuccess}
-          onBack={() => setCurrentView('auth')}
+          onBack={() => setCurrentView('landing')}
         />
       );
     }
