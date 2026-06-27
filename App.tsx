@@ -11,30 +11,8 @@ import {
   ShieldAlert, UserPlus, FileArchive, Settings
 } from 'lucide-react';
 
-const SECTORS = [
-  { name: 'FABRİKA', icon: <Factory size={32} strokeWidth={1.5} />, color: 'from-pink-900/80 to-purple-900/80', bgImage: 'https://images.unsplash.com/photo-1565106430482-8f6e1d54e70e?auto=format&fit=crop&w=500&q=80' },
-  { name: 'KURUMSAL', icon: <Building2 size={32} strokeWidth={1.5} />, color: 'from-blue-900/80 to-indigo-900/80', bgImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=500&q=80' },
-  { name: 'MADEN', icon: <Pickaxe size={32} strokeWidth={1.5} />, color: 'from-amber-900/80 to-orange-900/80', bgImage: 'https://images.unsplash.com/photo-1518174542475-430c49cc8b73?auto=format&fit=crop&w=500&q=80' },
-  { name: 'İNŞAAT', icon: <HardHat size={32} strokeWidth={1.5} />, color: 'from-red-900/80 to-rose-900/80', bgImage: 'https://images.unsplash.com/photo-1541888086925-eb388915b4bc?auto=format&fit=crop&w=500&q=80' },
-  { name: 'ENERJİ', icon: <Zap size={32} strokeWidth={1.5} />, color: 'from-yellow-900/80 to-amber-900/80', bgImage: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=500&q=80' },
-  { name: 'KİMYA', icon: <FlaskConical size={32} strokeWidth={1.5} />, color: 'from-teal-900/80 to-emerald-900/80', bgImage: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80' },
-  { name: 'KOBİ', icon: <Briefcase size={32} strokeWidth={1.5} />, color: 'from-violet-900/80 to-fuchsia-900/80', bgImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=500&q=80' },
-];
-
-const DOCUMENTS = [
-  { title: 'Üretim Takip Formu', sector: 'FABRİKA', icon: <FileText size={18} /> },
-  { title: 'Günlük Kalite Raporu', sector: 'FABRİKA', icon: <ClipboardList size={18} /> },
-  { title: 'Makine Bakım Kartı', sector: 'FABRİKA', icon: <Settings size={18} /> },
-  { title: 'Vardiya Teslim Tutanağı', sector: 'FABRİKA', icon: <FileClock size={18} /> },
-  { title: 'İş Güvenliği Saha Denetim', sector: 'FABRİKA', icon: <ShieldAlert size={18} /> },
-  { title: 'Personel Performans Takibi', sector: 'FABRİKA', icon: <CheckSquare size={18} /> },
-  { title: 'Hammadde Stok Kontrol', sector: 'FABRİKA', icon: <PackageSearch size={18} /> },
-  { title: 'Atık Yönetim Formu', sector: 'FABRİKA', icon: <Trash2 size={18} /> },
-  { title: 'Sevkiyat Planlama Listesi', sector: 'FABRİKA', icon: <ClipboardList size={18} /> },
-  { title: 'Acil Durum Eylem Planı', sector: 'FABRİKA', icon: <ShieldAlert size={18} /> },
-  { title: 'Personel Özlük Dosyası', sector: 'KURUMSAL', icon: <UserCheck size={18} /> },
-  { title: 'Yıllık İzin Planı', sector: 'KURUMSAL', icon: <FileArchive size={18} /> },
-];
+// Template & document lists imported from constants (they can be simulated data and we removed local hardcoded parts)
+import { MOCK_TEMPLATES } from './constants';
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -78,30 +56,21 @@ const App = () => {
 
     if (user && currentView === 'dashboard') {
       return (
-        <div className="w-full max-w-[1400px] mx-auto p-6 md:p-10 animate-in fade-in duration-500">
-          
-          {/* Header Title (Centered in the layout historically) */}
-          <div className="text-center mb-10 mt-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-100 uppercase tracking-widest drop-shadow-md">
-              YILLIK DOKÜMANLAR
-            </h1>
-            <p className="text-sm font-bold text-orange-500 tracking-[0.2em] mt-1">İ Ş &nbsp;&nbsp; T A K İ P &nbsp;&nbsp; P A N E L İ</p>
-          </div>
+        <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
+          <div className="w-full max-w-[1400px] mx-auto p-6 md:p-10 animate-in fade-in duration-500">
+            {/* Header Title (Centered in the layout historically) */}
+            <div className="text-center mb-10 mt-6 relative">
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-100 uppercase tracking-widest drop-shadow-md">
+                YILLIK DOKÜMANLAR
+              </h1>
+              <p className="text-sm font-bold text-orange-500 tracking-[0.2em] mt-1 hidden md:block">İ Ş &nbsp;&nbsp; T A K İ P &nbsp;&nbsp; P A N E L İ</p>
+              <div className="absolute top-0 right-0 md:hidden text-orange-500 opacity-80 text-xl font-bold">&amp;</div>
+            </div>
 
           {/* Sectors Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-10">
-            {SECTORS.map((sector, i) => (
-              <div key={i} className="group relative h-28 rounded-2xl overflow-hidden cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 hover:border-orange-500/50 hover:-translate-y-1 transition-all duration-300">
-                <img src={sector.bgImage} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-700" alt={sector.name} />
-                <div className={`absolute inset-0 bg-gradient-to-t ${sector.color} mix-blend-multiply opacity-80 group-hover:opacity-60 transition-opacity`} />
-                <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
-                  <div className="mb-2 opacity-80 group-hover:opacity-100 group-hover:text-amber-300 transition-colors drop-shadow-lg">
-                    {sector.icon}
-                  </div>
-                  <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">{sector.name}</h3>
-                </div>
-              </div>
-            ))}
+             {/* You may want to map your actual sectors here or implement logic */}
+             <p className="text-white text-sm col-span-full text-center">Sektör kartları (Veritabanından Gelecek)</p>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6">
@@ -130,19 +99,7 @@ const App = () => {
 
               {/* Documents Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                {DOCUMENTS.map((doc, i) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 rounded-xl cursor-pointer transition-all hover:translate-x-1 group">
-                    <div className="flex items-center gap-4">
-                      <div className="text-slate-400 group-hover:text-orange-400 transition-colors">
-                        {doc.icon}
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-slate-200 group-hover:text-white transition-colors">{doc.title}</span>
-                        <span className="text-[10px] font-bold text-slate-500 tracking-wider uppercase mt-0.5">{doc.sector}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                 <p className="text-white text-sm col-span-full">Dokümanlar (Veritabanından Gelecek)</p>
               </div>
 
               {/* View More Button Centered at Bottom */}
@@ -178,28 +135,32 @@ const App = () => {
                  </div>
                  
                  <div className="p-4 grid grid-cols-2 gap-3">
-                   <button className="bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-colors group">
+                   <button className="bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-colors group cursor-not-allowed opacity-80"
+                           title="Yakında eklenecektir">
                      <FileText size={24} className="text-blue-400 group-hover:scale-110 transition-transform" />
                      <div className="text-center">
                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider leading-tight">Hemen</p>
                        <p className="text-xs font-bold text-slate-200 uppercase tracking-wide leading-tight">TUTANAK</p>
                      </div>
                    </button>
-                   <button className="bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-colors group">
+                   <button className="bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-colors group cursor-not-allowed opacity-80"
+                           title="Yakında eklenecektir">
                      <ClipboardList size={24} className="text-emerald-400 group-hover:scale-110 transition-transform" />
                      <div className="text-center">
                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider leading-tight">Günlük</p>
                        <p className="text-xs font-bold text-slate-200 uppercase tracking-wide leading-tight">RAPOR</p>
                      </div>
                    </button>
-                   <button className="bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-colors group">
+                   <button className="bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-colors group cursor-not-allowed opacity-80"
+                           title="Yakında eklenecektir">
                      <UserPlus size={24} className="text-indigo-400 group-hover:scale-110 transition-transform" />
                      <div className="text-center">
                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider leading-tight">Personel</p>
                        <p className="text-xs font-bold text-slate-200 uppercase tracking-wide leading-tight">İZİN FORMU</p>
                      </div>
                    </button>
-                   <button className="bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-colors group">
+                   <button className="bg-[#1A1F2B] hover:bg-[#202736] border border-[#2A3143] hover:border-orange-500/40 p-4 rounded-xl flex flex-col items-center justify-center gap-3 transition-colors group cursor-not-allowed opacity-80"
+                           title="Yakında eklenecektir">
                      <PackageSearch size={24} className="text-purple-400 group-hover:scale-110 transition-transform" />
                      <div className="text-center">
                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider leading-tight">Demirbaş</p>
@@ -210,7 +171,10 @@ const App = () => {
               </div>
 
               {/* Archive Document Button */}
-              <button className="bg-[#151921] border border-[#2A3143] hover:border-purple-500/50 p-5 rounded-2xl flex items-center justify-between group transition-all">
+              <button 
+                onClick={() => document.getElementById('archive-panel')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-[#151921] border border-[#2A3143] hover:border-purple-500/50 p-5 rounded-2xl flex items-center justify-between group transition-all"
+              >
                 <div className="flex items-center gap-4">
                   <div className="text-slate-400 group-hover:text-purple-400 transition-colors">
                     <FolderOpen size={28} />
@@ -224,6 +188,12 @@ const App = () => {
                   <ArrowRight size={16} />
                 </div>
               </button>
+
+              {/* Archive Data Placeholder ID */}
+              <div id="archive-panel" className="bg-[#151921] border border-[#2A3143] rounded-3xl overflow-hidden shadow-xl p-6 mt-4">
+                 <h3 className="text-white text-sm font-bold tracking-widest uppercase border-b border-[#2A3143] pb-3 mb-4">DOKÜMAN ARŞİVİ (VERİLER)</h3>
+                 <p className="text-slate-400 text-xs">Arşivdeki dosyalar backend servisine bağlandığında burada listelenecektir.</p>
+              </div>
 
             </div>
           </div>

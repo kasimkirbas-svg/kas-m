@@ -40,33 +40,44 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
           &amp;
         </div>
 
-        {/* User / Actions Right */}
-        <div className="flex items-center gap-6">
-          <button className="text-slate-400 hover:text-orange-400 transition-colors">
-            <Bell size={20} />
-          </button>
-          
-          <div 
-            className="flex items-center gap-3 cursor-pointer group"
-            onClick={() => onNavigate('profile')}
-          >
-            <div className="flex flex-col items-end">
-              <span className="font-bold text-slate-200 text-sm group-hover:text-white transition-colors">{user.name.split(' ')[0]}</span>
-              <span className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">{user.role === 'GUEST' ? 'KULLANICI' : 'PREMIUM'}</span>
+          {/* User / Actions Right */}
+          <div className="flex items-center gap-6">
+            <button 
+              className="text-slate-400 hover:text-orange-400 transition-colors pointer-events-auto"
+              title="Bildirimler"
+              aria-label="Bildirimler"
+            >
+              <Bell size={20} />
+            </button>
+            
+            <div 
+              className="flex items-center gap-3 cursor-pointer group"
+              onClick={() => onNavigate('profile')}
+              title="Profile Git"
+              aria-label="Profil"
+            >
+              <div className="flex flex-col items-end">
+                <span className="font-bold text-slate-200 text-sm group-hover:text-white transition-colors">{user.name.split(' ')[0]}</span>
+                <span className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">{user.role === 'GUEST' ? 'KULLANICI' : 'PREMIUM'}</span>
+              </div>
+              <div className="w-10 h-10 bg-[#1A1D27] rounded-full flex items-center justify-center text-slate-300 font-bold border border-white/5 group-hover:border-orange-500/50 transition-colors">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
             </div>
-            <div className="w-10 h-10 bg-[#1A1D27] rounded-full flex items-center justify-center text-slate-300 font-bold border border-white/5 group-hover:border-orange-500/50 transition-colors">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
+
+            <button 
+              onClick={() => onNavigate('settings')}
+              className="flex items-center gap-2 bg-orange-600/10 hover:bg-orange-500 border border-orange-500/30 hover:border-orange-500 text-orange-500 hover:text-[#0A0C10] px-4 py-2 rounded-xl transition-all font-bold tracking-wide text-sm h-10"
+              title="Menü / Ayarlar"
+              aria-label="Ayarlar"
+            >
+              Menü
+              <Menu size={18} />
+            </button>
           </div>
+        </header>
 
-          <button className="flex items-center gap-2 bg-orange-600/10 hover:bg-orange-500 border border-orange-500/30 hover:border-orange-500 text-orange-500 hover:text-[#0A0C10] px-4 py-2 rounded-xl transition-all font-bold tracking-wide text-sm h-10">
-            Menü
-            <Menu size={18} />
-          </button>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
+        {/* Main Content Area */}
       <main className="flex-1 w-full bg-[#0A0C10] overflow-hidden relative">
         {/* Subtle grid background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
