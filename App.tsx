@@ -8,7 +8,7 @@ import {
   Building2, Factory, Pickaxe, HardHat, Zap, FlaskConical, Briefcase, 
   Search, ArrowDownAz, FileText, ClipboardList, PackageSearch, Trash2, 
   FileBox, UserCheck, CheckSquare, Award, FileClock, FolderOpen, ArrowRight,
-  ShieldAlert, UserPlus, FileArchive, Settings
+  ShieldAlert, UserPlus, FileArchive, Settings, Crown
 } from 'lucide-react';
 
 // Template & document lists imported from constants (they can be simulated data and we removed local hardcoded parts)
