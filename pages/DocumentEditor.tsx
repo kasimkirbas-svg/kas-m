@@ -241,12 +241,3 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   );
 };
 
-        {/* Paper Container */}
-        <div className="flex-1 p-8 flex justify-center bg-slate-200">
-           {/* Rendering DOCX exactly, removing manual paper container entirely. docx-preview will create its own wrapper. */}
-           <div ref={previewRef} className="w-full"></div>
-        </div>
-      </div>
-    </div>
-  );
-};
