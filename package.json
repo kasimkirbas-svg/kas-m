@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/dompurify": "^3.0.5",
+    "@types/pizzip": "^3.0.5",
     "docx-preview": "^0.4.0",
     "docxtemplater": "^3.69.0",
     "html2canvas": "^1.4.1",

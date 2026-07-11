@@ -4,6 +4,8 @@ import { Button } from '../components/Button';
 import { ArrowLeft, Upload, Plus, Trash2, FileText, Download, Printer } from 'lucide-react';
 import { generatePDF } from '../services/pdfService';
 import { renderAsync } from 'docx-preview';
+import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -37,15 +39,46 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
   // DOCX Content
   const previewRef = useRef<HTMLDivElement>(null);
+  const [templateBuffer, setTemplateBuffer] = useState<ArrayBuffer | null>(null);
 
+  // Fetch the template buffer once
   useEffect(() => {
-    if (template.fileUrl && previewRef.current) {
+    if (template.fileUrl) {
        fetch(template.fileUrl)
-         .then(res => res.blob())
-         .then(blob => renderAsync(blob, previewRef.current!))
+         .then(res => res.arrayBuffer())
+         .then(buffer => setTemplateBuffer(buffer))
          .catch(err => console.error(err));
     }
-  }, [template]);
+  }, [template.fileUrl]);
+
+  // Generate preview when buffer or formData changes
+  useEffect(() => {
+    if (!templateBuffer || !previewRef.current) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const zip = new PizZip(templateBuffer);
+        const doc = new Docxtemplater(zip, {
+          paragraphLoop: true,
+          linebreaks: true,
+          nullGetter: () => "",
+        });
+
+        doc.render({ ...formData, clauses });
+
+        const blob = doc.getZip().generate({
+          type: "blob",
+          mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+
+        renderAsync(blob, previewRef.current!).catch(err => console.error("Docx-preview error:", err));
+      } catch (error) {
+        console.error("Docxtemplater error:", error);
+      }
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [templateBuffer, formData, clauses]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -198,6 +231,15 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
              <Download className="mr-2" size={16} /> Kaydet
           </Button>
         </div>
+
+        {/* Live Preview Container */}
+        <div className="p-8 pb-32 flex-1 flex flex-col items-center">
+          <div ref={previewRef} className="w-full bg-white shadow-xl min-h-[1056px]"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
         {/* Paper Container */}
         <div className="flex-1 p-8 flex justify-center bg-slate-200">
