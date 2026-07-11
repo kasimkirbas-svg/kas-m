@@ -3,9 +3,7 @@ import { DocumentTemplate } from '../types';
 import { Button } from '../components/Button';
 import { ArrowLeft, Upload, Plus, Trash2, FileText, Download, Printer } from 'lucide-react';
 import { generatePDF } from '../services/pdfService';
-import mammoth from 'mammoth';
-import parse from 'html-react-parser';
-import DOMPurify from 'dompurify';
+import { renderAsync } from 'docx-preview';
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -38,14 +36,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // DOCX Content
-  const [docHtml, setDocHtml] = useState<string | null>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (template.fileUrl) {
+    if (template.fileUrl && previewRef.current) {
        fetch(template.fileUrl)
-         .then(res => res.arrayBuffer())
-         .then(buffer => mammoth.convertToHtml({ arrayBuffer: buffer }))
-         .then(result => setDocHtml(DOMPurify.sanitize(result.value)))
+         .then(res => res.blob())
+         .then(blob => renderAsync(blob, previewRef.current!))
          .catch(err => console.error(err));
     }
   }, [template]);
@@ -203,69 +200,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         </div>
 
         {/* Paper Container */}
-        <div className="flex-1 p-8 flex justify-center">
-          <div className="bg-white text-black shadow-2xl p-12 min-h-[1056px] w-[794px] max-w-full print:p-0 print:shadow-none print:w-full shrink-0 relative" id="pdf-content">
-            
-            {/* Header */}
-            <div className="border-b-2 border-slate-800 pb-6 mb-8 flex justify-between items-end">
-              <div>
-                <h1 className="text-3xl font-bold text-slate-900 uppercase tracking-wide break-words max-w-[400px]">
-                  {template.title || 'Doküman Başlığı'}
-                </h1>
-                <p className="text-slate-500 mt-2">{template.category} Dokümanı</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-slate-900">{formData.companyName || 'Firma Adı'}</p>
-                <p className="text-sm text-slate-500">{formData.date}</p>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="mb-8">
-              {docHtml ? (
-                <div className="prose max-w-none text-sm text-slate-800">
-                  {parse(docHtml)}
-                </div>
-              ) : (
-                <>
-                  <h2 className="text-lg font-bold text-slate-800 mb-3 border-b border-slate-200 pb-1">Genel Bilgiler</h2>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div><span className="font-semibold text-slate-700">Hazırlayan:</span> {formData.preparedBy || '...'}</div>
-                    <div><span className="font-semibold text-slate-700">Firma:</span> {formData.companyName || '...'}</div>
-                    <div className="col-span-2">
-                      <span className="font-semibold text-slate-700">Açıklama:</span>
-                      <p className="mt-1 text-slate-600 whitespace-pre-wrap">{formData.description || "Açıklama yok."}</p>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Clauses */}
-            {clauses.length > 0 && (
-              <div className="mb-8 break-inside-avoid">
-                <h2 className="text-lg font-bold text-slate-800 mb-3 border-b border-slate-200 pb-1">Ek Maddeler & Notlar</h2>
-                <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
-                  {clauses.map(clause => <li key={clause.id}>{clause.text}</li>)}
-                </ul>
-              </div>
-            )}
-
-            {/* Photos */}
-            {photos.length > 0 && (
-              <div className="break-before-auto">
-                <h2 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-200 pb-1">Saha Fotoğrafları</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {photos.map((photo, index) => (
-                    <div key={index} className="aspect-square border border-slate-200 rounded-lg overflow-hidden relative break-inside-avoid">
-                      <img src={photo} alt="" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-          </div>
+        <div className="flex-1 p-8 flex justify-center bg-slate-200">
+           {/* Rendering DOCX exactly, removing manual paper container entirely. docx-preview will create its own wrapper. */}
+           <div ref={previewRef} className="w-full"></div>
         </div>
       </div>
     </div>
