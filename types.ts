@@ -26,6 +26,7 @@ export interface DocumentTemplate {
   category: string;
   description: string;
   isPremium: boolean;
+  fileUrl?: string;
   fields: DocumentField[];
 }
 
