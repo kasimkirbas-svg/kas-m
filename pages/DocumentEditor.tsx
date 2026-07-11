@@ -159,19 +159,22 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
   if (step === 'selection') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-6">
-        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-6 text-slate-800 text-center">Lütfen doküman varyasyonunu seçin.</h2>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 p-6 selection-overlay">
+        <div className="bg-slate-800/80 backdrop-blur-md p-8 rounded-2xl border border-slate-700 shadow-2xl w-full max-w-md">
+          <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500 text-center">
+            Varyasyon Seçimi
+          </h2>
+          <p className="text-slate-400 text-center mb-8 text-sm">Lütfen dokümanın detayını belirleyin.</p>
           
-          <div className="space-y-4 mb-8">
+          <div className="space-y-5 mb-8">
             {primarySelectFields.map(field => (
               <div key={field.key}>
-                <label className="block text-sm font-medium text-slate-700 mb-1">{field.label}</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{field.label}</label>
                 <select
                   name={field.key}
                   value={formData[field.key] || ''}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none"
                 >
                   {field.options?.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
@@ -181,11 +184,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
             ))}
           </div>
 
-          <div className="flex justify-between">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="mr-2" size={16} /> Listeye Dön
-            </Button>
-            <Button variant="primary" onClick={() => setStep('editor')}>
+          <div className="flex justify-between items-center pt-4 border-t border-slate-700/50">
+            <button 
+              onClick={onBack}
+              className="flex items-center text-slate-400 hover:text-slate-200 transition-colors text-sm font-medium"
+            >
+              <ArrowLeft className="mr-2" size={16} /> Geri Dön
+            </button>
+            <Button variant="primary" onClick={() => setStep('editor')} className="px-6 py-2.5 shadow-lg shadow-orange-500/20">
               Devam Et
             </Button>
           </div>
@@ -197,11 +203,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* LEFT PANE: ENTRYS */}
-      <div className="w-1/2 h-full overflow-y-auto p-6 bg-white border-r">
-        <button onClick={onBack} className="flex items-center text-slate-500 hover:text-slate-700 mb-6 transition-colors">
-          <ArrowLeft className="mr-2" size={20} /> Listeye Dön
+      <div className="w-1/2 h-full overflow-y-auto px-8 py-10 bg-white border-r shadow-lg z-10">
+        <button onClick={onBack} className="flex items-center text-slate-500 hover:text-slate-800 mb-8 transition-colors font-medium">
+          <ArrowLeft className="mr-2" size={18} /> Listeye Dön
         </button>
-        <h1 className="text-2xl font-bold mb-6 text-slate-800">{template.title} <span className="text-sm font-normal text-slate-500">Düzenle</span></h1>
+        <h1 className="text-3xl font-bold mb-8 text-slate-800 tracking-tight">{template.title} <span className="text-base font-medium text-slate-400 ml-2">Düzenle</span></h1>
         
         <div className="space-y-6">
           {/* Form Fields */}
