@@ -22,11 +22,20 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [loading, setLoading] = useState(false);
   
   // Form State
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Record<string, any>>({
     companyName: '',
     preparedBy: '',
     date: new Date().toISOString().split('T')[0],
     description: '',
+    // Pre-fill existing fields with default empty string or the first option
+    ...(template.fields?.reduce((acc, field) => {
+      if (field.type === 'select' && field.options && field.options.length > 0) {
+        acc[field.key] = field.options[0];
+      } else {
+        acc[field.key] = '';
+      }
+      return acc;
+    }, {} as Record<string, any>))
   });
 
   // Dynamic Custom Clauses
@@ -80,7 +89,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     return () => clearTimeout(timer);
   }, [templateBuffer, formData, clauses]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -133,20 +142,46 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Firma Adı</label>
-              <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Örn: XYZ Ltd. Şti." />
+              <input type="text" name="companyName" value={formData.companyName || ''} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Örn: XYZ Ltd. Şti." />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Hazırlayan Uzman</label>
-              <input type="text" name="preparedBy" value={formData.preparedBy} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="İsim Soyisim" />
+              <input type="text" name="preparedBy" value={formData.preparedBy || ''} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="İsim Soyisim" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Tarih</label>
-              <input type="date" name="date" value={formData.date} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" />
+              <input type="date" name="date" value={formData.date || ''} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div className="col-span-2">
               <label className="block text-sm font-medium text-slate-700 mb-1">Açıklama / Notlar</label>
-              <textarea name="description" value={formData.description} onChange={handleInputChange} rows={3} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Genel değerlendirme..." />
+              <textarea name="description" value={formData.description || ''} onChange={handleInputChange} rows={3} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Genel değerlendirme..." />
             </div>
+            {template.fields?.map(field => {
+              // Skip rendering these since they are hardcoded above
+              if (['companyName', 'preparedBy', 'date', 'description'].includes(field.key)) return null;
+
+              return (
+                <div key={field.key} className={field.type === 'textarea' ? 'col-span-2' : ''}>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{field.label}</label>
+                  {field.type === 'text' && (
+                    <input type="text" name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder={field.placeholder} />
+                  )}
+                  {field.type === 'date' && (
+                    <input type="date" name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" />
+                  )}
+                  {field.type === 'textarea' && (
+                    <textarea name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} rows={3} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder={field.placeholder} />
+                  )}
+                  {field.type === 'select' && (
+                    <select name={field.key} value={formData[field.key] || ''} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                      {field.options?.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
            {/* Clauses Section */}

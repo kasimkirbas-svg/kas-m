@@ -33,8 +33,9 @@ export interface DocumentTemplate {
 export interface DocumentField {
   key: string;
   label: string;
-  type: 'text' | 'date' | 'textarea' | 'list';
+  type: 'text' | 'date' | 'textarea' | 'list' | 'select';
   placeholder?: string;
+  options?: string[];
 }
 
 export interface GeneratedDocument {

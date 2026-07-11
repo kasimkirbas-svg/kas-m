@@ -164,12 +164,14 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
   // STANDART DOKÜMANLAR
   {
     id: 'standart-1',
-    title: 'acil durum eylem planı.docx',
+    title: '(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısı.docx',
     category: 'STANDART DOKÜMANLAR',
-    description: 'Temel acil durum eylem planı.',
-    isPremium: false,
-    fileUrl: '/templates/acil durum eylem planı.docx',
-    fields: []
+    description: 'Yüksek gerilim işletme sorumluluğu atama yazısı.',
+    isPremium: true,
+    fileUrl: '/templates/(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısı.docx',
+    fields: [
+      { key: 'facilityType', label: 'Tesis Türü', type: 'select', options: ['RES (Rüzgar Enerjisi)', 'GES (Güneş Enerjisi)', 'HES (Hidroelektrik)', 'Termik Santral'] }
+    ]
   },
   {
     id: 'standart-2',
