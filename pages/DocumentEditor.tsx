@@ -20,24 +20,11 @@ interface CustomClause {
 
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
   const [loading, setLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
   
   // Form State
-  const [formData, setFormData] = useState<Record<string, any>>({
-    companyName: '',
-    preparedBy: '',
-    date: new Date().toISOString().split('T')[0],
-    description: '',
-    // Pre-fill existing fields with default empty string or the first option
-    ...(template.fields?.reduce((acc, field) => {
-      if (field.type === 'select' && field.options && field.options.length > 0) {
-        acc[field.key] = field.options[0];
-      } else {
-        acc[field.key] = '';
-      }
-      return acc;
-    }, {} as Record<string, any>))
-  });
-
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  
   // Dynamic Custom Clauses
   const [clauses, setClauses] = useState<CustomClause[]>([]);
   const [newClause, setNewClause] = useState('');
@@ -49,6 +36,27 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   // DOCX Content
   const previewRef = useRef<HTMLDivElement>(null);
   const [templateBuffer, setTemplateBuffer] = useState<ArrayBuffer | null>(null);
+
+  // Reset form when template changes
+  useEffect(() => {
+    setFormData({
+      companyName: '',
+      preparedBy: '',
+      date: new Date().toISOString().split('T')[0],
+      description: '',
+      // Pre-fill existing fields with default empty string or the first option
+      ...(template.fields?.reduce((acc, field) => {
+        if (field.type === 'select' && field.options && field.options.length > 0) {
+          acc[field.key] = field.options[0];
+        } else {
+          acc[field.key] = '';
+        }
+        return acc;
+      }, {} as Record<string, any>))
+    });
+    setClauses([]);
+    setPhotos([]);
+  }, [template]);
 
   // Fetch the template buffer once
   useEffect(() => {
@@ -87,9 +95,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
 
-        renderAsync(blob, previewRef.current!).catch(err => console.error("Docx-preview error:", err));
-      } catch (error) {
+        setPreviewError(null);
+        renderAsync(blob, previewRef.current!).catch(err => {
+          console.error("Docx-preview error:", err);
+          setPreviewError(err.message || "Preview rendering failed");
+        });
+      } catch (error: any) {
         console.error("Docxtemplater error:", error);
+        setPreviewError(error.message || "Template processing failed");
       }
     }, 800);
 
@@ -276,6 +289,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
         {/* Live Preview Container */}
         <div className="p-8 pb-32 flex-1 flex flex-col items-center">
+          {previewError && (
+             <div className="w-full max-w-4xl bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+               <strong>Önizleme Hatası: </strong> {previewError}
+             </div>
+          )}
           <div ref={previewRef} className="w-full bg-white shadow-xl min-h-[1056px]"></div>
         </div>
       </div>
