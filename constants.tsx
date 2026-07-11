@@ -196,7 +196,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     isPremium: true,
     fileUrl: '/templates/(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısı.docx',
     fields: [
-      { key: 'facilityType', label: 'Tesis Türü', type: 'select', options: ['RES (Rüzgar Enerjisi)', 'GES (Güneş Enerjisi)', 'HES (Hidroelektrik)', 'Termik Santral'] }
+      { key: 'facilityType', label: 'Tesis Türü', type: 'select', options: ['RES', 'GES', 'HES', 'Termik'] },
+      { key: 'turbinSayisi', label: 'Türbin Sayısı', type: 'text', dependsOn: { field: 'facilityType', value: 'RES' } },
+      { key: 'panelAlani', label: 'Toplam Panel Alanı (m2)', type: 'text', dependsOn: { field: 'facilityType', value: 'GES' } }
     ]
   },
   {

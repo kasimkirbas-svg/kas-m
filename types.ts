@@ -36,6 +36,7 @@ export interface DocumentField {
   type: 'text' | 'date' | 'textarea' | 'list' | 'select';
   placeholder?: string;
   options?: string[];
+  dependsOn?: { field: string; value: string };
 }
 
 export interface GeneratedDocument {
