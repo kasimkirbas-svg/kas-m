@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { Auth } from './pages/Auth';
 import { DocumentEditor } from './pages/DocumentEditor';
@@ -21,14 +21,64 @@ const App = () => {
   // To simulate going into document editor
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
 
+  // Initialize from storage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    const lastActivity = localStorage.getItem('lastActivity');
+    
+    if (storedUser && lastActivity) {
+      if (Date.now() - parseInt(lastActivity, 10) > 3600000) { // 1 hour = 3600000 ms
+        handleLogout(true);
+      } else {
+        setUser(JSON.parse(storedUser));
+        setCurrentView('dashboard');
+        localStorage.setItem('lastActivity', Date.now().toString());
+      }
+    }
+  }, []);
+
+  // Track activity
+  useEffect(() => {
+    if (!user) return;
+
+    const updateActivity = () => {
+      localStorage.setItem('lastActivity', Date.now().toString());
+    };
+
+    window.addEventListener('mousemove', updateActivity);
+    window.addEventListener('keydown', updateActivity);
+    window.addEventListener('click', updateActivity);
+
+    const interval = setInterval(() => {
+      const lastActivity = localStorage.getItem('lastActivity');
+      if (lastActivity && Date.now() - parseInt(lastActivity, 10) > 3600000) {
+        handleLogout(true);
+      }
+    }, 60000); // Check every minute
+
+    return () => {
+      window.removeEventListener('mousemove', updateActivity);
+      window.removeEventListener('keydown', updateActivity);
+      window.removeEventListener('click', updateActivity);
+      clearInterval(interval);
+    };
+  }, [user]);
+
   const handleAuthSuccess = (userData: User) => {
     setUser(userData);
     setCurrentView('dashboard');
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('lastActivity', Date.now().toString());
   };
 
-  const handleLogout = () => {
+  const handleLogout = (auto = false) => {
     setUser(null);
     setCurrentView('auth');
+    localStorage.removeItem('user');
+    localStorage.removeItem('lastActivity');
+    if (auto) {
+      alert('You have been logged out due to inactivity.');
+    }
   };
 
   const renderContent = () => {
@@ -56,7 +106,7 @@ const App = () => {
 
     if (user && currentView === 'dashboard') {
       return (
-        <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
+        <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={() => handleLogout()}>
           <div className="w-full max-w-[1400px] mx-auto p-6 md:p-10 animate-in fade-in duration-500">
             {/* Header Title (Centered in the layout historically) */}
             <div className="text-center mb-16 mt-4 relative flex flex-col items-center justify-center">
