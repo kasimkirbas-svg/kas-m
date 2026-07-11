@@ -16,10 +16,40 @@ import { MOCK_TEMPLATES } from './constants';
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [currentView, setCurrentView] = useState('auth'); 
+  const [currentView, setCurrentView] = useState('dashboard'); 
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // To simulate going into document editor
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
+
+  // Parse unique categories from MOCK_TEMPLATES
+  const uniqueCategories = Array.from(new Set(MOCK_TEMPLATES.map(t => t.category)));
+
+  // Simple icon mapping or default fallback
+  const getCategoryIcon = (categoryName: string) => {
+    const lower = categoryName.toLowerCase();
+    if (lower.includes('fabrika')) return <Factory size={32} strokeWidth={1.5} />;
+    if (lower.includes('gıda')) return <PackageSearch size={32} strokeWidth={1.5} />;
+    if (lower.includes('inşaat') || lower.includes('tersane')) return <HardHat size={32} strokeWidth={1.5} />;
+    if (lower.includes('kimya')) return <FlaskConical size={32} strokeWidth={1.5} />;
+    if (lower.includes('maden')) return <Pickaxe size={32} strokeWidth={1.5} />;
+    if (lower.includes('enerji')) return <Zap size={32} strokeWidth={1.5} />;
+    if (lower.includes('metal')) return <Building2 size={32} strokeWidth={1.5} />;
+    if (lower.includes('kurumsal')) return <Building2 size={32} strokeWidth={1.5} />;
+    if (lower.includes('standart')) return <ClipboardList size={32} strokeWidth={1.5} />;
+    if (lower.includes('otel') || lower.includes('bina') || lower.includes('hastane')) return <Building2 size={32} strokeWidth={1.5} />;
+    return <FileBox size={32} strokeWidth={1.5} />;
+  };
+
+  const colors = [
+    'from-pink-900/80 to-purple-900/80',
+    'from-blue-900/80 to-indigo-900/80',
+    'from-amber-900/80 to-orange-900/80',
+    'from-red-900/80 to-rose-900/80',
+    'from-yellow-900/80 to-amber-900/80',
+    'from-teal-900/80 to-emerald-900/80',
+    'from-violet-900/80 to-fuchsia-900/80'
+  ];
 
   // Initialize from storage
   useEffect(() => {
@@ -121,76 +151,30 @@ const App = () => {
 
           {/* Sectors Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-10">
-             {/* Temporary disabled dummy buttons for visual representation */}
-             <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
-               <div className="absolute inset-0 bg-gradient-to-t from-pink-900/80 to-purple-900/80 mix-blend-multiply opacity-80" />
-               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
-                 <div className="mb-2 opacity-80">
-                   <Factory size={32} strokeWidth={1.5} />
-                 </div>
-                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">FABRİKA</h3>
-               </div>
-             </div>
-             
-             <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
-               <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-indigo-900/80 mix-blend-multiply opacity-80" />
-               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
-                 <div className="mb-2 opacity-80">
-                   <Building2 size={32} strokeWidth={1.5} />
-                 </div>
-                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">KURUMSAL</h3>
-               </div>
-             </div>
-             
-              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
-               <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 to-orange-900/80 mix-blend-multiply opacity-80" />
-               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
-                 <div className="mb-2 opacity-80">
-                   <Pickaxe size={32} strokeWidth={1.5} />
-                 </div>
-                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">MADEN</h3>
-               </div>
-             </div>
-             
-              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
-               <div className="absolute inset-0 bg-gradient-to-t from-red-900/80 to-rose-900/80 mix-blend-multiply opacity-80" />
-               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
-                 <div className="mb-2 opacity-80">
-                   <HardHat size={32} strokeWidth={1.5} />
-                 </div>
-                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">İNŞAAT</h3>
-               </div>
-             </div>
-             
-              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
-               <div className="absolute inset-0 bg-gradient-to-t from-yellow-900/80 to-amber-900/80 mix-blend-multiply opacity-80" />
-               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
-                 <div className="mb-2 opacity-80">
-                   <Zap size={32} strokeWidth={1.5} />
-                 </div>
-                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">ENERJİ</h3>
-               </div>
-             </div>
-             
-              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
-               <div className="absolute inset-0 bg-gradient-to-t from-teal-900/80 to-emerald-900/80 mix-blend-multiply opacity-80" />
-               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
-                 <div className="mb-2 opacity-80">
-                   <FlaskConical size={32} strokeWidth={1.5} />
-                 </div>
-                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">KİMYA</h3>
-               </div>
-             </div>
-             
-              <div className="group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/10 opacity-70 cursor-not-allowed">
-               <div className="absolute inset-0 bg-gradient-to-t from-violet-900/80 to-fuchsia-900/80 mix-blend-multiply opacity-80" />
-               <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
-                 <div className="mb-2 opacity-80">
-                   <Briefcase size={32} strokeWidth={1.5} />
-                 </div>
-                 <h3 className="text-xs font-bold tracking-widest uppercase text-center drop-shadow-md">KOBİ</h3>
-               </div>
-             </div>
+            {uniqueCategories.map((category, index) => {
+              const bgGradient = colors[index % colors.length];
+              const isSelected = selectedCategory === category;
+
+              return (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(isSelected ? null : category)}
+                  className={`group relative h-28 rounded-2xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] border ${
+                    isSelected ? 'border-orange-500 ring-2 ring-orange-500/50 scale-[1.02]' : 'border-white/10 opacity-70 hover:opacity-100 hover:scale-[1.02]'
+                  } transition-all duration-300 w-full`}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-t ${bgGradient} mix-blend-multiply opacity-80`} />
+                  <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col items-center justify-center p-3 text-white">
+                    <div className="mb-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                      {getCategoryIcon(category)}
+                    </div>
+                    <h3 className="text-[10px] sm:text-xs font-bold tracking-widest uppercase text-center drop-shadow-md px-1 line-clamp-2 leading-tight">
+                      {category}
+                    </h3>
+                  </div>
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6">
@@ -203,7 +187,9 @@ const App = () => {
                      <FileBox size={20} className="text-orange-500" />
                    </div>
                    <div>
-                     <h2 className="text-white font-bold text-lg uppercase tracking-wider">TÜM SEKTÖRLER <span className="text-slate-500">DOKÜMANLARI</span></h2>
+                     <h2 className="text-white font-bold text-lg uppercase tracking-wider">
+                       {selectedCategory ? selectedCategory : "TÜM SEKTÖRLER"} <span className="text-slate-500">DOKÜMANLARI</span>
+                     </h2>
                    </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -213,28 +199,67 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Data Table Skeleton */}
+              {/* Data Table */}
               <div className="w-full overflow-x-auto">
                 <table className="w-full text-left min-w-[600px]">
                   <thead>
                     <tr className="text-[#64748b] text-[10px] uppercase tracking-wider border-b border-[#2A3143]">
                       <th className="pb-3 font-semibold">Dosya Adı</th>
                       <th className="pb-3 font-semibold">Sektör</th>
-                      <th className="pb-3 font-semibold">Oluşturma Tarihi</th>
-                      <th className="pb-3 font-semibold">Durum</th>
+                      <th className="pb-3 font-semibold">Türü</th>
+                      <th className="pb-3 font-semibold text-right">İşlem</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Empty State / Backend Integration Point */}
-                    <tr>
-                      <td colSpan={4} className="py-16 text-center">
-                        <div className="flex flex-col items-center justify-center opacity-50">
-                           <FolderOpen size={48} className="text-slate-500 mb-3" />
-                           <p className="text-slate-400 text-sm">Henüz doküman bulunmamaktadır.</p>
-                        </div>
-                      </td>
-                    </tr>
-                    {/* Real rows will map here */}
+                    {MOCK_TEMPLATES.filter(t => !selectedCategory || t.category === selectedCategory).length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="py-16 text-center">
+                          <div className="flex flex-col items-center justify-center opacity-50">
+                             <FolderOpen size={48} className="text-slate-500 mb-3" />
+                             <p className="text-slate-400 text-sm">Bu kategoride henüz doküman bulunmamaktadır.</p>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      MOCK_TEMPLATES.filter(t => !selectedCategory || t.category === selectedCategory).map(template => (
+                        <tr key={template.id} className="border-b border-[#2A3143]/50 hover:bg-[#1A1F2B] transition-colors group">
+                          <td className="py-4 mr-4">
+                            <div className="flex items-center gap-3">
+                              <FileText size={16} className="text-slate-400" />
+                              <div>
+                                <p className="text-slate-200 text-sm font-medium">{template.title}</p>
+                                <p className="text-slate-500 text-xs truncate max-w-[200px]">{template.description}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4">
+                            <span className="px-2 py-1 bg-[#1A1F2B] border border-[#2A3143] rounded text-slate-400 text-[10px] uppercase">
+                              {template.category}
+                            </span>
+                          </td>
+                          <td className="py-4">
+                            {template.isPremium ? (
+                              <span className="flex items-center gap-1 text-orange-400 text-[10px] uppercase font-bold">
+                                <Crown size={12} /> Premium
+                              </span>
+                            ) : (
+                              <span className="text-emerald-400 text-[10px] uppercase font-bold">Standart</span>
+                            )}
+                          </td>
+                          <td className="py-4 text-right">
+                             <button
+                               onClick={() => {
+                                 setSelectedTemplate(template);
+                                 setCurrentView('editor');
+                               }}
+                               className="px-4 py-2 bg-[#2A3143] hover:bg-orange-600 border border-[#2A3143] hover:border-orange-500 text-slate-300 hover:text-white rounded-lg text-xs font-bold uppercase transition-all shadow-sm"
+                             >
+                               Düzenle
+                             </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
