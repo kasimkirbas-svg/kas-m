@@ -19,6 +19,15 @@ interface CustomClause {
 }
 
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
+  // Check if there are primary select fields
+  const primarySelectFields = template.fields?.filter(
+    (field) => field.type === 'select' && !field.dependsOn
+  ) || [];
+
+  const [step, setStep] = useState<'selection' | 'editor'>(
+    primarySelectFields.length > 0 ? 'selection' : 'editor'
+  );
+
   const [loading, setLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   
@@ -147,6 +156,43 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     await generatePDF({ formData, clauses, photos }, template.title);
     setLoading(false);
   };
+
+  if (step === 'selection') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-6">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-slate-800 text-center">Lütfen doküman varyasyonunu seçin.</h2>
+          
+          <div className="space-y-4 mb-8">
+            {primarySelectFields.map(field => (
+              <div key={field.key}>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{field.label}</label>
+                <select
+                  name={field.key}
+                  value={formData[field.key] || ''}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {field.options?.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-between">
+            <Button variant="outline" onClick={onBack}>
+              <ArrowLeft className="mr-2" size={16} /> Listeye Dön
+            </Button>
+            <Button variant="primary" onClick={() => setStep('editor')}>
+              Devam Et
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
