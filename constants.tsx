@@ -32,7 +32,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Proje teknik şartname hazırlama dökümanı.',
     isPremium: true,
     fileUrl: '/templates/PROJE TEKNİK ŞARTNAMESİ.docx',
-    fields: []
+    fields: [
+      { key: 'projeTuru', label: 'Proje Türü', type: 'select', options: ['Mekanik', 'Elektrik', 'İnşaat', 'Mimari'] }
+    ]
   },
   
   // Gıda Fabrikaları
@@ -43,7 +45,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Gıda üretim alanları için hijyen talimatları.',
     isPremium: false,
     fileUrl: '/templates/Hijyen ve Sanitasyon Talimatı.docx',
-    fields: []
+    fields: [
+      { key: 'birim', label: 'Birim', type: 'select', options: ['Üretim', 'Depo', 'Sevkiyat', 'Yemekhane'] }
+    ]
   },
   {
     id: 'gida-2',
@@ -52,7 +56,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'İş yeri genel hijyen ve sanitasyon talimatnamesi.',
     isPremium: false,
     fileUrl: '/templates/İş Yeri Hijyen ve Sanitasyon Talimatnamesi.docx',
-    fields: []
+    fields: [
+      { key: 'isletmeTuru', label: 'İşletme Türü', type: 'select', options: ['Gıda İmalathanesi', 'Hazır Yemek (Catering)', 'Süt ve Süt Ürünleri', 'Et Dünyası'] }
+    ]
   },
   {
     id: 'gida-3',
@@ -61,7 +67,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Soğuk oda alanlarında güvenli çalışma talimatları.',
     isPremium: true,
     fileUrl: '/templates/Soğuk Oda Çalışma Talimat.docx',
-    fields: []
+    fields: [
+      { key: 'depoTipi', label: 'Depo Tipi', type: 'select', options: ['Donuk Depo (-18)', 'Soğuk Depo (+4)'] }
+    ]
   },
 
   // Hava Limanları
@@ -72,7 +80,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Apron ve yer hizmetlerinde güvenlik standartları.',
     isPremium: true,
     fileUrl: '/templates/Apron Güvenliği ve Yer Hizmetleri Talimatnamesi.docx',
-    fields: []
+    fields: [
+      { key: 'aracTipi', label: 'Araç Tipi', type: 'select', options: ['Trainee', 'Bagaj Aracı', 'Merdiven Aracı', 'Otobüs'] }
+    ]
   },
 
   // İnşaat ve Tersaneler
@@ -83,7 +93,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Çalışan temsilcisi atama ve bilgilendirme yazıları.',
     isPremium: false,
     fileUrl: '/templates/Çalışan Temsilcisi ve Destek Elemanı Atama Yazıları.docx',
-    fields: []
+    fields: [
+      { key: 'temsilciTuru', label: 'Temsilci Türü', type: 'select', options: ['Baş Temsilci', 'Çalışan Temsilcisi', 'Destek Elemanı'] }
+    ]
   },
 
   // Kimya Fabrikası
@@ -94,7 +106,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Patlayıcı ortamlarda korunma stratejisi dokümanı.',
     isPremium: true,
     fileUrl: '/templates/patlamadan korunma dökümanı.docx',
-    fields: []
+    fields: [
+      { key: 'tehlikeSinifi', label: 'Tehlike Sınıfı', type: 'select', options: ['Zone 0', 'Zone 1', 'Zone 2', 'Zone 20', 'Zone 21', 'Zone 22'] }
+    ]
   },
   {
     id: 'kimya-2',
@@ -103,7 +117,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Etiketleme kilitleme (LOTO) formu.',
     isPremium: true,
     fileUrl: '/templates/LOTO Formu.docx',
-    fields: []
+    fields: [
+      { key: 'enerjiTuru', label: 'Enerji Türü', type: 'select', options: ['Elektrik', 'Mekanik', 'Hidrolik', 'Pnömatik'] }
+    ]
   },
 
   // Liman İşletmeciliği
@@ -114,7 +130,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Liman operasyonlarında uyulması gereken güvenlik adımları.',
     isPremium: true,
     fileUrl: '/templates/Liman Operasyon Güvenlik Planı.docx',
-    fields: []
+    fields: [
+      { key: 'operasyonTuru', label: 'Operasyon Türü', type: 'select', options: ['Konteyner Yükleme', 'Dökme Yük', 'Ro-Ro', 'Sıvı Yük'] }
+    ]
   },
 
   // Lojistik ve Taşımacılık Yükleme Güvenliği
@@ -125,7 +143,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Yük sabitleme (lashing) uygulama talimatı.',
     isPremium: true,
     fileUrl: '/templates/(Lashing) Talimatı ve Formu.docx',
-    fields: []
+    fields: [
+      { key: 'vasitaTipi', label: 'Vasıta Tipi', type: 'select', options: ['Kamyon', 'Tır', 'Gemi', 'Tren'] }
+    ]
   },
 
   // Maden İşletmeleri
@@ -136,7 +156,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Madenlerde patlamadan korunma için temel doküman.',
     isPremium: true,
     fileUrl: '/templates/Maden Patlamadan Korunma.docx',
-    fields: []
+    fields: [
+      { key: 'madenTipi', label: 'Maden Tipi', type: 'select', options: ['Yeraltı Kömür', 'Açık Ocak', 'Metalik Maden'] }
+    ]
   },
 
   // Metal ve Döküm
@@ -147,7 +169,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Sıcak metal aktarımı için isg talimatları.',
     isPremium: true,
     fileUrl: '/templates/Sıcak Metal Transfer Talimatı.docx',
-    fields: []
+    fields: [
+      { key: 'metalTuru', label: 'Metal Türü', type: 'select', options: ['Çelik', 'Demir', 'Alüminyum'] }
+    ]
   },
 
   // Otel,Bina ve Hastaneler
@@ -158,7 +182,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Binalar ve tesisler için yangından korunma standartları.',
     isPremium: false,
     fileUrl: '/templates/yangından korunma dökümanı.docx',
-    fields: []
+    fields: [
+      { key: 'yapiSinifi', label: 'Yapı Sınıfı', type: 'select', options: ['Endüstriyel Tesis', 'Ofis/İdari Bina', 'Depo'] }
+    ]
   },
 
   // STANDART DOKÜMANLAR
@@ -180,7 +206,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Acil durum ekipleri atama formu.',
     isPremium: false,
     fileUrl: '/templates/ACİL DURUM ATAMA yazısı.docx',
-    fields: []
+    fields: [
+      { key: 'ekipTuru', label: 'Ekip Türü', type: 'select', options: ['Söndürme Ekibi', 'Kurtarma Ekibi', 'Koruma Ekibi', 'İlk Yardım Ekibi'] }
+    ]
   },
   {
     id: 'standart-3',
@@ -189,7 +217,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'İSG kurulu toplantı tutanağı.',
     isPremium: false,
     fileUrl: '/templates/İSG Kurul Tutanağı.docx',
-    fields: []
+    fields: [
+      { key: 'toplantiTuru', label: 'Toplantı Türü', type: 'select', options: ['Olağan', 'Olağanüstü'] }
+    ]
   },
   {
     id: 'standart-4',
@@ -198,7 +228,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Ramak kala ve kaza bildirim şablonu.',
     isPremium: false,
     fileUrl: '/templates/İş Kazası ve Ramak Kala Bildirim Formu.docx',
-    fields: []
+    fields: [
+      { key: 'olayTuru', label: 'Olay Türü', type: 'select', options: ['İş Kazası', 'Ramak Kala Olay'] }
+    ]
   },
   {
     id: 'standart-5',
@@ -207,7 +239,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Personel isg uyarı tutanağı.',
     isPremium: false,
     fileUrl: '/templates/Personel İSG İhtar ve Uyarı Tutanağı.docx',
-    fields: []
+    fields: [
+      { key: 'uyariSebebi', label: 'Uyarı Sebebi', type: 'select', options: ['KKD Kullanmama', 'Talimatlara Uymama', 'Tehlikeli Davranış'] }
+    ]
   },
   {
     id: 'standart-6',
@@ -216,7 +250,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'İşe giriş ve temel isg eğitim formu.',
     isPremium: false,
     fileUrl: '/templates/temel iş sağlığı formu ve işe başlama eğitim formu.docx',
-    fields: []
+    fields: [
+      { key: 'egitimSeviyesi', label: 'Eğitim Seviyesi', type: 'select', options: ['Çok Tehlikeli (16 Saat)', 'Tehlikeli (12 Saat)', 'Az Tehlikeli (8 Saat)'] }
+    ]
   },
 
   // Şirketler (Ofis ve Küçük İşletmeler)
@@ -227,7 +263,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Örnek strateji ve raporlama belgesi.',
     isPremium: false,
     fileUrl: '/templates/YUVAM Projesi - Nihai Devlet Strateji Belgesi (V4).docx',
-    fields: []
+    fields: [
+      { key: 'raporDonemi', label: 'Rapor Dönemi', type: 'select', options: ['1. Çeyrek', '2. Çeyrek', '3. Çeyrek', '4. Çeyrek', 'Yıllık'] }
+    ]
   },
 
   // Tarım, Hayvancılık ve Ormancılık
@@ -238,7 +276,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Orman işlerinde güvenlik talimatları.',
     isPremium: true,
     fileUrl: '/templates/Orman Kesim ve Tomruklama Güvenlik Prosedürü.docx',
-    fields: []
+    fields: [
+      { key: 'araziDurumu', label: 'Arazi Durumu', type: 'select', options: ['Düz Arazi', 'Eğimli Arazi', 'Sarp Arazi'] }
+    ]
   },
   {
     id: 'tarim-2',
@@ -247,7 +287,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Zirai ilaçların kullanımı ve depolanması hakkında talimat.',
     isPremium: true,
     fileUrl: '/templates/Zirai İlaç (Pestisit) Kullanım ve Depolama Talimatı.docx',
-    fields: []
+    fields: [
+      { key: 'ilacSinifi', label: 'İlaç Sınıfı', type: 'select', options: ['Herbisit', 'İnsektisit', 'Fungisit'] }
+    ]
   },
 
   // Enerji Santralleri
@@ -258,7 +300,9 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Yüksek gerilim işletme sorumlusu atama belgesi.',
     isPremium: true,
     fileUrl: '/templates/(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısı.docx',
-    fields: []
+    fields: [
+      { key: 'tesisTipi', label: 'Tesis Tipi', type: 'select', options: ['RES (Rüzgar Enerjisi)', 'GES (Güneş Enerjisi)', 'HES (Hidroelektrik)', 'Termik Santral'] }
+    ]
   },
   {
     id: 'enerji-2',
@@ -267,6 +311,8 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     description: 'Elektrik kuvvetli akım tesisleri yetki belgesi takip şablonu.',
     isPremium: true,
     fileUrl: '/templates/EKAT Yetki Belgesi Takip Çizelgesi.docx',
-    fields: []
+    fields: [
+      { key: 'gerilimSeviyesi', label: 'Gerilim Seviyesi', type: 'select', options: ['Alçak Gerilim (AG)', 'Yüksek Gerilim (YG)'] }
+    ]
   }
 ];
