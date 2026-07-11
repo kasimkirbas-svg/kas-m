@@ -1,8 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { DocumentTemplate } from '../types';
 import { Button } from '../components/Button';
 import { ArrowLeft, Upload, Plus, Trash2, FileText, Download, Printer } from 'lucide-react';
 import { generatePDF } from '../services/pdfService';
+import mammoth from 'mammoth';
+import parse from 'html-react-parser';
+import DOMPurify from 'dompurify';
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -33,6 +36,19 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   // Photos
   const [photos, setPhotos] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // DOCX Content
+  const [docHtml, setDocHtml] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (template.fileUrl) {
+       fetch(template.fileUrl)
+         .then(res => res.arrayBuffer())
+         .then(buffer => mammoth.convertToHtml({ arrayBuffer: buffer }))
+         .then(result => setDocHtml(DOMPurify.sanitize(result.value)))
+         .catch(err => console.error(err));
+    }
+  }, [template]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -206,15 +222,23 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
             {/* Content */}
             <div className="mb-8">
-              <h2 className="text-lg font-bold text-slate-800 mb-3 border-b border-slate-200 pb-1">Genel Bilgiler</h2>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div><span className="font-semibold text-slate-700">Hazırlayan:</span> {formData.preparedBy || '...'}</div>
-                <div><span className="font-semibold text-slate-700">Firma:</span> {formData.companyName || '...'}</div>
-                <div className="col-span-2">
-                  <span className="font-semibold text-slate-700">Açıklama:</span>
-                  <p className="mt-1 text-slate-600 whitespace-pre-wrap">{formData.description || "Açıklama yok."}</p>
+              {docHtml ? (
+                <div className="prose max-w-none text-sm text-slate-800">
+                  {parse(docHtml)}
                 </div>
-              </div>
+              ) : (
+                <>
+                  <h2 className="text-lg font-bold text-slate-800 mb-3 border-b border-slate-200 pb-1">Genel Bilgiler</h2>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div><span className="font-semibold text-slate-700">Hazırlayan:</span> {formData.preparedBy || '...'}</div>
+                    <div><span className="font-semibold text-slate-700">Firma:</span> {formData.companyName || '...'}</div>
+                    <div className="col-span-2">
+                      <span className="font-semibold text-slate-700">Açıklama:</span>
+                      <p className="mt-1 text-slate-600 whitespace-pre-wrap">{formData.description || "Açıklama yok."}</p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Clauses */}
