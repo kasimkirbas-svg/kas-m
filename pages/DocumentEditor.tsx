@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { DocumentTemplate } from '../types';
 import { Button } from '../components/Button';
-import { ArrowLeft, Upload, Plus, Trash2, FileText, Download, CheckCircle, Printer } from 'lucide-react';
+import { ArrowLeft, Upload, Plus, Trash2, FileText, Download, Printer } from 'lucide-react';
 import { generatePDF } from '../services/pdfService';
 
 interface DocumentEditorProps {
@@ -16,7 +16,6 @@ interface CustomClause {
 }
 
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
-  const [step, setStep] = useState<1 | 2>(1); // 1: Edit, 2: Preview
   const [loading, setLoading] = useState(false);
   
   // Form State
@@ -72,275 +71,178 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     // Simulate Backend PDF Gen
     await generatePDF({ formData, clauses, photos }, template.title);
     setLoading(false);
-    setStep(2);
   };
 
-  // Preview / Print View
-  if (step === 2) {
-    return (
-      <div className="max-w-4xl mx-auto bg-white shadow-lg min-h-[800px] flex flex-col">
-        {/* Toolbar - No Print */}
-        <div className="bg-slate-800 text-white p-4 flex justify-between items-center no-print sticky top-0 z-10">
-          <div className="flex items-center space-x-2">
-            <CheckCircle className="text-green-400" size={20} />
-            <span className="font-semibold">Doküman Hazır</span>
-          </div>
-          <div className="flex space-x-3">
-             <Button variant="secondary" size="sm" onClick={() => setStep(1)}>
-               Düzenle
-             </Button>
-             <Button variant="primary" size="sm" onClick={() => window.print()}>
-               <Printer className="mr-2" size={16} />
-               Yazdır / PDF Kaydet
-             </Button>
-             <Button variant="outline" size="sm" onClick={onSave}>
-               <Download className="mr-2" size={16} />
-               Sisteme Kaydet
-             </Button>
-          </div>
-        </div>
-
-        {/* PDF Content Area */}
-        <div className="p-12 print:p-0 flex-1" id="pdf-content">
-          <div className="border-b-2 border-slate-800 pb-6 mb-8 flex justify-between items-end">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 uppercase tracking-wide">{template.title}</h1>
-              <p className="text-slate-500 mt-2">{template.category} Dokümanı</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-semibold text-slate-900">{formData.companyName}</p>
-              <p className="text-sm text-slate-500">{formData.date}</p>
-            </div>
-          </div>
-
-          <div className="mb-8">
-            <h2 className="text-lg font-bold text-slate-800 mb-3 border-b border-slate-200 pb-1">Genel Bilgiler</h2>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="font-semibold text-slate-700">Hazırlayan:</span> {formData.preparedBy}
-              </div>
-              <div>
-                <span className="font-semibold text-slate-700">Firma:</span> {formData.companyName}
-              </div>
-              <div className="col-span-2">
-                <span className="font-semibold text-slate-700">Açıklama:</span>
-                <p className="mt-1 text-slate-600 whitespace-pre-wrap">{formData.description || "Açıklama girilmedi."}</p>
-              </div>
-            </div>
-          </div>
-
-          {clauses.length > 0 && (
-            <div className="mb-8 break-inside-avoid">
-              <h2 className="text-lg font-bold text-slate-800 mb-3 border-b border-slate-200 pb-1">Ek Maddeler & Notlar</h2>
-              <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
-                {clauses.map(clause => (
-                  <li key={clause.id}>{clause.text}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {photos.length > 0 && (
-            <div className="break-before-auto">
-              <h2 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-200 pb-1">Saha Fotoğrafları</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {photos.map((photo, index) => (
-                  <div key={index} className="aspect-square border border-slate-200 rounded-lg overflow-hidden relative break-inside-avoid">
-                     <img src={photo} alt={`Evidence ${index}`} className="w-full h-full object-cover" />
-                     <div className="absolute bottom-0 left-0 bg-black/50 text-white text-xs px-2 py-1">
-                       Foto #{index + 1}
-                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="mt-16 pt-8 border-t border-slate-200 flex justify-between break-inside-avoid">
-             <div className="text-center">
-               <p className="mb-8 font-semibold">Hazırlayan</p>
-               <div className="h-0.5 w-32 bg-slate-400 mx-auto"></div>
-               <p className="mt-2 text-sm">{formData.preparedBy}</p>
-             </div>
-             <div className="text-center">
-               <p className="mb-8 font-semibold">Onaylayan</p>
-               <div className="h-0.5 w-32 bg-slate-400 mx-auto"></div>
-               <p className="mt-2 text-sm">İmza / Kaşe</p>
-             </div>
-          </div>
-          
-          <div className="mt-12 text-center text-xs text-slate-400">
-             Bu belge Kırbaş Doküman Sistemi altyapısı ile dijital olarak oluşturulmuştur.
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Edit View
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center mb-6">
-        <button onClick={onBack} className="mr-4 p-2 hover:bg-slate-200 rounded-full transition-colors">
-          <ArrowLeft size={20} />
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* LEFT PANE: ENTRYS */}
+      <div className="w-1/2 h-full overflow-y-auto p-6 bg-white border-r">
+        <button onClick={onBack} className="flex items-center text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+          <ArrowLeft className="mr-2" size={20} /> Listeye Dön
         </button>
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800">{template.title}</h2>
-          <p className="text-slate-500">Doküman oluşturma sihirbazı</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-8">
+        <h1 className="text-2xl font-bold mb-6 text-slate-800">{template.title} <span className="text-sm font-normal text-slate-500">Düzenle</span></h1>
         
-        {/* Section 1: Basic Info */}
-        <section>
-          <div className="flex items-center mb-4 text-blue-600">
-            <FileText className="mr-2" size={20} />
-            <h3 className="text-lg font-semibold">Temel Bilgiler</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-6">
+          {/* Form Fields */}
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Firma Adı</label>
-              <input 
-                name="companyName"
-                value={formData.companyName}
-                onChange={handleInputChange}
-                type="text" 
-                className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" 
-                placeholder="Örn: Kırbaş İnşaat A.Ş." 
-              />
+              <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Örn: XYZ Ltd. Şti." />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Hazırlayan Uzman</label>
+              <input type="text" name="preparedBy" value={formData.preparedBy} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="İsim Soyisim" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Tarih</label>
-              <input 
-                name="date"
-                value={formData.date}
-                onChange={handleInputChange}
-                type="date" 
-                className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" 
-              />
+              <input type="date" name="date" value={formData.date} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Hazırlayan Kişi</label>
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-slate-700 mb-1">Açıklama / Notlar</label>
+              <textarea name="description" value={formData.description} onChange={handleInputChange} rows={3} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Genel değerlendirme..." />
+            </div>
+          </div>
+
+           {/* Clauses Section */}
+           <div className="border-t pt-4">
+            <h3 className="font-semibold text-slate-800 mb-2 flex items-center"><FileText size={18} className="mr-2" /> Ek Maddeler</h3>
+            <div className="flex gap-2 mb-3">
               <input 
-                name="preparedBy"
-                value={formData.preparedBy}
-                onChange={handleInputChange}
                 type="text" 
-                className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" 
-                placeholder="Ad Soyad" 
+                value={newClause} 
+                onChange={(e) => setNewClause(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addClause()}
+                placeholder="Yeni madde ekle..." 
+                className="flex-1 px-3 py-2 border rounded-md"
               />
+              <Button type="button" onClick={addClause} variant="outline"><Plus size={18} /></Button>
             </div>
-             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1">Açıklama / Kapsam</label>
-              <textarea 
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={3} 
-                className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" 
-                placeholder="Doküman ile ilgili genel notlar..." 
-              />
-            </div>
-          </div>
-        </section>
-
-        <hr className="border-slate-100" />
-
-        {/* Section 2: Dynamic Items */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-             <div className="flex items-center text-blue-600">
-                <Plus className="mr-2" size={20} />
-                <h3 className="text-lg font-semibold">Ek Maddeler / Bulgular</h3>
-             </div>
-             <span className="text-xs text-slate-400">Örn: "Yangın tüpü eksik", "Zemin kaygan"</span>
-          </div>
-          
-          <div className="space-y-3 mb-4">
-            {clauses.map((clause) => (
-              <div key={clause.id} className="flex items-center bg-slate-50 p-3 rounded-lg border border-slate-200">
-                <span className="w-2 h-2 rounded-full bg-blue-50 mr-3"></span>
-                <span className="flex-1 text-sm text-slate-700">{clause.text}</span>
-                <button onClick={() => removeClause(clause.id)} className="text-red-500 hover:bg-red-50 p-1 rounded">
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))}
-            {clauses.length === 0 && <p className="text-sm text-slate-400 italic">Henüz madde eklenmedi.</p>}
-          </div>
-
-          <div className="flex gap-2">
-            <input 
-              type="text" 
-              value={newClause}
-              onChange={(e) => setNewClause(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && addClause()}
-              className="flex-1 border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" 
-              placeholder="Yeni madde yazın..." 
-            />
-            <Button onClick={addClause} variant="secondary">Ekle</Button>
-          </div>
-        </section>
-
-        <hr className="border-slate-100" />
-
-        {/* Section 3: Photos */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-             <div className="flex items-center text-blue-600">
-                <Upload className="mr-2" size={20} />
-                <h3 className="text-lg font-semibold">Fotoğraflar</h3>
-             </div>
-             <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-               {photos.length} / 15
-             </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
-            {photos.map((photo, index) => (
-              <div key={index} className="relative group aspect-square rounded-lg overflow-hidden border border-slate-200">
-                <img src={photo} alt={`Upload ${index}`} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <button onClick={() => removePhoto(index)} className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700">
+            
+            <ul className="space-y-2">
+              {clauses.map(clause => (
+                <li key={clause.id} className="flex justify-between items-center group bg-slate-50 px-3 py-2 rounded-md hover:bg-slate-100">
+                  <span className="text-sm text-slate-700">{clause.text}</span>
+                  <button onClick={() => removeClause(clause.id)} className="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Trash2 size={16} />
                   </button>
-                </div>
-              </div>
-            ))}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Photos */}
+          <div className="border-t pt-4 pb-12">
+            <h3 className="font-semibold text-slate-800 mb-2 flex flex-col">
+              <span>Saha Fotoğrafları</span>
+              <span className="text-xs text-slate-500 font-normal">Maksimum 15 fotoğraf. Şu an: {photos.length}</span>
+            </h3>
             
-            {photos.length < 15 && (
-              <button 
-                onClick={() => fileInputRef.current?.click()}
-                className="flex flex-col items-center justify-center aspect-square border-2 border-slate-300 border-dashed rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-slate-400 hover:text-blue-500"
-              >
-                <Plus size={32} />
-                <span className="text-xs mt-2 font-medium">Fotoğraf Ekle</span>
-              </button>
+            <input 
+              type="file" 
+              multiple 
+              accept="image/*" 
+              className="hidden" 
+              ref={fileInputRef} 
+              onChange={handlePhotoUpload}
+            />
+            
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="w-full mb-4" 
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="mr-2" size={18} /> Fotoğraf Ekle
+            </Button>
+
+            {photos.length > 0 && (
+              <div className="grid grid-cols-4 gap-2">
+                {photos.map((photo, i) => (
+                  <div key={i} className="relative group aspect-square rounded-md overflow-hidden bg-slate-100 border">
+                    <img src={photo} alt="" className="w-full h-full object-cover" />
+                    <button 
+                      onClick={() => removePhoto(i)}
+                      className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100"
+                    >
+                      <Trash2 className="text-white" size={20} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handlePhotoUpload} 
-            className="hidden" 
-            accept="image/*" 
-            multiple 
-          />
-        </section>
+        </div>
+      </div>
 
-        <div className="pt-6 border-t border-slate-200 flex justify-end">
-          <Button 
-            onClick={handleGenerate} 
-            size="lg" 
-            className="w-full md:w-auto"
-            isLoading={loading}
-            disabled={!formData.companyName}
-          >
-            Dokümanı Hazırla
+      {/* RIGHT PANE: LIVE PREVIEW */}
+      <div className="w-1/2 h-full bg-slate-700 overflow-y-auto relative flex flex-col">
+        {/* Actions Bar */}
+        <div className="bg-slate-800 text-white p-3 flex justify-end space-x-3 shadow-md sticky top-0 z-20">
+          <Button variant="primary" size="sm" onClick={() => window.print()}>
+            <Printer className="mr-2" size={16} /> Yazdır / PDF
+          </Button>
+          <Button variant="outline" size="sm" onClick={onSave} loading={loading}>
+             <Download className="mr-2" size={16} /> Kaydet
           </Button>
         </div>
 
+        {/* Paper Container */}
+        <div className="flex-1 p-8 flex justify-center">
+          <div className="bg-white text-black shadow-2xl p-12 min-h-[1056px] w-[794px] max-w-full print:p-0 print:shadow-none print:w-full shrink-0 relative" id="pdf-content">
+            
+            {/* Header */}
+            <div className="border-b-2 border-slate-800 pb-6 mb-8 flex justify-between items-end">
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900 uppercase tracking-wide break-words max-w-[400px]">
+                  {template.title || 'Doküman Başlığı'}
+                </h1>
+                <p className="text-slate-500 mt-2">{template.category} Dokümanı</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-semibold text-slate-900">{formData.companyName || 'Firma Adı'}</p>
+                <p className="text-sm text-slate-500">{formData.date}</p>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="mb-8">
+              <h2 className="text-lg font-bold text-slate-800 mb-3 border-b border-slate-200 pb-1">Genel Bilgiler</h2>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div><span className="font-semibold text-slate-700">Hazırlayan:</span> {formData.preparedBy || '...'}</div>
+                <div><span className="font-semibold text-slate-700">Firma:</span> {formData.companyName || '...'}</div>
+                <div className="col-span-2">
+                  <span className="font-semibold text-slate-700">Açıklama:</span>
+                  <p className="mt-1 text-slate-600 whitespace-pre-wrap">{formData.description || "Açıklama yok."}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Clauses */}
+            {clauses.length > 0 && (
+              <div className="mb-8 break-inside-avoid">
+                <h2 className="text-lg font-bold text-slate-800 mb-3 border-b border-slate-200 pb-1">Ek Maddeler & Notlar</h2>
+                <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
+                  {clauses.map(clause => <li key={clause.id}>{clause.text}</li>)}
+                </ul>
+              </div>
+            )}
+
+            {/* Photos */}
+            {photos.length > 0 && (
+              <div className="break-before-auto">
+                <h2 className="text-lg font-bold text-slate-800 mb-4 border-b border-slate-200 pb-1">Saha Fotoğrafları</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {photos.map((photo, index) => (
+                    <div key={index} className="aspect-square border border-slate-200 rounded-lg overflow-hidden relative break-inside-avoid">
+                      <img src={photo} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
       </div>
     </div>
   );
