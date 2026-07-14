@@ -110,8 +110,22 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           setPreviewError(err.message || "Preview rendering failed");
         });
       } catch (error: any) {
-        console.error("Docxtemplater error:", error);
-        setPreviewError(error.message || "Template processing failed");
+        console.error("Docxtemplater error object:", error);
+        
+        let errorMsg = error.message || "Bilinmeyen bir hata oluştu";
+        
+        // Docxtemplater exposes multiple errors via properties.errors
+        if (error.properties && error.properties.errors instanceof Array) {
+            errorMsg = error.properties.errors
+              .map((e: any) => e.properties?.explanation || e.message)
+              .join('\n');
+        } else if (error.message) {
+            errorMsg = error.message;
+        } else {
+            errorMsg = JSON.stringify(error);
+        }
+
+        setPreviewError(`Şablon İşleme Hatası:\n${errorMsg}`);
       }
     }, 800);
 
