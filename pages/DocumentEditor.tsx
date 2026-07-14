@@ -6,6 +6,7 @@ import { generatePDF } from '../services/pdfService';
 import { renderAsync } from 'docx-preview';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
+import ImageModule from 'docxtemplater-image-module-free';
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -39,7 +40,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [newClause, setNewClause] = useState('');
 
   // Photos
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<{ id: number, url: string, buffer: ArrayBuffer }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // DOCX Content
@@ -84,13 +85,32 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     const timer = setTimeout(() => {
       try {
         const zip = new PizZip(templateBuffer);
+        
+        let imageOptions = {
+            centered: false,
+            getImage: function(tagValue: string, tagName: string) {
+                if (tagName === "logo" && photos.length > 0) {
+                    return photos[0].buffer; // Return the first uploaded photo as logo
+                }
+                // Return 1x1 transparent png blank buffer if no logo uploaded
+                return new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 11, 73, 68, 65, 84, 8, 215, 99, 96, 0, 2, 0, 0, 5, 0, 1, 226, 38, 5, 155, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130]).buffer;
+            },
+            getSize: function(img: any, tagValue: string, tagName: string) {
+                return [150, 75]; // Width x height
+            }
+        };
+        const imageModule = new ImageModule(imageOptions);
+        
         const doc = new Docxtemplater(zip, {
           paragraphLoop: true,
           linebreaks: true,
           nullGetter: () => "",
+          modules: [imageModule]
         });
 
-        const docData = { ...formData, clauses };
+        const docData: any = { ...formData, clauses };
+        docData.logo = "logo"; // Trigger logo tag replacement
+        
         template.fields?.filter(f => f.type === 'select').forEach(field => {
           field.options?.forEach(opt => {
             docData[`is${opt.replace(/[^a-zA-Z0-9]/g, '')}`] = (formData[field.key] === opt);
@@ -155,8 +175,17 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         return;
       }
 
-      const newPhotos = files.map(file => URL.createObjectURL(file));
-      setPhotos(prev => [...prev, ...newPhotos]);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (event.target && event.target.result) {
+             const buffer = event.target.result as ArrayBuffer;
+             const url = URL.createObjectURL(file);
+             setPhotos(prev => [...prev, { id: Date.now() + Math.random(), url, buffer }]);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      });
     }
   };
 
@@ -325,8 +354,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
             {photos.length > 0 && (
               <div className="grid grid-cols-4 gap-2">
                 {photos.map((photo, i) => (
-                  <div key={i} className="relative group aspect-square rounded-md overflow-hidden bg-slate-100 border">
-                    <img src={photo} alt="" className="w-full h-full object-cover" />
+                  <div key={photo.id} className="relative group aspect-square rounded-md overflow-hidden bg-slate-100 border">
+                    <img src={photo.url} alt="" className="w-full h-full object-cover" />
                     <button 
                       onClick={() => removePhoto(i)}
                       className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100"
