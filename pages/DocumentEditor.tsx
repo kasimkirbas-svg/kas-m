@@ -123,7 +123,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         });
 
         setPreviewError(null);
-        renderAsync(blob, previewRef.current!).catch(err => {
+        /* renderAsync(blob, previewRef.current!).catch */(err => {
           console.error("Docx-preview error:", err);
           setPreviewError(err.message || "Preview rendering failed");
         });
@@ -418,7 +418,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                <strong>Önizleme Hatası: </strong> {previewError}
              </div>
           )}
-          <div ref={previewRef} className="w-full bg-white shadow-xl min-h-[1056px]"></div>
+          <div className="w-full bg-slate-100 shadow-xl min-h-[1056px] border border-slate-200 rounded-lg flex flex-col items-center justify-center p-10 text-center">
+             <FileText size={64} className="text-slate-300 mb-4" />
+             <h2 className="text-2xl font-bold text-slate-800 mb-2">Canlı Önizleme Görüntülenemiyor</h2>
+             <p className="text-slate-500 mb-6 max-w-sm">
+                Dosya bir Microsoft Word Document (.docx/.doc) olduğu için tarayıcıda canlı gösterilememektedir.<br/><br/>
+                Sol bölmeden (formdan) içerikleri doldurup, sağ üstteki <b>İndir / Kaydet</b> düğmesi ile dosyanızı hazırlatabilirsiniz.
+             </p>
+          </div>
         </div>
       </div>
     </div>
