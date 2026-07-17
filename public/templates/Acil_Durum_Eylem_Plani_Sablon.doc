@@ -1,0 +1,134 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+h2 { font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; }
+p { margin-bottom: 10px; text-align: justify; }
+ul { margin-top: 0; padding-left: 20px; }
+li { margin-bottom: 5px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">ACİL DURUM EYLEM PLANI</h1>
+<p class="center">(İşyerlerinde Acil Durumlar Hakkında Yönetmelik kapsamında hazırlanmıştır)</p>
+
+<h2>1. İŞYERİ GENEL BİLGİLERİ</h2>
+<table>
+    <tr><td width="30%"><b>İşyeri Unvanı</b></td><td>{isyeriUnvani}</td></tr>
+    <tr><td><b>Adresi</b></td><td>{isyeriAdresi}</td></tr>
+    <tr><td><b>Telefon / Faks</b></td><td>{telefonFaks}</td></tr>
+    <tr><td><b>E-posta</b></td><td>{ePosta}</td></tr>
+    <tr><td><b>Faaliyet Konusu (NACE)</b></td><td>{naceKodu}</td></tr>
+    <tr><td><b>Tehlike Sınıfı</b></td><td>{tehlikeSinifi}</td></tr>
+    <tr><td><b>SGK Sicil No</b></td><td>{sgkSicilNo}</td></tr>
+    <tr><td><b>Toplam Çalışan Sayısı</b></td><td>{toplamCalisan} (Kadın: {kadinCalisan} Erkek: {erkekCalisan} Engelli: {engelliCalisan})</td></tr>
+    <tr><td><b>İşveren / Vekili</b></td><td>{isverenVekili}</td></tr>
+    <tr><td><b>İSG Profesyoneli (İGU)</b></td><td>{isgUzmani}</td></tr>
+    <tr><td><b>İşyeri Hekimi</b></td><td>{isyeriHekimi}</td></tr>
+    <tr><td><b>Plan Hazırlanma Tarihi</b></td><td>{hazirlanmaTarihi}</td></tr>
+    <tr><td><b>Plan Geçerlilik Süresi</b></td><td>{gecerlilikSuresi}</td></tr>
+    <tr><td><b>Revizyon No / Tarihi</b></td><td>{revizyonNoTarihi}</td></tr>
+</table>
+
+<h2>2. AMAÇ</h2>
+<p>Bu plan; işyerinde meydana gelebilecek acil durumların önceden değerlendirilerek, çalışanların, ziyaretçilerin ve işyerinde bulunan diğer kişilerin can güvenliğinin sağlanması, mal ve çevre kayıplarının en aza indirilmesi ve faaliyetlerin en kısa sürede normale döndürülmesi amacıyla yapılacak iş ve işlemleri belirlemek üzere hazırlanmıştır.</p>
+
+<h2>3. KAPSAM</h2>
+<p>Bu plan; {isyeriUnvani}'na ait {isyeriAdresi} adresindeki işyerinde çalışan tüm personeli, alt işveren çalışanlarını, stajyerleri, ziyaretçileri ve işyerinde bulunan tüm tesis, ekipman ve donanımları kapsar.</p>
+
+<h2>6. İŞYERİ YERLEŞİMİ VE FİZİKSEL ÖZELLİKLERİ</h2>
+<table>
+    <tr><td width="40%"><b>Bina Türü / Yapı Sistemi</b></td><td>{yapiSistemi}</td></tr>
+    <tr><td><b>Kat Sayısı</b></td><td>{katSayisi}</td></tr>
+    <tr><td><b>Toplam Kullanım Alanı (m²)</b></td><td>{kullanimAlani}</td></tr>
+    <tr><td><b>Bölümler / Birimler</b></td><td>{bolumlerBirimler}</td></tr>
+    <tr><td><b>Kaçış Yolu ve Çıkış Sayısı</b></td><td>{kacisYoluCikisSayisi}</td></tr>
+    <tr><td><b>Aydınlatma (Acil Aydınlatma)</b></td><td>{acilAydinlatma}</td></tr>
+    <tr><td><b>Yangın Algılama ve İhbar Sistemi</b></td><td>{yanginAlgilama}</td></tr>
+    <tr><td><b>Yangın Söndürme Sistemi</b></td><td>{yanginSondurme}</td></tr>
+    <tr><td><b>Elektrik Pano Yerleri</b></td><td>{elektrikPanolari}</td></tr>
+    <tr><td><b>Gaz / Su Vana Kapatma Noktaları</b></td><td>{vanaNoktalari}</td></tr>
+    <tr><td><b>Engelli Çalışan/Ziyaretçi İçin Düzenleme</b></td><td>{engelliDuzenlemeleri}</td></tr>
+</table>
+
+<h2>7. ACİL DURUMLARIN BELİRLENMESİ VE RİSK DEĞERLENDİRME ÖZETİ</h2>
+<p>İşyerinde meydana gelebilecek acil durumlar; risk değerlendirme raporu, çalışan görüşleri, çevre koşulları ve geçmiş olay kayıtları dikkate alınarak aşağıdaki gibi belirlenmiştir. Olasılık ve şiddet değerleri 5x5 L-Matris yöntemine göre değerlendirilmiştir (1: Çok Düşük – 5: Çok Yüksek).</p>
+<table>
+    <tr><th>Acil Durum</th><th>Olasılık (1-5)</th><th>Şiddet (1-5)</th><th>Risk Skoru</th><th>Risk Düzeyi</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#acilDurumRiskleri}</td></tr>
+    <tr><td>{acilDurumTuru}</td><td>{olasilik}</td><td>{siddet}</td><td>{riskSkoru}</td><td>{riskDuzeyi}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/acilDurumRiskleri}</td></tr>
+</table>
+
+<h2>8. ACİL DURUM EKİPLERİ VE GÖREV TANIMLARI</h2>
+<h3>8.1. Acil Durum Koordinatörü</h3>
+<table>
+    <tr><th>Görev</th><th>Ad-Soyad</th><th>Görevi/Unvanı</th><th>Telefon</th></tr>
+    <tr><td>Acil Durum Koordinatörü (Asıl)</td><td>{koordinatorAsilAd}</td><td>{koordinatorAsilGorev}</td><td>{koordinatorAsilTel}</td></tr>
+    <tr><td>Acil Durum Koordinatörü (Yedek)</td><td>{koordinatorYedekAd}</td><td>{koordinatorYedekGorev}</td><td>{koordinatorYedekTel}</td></tr>
+</table>
+
+<h3>8.2. Yangınla Mücadele Ekibi</h3>
+<table>
+    <tr><th>Sıra</th><th>Ad-Soyad</th><th>Görevi/Unvanı</th><th>Telefon</th><th>Eğitim Tarihi</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#yanginEkibi}</td></tr>
+    <tr><td>{siraNo}</td><td>{adSoyad}</td><td>{gorevUnvan}</td><td>{telefon}</td><td>{egitimTarihi}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/yanginEkibi}</td></tr>
+</table>
+
+<h3>8.3. Arama, Kurtarma ve Tahliye Ekibi</h3>
+<table>
+    <tr><th>Sıra</th><th>Ad-Soyad</th><th>Görevi/Unvanı</th><th>Telefon</th><th>Eğitim Tarihi</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#kurtarmaEkibi}</td></tr>
+    <tr><td>{siraNo}</td><td>{adSoyad}</td><td>{gorevUnvan}</td><td>{telefon}</td><td>{egitimTarihi}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/kurtarmaEkibi}</td></tr>
+</table>
+
+<h3>8.4. İlkyardım Ekibi</h3>
+<table>
+    <tr><th>Sıra</th><th>Ad-Soyad</th><th>Görevi/Unvanı</th><th>Telefon</th><th>Sertifika No / Tarihi</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#ilkyardimEkibi}</td></tr>
+    <tr><td>{siraNo}</td><td>{adSoyad}</td><td>{gorevUnvan}</td><td>{telefon}</td><td>{sertifikaBilgisi}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/ilkyardimEkibi}</td></tr>
+</table>
+
+<h3>8.5. Haberleşme Ekibi</h3>
+<table>
+    <tr><th>Sıra</th><th>Ad-Soyad</th><th>Görevi/Unvanı</th><th>Telefon</th><th>Eğitim Tarihi</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#haberlesmeEkibi}</td></tr>
+    <tr><td>{siraNo}</td><td>{adSoyad}</td><td>{gorevUnvan}</td><td>{telefon}</td><td>{egitimTarihi}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/haberlesmeEkibi}</td></tr>
+</table>
+
+<h2>10. TAHLİYE PLANI VE TOPLANMA YERİ</h2>
+<table>
+    <tr><td width="40%"><b>Birincil Toplanma Yeri</b></td><td>{birincilToplanmaYeri}</td></tr>
+    <tr><td><b>İkincil Toplanma Yeri</b></td><td>{ikincilToplanmaYeri}</td></tr>
+    <tr><td><b>Toplanma Yerinden Sorumlu Kişi</b></td><td>{toplanmaSorumlusu}</td></tr>
+    <tr><td><b>Sayım Yöntemi</b></td><td>{sayimYontemi}</td></tr>
+    <tr><td><b>Toplanma Yeri Tabela / İşaretleme</b></td><td>{tabelaIsaretleme}</td></tr>
+</table>
+
+<h2>11. ACİL DURUM İLETİŞİM LİSTESİ</h2>
+<table>
+    <tr><th>Kuruluş / Kişi</th><th>Telefon</th><th>Açıklama</th></tr>
+    <tr><td colspan="3" style="border:none; padding:2px;">{#iletisimListesi}</td></tr>
+    <tr><td>{kurulusKisi}</td><td>{telefonNo}</td><td>{aciklama}</td></tr>
+    <tr><td colspan="3" style="border:none; padding:2px;">{/iletisimListesi}</td></tr>
+</table>
+
+<h2>16. ONAY VE İMZA</h2>
+<p>Bu Acil Durum Eylem Planı; 6331 sayılı İş Sağlığı ve Güvenliği Kanunu ile İşyerlerinde Acil Durumlar Hakkında Yönetmelik hükümlerine uygun olarak hazırlanmış ve aşağıda imzası bulunan kişilerce onaylanmıştır.</p>
+<table>
+    <tr>
+        <td width="33%"><b>Hazırlayan (İSG Uzmanı)</b><br><br>Ad-Soyad: {isgUzmaniAd}<br>Sertifika No: {isgSertifikaNo}<br>Tarih: {onayTarihi}<br>İmza:<br><br></td>
+        <td width="33%"><b>Hazırlayan (İşyeri Hekimi)</b><br><br>Ad-Soyad: {hekimAd}<br>Diploma No: {hekimDiplomaNo}<br>Tarih: {onayTarihi}<br>İmza:<br><br></td>
+        <td width="34%"><b>Onaylayan (İşveren / Vekili)</b><br><br>Ad-Soyad: {isverenAd}<br>Unvan: {isverenUnvan}<br>Tarih: {onayTarihi}<br>İmza:<br><br></td>
+    </tr>
+</table>
+
+</body></html>

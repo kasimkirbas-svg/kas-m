@@ -22,12 +22,10 @@ interface CustomClause {
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
   // Check if there are primary select fields
   const primarySelectFields = template.fields?.filter(
-    (field) => field.type === 'select' && !field.dependsOn
+    (field) => field.type === 'select'
   ) || [];
 
-  const [step, setStep] = useState<'selection' | 'editor'>(
-    primarySelectFields.length > 0 ? 'selection' : 'editor'
-  );
+  const [step, setStep] = useState<'preview' | 'selection' | 'editor'>('preview');
 
   const [loading, setLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
@@ -199,6 +197,37 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     await generatePDF({ formData, clauses, photos }, template.title);
     setLoading(false);
   };
+
+  if (step === 'preview') {
+    return (
+      <div className="h-[calc(100vh-2rem)] flex flex-col bg-slate-900 border border-slate-700/50 rounded-2xl overflow-hidden relative">
+        <div className="flex-1 overflow-auto bg-slate-800/30 p-8 flex justify-center custom-scrollbar">
+          <div className="w-full max-w-[800px] h-auto min-h-full">
+            <div ref={previewRef} className="docx-preview-container h-full w-full bg-white text-black !p-12 shadow-2xl rounded-sm" />
+          </div>
+        </div>
+        <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-6">
+           <div className="bg-slate-800 border border-orange-500/30 p-8 rounded-2xl shadow-2xl flex flex-col items-center max-w-sm text-center">
+              <h2 className="text-xl font-bold text-white mb-4">Şablon Önizleme</h2>
+              <p className="text-slate-300 text-sm mb-8">Bu dokümanı düzenlemek ve kendi bilgilerinizi girmek için aşağıdaki butona tıklayın.</p>
+              <Button 
+                onClick={() => setStep(primarySelectFields.length > 0 ? 'selection' : 'editor')}
+                size="lg"
+                className="w-full shadow-orange-500/20 py-3"
+              >
+                Bu Şablonu Kullan / Düzenlemeye Başla
+              </Button>
+              <button 
+                onClick={onBack}
+                className="mt-6 text-slate-400 hover:text-white text-sm transition-colors"
+              >
+                Geri Dön
+              </button>
+           </div>
+        </div>
+      </div>
+    );
+  }
 
   if (step === 'selection') {
     return (

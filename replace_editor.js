@@ -1,0 +1,1 @@
+const fs = require('fs'); const file = 'pages/DocumentEditor.tsx'; let c = fs.readFileSync(file, 'utf8'); c = c.replace(/const \\\[step, setStep\\] = useState<.*?>\\(.*?\\);/, 'const [step, setStep] = useState<\\'preview\\' | \\'selection\\' | \\'editor\\'>(\\'preview\\');'); fs.writeFileSync(file, c);

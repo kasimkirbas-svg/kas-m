@@ -1,0 +1,17 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+</style></head><body>
+<h1 class="center">{sirketIsmi} - Acil Durum Ekipleri Görevlendirme</h1>
+<p>6331 sayılı İş Sağlığı ve Güvenliği Kanunu, İşyerlerinde Acil Durumlar Hakkındaki Yönetmelik gereği, oluşturulan acil durum ekiplerine aşağıda isimleri verilen çalışanlar atanmıştır.</p>
+<table>
+    <tr><th>Bina</th><th>Adı Soyadı</th><th>Görevi</th></tr>
+    <tr><td colspan="3" style="border:none; padding:2px;">{#ekipler}</td></tr>
+    <tr><td>{binaAdi}</td><td>{adSoyad}</td><td>{gorevi}</td></tr>
+    <tr><td colspan="3" style="border:none; padding:2px;">{/ekipler}</td></tr>
+</table>
+<br><p><b>Yönetim Üyesi / İşveren Vekili:</b> {yetkiliIsim}</p>
+</body></html>

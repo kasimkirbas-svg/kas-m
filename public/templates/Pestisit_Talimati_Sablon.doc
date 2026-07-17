@@ -1,0 +1,99 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 15px; margin-top: 15px; text-align: center; }
+h2 { font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; }
+p { margin-bottom: 10px; text-align: justify; }
+ul { margin-top: 0; padding-left: 20px; }
+li { margin-bottom: 5px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">İŞ SAĞLIĞI VE GÜVENLİĞİ TALİMATI<br>ZİRAİ İLAÇ (PESTİSİT) KULLANIM VE DEPOLAMA TALİMATI</h1>
+
+<table class="no-border" style="width: 50%; margin: 0 auto;">
+    <tr><td><b>Doküman No:</b></td><td>{dokumanNo}</td></tr>
+    <tr><td><b>Yayın Tarihi:</b></td><td>{yayinTarihi}</td></tr>
+    <tr><td><b>Revizyon No:</b></td><td>{revizyonNo}</td></tr>
+    <tr><td><b>Sayfa No:</b></td><td>{sayfaNo}</td></tr>
+</table>
+
+<h2>1. AMAÇ</h2>
+<p>Bu talimatın amacı; tarım, hayvancılık ve ormancılık faaliyetlerinde kullanılan zirai ilaçların (pestisit/bitki koruma ürünleri) hazırlanması, uygulanması, taşınması ve depolanması sırasında çalışanların sağlık ve güvenliğini korumak, çevre ve ürün güvenliğini sağlamak, zehirlenme ve kaza risklerini en aza indirmek için uyulması gereken kuralları belirlemektir.</p>
+
+<h2>2. KAPSAM</h2>
+<p>Bu talimat; işyerinde zirai ilaç hazırlayan, uygulayan, taşıyan ve depolayan tüm çalışanları, mevsimlik işçileri, alt yüklenici personelini ve ilaç deposunda görevli kişileri kapsar.</p>
+
+<h2>4. GENEL KURALLAR</h2>
+<ol>
+    <li>Zirai ilaç kullanacak personel, kullanım öncesinde iş sağlığı ve güvenliği eğitimi almış ve bilgilendirilmiş olmalıdır.</li>
+    <li>İlaçlama yapacak çalışanlar periyodik sağlık muayenesinden geçirilmeli; gebe, emziren ve 18 yaşından küçük çalışanlar pestisit işlerinde çalıştırılmamalıdır.</li>
+    <li>Her ürünün etiketi ve Güvenlik Bilgi Formu (GBF/MSDS) iş öncesinde mutlaka okunmalı, etikette belirtilen doz ve talimatlara uyulmalıdır.</li>
+    <li>Tavsiye edilen kullanım amacı ve dozu dışında ilaç kullanılması kesinlikle yasaktır.</li>
+    <li>İlaçlama sırasında kesinlikle bir şey yenilmemeli, içilmemeli ve sigara içilmemelidir.</li>
+    <li>İşlem bitiminde eller, yüz ve açık vücut bölgeleri bol su ve sabunla yıkanmalıdır.</li>
+</ol>
+
+<h2>5. DEPOLAMA TALİMATLARI</h2>
+<ol>
+    <li>Zirai ilaçlar yalnızca bu amaca ayrılmış, kilit altında tutulan, serin, kuru ve iyi havalandırılan bir depoda muhafaza edilmelidir.</li>
+    <li>İlaçlar mutlaka orijinal ambalajlarında ve etiketleri okunaklı şekilde saklanmalı; ilaçlar gıda, içme suyu, yem ve hayvan barınaklarından uzak tutulmalıdır.</li>
+    <li>Depo, çocukların, yetkisiz kişilerin ve evcil hayvanların ulaşamayacağı şekilde düzenlenmeli; kapıya 'Zehirli Madde / Yetkisiz Giremez' uyarı levhası asılmalıdır.</li>
+    <li>İlaçlar gıda kaplarına veya etiketsiz başka kaplara kesinlikle aktarılmamalıdır.</li>
+    <li>Toz, sıvı ve granül formdaki ilaçlar ayrı raflarda; sıvı ilaçlar alt raflarda, sızıntıya karşı tava/havuz içinde depolanmalıdır.</li>
+    <li>Depoda yangın söndürme tüpü, ilk yardım malzemesi, dökülmelere karşı emici malzeme (kum, talaş) ve Güvenlik Bilgi Formları bulundurulmalıdır.</li>
+    <li>Son kullanma tarihi geçmiş veya bozulmuş ilaçlar ayrı bir bölümde işaretlenerek tutulmalı ve usulüne uygun şekilde bertaraf edilmelidir.</li>
+    <li>Depo giriş-çıkışları ve stok hareketleri kayıt altına alınmalıdır.</li>
+</ol>
+
+<h2>6. KULLANIM VE UYGULAMA TALİMATLARI</h2>
+<ol>
+    <li>İlaçlama öncesi cihaz/pülverizatör kontrol edilmeli, kaçak ve arıza varsa kullanılmamalıdır.</li>
+    <li>İlaç, etikette belirtilen doz ve oranda; gıda maddelerinin, mutfak veya ahır gibi ortamların bulunmadığı açık/havadar bir alanda hazırlanmalıdır.</li>
+    <li>İlaç hazırlarken yemek kapları veya mutfak malzemeleri kesinlikle kullanılmamalıdır.</li>
+    <li>Uygulama rüzgârsız veya rüzgâr arkaya alınarak, serin saatlerde (sabah erken/akşam) yapılmalı; rüzgâr hızı yüksekken ilaçlama yapılmamalıdır.</li>
+    <li>İlaçlama sırasında uygulama yapan kişi dışındaki insanlar ve hayvanlar alandan uzaklaştırılmalıdır.</li>
+    <li>Etikette belirtilen son ilaçlama–hasat aralığına (bekleme süresine) mutlaka uyulmalıdır.</li>
+    <li>İlaçlanan alanlara giriş yasağı süresi boyunca uyarı levhaları konulmalı, alana giriş engellenmelidir.</li>
+    <li>Artan ilaç ve yıkama suyu su kaynaklarına, derelere ve kanallara boşaltılmamalıdır.</li>
+</ol>
+
+<h2>7. KİŞİSEL KORUYUCU DONANIM (KKD)</h2>
+<ol>
+    <li>Zirai ilaçla çalışan personel; kimyasala dayanıklı eldiven, tulum/önlük, çizme, koruyucu gözlük ve uygun maske/respiratör kullanmalıdır.</li>
+    <li>KKD her kullanım öncesi kontrol edilmeli, yıpranmış/delinmiş olanlar değiştirilmelidir.</li>
+    <li>Kullanılan KKD'ler temiz tutulmalı, iş elbiseleri günlük kıyafetlerden ve gıdadan ayrı yıkanıp saklanmalıdır.</li>
+    <li>İlaçlama sonrası KKD çıkarılmadan yeme, içme ve tuvalet ihtiyacı karşılanmamalıdır.</li>
+</ol>
+
+<h2>8. İLK YARDIM</h2>
+<ol>
+    <li>İlaç cilde temas ederse bölge bol su ve sabunla yıkanmalı; göze kaçarsa en az 15 dakika temiz suyla yıkanmalıdır.</li>
+    <li>İlaç solunursa kişi temiz havaya çıkarılmalı; yutulması halinde kusturulmadan (etiket aksini belirtmedikçe) derhal sağlık kuruluşuna başvurulmalıdır.</li>
+    <li>Zehirlenme belirtilerinde (baş dönmesi, bulantı, terleme, görme bozukluğu) çalışma durdurulmalı, ürün etiketi/GBF ile birlikte 112 aranmalıdır.</li>
+    <li>İlacın etiketi ve Güvenlik Bilgi Formu her zaman ulaşılabilir bulundurulmalıdır.</li>
+</ol>
+
+<h2>9. ACİL DURUM VE ATIK YÖNETİMİ</h2>
+<ol>
+    <li>Dökülme/saçılmada alan boşaltılmalı, KKD giyilmeli, kum veya talaş gibi emici malzeme ile sıvı toplanmalı ve etiketli atık kabında biriktirilmelidir.</li>
+    <li>Yangın durumunda ilaç deposuna uygun (kuru kimyevi tozlu/köpüklü) söndürücü kullanılmalı, itfaiye (112) bilgilendirilmelidir.</li>
+    <li>Boş ilaç ambalajları üçlü durulama yapıldıktan sonra usulüne uygun bertaraf edilmeli; kesinlikle başka amaçla kullanılmamalı, gelişigüzel yakılmamalıdır.</li>
+    <li>Cam ve plastik şişeler ile atık ilaçlar uygulama alanında bırakılmamalı, tehlikeli atık prosedürüne göre toplanmalıdır.</li>
+</ol>
+
+<h2>TEBLİĞ – TEBELLÜĞ TUTANAĞI</h2>
+<p>Yukarıda belirtilen Zirai İlaç (Pestisit) Kullanım ve Depolama Talimatı tarafıma tebliğ edilmiş; okunup anlatılarak bir nüshası elime tebellüğ edilmiştir. Talimat hükümlerini okuduğumu, anladığımı ve eksiksiz uyacağımı; aksi davranışlardan doğacak her türlü sorumluluğun tarafıma ait olacağını kabul, beyan ve taahhüt ederim.</p>
+
+<table class="no-border">
+    <tr>
+        <td width="50%"><b>TEBLİĞ EDEN</b><br>(İşveren / İSG Uzmanı)<br><br>Adı Soyadı: {tebligEdenAdSoyad}<br><br>Tarih: {tebligTarihi}<br><br>İmza:<br><br></td>
+        <td width="50%"><b>TEBELLÜĞ EDEN</b><br>(Çalışan)<br><br>Adı Soyadı: {tebellugEdenAdSoyad}<br><br>Tarih: {tebellugTarihi}<br><br>İmza:<br><br></td>
+    </tr>
+</table>
+
+</body></html>

@@ -1,0 +1,128 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+h2 { font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; }
+h3 { font-size: 11pt; font-weight: bold; margin-bottom: 10px; margin-top: 10px; }
+p { margin-bottom: 10px; text-align: justify; }
+ul { margin-top: 0; padding-left: 20px; }
+li { margin-bottom: 5px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1>PATLAMADAN KORUNMA DOKÜMANI<br>(PKD)<br>YERALTI MADEN OCAĞI</h1>
+<p class="center">(Kömür / Linyit İşletmesi — Örnek Doküman)<br>30.04.2013 tarih ve 28633 sayılı Resmî Gazete'de yayımlanan<br>"Çalışanların Patlayıcı Ortamların Tehlikelerinden Korunması Hakkında Yönetmelik"<br>kapsamında hazırlanmıştır.</p>
+
+<table>
+    <tr><td width="30%"><b>İşyeri / İşletme Adı</b></td><td>{isletmeAdi}</td></tr>
+    <tr><td><b>İşyeri SGK Sicil No</b></td><td>{sgkSicilNo}</td></tr>
+    <tr><td><b>Adres</b></td><td>{isyeriAdresi}</td></tr>
+    <tr><td><b>NACE Kodu / Tehlike Sınıfı</b></td><td>05.10.01 (Taş kömürü) — Çok Tehlikeli</td></tr>
+    <tr><td><b>Doküman No</b></td><td>{dokumanNo}</td></tr>
+    <tr><td><b>Yayın Tarihi</b></td><td>{yayinTarihi}</td></tr>
+    <tr><td><b>Revizyon No / Tarihi</b></td><td>{revizyonNoTarihi}</td></tr>
+    <tr><td><b>Hazırlayan (İSG Uzmanı / Mühendis)</b></td><td>{hazirlayanAdSoyad}</td></tr>
+    <tr><td><b>Onaylayan (İşveren / İşveren Vekili)</b></td><td>{onaylayanAdSoyad}</td></tr>
+</table>
+
+<h2>REVİZYON TAKİP ÇİZELGESİ</h2>
+<table>
+    <tr><th>Rev. No</th><th>Tarih</th><th>Revizyon Açıklaması</th><th>Hazırlayan</th><th>Onaylayan</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#revizyonTablosu}</td></tr>
+    <tr><td>{revNo}</td><td>{revTarihi}</td><td>{revAciklama}</td><td>{revHazirlayan}</td><td>{revOnaylayan}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/revizyonTablosu}</td></tr>
+</table>
+<p><i>Bu doküman, işyerinde iş ekipmanında veya iş organizasyonunda önemli değişiklik, genişleme veya tadilat yapıldığı hallerde ve en geç periyodik gözden geçirme süresi sonunda yeniden gözden geçirilerek güncellenir.</i></p>
+
+<h2>1. AMAÇ</h2>
+<p>Bu Patlamadan Korunma Dokümanı (PKD); yeraltı maden ocağında metan (grizu), kömür tozu ve diğer yanıcı maddelerden kaynaklanabilecek patlayıcı ortamların oluşmasını önlemek, oluşması engellenemiyorsa tutuşmasını önlemek ve olası bir patlamanın çalışanların sağlık ve güvenliği üzerindeki zararlı etkilerini en aza indirmek amacıyla hazırlanmıştır.</p>
+
+<h2>2. KAPSAM</h2>
+<p>Bu doküman, işletmeye ait yeraltı üretim panoları, galeriler, nakliye yolları, hava giriş/çıkış kuyuları, kömür stok ve bunker alanları, elektrik ve mekanik tesisler ile patlayıcı ortam oluşma ihtimali bulunan tüm yeraltı ve yerüstü çalışma alanlarını kapsar.</p>
+
+<h2>3. TANIMLAR</h2>
+<table>
+    <tr><th width="30%">Terim</th><th>Tanım</th></tr>
+    <tr><td><b>Patlayıcı ortam</b></td><td>Yanıcı maddelerin gaz, buhar, sis veya toz halinde hava ile karışarak, tutuşma sonrası yanmanın tüm karışıma yayıldığı ortam.</td></tr>
+    <tr><td><b>Patlamadan Korunma Dokümanı (PKD)</b></td><td>İşyerlerinde oluşabilecek patlayıcı ortamların tehlikelerinden çalışanların sağlık ve güvenliğini korumak amacıyla hazırlanan doküman.</td></tr>
+    <tr><td><b>Grizu (Metan – CH₄)</b></td><td>Kömür damarlarından açığa çıkan, hava ile %4,4–17 hacim aralığında patlayıcı karışım oluşturan renksiz ve kokusuz yanıcı gaz.</td></tr>
+    <tr><td><b>Kömür tozu</b></td><td>Havada askıda kaldığında veya çökeltiler halinde tutuştuğunda ikincil patlamalara yol açabilen, ince taneli yanıcı kömür tanecikleri.</td></tr>
+    <tr><td><b>Alt Patlama Sınırı (LEL)</b></td><td>Yanıcı gaz/tozun hava içinde tutuşabildiği en düşük konsantrasyon.</td></tr>
+    <tr><td><b>Üst Patlama Sınırı (UEL)</b></td><td>Yanıcı gaz/tozun hava içinde tutuşabildiği en yüksek konsantrasyon.</td></tr>
+    <tr><td><b>Zon (Bölge)</b></td><td>Patlayıcı ortamın oluşma sıklığı ve süresine göre yapılan tehlikeli bölge sınıflandırması (gazlar için Zon 0/1/2; tozlar için Zon 20/21/22).</td></tr>
+    <tr><td><b>Tutuşma kaynağı</b></td><td>Patlayıcı ortamı tutuşturabilecek kıvılcım, sıcak yüzey, alev, elektrik arkı, statik elektrik vb. enerji kaynağı.</td></tr>
+    <tr><td><b>ATEX</b></td><td>Patlayıcı ortamlarla ilgili 1999/92/EC (çalışan koruması) ve 2014/34/AB (ekipman) Avrupa direktiflerinin ortak adı.</td></tr>
+</table>
+
+<h2>5. İŞYERİNİN TANITIMI VE FAALİYET BİLGİLERİ</h2>
+<table>
+    <tr><td width="40%"><b>Faaliyet Konusu</b></td><td>{faaliyetKonusu}</td></tr>
+    <tr><td><b>Üretim Yöntemi</b></td><td>{uretimYontemi}</td></tr>
+    <tr><td><b>Çalışan Sayısı</b></td><td>{calisanSayisi}</td></tr>
+    <tr><td><b>Vardiya Düzeni</b></td><td>{vardiyaDuzeni}</td></tr>
+    <tr><td><b>Ocak Derinliği / Galeri Uzunluğu</b></td><td>{ocakDerinligi}</td></tr>
+    <tr><td><b>Havalandırma Sistemi</b></td><td>{havalandirmaSistemi}</td></tr>
+    <tr><td><b>Metan İçeriği (ocak gazı)</b></td><td>{metanIcerigi}</td></tr>
+    <tr><td><b>Kömür Tozu Patlama Özelliği</b></td><td>{komurTozuOzelligi}</td></tr>
+</table>
+
+<h2>6. PATLAYICI ORTAM KAYNAKLARININ BELİRLENMESİ</h2>
+<h3>6.1. Metan (Grizu – CH₄)</h3>
+<table>
+    <tr><td width="40%"><b>Alt Patlama Sınırı (LEL)</b></td><td>%4,4 (hacimce)</td></tr>
+    <tr><td><b>Üst Patlama Sınırı (UEL)</b></td><td>%17 (hacimce)</td></tr>
+    <tr><td><b>En şiddetli patlama konsantrasyonu</b></td><td>≈ %9,5 metan</td></tr>
+    <tr><td><b>Yoğunluk (havaya göre)</b></td><td>0,55 (havadan hafif – tavanda birikir)</td></tr>
+    <tr><td><b>Tutuşma sıcaklığı</b></td><td>≈ 595 °C</td></tr>
+    <tr><td><b>Patlama grubu / sıcaklık sınıfı</b></td><td>Grup I (maden) — Grup IIA, T1</td></tr>
+    <tr><td><b>Salım kaynakları</b></td><td>Kazı aynası, göçük boşlukları, sondaj delikleri, kömür yüzeyi, eski imalat (göçük) alanları</td></tr>
+</table>
+
+<h3>6.2. Kömür Tozu</h3>
+<table>
+    <tr><td width="40%"><b>Tehlikeli tane boyutu</b></td><td>< 200 mikron (özellikle < 75 µm)</td></tr>
+    <tr><td><b>Minimum patlayıcı konsantrasyon</b></td><td>≈ 50 g/m³ (havada askıda toz)</td></tr>
+    <tr><td><b>Tutuşma kaynağı</b></td><td>Metan patlaması, sıcak yüzey, kıvılcım, sürtünme</td></tr>
+    <tr><td><b>İkincil patlama riski</b></td><td>Yüksek (zincirleme toz patlaması)</td></tr>
+    <tr><td><b>Korunma yöntemi</b></td><td>Taş tozlama (kalkerle nötrleme), taş tozu barajları, sulu süpürme</td></tr>
+</table>
+
+<h2>8. TEHLİKELİ BÖLGELERİN (ZON) SINIFLANDIRILMASI</h2>
+<h3>8.1. İşyerine Ait Örnek Zon Sınıflandırma Tablosu</h3>
+<table>
+    <tr><th>No</th><th>Alan / Ekipman</th><th>Yanıcı Madde</th><th>Salım Derecesi</th><th>Zon</th><th>Açıklama</th></tr>
+    <tr><td colspan="6" style="border:none; padding:2px;">{#zonSiniflandirma}</td></tr>
+    <tr><td>{zonNo}</td><td>{alanEkipman}</td><td>{yaniciMadde}</td><td>{salimDerecesi}</td><td>{zonTipi}</td><td>{zonAciklama}</td></tr>
+    <tr><td colspan="6" style="border:none; padding:2px;">{/zonSiniflandirma}</td></tr>
+</table>
+
+<h2>9. PATLAMA RİSKİNİN BELİRLENMESİ VE DEĞERLENDİRİLMESİ</h2>
+<h3>9.2. Örnek Patlama Risk Değerlendirme Tablosu</h3>
+<table>
+    <tr><th>No</th><th>Tehlike / Senaryo</th><th>Mevcut Durum</th><th>O</th><th>Ş</th><th>Risk</th><th>Alınacak Önlem</th><th>Kalan Risk</th></tr>
+    <tr><td colspan="8" style="border:none; padding:2px;">{#riskDegerlendirme}</td></tr>
+    <tr><td>{riskNo}</td><td>{tehlikeSenaryosu}</td><td>{mevcutDurum}</td><td>{olasilik}</td><td>{siddet}</td><td>{riskSkoru}</td><td>{alinacakOnlem}</td><td>{kalanRisk}</td></tr>
+    <tr><td colspan="8" style="border:none; padding:2px;">{/riskDegerlendirme}</td></tr>
+</table>
+
+<h2>11. EKİPMAN VE KORUYUCU SİSTEM SEÇİMİ (ATEX)</h2>
+<h3>11.2. Zon – Kategori Uygunluk Tablosu</h3>
+<table>
+    <tr><th>Bölge (Zon)</th><th>Gerekli Ekipman Kategorisi</th><th>Tipik Koruma Türü</th></tr>
+    <tr><td>Zon 0 / Zon 20</td><td>Kategori 1 (G/D) — Grup I M1</td><td>Ex ia (kendinden emniyetli)</td></tr>
+    <tr><td>Zon 1 / Zon 21</td><td>Kategori 1 veya 2 — Grup I M2</td><td>Ex d (alev sızdırmaz), Ex ib</td></tr>
+    <tr><td>Zon 2 / Zon 22</td><td>Kategori 1, 2 veya 3</td><td>Ex e, Ex n, Ex t</td></tr>
+</table>
+
+<h2>14. ONAY</h2>
+<table>
+    <tr><th>Hazırlayan</th><th>Kontrol Eden</th><th>Onaylayan</th></tr>
+    <tr><td>{hazirlayanGorevi}</td><td>{kontrolEdenGorevi}</td><td>{onaylayanGorevi}</td></tr>
+    <tr><td>İmza:</td><td>İmza:</td><td>İmza:</td></tr>
+</table>
+
+</body></html>
