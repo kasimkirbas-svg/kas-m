@@ -23,7 +23,8 @@ const App = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
 
   // Parse unique categories from MOCK_TEMPLATES
-  const uniqueCategories = Array.from(new Set(MOCK_TEMPLATES.map(t => t.category)));
+  const safeTemplates = MOCK_TEMPLATES || [];
+  const uniqueCategories = Array.from(new Set(safeTemplates.map(t => t.category)));
 
   // Simple icon mapping or default fallback
   const getCategoryIcon = (categoryName: string) => {
@@ -211,7 +212,7 @@ const App = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {MOCK_TEMPLATES.filter(t => !selectedCategory || t.category === selectedCategory).length === 0 ? (
+                    {safeTemplates.filter(t => !selectedCategory || t.category === selectedCategory).length === 0 ? (
                       <tr>
                         <td colSpan={4} className="py-16 text-center">
                           <div className="flex flex-col items-center justify-center opacity-50">
@@ -221,7 +222,7 @@ const App = () => {
                         </td>
                       </tr>
                     ) : (
-                      MOCK_TEMPLATES.filter(t => !selectedCategory || t.category === selectedCategory).map(template => (
+                      safeTemplates.filter(t => !selectedCategory || t.category === selectedCategory).map(template => (
                         <tr key={template.id} className="border-b border-[#2A3143]/50 hover:bg-[#1A1F2B] transition-colors group">
                           <td className="py-4 mr-4">
                             <div className="flex items-center gap-3">

@@ -300,7 +300,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
               <label className="block text-sm font-medium text-slate-700 mb-1">Açıklama / Notlar</label>
               <textarea name="description" value={formData.description || ''} onChange={handleInputChange} rows={3} className="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Genel değerlendirme..." />
             </div>
-            {template.fields?.filter(f => !f.dependsOn || formData[f.dependsOn.field] === f.dependsOn.value).map(field => {
+            {template.fields?.filter(f => !f.dependsOn || (f.dependsOn && formData[f.dependsOn.field] === f.dependsOn.value)).map(field => {
               // Skip rendering these since they are hardcoded above
               if (['companyName', 'preparedBy', 'date', 'description'].includes(field.key)) return null;
 
