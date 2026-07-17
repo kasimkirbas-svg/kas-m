@@ -1,0 +1,73 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+h2 { font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; }
+p { margin-bottom: 10px; text-align: justify; }
+ul { margin-top: 0; padding-left: 20px; }
+li { margin-bottom: 5px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">ORMAN KESİM VE TOMRUKLAMA GÜVENLİK PROSEDÜRÜ</h1>
+
+<table class="no-border" style="width: 50%; margin: 0 auto;">
+    <tr><td><b>Doküman No:</b></td><td>{dokumanNo}</td></tr>
+    <tr><td><b>Yayın Tarihi:</b></td><td>{yayinTarihi}</td></tr>
+    <tr><td><b>Revizyon No:</b></td><td>{revizyonNo}</td></tr>
+    <tr><td><b>Sayfa:</b></td><td>{sayfaNo}</td></tr>
+</table>
+
+<h2>REVİZYON BİLGİLERİ</h2>
+<table>
+    <tr><th>Rev. No</th><th>Tarih</th><th>Revizyon Açıklaması</th><th>Hazırlayan</th></tr>
+    <tr><td colspan="4" style="border:none; padding:2px;">{#revizyonTablosu}</td></tr>
+    <tr><td>{revNo}</td><td>{revTarihi}</td><td>{revAciklama}</td><td>{revHazirlayan}</td></tr>
+    <tr><td colspan="4" style="border:none; padding:2px;">{/revizyonTablosu}</td></tr>
+</table>
+
+<table>
+    <tr><th>HAZIRLAYAN</th><th>KONTROL EDEN</th><th>ONAYLAYAN</th></tr>
+    <tr><td>{hazirlayanAdSoyad}<br>İSG Uzmanı<br>İmza:</td><td>{kontrolEdenAdSoyad}<br>İş Yeri Hekimi / OSGB Sorumlusu<br>İmza:</td><td>{onaylayanAdSoyad}<br>İşveren / İşveren Vekili<br>İmza:</td></tr>
+</table>
+
+<h2>1. AMAÇ</h2>
+<p>Bu prosedürün amacı; orman içinde ve orman ürünleri sahalarında yürütülen ağaç kesim (devirme), dallama, boylama (tomruklama), sürütme, taşıma ve istifleme faaliyetlerinde çalışanların sağlık ve güvenliğini korumak, iş kazaları ve meslek hastalıklarını önlemek, 6331 sayılı İş Sağlığı ve Güvenliği Kanunu ile ilgili yönetmeliklere uygun güvenli çalışma esaslarını belirlemektir.</p>
+
+<h2>2. KAPSAM</h2>
+<p>Bu prosedür; orman kesim ve tomruklama sahalarında çalışan tüm motorlu testere operatörleri, kesim ekipleri, sürütme/taşıma operatörleri, alt yükleniciler, stajyerler ve sahada bulunan ziyaretçiler ile bu faaliyetlerde kullanılan tüm iş ekipmanlarını kapsar.</p>
+
+<h2>5. GENEL GÜVENLİK KURALLARI</h2>
+<ul>
+    <li>Kesim sahasında yalnızca yetkili, eğitimli ve görevlendirilmiş personel bulunur; ziyaretçiler güvenlik mesafesi dışında tutulur.</li>
+    <li>Tüm çalışanlar göreve başlamadan önce KKD'lerini eksiksiz ve uygun şekilde giyer.</li>
+    <li>Alkol, uyuşturucu veya uyku hâli yaratan ilaç etkisi altında saha çalışması kesinlikle yasaktır.</li>
+    <li>Olumsuz hava koşullarında (kuvvetli rüzgâr, yoğun sis, fırtına, yıldırım riski, aşırı kar/buzlanma) kesim faaliyeti durdurulur.</li>
+    <li>Çalışanlar tek başına kesim yapmaz; en az iki kişi görerek-duyarak iletişim mesafesinde çalışır.</li>
+    <li>İki çalışan arasındaki güvenlik mesafesi, devrilecek en uzun ağaç boyunun en az iki katı olacak şekilde korunur.</li>
+    <li>İş ekipmanları (motorlu testere, balta, kama, vinç, çekici) her vardiya öncesi kontrol edilir; arızalı ekipman kullanılmaz, etiketlenerek devre dışı bırakılır.</li>
+    <li>Yakıt ikmali motor durdurulduktan ve soğuduktan sonra, açık havada ve ateş kaynaklarından uzakta yapılır.</li>
+</ul>
+
+<h2>EK-1: KİŞİSEL KORUYUCU DONANIM KONTROL TABLOSU</h2>
+<table>
+    <tr><th>S.No</th><th>KKD</th><th>İlgili Standart / Tip</th><th>Kullanım Zorunluluğu</th><th>Kontrol Durumu</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#kkdKontrolTablosu}</td></tr>
+    <tr><td>{siraNo}</td><td>{kkdAdi}</td><td>{ilgiliStandart}</td><td>{kullanimZorunlulugu}</td><td>{kontrolDurumu}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/kkdKontrolTablosu}</td></tr>
+</table>
+
+<h2>EK-2: ORMAN KESİM SAHASI GÜNLÜK GÜVENLİK KONTROL LİSTESİ</h2>
+<table>
+    <tr><th>S.No</th><th>Kontrol Maddesi</th><th>Evet</th><th>Hayır</th><th>Açıklama</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#gunlukGuvenlikKontrol}</td></tr>
+    <tr><td>{siraNo}</td><td>{kontrolMaddesi}</td><td>{evetDurumu}</td><td>{hayirDurumu}</td><td>{aciklama}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/gunlukGuvenlikKontrol}</td></tr>
+</table>
+<p>Kontrolü Yapan (Saha Sorumlusu): {kontrolYapanAd} &nbsp;&nbsp;&nbsp;&nbsp; İmza: &nbsp;&nbsp;&nbsp;&nbsp; Tarih: {kontrolTarihi}</p>
+
+</body></html>

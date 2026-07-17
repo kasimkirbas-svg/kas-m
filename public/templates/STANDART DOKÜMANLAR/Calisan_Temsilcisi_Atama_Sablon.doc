@@ -1,0 +1,48 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+p { margin-bottom: 10px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">{sirketUnvani}<br>İş Sağlığı ve Güvenliği Birimi</h1>
+<h2 class="center">ÇALIŞAN TEMSİLCİSİ ATAMA (GÖREVLENDİRME) YAZISI</h2>
+
+<table class="no-border" style="width: 50%; margin-bottom: 20px;">
+    <tr><td width="30%"><b>Sayı:</b></td><td>{evrakNo}</td></tr>
+    <tr><td><b>Tarih:</b></td><td>{tarih}</td></tr>
+    <tr><td><b>Konu:</b></td><td>İş Sağlığı ve Güvenliği Çalışan Temsilcisi Görevlendirmesi</td></tr>
+</table>
+
+<p><b>Sayın {temsilciAdSoyad}</b><br>
+(T.C. Kimlik No: {tcKimlikNo} / Sicil No: {sicilNo} / Görevi: {gorevi})</p>
+
+<p>6331 sayılı İş Sağlığı ve Güvenliği Kanunu’nun 20 nci maddesi ile 29/08/2013 tarihli ve 28750 sayılı Resmî Gazete’de yayımlanan “İş Sağlığı ve Güvenliği ile İlgili Çalışan Temsilcisinin Nitelikleri ve Seçilme Usul ve Esaslarına İlişkin Tebliğ” hükümleri uyarınca; işyerimizde çalışan sayısı dikkate alınarak (2-50 çalışan için 1 temsilci) yapılan değerlendirme/seçim sonucunda, iş sağlığı ve güvenliği konularında çalışanları temsil etmek üzere sizin <b>ÇALIŞAN TEMSİLCİSİ</b> olarak görevlendirilmenize karar verilmiştir.</p>
+
+<p>Bu kapsamda görev, yetki ve sorumluluklarınız aşağıda belirtilmiştir:</p>
+<ol>
+    <li>İş sağlığı ve güvenliği ile ilgili çalışmalara katılmak ve bu çalışmaları izlemek.</li>
+    <li>İşyerinde sağlık ve güvenliğe zarar verebilecek tehlike kaynaklarının yok edilmesi veya tehlikeden kaynaklanan riskin azaltılması için tedbir alınmasını işverenden istemek.</li>
+    <li>İş sağlığı ve güvenliği konularında çalışanlar adına işverene tekliflerde bulunmak.</li>
+    <li>Risk değerlendirmesi çalışmalarına ve (oluşturulmuşsa) iş sağlığı ve güvenliği kuruluna çalışanları temsilen katılmak.</li>
+    <li>Çalışma ortamı, kullanılan alet ve ekipmanlarla ilgili belirlenen uygunsuzlukları iş güvenliği uzmanına ve işverene bildirmek.</li>
+    <li>Çalışanları, iş sağlığı ve güvenliği hak ve yükümlülükleri konusunda bilgilendirmek.</li>
+    <li>Görevi gereği işverenin veya işyerinin mesleki sırları ile öğrendiği hususları ve çalışanlara ait özel bilgileri gizli tutmak.</li>
+</ol>
+
+<p>Görevlendirmeniz, yukarıda anılan Tebliğ uyarınca seçim/atama tarihinden itibaren beş (5) yıl süreyle geçerli olup, bu süre sonunda yenilenecektir. Görevinizi yürütmeniz nedeniyle hiçbir hakkınız kısıtlanmayacak; görevin gerektirdiği imkânlar işveren tarafından sağlanacaktır.</p>
+<p>Bilgilerinize sunar, başarılar dileriz.</p>
+
+<table class="no-border" style="margin-top: 30px;">
+    <tr>
+        <td width="50%"><b>İŞVEREN / İŞVEREN VEKİLİ</b><br><br>Adı Soyadı: {isverenAdSoyad}<br>Unvanı: {isverenUnvan}<br>İmza:<br></td>
+        <td width="50%"><b>TEBELLÜĞ EDEN (ÇALIŞAN TEMSİLCİSİ)</b><br><br>Adı Soyadı: {temsilciAdSoyad}<br>Tarih / İmza: {tarih} / ........................<br></td>
+    </tr>
+</table>
+
+</body></html>

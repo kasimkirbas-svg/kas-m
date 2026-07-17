@@ -1,0 +1,122 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+h2 { font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; background-color: #f2f2f2; padding: 5px; }
+p { margin-bottom: 10px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">İŞ KAZASI VE RAMAK KALA BİLDİRİM FORMLARI</h1>
+<p class="center">Form No: {formNo} | Rev. No: {revizyonNo} | Yayın Tarihi: {yayinTarihi}</p>
+
+<h2>FORM-1: İŞ KAZASI BİLDİRİM VE İNCELEME FORMU</h2>
+
+<h3>BÖLÜM A — Olay Künyesi</h3>
+<table>
+    <tr><td width="40%"><b>Bildirim/Olay Sıra No</b></td><td>{olaySiraNo}</td></tr>
+    <tr><td><b>İşyeri Unvanı</b></td><td>{isyeriUnvani}</td></tr>
+    <tr><td><b>SGK İşyeri Sicil No</b></td><td>{sgkSicilNo}</td></tr>
+    <tr><td><b>İşyeri Adresi</b></td><td>{isyeriAdresi}</td></tr>
+    <tr><td><b>NACE Kodu / Tehlike Sınıfı</b></td><td>{naceKodu} / {tehlikeSinifi}</td></tr>
+    <tr><td><b>Olay Tarihi ve Saati</b></td><td>{olayTarihiSaati}</td></tr>
+    <tr><td><b>Olayın Öğrenildiği Tarih/Saat</b></td><td>{ogrenilmeTarihiSaati}</td></tr>
+    <tr><td><b>Olay Yeri (bölüm/birim)</b></td><td>{olayYeri}</td></tr>
+    <tr><td><b>Vardiya</b></td><td>{vardiya}</td></tr>
+    <tr><td><b>Hava/Ortam Koşulları</b></td><td>{ortamKosullari}</td></tr>
+</table>
+
+<h3>BÖLÜM B — Kazazede Bilgileri</h3>
+<table>
+    <tr><td width="40%"><b>Adı Soyadı</b></td><td>{kazazedeAdSoyad}</td></tr>
+    <tr><td><b>T.C. Kimlik No</b></td><td>{kazazedeTc}</td></tr>
+    <tr><td><b>Doğum Tarihi / Yaş</b></td><td>{kazazedeDogumYasi}</td></tr>
+    <tr><td><b>Görevi / Unvanı</b></td><td>{kazazedeGorevi}</td></tr>
+    <tr><td><b>İşe Giriş Tarihi</b></td><td>{kazazedeIseGiris}</td></tr>
+    <tr><td><b>Toplam Kıdem / Bu İşteki Kıdem</b></td><td>{kazazedeKidem}</td></tr>
+    <tr><td><b>İşe Başlama Eğitimi Aldı mı?</b></td><td>{iseBaslamaEgitimi}</td></tr>
+    <tr><td><b>Son Temel İSG Eğitimi</b></td><td>{sonTemelIsgEgitimi}</td></tr>
+    <tr><td><b>Son Periyodik Sağlık Muayenesi</b></td><td>{sonPeriyodikMuayene}</td></tr>
+    <tr><td><b>Kaza anında KKD durumu</b></td><td>{kkdDurumu}</td></tr>
+</table>
+
+<h3>BÖLÜM C — Olayın Oluş Şekli ve Yaralanma</h3>
+<table>
+    <tr><td width="40%"><b>Olayın Detaylı Anlatımı</b></td><td>{olayAnlatimi}</td></tr>
+    <tr><td><b>Kaza Tipi (SGK kodu)</b></td><td>{kazaTipi}</td></tr>
+    <tr><td><b>Yaralanmanın Türü</b></td><td>{yaralanmaTuru}</td></tr>
+    <tr><td><b>Vücuttaki Yeri</b></td><td>{vucuttakiYeri}</td></tr>
+    <tr><td><b>İlk Müdahale</b></td><td>{ilkMudahale}</td></tr>
+    <tr><td><b>Sevk Durumu</b></td><td>{sevkDurumu}</td></tr>
+    <tr><td><b>Tıbbi Sonuç / İstirahat</b></td><td>{tibbiSonucIstirahat}</td></tr>
+    <tr><td><b>Tanık(lar)</b></td><td>{taniklar}</td></tr>
+</table>
+
+<h3>BÖLÜM D — Bildirim Takibi (Yasal Süre Kontrolü)</h3>
+<table>
+    <tr><th>Bildirim Mercii</th><th>Yasal Süre</th><th>Yapılan Tarih/Saat</th><th>Durum</th></tr>
+    <tr><td colspan="4" style="border:none; padding:2px;">{#bildirimTakibi}</td></tr>
+    <tr><td>{bildirimMercii}</td><td>{yasalSure}</td><td>{yapilanTarih}</td><td>{durum}</td></tr>
+    <tr><td colspan="4" style="border:none; padding:2px;">{/bildirimTakibi}</td></tr>
+</table>
+
+<h3>BÖLÜM E — Kök Neden Analizi (5 Neden Yöntemi)</h3>
+<table>
+    <tr><th width="30%">Adım</th><th>Cevap</th></tr>
+    <tr><td colspan="2" style="border:none; padding:2px;">{#kokNedenAnalizi}</td></tr>
+    <tr><td>{nedenSorusu}</td><td>{nedenCevabi}</td></tr>
+    <tr><td colspan="2" style="border:none; padding:2px;">{/kokNedenAnalizi}</td></tr>
+</table>
+
+<h3>BÖLÜM F — Düzeltici ve Önleyici Faaliyetler (DÖF)</h3>
+<table>
+    <tr><th>No</th><th>Faaliyet</th><th>Tür</th><th>Sorumlu</th><th>Termin</th><th>Durum</th></tr>
+    <tr><td colspan="6" style="border:none; padding:2px;">{#dofListesi}</td></tr>
+    <tr><td>{dofNo}</td><td>{faaliyet}</td><td>{tur}</td><td>{sorumlu}</td><td>{termin}</td><td>{durum}</td></tr>
+    <tr><td colspan="6" style="border:none; padding:2px;">{/dofListesi}</td></tr>
+</table>
+
+<h3>BÖLÜM G — İnceleme Ekibi ve Onaylar</h3>
+<table>
+    <tr><th>Rol</th><th>Adı Soyadı</th><th>Tarih</th><th>İmza</th></tr>
+    <tr><td>İş Güvenliği Uzmanı</td><td>{isgUzmaniAd}</td><td>{onayTarihi}</td><td></td></tr>
+    <tr><td>İşyeri Hekimi</td><td>{isyeriHekimiAd}</td><td>{onayTarihi}</td><td></td></tr>
+    <tr><td>Çalışan Temsilcisi</td><td>{calisanTemsilcisiAd}</td><td>{onayTarihi}</td><td></td></tr>
+    <tr><td>Birim Amiri / Müdür</td><td>{birimAmiriAd}</td><td>{onayTarihi}</td><td></td></tr>
+    <tr><td>İşveren / İşveren Vekili</td><td>{isverenAd}</td><td>{onayTarihi}</td><td></td></tr>
+</table>
+
+<br>
+<h2>FORM-2: RAMAK KALA / TEHLİKELİ DURUM BİLDİRİM FORMU</h2>
+<h3>BÖLÜM A — Bildirim Bilgileri</h3>
+<table>
+    <tr><td width="40%"><b>Bildirim No</b></td><td>{rkBildirimNo}</td></tr>
+    <tr><td><b>Bildirim Tarihi / Saati</b></td><td>{rkBildirimTarihiSaati}</td></tr>
+    <tr><td><b>Olay Tarihi / Saati</b></td><td>{rkOlayTarihiSaati}</td></tr>
+    <tr><td><b>Bildiren</b></td><td>{rkBildiren}</td></tr>
+    <tr><td><b>Olay Yeri / Birim</b></td><td>{rkOlayYeri}</td></tr>
+    <tr><td><b>Olay Türü</b></td><td>{rkOlayTuru}</td></tr>
+</table>
+
+<h3>BÖLÜM B — Olayın Tanımı</h3>
+<table>
+    <tr><td width="40%"><b>Ne oldu? (olay anlatımı)</b></td><td>{rkOlayAnlatimi}</td></tr>
+    <tr><td><b>Olası sonuç (gerçekleşseydi)</b></td><td>{rkOlasiSonuc}</td></tr>
+    <tr><td><b>Potansiyel Şiddet</b></td><td>{rkPotansiyelSiddet}</td></tr>
+    <tr><td><b>Olasılık</b></td><td>{rkOlasilik}</td></tr>
+    <tr><td><b>Risk Önceliği (P×Ş)</b></td><td>{rkRiskOnceligi}</td></tr>
+</table>
+
+<h3>BÖLÜM C — Değerlendirme ve Aksiyon</h3>
+<table>
+    <tr><th>No</th><th>Alınan / Planlanan Önlem</th><th>Tür</th><th>Sorumlu</th><th>Termin</th><th>Durum</th></tr>
+    <tr><td colspan="6" style="border:none; padding:2px;">{#rkDofListesi}</td></tr>
+    <tr><td>{rkDofNo}</td><td>{rkFaaliyet}</td><td>{rkTur}</td><td>{rkSorumlu}</td><td>{rkTermin}</td><td>{rkDurum}</td></tr>
+    <tr><td colspan="6" style="border:none; padding:2px;">{/rkDofListesi}</td></tr>
+</table>
+
+</body></html>

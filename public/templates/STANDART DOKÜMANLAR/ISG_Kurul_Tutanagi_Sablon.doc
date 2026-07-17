@@ -1,0 +1,40 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+</style></head><body>
+
+<h1>İŞ SAĞLIĞI VE GÜVENLİĞİ KURULU TOPLANTI TUTANAĞI</h1>
+<p><b>Toplantı No:</b> {toplantiNo} | <b>Tarih/Saat:</b> {tarihSaat} | <b>Yer:</b> {toplantiYeri}</p>
+<p><b>Başkan:</b> {baskanAd}</p>
+
+<h2>KATILIMCILAR</h2>
+<table>
+    <tr><th>Ad Soyad</th><th>Görevi</th><th>Durum</th></tr>
+    <tr><td colspan="3" style="border:none; padding:2px;">{#katilimcilar}</td></tr>
+    <tr><td>{adSoyad}</td><td>{gorevi}</td><td>{durum}</td></tr>
+    <tr><td colspan="3" style="border:none; padding:2px;">{/katilimcilar}</td></tr>
+</table>
+
+<h2>GÜNDEM MADDELERİ</h2>
+<table>
+    <tr><th>No</th><th>Konu</th></tr>
+    <tr><td colspan="2" style="border:none; padding:2px;">{#gundem}</td></tr>
+    <tr><td>{siraNo}</td><td>{konu}</td></tr>
+    <tr><td colspan="2" style="border:none; padding:2px;">{/gundem}</td></tr>
+</table>
+
+<h2>ALINAN KARARLAR</h2>
+<table>
+    <tr><th>Karar No</th><th>Karar</th><th>Sorumlu</th><th>Termin</th></tr>
+    <tr><td colspan="4" style="border:none; padding:2px;">{#kararlar}</td></tr>
+    <tr><td>{kararNo}</td><td>{karar}</td><td>{sorumlu}</td><td>{termin}</td></tr>
+    <tr><td colspan="4" style="border:none; padding:2px;">{/kararlar}</td></tr>
+</table>
+
+<p><b>Başkan:</b> {baskanAd} | <b>Raportör:</b> {raportorAd}</p>
+</body></html>

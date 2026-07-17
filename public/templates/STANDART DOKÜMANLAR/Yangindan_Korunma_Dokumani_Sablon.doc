@@ -1,0 +1,74 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+h2 { font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; background-color: #f2f2f2; padding: 5px; }
+p { margin-bottom: 10px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">YANGINDAN KORUNMA DOKÜMANI<br>(Fire Protection Document)</h1>
+
+<table class="no-border" style="width: 50%; margin: 0 auto;">
+    <tr><td><b>Doküman No:</b></td><td>{dokumanNo}</td></tr>
+    <tr><td><b>Yayın Tarihi:</b></td><td>{yayinTarihi}</td></tr>
+    <tr><td><b>Revizyon No / Tarihi:</b></td><td>{revizyonNoTarihi}</td></tr>
+    <tr><td><b>Kapsam:</b></td><td>{kapsamAlanlari}</td></tr>
+</table>
+
+<h2>REVİZYON TAKİP TABLOSU</h2>
+<table>
+    <tr><th>Rev. No</th><th>Tarih</th><th>Değişiklik Özeti</th><th>Hazırlayan</th><th>Onaylayan</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#revizyonTablosu}</td></tr>
+    <tr><td>{revNo}</td><td>{revTarihi}</td><td>{revOzeti}</td><td>{revHazirlayan}</td><td>{revOnaylayan}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/revizyonTablosu}</td></tr>
+</table>
+
+<h2>1. AMAÇ VE KAPSAM</h2>
+<p>Bu doküman; {isyeriUnvani} bünyesindeki tüm bina, tesis ve sahalarda yangın çıkmasının önlenmesi, yangın çıkması halinde can ve mal kaybının asgariye indirilmesi, çalışanların, ziyaretçilerin ve üçüncü tarafların güvenliğinin sağlanması amacıyla hazırlanmıştır.</p>
+
+<h2>6. YANGIN RİSK DEĞERLENDİRMESİ (5x5 L Tipi Matris)</h2>
+<table>
+    <tr><th>No</th><th>Tehlike Kaynağı / Alan</th><th>Olası Tehlike</th><th>O</th><th>Ş</th><th>Risk</th><th>Mevcut Önlemler</th><th>Önerilen Önlemler</th></tr>
+    <tr><td colspan="8" style="border:none; padding:2px;">{#yanginRiskleri}</td></tr>
+    <tr><td>{riskNo}</td><td>{tehlikeKaynagi}</td><td>{olasiTehlike}</td><td>{olasilik}</td><td>{siddet}</td><td>{riskSkoru}</td><td>{mevcutOnlem}</td><td>{onerilenOnlem}</td></tr>
+    <tr><td colspan="8" style="border:none; padding:2px;">{/yanginRiskleri}</td></tr>
+</table>
+
+<h2>8. YANGIN ALGILAMA, İHBAR VE SÖNDÜRME SİSTEMLERİ</h2>
+<h3>Söndürme Sistemleri Envanteri</h3>
+<table>
+    <tr><th>No</th><th>Lokasyon</th><th>Sistem Tipi</th><th>Kapasite/Adet</th><th>Son Kontrol</th><th>Durum</th></tr>
+    <tr><td colspan="6" style="border:none; padding:2px;">{#sondurmeSistemleri}</td></tr>
+    <tr><td>{sistemNo}</td><td>{lokasyon}</td><td>{sistemTipi}</td><td>{kapasiteAdet}</td><td>{sonKontrol}</td><td>{durum}</td></tr>
+    <tr><td colspan="6" style="border:none; padding:2px;">{/sondurmeSistemleri}</td></tr>
+</table>
+
+<h2>9. ACİL DURUM EKİPLERİ VE GÖREVLİLER</h2>
+<table>
+    <tr><th>Ekip</th><th>Görev Tanımı</th><th>Lider (Asil)</th><th>Lider (Yedek)</th><th>Üye Sayısı</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#acilDurumEkipleri}</td></tr>
+    <tr><td>{ekipAdi}</td><td>{gorevTanimi}</td><td>{liderAsil}</td><td>{liderYedek}</td><td>{uyeSayisi}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/acilDurumEkipleri}</td></tr>
+</table>
+
+<h2>11. EĞİTİM VE TATBİKAT PLANI</h2>
+<table>
+    <tr><th>Eğitim/Tatbikat</th><th>Hedef Kitle</th><th>Süre</th><th>Periyot</th><th>Sorumlu</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#egitimTatbikatPlani}</td></tr>
+    <tr><td>{egitimAdi}</td><td>{hedefKitle}</td><td>{sure}</td><td>{periyot}</td><td>{sorumlu}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/egitimTatbikatPlani}</td></tr>
+</table>
+
+<h2>ONAY VE İMZA BLOĞU</h2>
+<table>
+    <tr><th>Hazırlayan</th><th>Kontrol Eden</th><th>Onaylayan</th></tr>
+    <tr><td>{hazirlayanGorevi}</td><td>{kontrolEdenGorevi}</td><td>{onaylayanGorevi}</td></tr>
+    <tr><td>İmza:</td><td>İmza:</td><td>İmza:</td></tr>
+</table>
+
+</body></html>

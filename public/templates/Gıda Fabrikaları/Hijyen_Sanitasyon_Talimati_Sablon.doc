@@ -1,0 +1,49 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 15px; margin-top: 15px; text-align: center; }
+p { margin-bottom: 10px; text-align: justify; }
+ul { margin-top: 0; padding-left: 20px; }
+li { margin-bottom: 5px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1>HİJYEN VE SANİTASYON TALİMATI</h1>
+<p>Aşağıda hüviyeti yazılı personelin iş yerimizde kişisel temizlik, hijyen ve sanitasyon kurallarına muhakkak surette riayet ederek çalışacağına dair işbu talimat ve tutanak serbest arzu ve iradesi altında aşağıdaki şekilde tanzim ve imza edilmiştir.</p>
+
+<ol>
+    <li>Yetki, bilgi ve görevim dışında iş yapmayacak; kişisel temizlik ve hijyen kurallarına eksiksiz riayet edeceğim.</li>
+    <li>İşe başlamadan önce, yemekten önce ve sonra, tuvaleti kullandıktan sonra, çöp ve atık ile temas ettikten sonra ellerimi sabun ve su ile usulüne uygun şekilde yıkayacağım.</li>
+    <li>Eldiven kullanılmasını gerektiren işlerde uygun eldiveni takacak; eldiveni el yıkamanın yerine geçen bir uygulama olarak görmeyeceğim.</li>
+    <li>Tırnaklarımı kısa ve temiz tutacak; saç, sakal ve bıyık temizliğine özen göstereceğim. Gerektiğinde bone, galoş ve maske kullanacağım.</li>
+    <li>İş kıyafetimi (önlük, iş elbisesi vb.) temiz ve düzenli bulunduracak; iş kıyafetlerimi günlük yaşamda kullandığım kıyafetlerle aynı dolapta bulundurmayacağım.</li>
+    <li>Çalışma alanımı, kullandığım tezgah, alet ve ekipmanı her vardiya sonunda temizleyecek; temizlik ve dezenfeksiyon malzemelerini amacına uygun ve etiketinde belirtilen doğru oranda kullanacağım.</li>
+    <li>Temizlik ve dezenfeksiyon kimyasallarını asla birbirine karıştırmayacak; orijinal ambalajı dışında ve etiketsiz kaplarda bulundurmayacağım.</li>
+    <li>El, cilt ve yüz temizliği için çözücü, tiner, alkali veya makine yağı gibi maddeleri asla kullanmayacağım.</li>
+    <li>Çalışma sırasında sigara içmeyecek, sakız çiğnemeyecek; gıda ve içecekleri yalnızca bu iş için ayrılmış alanlarda tüketeceğim.</li>
+    <li>Bulaşıcı bir hastalık (ishal, kusma, ateş, cilt enfeksiyonu, açık yara vb.) belirtisi taşıdığımda derhal amirime ve işyeri hekimine bilgi verecek; izin verilmeden gıda ve servis alanlarında çalışmayacağım.</li>
+    <li>Periyodik sağlık kontrollerime zamanında katılacak; mevzuat gereği hijyen eğitimimi alarak geçerli hijyen belgesini bulunduracak ve süresi dolmadan yenileyeceğim.</li>
+    <li>Tuvalet, lavabo, soyunma odası, duş ve dinlenme alanlarını temiz ve düzenli kullanacak; ortak kullanım alanlarını kirli bırakmayacağım.</li>
+    <li>Gıda ile çalışılan alanlarda çapraz bulaşmayı önleyecek; çiğ ve pişmiş ürünleri, temiz ve kirli ekipmanı birbirinden ayrı tutacağım.</li>
+    <li>Soğuk zincir gerektiren ürünleri uygun sıcaklıkta muhafaza edecek; soğutucu ve buzdolabı sıcaklık takibini ihmal etmeyeceğim.</li>
+    <li>Atıkları türlerine göre ayrı toplayacak; çöp ve atık kaplarını ağzı kapalı tutacak ve düzenli olarak boşaltacağım.</li>
+    <li>Haşere ve kemirgenlere karşı alınan tedbirlere uyacak; gördüğüm her türlü haşere belirtisini derhal yetkilisine bildireceğim.</li>
+    <li>Su, lavabo, batarya ve tesisattaki sızıntı, tıkanıklık ve arızaları derhal yetkilisine bildireceğim.</li>
+    <li>İşyerinde asılı bulunan hijyen, sanitasyon ve temizlik talimatlarını tam anlamı ile okuyup öğrendim; aynen tatbik edecek ve ettireceğim.</li>
+    <li>Temizlik ve sanitasyon planında bana verilen görevleri belirlenen sıklık ve yöntemde eksiksiz yerine getireceğim.</li>
+</ol>
+
+<p>İşyeri Hijyen ve Sanitasyon eğitimlerine katıldığımı, hijyen ve sanitasyon kurallarına ve talimatlarına harfiyen uyacağımı, işim ile ilgili hususlarda üzerime düşen ve yetkim dahilinde gerekenleri uygulayacağımı, yetkim haricinde olan konular ile ilgili işveren ve/veya işveren vekiline müracaat edeceğimi, işbu talimat tutanağını tamamen okuyup anlayarak imza ile taahhüt ediyorum.</p>
+
+<table class="no-border">
+    <tr>
+        <td width="50%"><b>TEBLİĞ EDEN</b><br><br>ADI SOYADI : {tebligEdenAdSoyad}<br><br>TARİH : {tebligTarihi}<br><br>İMZA :<br><br></td>
+        <td width="50%"><b>TEBELLÜĞ EDEN</b><br><br>ADI SOYADI : {tebellugEdenAdSoyad}<br><br>TARİH : {tebellugTarihi}<br><br>İMZA :<br><br></td>
+    </tr>
+</table>
+
+</body></html>

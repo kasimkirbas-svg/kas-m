@@ -1,0 +1,51 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+p { margin-bottom: 10px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">{sirketUnvani}<br>İş Sağlığı ve Güvenliği Birimi</h1>
+<h2 class="center">DESTEK ELEMANI ATAMA (GÖREVLENDİRME) YAZISI</h2>
+
+<table class="no-border" style="width: 50%; margin-bottom: 20px;">
+    <tr><td width="30%"><b>Sayı:</b></td><td>{evrakNo}</td></tr>
+    <tr><td><b>Tarih:</b></td><td>{tarih}</td></tr>
+    <tr><td><b>Konu:</b></td><td>İş Sağlığı ve Güvenliği Destek Elemanı Görevlendirmesi</td></tr>
+</table>
+
+<p><b>Sayın {destekElemanAdSoyad}</b><br>
+(T.C. Kimlik No: {tcKimlikNo} / Sicil No: {sicilNo} / Görevi: {gorevi})</p>
+
+<p>6331 sayılı İş Sağlığı ve Güvenliği Kanunu’nun 3 üncü maddesinde destek elemanı; “asli görevinin yanında iş sağlığı ve güvenliği ile ilgili önleme, koruma, tahliye, yangınla mücadele, ilk yardım ve benzeri konularda özel olarak görevlendirilmiş, uygun donanım ve yeterli eğitime sahip kişi” olarak tanımlanmıştır. Anılan Kanun’un 11 ve 12 nci maddeleri ile İşyerlerinde Acil Durumlar Hakkında Yönetmelik hükümleri uyarınca; işyerimizde acil durumların önlenmesi ve müdahale çalışmalarının yürütülmesi amacıyla, asli görevinizin yanında <b>DESTEK ELEMANI</b> olarak görevlendirilmenize karar verilmiştir.</p>
+
+<p>Görevlendirildiğiniz destek elemanı alanı:<br>
+<b>[ {gorevAlani} ]</b></p>
+
+<p>Bu kapsamda görev ve sorumluluklarınız aşağıda belirtilmiştir:</p>
+<ol>
+    <li>İşyerinde belirlenen acil durum (yangın, deprem, tahliye vb.) planları kapsamında kendisine verilen görevleri yerine getirmek.</li>
+    <li>Yangın söndürme cihazlarının ve acil durum ekipmanlarının yerini, kullanımını bilmek ve kullanıma hazır olmalarını gözetmek.</li>
+    <li>Acil durumlarda çalışanların güvenli toplanma alanlarına yönlendirilmesine ve tahliyesine yardımcı olmak.</li>
+    <li>Acil durum tatbikatlarına aktif olarak katılmak ve tatbikatların organizasyonunda görev almak.</li>
+    <li>İlk yardım gerektiren durumlarda (görevlendirilmişse) ilk müdahaleyi yapmak ve sağlık birimini/112’yi bilgilendirmek.</li>
+    <li>Görev alanıyla ilgili tespit ettiği eksiklik ve tehlikeleri iş güvenliği uzmanına ve işverene bildirmek.</li>
+    <li>Kendisine sağlanan kişisel koruyucu donanım ve ekipmanı amacına uygun kullanmak ve korumak.</li>
+</ol>
+
+<p>Bu görevlendirme, görevin gerektirdiği eğitimlerin tamamlanmasını müteakip yürürlüğe girer. Görevinizi yürütmeniz nedeniyle hiçbir hakkınız kısıtlanmayacak; görevin gerektirdiği eğitim, donanım ve imkânlar işveren tarafından sağlanacaktır.</p>
+<p>Bilgilerinize sunar, başarılar dileriz.</p>
+
+<table class="no-border" style="margin-top: 30px;">
+    <tr>
+        <td width="50%"><b>İŞVEREN / İŞVEREN VEKİLİ</b><br><br>Adı Soyadı: {isverenAdSoyad}<br>Unvanı: {isverenUnvan}<br>İmza:<br></td>
+        <td width="50%"><b>TEBELLÜĞ EDEN (DESTEK ELEMANI)</b><br><br>Adı Soyadı: {destekElemanAdSoyad}<br>Tarih / İmza: {tarih} / ........................<br></td>
+    </tr>
+</table>
+
+</body></html>

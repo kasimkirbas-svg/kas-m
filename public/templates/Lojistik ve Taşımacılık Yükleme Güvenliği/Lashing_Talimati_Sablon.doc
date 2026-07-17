@@ -1,0 +1,86 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+p { margin-bottom: 10px; text-align: justify; }
+ul { margin-top: 0; padding-left: 20px; }
+li { margin-bottom: 5px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">LOJİSTİK VE TAŞIMACILIK YÜK EMNİYETİ (LASHING) İŞ GÜVENLİĞİ TALİMATI</h1>
+<table class="no-border" style="width: 50%; margin: 0 auto;">
+    <tr><td><b>Doküman No:</b></td><td>{dokumanNo}</td></tr>
+    <tr><td><b>Yayın Tarihi:</b></td><td>{yayinTarihi}</td></tr>
+    <tr><td><b>Revizyon No:</b></td><td>{revizyonNo}</td></tr>
+    <tr><td><b>Sayfa No:</b></td><td>1/1</td></tr>
+</table>
+
+<p>Aşağıda hüviyeti yazılı personelin iş yerimizde yük yükleme, istifleme, bağlama (lashing) ve emniyete alma işlerinde belirtilen şartlara muhakkak surette riayet ederek çalışacağına dair işbu talimat ve tutanak serbest arzu ve iradesi altında aşağıdaki şekilde tanzim ve imza edilmiştir.</p>
+
+<ol>
+    <li>Yük yükleme, istifleme ve bağlama (lashing) işlerine başlamadan önce bana verilen kişisel koruyucu donanımları (baret, çelik burunlu ayakkabı, koruyucu eldiven, reflektörlü yelek) eksiksiz kullanacağım.</li>
+    <li>Yetki, bilgi ve görevim dışında yükleme-bağlama işi yapmayacağım, verilen emir ve talimatlar dışında kendiliğinden işlem yapmayacağım.</li>
+    <li>Yük bağlama ekipmanlarını (zincir, gergi kayışı/ratchet, halat, çelik tel, sapan, çengel, kilit) her kullanım öncesi gözle kontrol edeceğim; ezik, çatlak, kesik, aşınmış veya deforme olmuş ekipmanı kullanmayacağım ve derhal yetkiliye bildireceğim.</li>
+    <li>Her bağlama ekipmanının üzerinde yazılı emniyetli çalışma yükü (SWL/LC) değerini aşmayacağım; ekipmanı taşıma kapasitesinin üzerinde zorlamayacağım.</li>
+    <li>Yükü araç/konteyner üzerine ağırlık merkezi dengeli ve aks yük dağılımına uygun olacak şekilde istifleyeceğim; dengesiz ve devrilme riski taşıyan istif yapmayacağım.</li>
+    <li>Bağlama noktası olarak yalnızca aracın/treylerin imalatçı tarafından belirlenmiş sertifikalı bağlama halkalarını ve mapalarını kullanacağım; uygun olmayan noktalara bağlama yapmayacağım.</li>
+    <li>Yükü; kayma, devrilme, yuvarlanma ve öne-arkaya-yana hareketi önleyecek yeterli sayıda ve yönde bağlama ile emniyete alacağım, eksik bağlama ile yola çıkışa izin vermeyeceğim.</li>
+    <li>Keskin kenarlı yüklerde bağlama ekipmanını kesilmeye karşı korumak için kenar koruyucu (köşebent/açı koruyucu) kullanacağım.</li>
+    <li>Gergi kayışı ve ratchet mekanizmalarını gererken vücudumu kayış hattının dışında konumlandıracağım; ani boşalma ve geri tepmeye karşı tedbir alacağım.</li>
+    <li>Yük üzerine çıkarken ve inerken uygun erişim ekipmanını (merdiven, platform) kullanacağım; yük, dorse veya konteyner üzerinde dengesiz şekilde yürümeyeceğim, atlamayacağım.</li>
+    <li>Forklift, vinç, reach-stacker ve benzeri kaldırma araçlarının manevra ve çalışma sahasına izinsiz girmeyeceğim; askıda yük altında durmayacağım ve geçmeyeceğim.</li>
+    <li>Yükleme-boşaltma sırasında araç ve treylerin takozlanmış, el freninin çekili ve kontağının kapalı olduğundan emin olacağım; emniyete alınmamış araçta çalışmayacağım.</li>
+    <li>Rampa ve yükleme platformlarında düşme ve sıkışma risklerine karşı dikkatli olacağım; rampa ile araç arasındaki boşlukta çalışmayacağım.</li>
+    <li>Tehlikeli madde (ADR kapsamı) yüklerinde ilgili etiketleme, ayrıştırma ve özel bağlama kurallarına uyacağım; uygunsuzluk durumunda işe başlamayacağım.</li>
+    <li>Konteyner ve dorse kapaklarını açıp kaparken devrilebilecek yüke karşı önümde durmayacağım; kapak menteşe ve kilitlerini kontrol edeceğim.</li>
+    <li>Vinç veya forklift ile yapılan kaldırma işlerinde işaretçi (rigger/signalman) talimatlarına uyacağım; yalnız yetkili işaretçinin verdiği işaretle hareket edeceğim.</li>
+    <li>Yük bağlama işlemi tamamlanmadan aracın hareket etmesine izin vermeyeceğim; sürücü ile koordineli çalışacağım ve hazır olmadan kalkış işareti vermeyeceğim.</li>
+    <li>Uzun, ağır ve özel ebatlı (proje/gabari dışı) yüklerin bağlanmasında yazılı yükleme planına ve amirimin talimatına uyacağım, plan olmadan işe başlamayacağım.</li>
+    <li>Çalışma sahasında cep telefonu ile konuşmayacağım, dikkat dağıtıcı davranışlardan kaçınacağım; iş arkadaşlarımı tehlikeye atacak şaka ve laubali hareketlerde bulunmayacağım.</li>
+    <li>Bağlama ekipmanlarını kullanım sonrası temiz, düzenli ve hasarsız şekilde belirlenen yerine kaldıracağım; yerde ve geçişlerde dağınık bırakmayacağım.</li>
+    <li>Olumsuz hava koşullarında (buzlanma, şiddetli rüzgâr, zemin kayganlığı) yükleme-bağlama işlerini amirimin değerlendirmesi doğrultusunda yapacağım; riskli durumda işe başlamayacağım.</li>
+    <li>Yol seyri sırasında ve ara molalarda yük bağlarının gevşeyip gevşemediğini kontrol edeceğim; gevşeyen bağları yeniden gerilim altına alacağım.</li>
+    <li>Herhangi bir arıza, hasar, tehlike veya ramak kala durumunda işe devam etmeyeceğim, derhal amirime bildireceğim ve tehlike giderildikten sonra işe devam edeceğim.</li>
+    <li>İş yerinde asılı bulunan iş güvenliği talimat ve ikaz levhalarına, uyarı işaretlerine harfiyen uyacağım; bu levha ve işaretlerin yerlerini değiştirmeyeceğim.</li>
+</ol>
+
+<p>İş Sağlığı ve İş Güvenliği eğitimlerine katıldığımı, yük yükleme-istifleme ve bağlama (lashing) işlerine ilişkin iş güvenliği kurallarına ve talimatlarına harfiyen uyacağımı, işim ile ilgili hususlarda üzerime düşen ve yetkim dahilinde gerekenleri uygulayacağımı, yetkim haricinde olan konular ile ilgili işveren ve/veya işveren vekiline müracaat edeceğimi, işbu talimat tutanağını tamamen okuyup anlayarak imza ile taahhüt ediyorum.</p>
+
+<table class="no-border">
+    <tr>
+        <td width="50%"><b>TEBLİĞ EDEN</b><br><br>ADI SOYADI : {tebligEdenAdSoyad}<br><br>TARİH : {tebligTarihi}<br><br>İMZA :<br><br></td>
+        <td width="50%"><b>TEBELLÜĞ EDEN</b><br><br>ADI SOYADI : {tebellugEdenAdSoyad}<br><br>TARİH : {tebellugTarihi}<br><br>İMZA :<br><br></td>
+    </tr>
+</table>
+
+<h1 class="center">LOJİSTİK VE TAŞIMACILIK YÜK EMNİYETİ (LASHING) KONTROL FORMU</h1>
+<table>
+    <tr><td><b>Tarih:</b></td><td>{kontrolTarihi}</td><td><b>Sefer / Sevkiyat No:</b></td><td>{seferNo}</td></tr>
+    <tr><td><b>Araç Plakası:</b></td><td>{aracPlakasi}</td><td><b>Dorse / Treyler No:</b></td><td>{dorseNo}</td></tr>
+    <tr><td><b>Sürücü Adı Soyadı:</b></td><td>{surucuAdi}</td><td><b>Konteyner No:</b></td><td>{konteynerNo}</td></tr>
+    <tr><td><b>Yük Cinsi / Tanımı:</b></td><td>{yukCinsi}</td><td><b>Toplam Ağırlık (kg):</b></td><td>{toplamAgirlik}</td></tr>
+    <tr><td><b>Yükleme Yeri:</b></td><td>{yuklemeYeri}</td><td><b>Boşaltma Yeri:</b></td><td>{bosaltmaYeri}</td></tr>
+</table>
+
+<table>
+    <tr><th>KONTROL MADDESİ</th><th>Evet</th><th>Hayır</th><th>U.D.</th><th>Açıklama</th></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{#lashingKontrolMaddeleri}</td></tr>
+    <tr><td>{kontrolMaddesi}</td><td>{evet}</td><td>{hayir}</td><td>{ud}</td><td>{aciklama}</td></tr>
+    <tr><td colspan="5" style="border:none; padding:2px;">{/lashingKontrolMaddeleri}</td></tr>
+</table>
+<p><i>U.D.: Uygun Değil / İlgili Değil. Tüm maddeler kontrol edilmeden araç sevk edilmez.</i></p>
+
+<table>
+    <tr>
+        <td width="33%"><b>YÜKLEMEYİ YAPAN</b><br><br>Adı Soyadı : {yuklemeyiYapan}<br><br>Görevi : {yuklemeyiYapanGorevi}<br><br>İmza :<br><br></td>
+        <td width="33%"><b>KONTROL EDEN</b><br><br>Adı Soyadı : {kontrolEden}<br><br>Görevi : {kontrolEdenGorevi}<br><br>İmza :<br><br></td>
+        <td width="34%"><b>ONAYLAYAN (Amir)</b><br><br>Adı Soyadı : {onaylayan}<br><br>Görevi : {onaylayanGorevi}<br><br>İmza :<br><br></td>
+    </tr>
+</table>
+
+</body></html>

@@ -1,0 +1,69 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body { font-family: 'Calibri', sans-serif; font-size: 11pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+th, td { border: 1px solid black; padding: 5px; text-align: left; vertical-align: middle; }
+.center { text-align: center; }
+.bold { font-weight: bold; }
+h1 { font-size: 14pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; text-align: center; }
+h2 { font-size: 12pt; font-weight: bold; margin-bottom: 10px; margin-top: 15px; background-color: #f2f2f2; padding: 5px; }
+p { margin-bottom: 10px; text-align: justify; }
+.no-border, .no-border td { border: none; padding: 2px; }
+</style></head><body>
+
+<h1 class="center">PERSONEL İSG İHTAR VE UYARI TUTANAĞI</h1>
+<p class="center">Doküman No: {dokumanNo} | Yayın Tarihi: {yayinTarihi} | Revizyon No: {revizyonNo}</p>
+
+<h2>1. İŞYERİ / İŞVEREN BİLGİLERİ</h2>
+<table>
+    <tr><td width="40%"><b>İşyeri (İşveren) Unvanı</b></td><td>{isyeriUnvani}</td></tr>
+    <tr><td><b>SGK İşyeri Sicil No</b></td><td>{sgkSicilNo}</td></tr>
+    <tr><td><b>İşyeri Adresi</b></td><td>{isyeriAdresi}</td></tr>
+    <tr><td><b>Tehlike Sınıfı</b></td><td>{tehlikeSinifi}</td></tr>
+    <tr><td><b>İSG-KATİP Sözleşme No / OSGB</b></td><td>{isgKatipOsgb}</td></tr>
+</table>
+
+<h2>2. UYARILAN PERSONEL BİLGİLERİ</h2>
+<table>
+    <tr><td width="40%"><b>Adı Soyadı</b></td><td>{personelAdSoyad}</td></tr>
+    <tr><td><b>T.C. Kimlik No</b></td><td>{personelTc}</td></tr>
+    <tr><td><b>SGK Sicil No</b></td><td>{personelSgkSicil}</td></tr>
+    <tr><td><b>Görevi / Unvanı</b></td><td>{personelGorevi}</td></tr>
+    <tr><td><b>Çalıştığı Bölüm</b></td><td>{personelBolumu}</td></tr>
+    <tr><td><b>İşe Giriş Tarihi</b></td><td>{personelIseGiris}</td></tr>
+</table>
+
+<h2>3. İHTAR / UYARI BİLGİLERİ</h2>
+<table>
+    <tr><td width="40%"><b>İhtar / Uyarı Tarihi ve Saati</b></td><td>{uyariTarihiSaati}</td></tr>
+    <tr><td><b>Kaçıncı Uyarı</b></td><td>{kacinciUyari}</td></tr>
+    <tr><td><b>Önceki Sözlü Uyarı Tarihi</b></td><td>{oncekiUyariTarihi}</td></tr>
+    <tr><td><b>Uyarı Türü</b></td><td>{uyariTuru}</td></tr>
+    <tr><td><b>Yasal Dayanak</b></td><td>{yasalDayanak}</td></tr>
+</table>
+
+<h2>4. OLAYIN OLUŞ ŞEKLİ VE TESPİT EDİLEN UYGUNSUZLUK</h2>
+<p>{olayTarihiSaati} tarihinde {olayYeri}'nde yapılan saha denetiminde; yukarıda kimlik bilgileri belirtilen personelin aşağıdaki iş sağlığı ve güvenliği kurallarına aykırı davrandığı tespit edilmiştir:</p>
+<ul>
+    <li>{uygunsuzluk1}</li>
+    <li>{uygunsuzluk2}</li>
+    <li>{uygunsuzluk3}</li>
+</ul>
+<p>Konuya ilişkin daha önce uyarılmış olmasına rağmen aynı davranışı tekrarladığı tespit edilmiştir.</p>
+
+<h2>5. İHTAR VE UYARI METNİ</h2>
+<p>Yukarıda belirtilen tutum ve davranışlarınız, 6331 sayılı İş Sağlığı ve Güvenliği Kanunu'nun 19. maddesinde düzenlenen "çalışanların yükümlülükleri" kapsamında; kendi ve diğer çalışanların sağlık ve güvenliğini tehlikeye atan, işveren tarafından sağlanan kişisel koruyucu donanımları usulüne uygun kullanmama niteliğindeki güvensiz davranışları oluşturmaktadır.</p>
+<p>İşbu tutanak ile tarafınız <b>YAZILI OLARAK İHTAREN UYARILMAKTADIR.</b> Belirtilen güvensiz davranış ve durumlara derhal son vermeniz, kişisel koruyucu donanımlarınızı eksiksiz kullanmanız ve iş sağlığı ve güvenliği talimatlarına eksiksiz uymanız gerekmektedir.</p>
+
+<h2>6. PERSONELİN BEYANI / SAVUNMASI</h2>
+<p>İşbu tutanak tarafıma okundu/tarafımca okundu. Bu konudaki beyan ve savunmam aşağıdaki gibidir:</p>
+<p>{personelSavunmasi}</p>
+
+<h2>7. TEBLİĞ – TEBELLÜĞ VE İMZALAR</h2>
+<table>
+    <tr><th>Düzenleyen (İSG Uzmanı)</th><th>İşveren / İşveren Vekili</th><th>Tebellüğ Eden (Personel)</th><th>Tanık</th></tr>
+    <tr><td>{isgUzmaniAd}</td><td>{isverenAd}</td><td>{personelAdSoyad}</td><td>{tanikAd}</td></tr>
+    <tr><td>İmza:</td><td>İmza:</td><td>İmza:</td><td>İmza:</td></tr>
+</table>
+
+</body></html>
