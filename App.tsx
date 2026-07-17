@@ -36,7 +36,7 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [currentView, setCurrentView] = useState('auth'); 
+  const [currentView, setCurrentView] = useState('landing'); 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -58,16 +58,6 @@ const App = () => {
     return <FileBox size={26} strokeWidth={1.5} />;
   };
 
-  const colors = [
-    'from-blue-900/40 via-transparent to-transparent',
-    'from-emerald-900/40 via-transparent to-transparent', 
-    'from-purple-900/40 via-transparent to-transparent',
-    'from-rose-900/40 via-transparent to-transparent',
-    'from-amber-900/40 via-transparent to-transparent',
-    'from-cyan-900/40 via-transparent to-transparent',
-    'from-indigo-900/40 via-transparent to-transparent'
-  ];
-
   const handleAuthSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
     setCurrentView('dashboard');
@@ -75,7 +65,8 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null);
-    setCurrentView('auth');
+    setCurrentView('landing');
+    setSelectedTemplate(null);
   };
 
   const filteredTemplates = safeTemplates.filter(t => {
@@ -86,7 +77,7 @@ const App = () => {
   });
 
   const renderContent = () => {
-    if (currentView === 'auth') {
+    if (currentView === 'landing' || (!user && currentView === 'dashboard')) {
       return (
         <Auth 
           onAuthSuccess={handleAuthSuccess}
