@@ -37,6 +37,7 @@ export interface DocumentField {
   placeholder?: string;
   options?: string[];
   dependsOn?: { field: string; value: string };
+  required?: boolean;
 }
 
 export interface GeneratedDocument {

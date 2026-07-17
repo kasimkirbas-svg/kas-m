@@ -90,15 +90,15 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
               <div className="space-y-4 max-w-md">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Mevcut Şifre</label>
-                  <input type="password" classID='curr-password' className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+                  <input type="password" id='curr-password' className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Yeni Şifre</label>
-                  <input type="password" classID='new-password' className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+                  <input type="password" id='new-password' className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Yeni Şifre (Tekrar)</label>
-                  <input type="password" classID='confirm-password' className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+                  <input type="password" id='confirm-password' className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none" />
                 </div>
               </div>
             </div>

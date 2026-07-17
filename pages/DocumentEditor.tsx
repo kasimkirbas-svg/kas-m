@@ -406,7 +406,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           <Button variant="primary" size="sm" onClick={() => window.print()}>
             <Printer className="mr-2" size={16} /> Yazdır / PDF
           </Button>
-          <Button variant="outline" size="sm" onClick={onSave} loading={loading}>
+          <Button variant="outline" size="sm" onClick={onSave}>
              <Download className="mr-2" size={16} /> Kaydet
           </Button>
         </div>

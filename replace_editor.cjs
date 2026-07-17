@@ -1,1 +1,0 @@
-const fs = require('fs'); const file = 'pages/DocumentEditor.tsx'; let c = fs.readFileSync(file, 'utf8'); c = c.replace(/useState<'selection' \\| 'editor'>\\([\s\S]*?primarySelectFields.length > 0 \? 'selection' : 'editor'[\s\S]*?\\)/, 'useState<\'preview\' | \'selection\' | \'editor\'>(\'preview\')'); fs.writeFileSync(file, c);
