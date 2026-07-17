@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from './components/Layout';
+import { Auth } from './pages/Auth';
+import { DocumentEditor } from './pages/DocumentEditor';
+import { APP_NAME } from './constants';
+import { User, DocumentTemplate } from './types';
+import { 
+  Building2, Factory, Pickaxe, HardHat, Zap, FlaskConical, Briefcase, 
+  Search, ArrowDownAz, FileText, ClipboardList, PackageSearch, Trash2, 
+  FileBox, UserCheck, CheckSquare, Award, FileClock, FolderOpen, ArrowRight,
+  ShieldAlert, UserPlus, FileArchive, Settings, Crown
+} from 'lucide-react';
+
+// Template & document lists imported from constants (they can be simulated data and we removed local hardcoded parts)
+import { MOCK_TEMPLATES } from './constants';
 
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   constructor(props: any) {
@@ -21,20 +34,6 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
     return this.props.children;
   }
 }
-
-import { Auth } from './pages/Auth';
-import { DocumentEditor } from './pages/DocumentEditor';
-import { APP_NAME } from './constants';
-import { User, DocumentTemplate } from './types';
-import { 
-  Building2, Factory, Pickaxe, HardHat, Zap, FlaskConical, Briefcase, 
-  Search, ArrowDownAz, FileText, ClipboardList, PackageSearch, Trash2, 
-  FileBox, UserCheck, CheckSquare, Award, FileClock, FolderOpen, ArrowRight,
-  ShieldAlert, UserPlus, FileArchive, Settings, Crown
-} from 'lucide-react';
-
-// Template & document lists imported from constants (they can be simulated data and we removed local hardcoded parts)
-import { MOCK_TEMPLATES } from './constants';
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
