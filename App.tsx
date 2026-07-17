@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Layout } from './components/Layout';
-import { Auth } from './pages/Auth';
+import Auth from './pages/Auth';
 import { DocumentEditor } from './pages/DocumentEditor';
 import { APP_NAME } from './constants';
 import { User, DocumentTemplate } from './types';
