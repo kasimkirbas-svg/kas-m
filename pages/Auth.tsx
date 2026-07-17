@@ -280,7 +280,6 @@ export default function Auth({ onLogin }: AuthProps) {
           >
             {/* Panel Glow */}
             <div className="absolute -inset-0.5 bg-gradient-to-b from-yellow-500/20 to-transparent rounded-[2.5rem] blur-xl opacity-60"></div>
-            
             <div className="relative bg-[#090912]/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 lg:p-10 shadow-2xl shadow-black">
               
               <div className="mb-10 text-center">
@@ -296,6 +295,7 @@ export default function Auth({ onLogin }: AuthProps) {
               </div>
 
               {message && (
+
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -413,3 +413,6 @@ export default function Auth({ onLogin }: AuthProps) {
     </div>
   );
 }
+
+
+
