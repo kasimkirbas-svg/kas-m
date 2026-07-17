@@ -37,7 +37,7 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [currentView, setCurrentView] = useState('dashboard'); 
+  const [currentView, setCurrentView] = useState('auth'); 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // To simulate going into document editor
