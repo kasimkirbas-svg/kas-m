@@ -1,9 +1,10 @@
 ﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Mail, Lock, LogIn, UserPlus, Fingerprint, Shield, Star, Rocket, Cpu, Eye, Info, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Particles from 'react-tsparticles';
-import { loadFull } from 'tsparticles';
-import type { Engine } from 'tsparticles-engine';
+import Particles from '@tsparticles/react';
+import { loadSlim } from '@tsparticles/slim';
+import type { Engine } from '@tsparticles/engine';
+import { initParticlesEngine } from '@tsparticles/react';
 
 interface AuthProps {
   onLogin: () => void;
@@ -23,12 +24,14 @@ export default function Auth({ onLogin }: AuthProps) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-  const particlesInit = useCallback(async (engine: Engine) => {
-    await loadFull(engine);
-  }, []);
+  const [init, setInit] = useState(false);
 
-  const particlesLoaded = useCallback(async (container: any) => {
-    console.log(container);
+  useEffect(() => {
+    initParticlesEngine(async (engine: Engine) => {
+      await loadSlim(engine);
+    }).then(() => {
+      setInit(true);
+    });
   }, []);
 
   const particlesOptions = useMemo(() => ({
@@ -132,13 +135,13 @@ export default function Auth({ onLogin }: AuthProps) {
     <div className="min-h-screen bg-[#050510] text-slate-300 relative overflow-hidden font-sans flex flex-col justify-between selection:bg-yellow-500/30 selection:text-yellow-200">
       
       {/* Dynamic Background */}
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        loaded={particlesLoaded}
-        options={particlesOptions}
-        className="absolute inset-0 z-0"
-      />
+      {init && (
+        <Particles
+          id="tsparticles"
+          options={particlesOptions}
+          className="absolute inset-0 z-0"
+        />
+      )}
 
       {/* Floating Orbs / Glow Effects */}
       <motion.div 
