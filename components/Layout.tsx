@@ -26,11 +26,9 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
           className="flex items-center gap-3 cursor-pointer group"
           onClick={() => onNavigate('dashboard')}
         >
-          <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-slate-900 font-extrabold text-xl shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:scale-105 transition-transform">
-            K
-          </div>
+          <img src="/site logo.jpeg" alt="İSG Zeyron Logo" className="h-10 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]" />
           <div className="flex flex-col">
-            <span className="font-bold text-white text-sm tracking-widest">{APP_NAME.split(' ')[0]}</span>
+            <span className="font-bold text-white text-sm tracking-widest">{APP_NAME}</span>
             <span className="text-[10px] text-slate-500 font-semibold tracking-widest leading-none">PANEL YÖNETİMİ</span>
           </div>
         </div>
