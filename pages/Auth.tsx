@@ -280,22 +280,7 @@ export default function Auth({ onLogin }: AuthProps) {
           >
             {/* Panel Glow */}
             <div className="absolute -inset-0.5 bg-gradient-to-b from-yellow-500/20 to-transparent rounded-[2.5rem] blur-xl opacity-60"></div>
-            `p-4 rounded-xl mb-6 flex items-start gap-3 border text-sm font-medium ${message.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-500'}`
-            <div className="relative bg-[#090912]/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 lg:p-10 shadow-2xl shadow-black">
-              
-              <div className="mb-10 text-center">
-                <motion.div 
-                  whileHover={{ rotate: 180 }}
-                  transition={{ duration: 0.5 }}
-                  className="w-16 h-16 mx-auto bg-gradient-to-br from-yellow-400/10 to-amber-600/10 rounded-2xl flex items-center justify-center mb-6 border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.2)]"
-                >
-                  <Fingerprint className="w-8 h-8 text-yellow-500" />
-                </motion.div>
-                <h2 className="text-2xl font-bold text-white mb-2 tracking-tight">Sisteme Giriş Yap</h2>
-                <p className="text-slate-400 text-sm">Zeyron ISG Komuta Merkezine hoş geldiniz.</p>
-              </div>
-
-              {message && (
+{message && (
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -413,3 +398,4 @@ export default function Auth({ onLogin }: AuthProps) {
     </div>
   );
 }
+
