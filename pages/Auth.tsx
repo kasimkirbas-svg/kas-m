@@ -1,249 +1,412 @@
-﻿import React, { useState } from 'react';
-import { Mail, Lock, User as UserIcon, ArrowRight, Instagram, Facebook, Twitter, Linkedin, ChevronDown, CheckCircle } from 'lucide-react';
-import { APP_NAME } from '../constants';
-import { UserRole, SubscriptionPlan } from '../types';
-import { LANDING_CONTENT } from '../landing_data';
-
-type AuthMode = 'login' | 'register' | 'forgot_password';
+﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Mail, Lock, LogIn, UserPlus, Fingerprint, Shield, Star, Rocket, Cpu, Eye, Info, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Particles from 'react-tsparticles';
+import { loadFull } from 'tsparticles';
+import type { Engine } from 'tsparticles-engine';
 
 interface AuthProps {
-  onAuthSuccess: (user: any) => void;
-  onBack: () => void;
+  onLogin: () => void;
 }
 
-export const Auth: React.FC<AuthProps> = ({ onAuthSuccess, onBack }) => {
-  const [mode, setMode] = useState<AuthMode>('login');
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', companyName: '', rememberMe: false });
+const FAQ_ITEMS = [
+  { question: 'İSG Zeyron Nedir?', answer: 'İş sağlığı ve güvenliği profesyonelleri için geliştirilmiş yeni nesil bir doküman yönetim asistanıdır. Yapay zeka destekli altyapısıyla karmaşık süreçlerinizi optimize eder.' },
+  { question: 'Sistem Hangi Dokümanları Destekler?', answer: 'Risk değerlendirme raporları, acil durum eylem planları, eğitim katılım tutanakları dahil olmak üzere tüm temel İSG dokümanlarını saniyeler içinde oluşturmanızı sağlar.' },
+  { question: 'Verilerim Güvende Mi?', answer: 'Askeri düzeyde şifreleme ve KVKK uyumlu veri merkezlerimiz ile verileriniz %100 güvence altındadır.' },
+  { question: 'Nasıl Başlayabilirim?', answer: 'Hemen ücretsiz bir hesap oluşturarak 14 günlük deneme sürenizi başlatabilir, İSG süreçlerinizi dijitalleştirmeye adım atabilirsiniz.' }
+];
+
+export default function Auth({ onLogin }: AuthProps) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
-  };
+  const particlesInit = useCallback(async (engine: Engine) => {
+    await loadFull(engine);
+  }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const particlesLoaded = useCallback(async (container: any) => {
+    console.log(container);
+  }, []);
+
+  const particlesOptions = useMemo(() => ({
+    background: {
+      color: {
+        value: '#050510',
+      },
+    },
+    fpsLimit: 120,
+    interactivity: {
+      events: {
+        onHover: {
+          enable: true,
+          mode: 'repulse',
+        },
+      },
+      modes: {
+        repulse: {
+          distance: 100,
+          duration: 0.4,
+        },
+      },
+    },
+    particles: {
+      color: {
+        value: '#eab308', // Gold color match
+      },
+      links: {
+        color: '#eab308',
+        distance: 200,
+        enable: true,
+        opacity: 0.2,
+        width: 1,
+      },
+      move: {
+        direction: 'none' as const,
+        enable: true,
+        outModes: {
+          default: 'bounce' as const,
+        },
+        random: false,
+        speed: 0.8,
+        straight: false,
+      },
+      number: {
+        density: {
+          enable: true,
+          area: 800,
+        },
+        value: 120,
+      },
+      opacity: {
+        value: 0.4,
+      },
+      shape: {
+        type: 'circle',
+      },
+      size: {
+        value: { min: 1, max: 2 },
+      },
+    },
+    detectRetina: true,
+  }), []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     setMessage(null);
-    
-    if (mode === 'forgot_password') {
-      if (!formData.email) {
-        setMessage({ type: 'error', text: 'Lütfen e-posta adresinizi giriniz.' });
-        return;
-      }
-      setTimeout(() => {
-        setMessage({ type: 'success', text: 'Şifre sıfırlama talimatları e-posta adresinize gönderildi.' });
-      }, 1000);
-      return;
-    }
 
-    if (!formData.email || !formData.password) {
-      setMessage({ type: 'error', text: 'Lütfen e-posta ve şifrenizi giriniz.' });
-      return;
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      onLogin();
+    } catch (err) {
+      setMessage({ type: 'error', text: 'Sistem bağlantısı kurulamadı. Lütfen tekrar deneyin.' });
+    } finally {
+      setLoading(false);
     }
-
-    setTimeout(() => {
-      onAuthSuccess({
-        id: '1',
-        name: formData.name || 'Zeyron Admin',
-        email: formData.email,
-        companyName: formData.companyName || 'İSG Kurumu',
-        role: UserRole.ADMIN,
-        subscriptionPlan: SubscriptionPlan.PRO,
-        subscriptionEndDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-        documentsGenerated: 145,
-        status: 'active'
-      });
-    }, 1000);
   };
 
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 100, damping: 10 }
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#0E1117] font-sans selection:bg-yellow-500/30 selection:text-white">
+    <div className="min-h-screen bg-[#050510] text-slate-300 relative overflow-hidden font-sans flex flex-col justify-between selection:bg-yellow-500/30 selection:text-yellow-200">
+      
+      {/* Dynamic Background */}
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        loaded={particlesLoaded}
+        options={particlesOptions}
+        className="absolute inset-0 z-0"
+      />
+
+      {/* Floating Orbs / Glow Effects */}
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-[10%] left-[10%] w-[500px] h-[500px] bg-yellow-500/10 rounded-full blur-[150px] pointer-events-none z-0"
+      />
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.3, 1],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        className="absolute bottom-[10%] right-[10%] w-[600px] h-[600px] bg-amber-600/10 rounded-full blur-[150px] pointer-events-none z-0"
+      />
+
+      {/* Background Video (Simulated overlay since we have particles, but we can add a subtle noise/grid) */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] z-0 mix-blend-overlay pointer-events-none"></div>
+      
       {/* Top Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0E1117]/80 backdrop-blur-xl border-b border-white/5 shadow-2xl transition-all">
-        <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
-           <div className="flex flex-col items-center justify-center transform hover:scale-105 transition-transform cursor-pointer">
-             <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="h-16 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,215,0,0.5)] mix-blend-screen" />
-           </div>
-           
-           <div className="hidden md:flex items-center gap-10">
-             <button onClick={() => scrollToSection('vision')} className="text-[13px] text-slate-300 hover:text-yellow-400 font-bold uppercase tracking-[0.2em] transition-colors">Vizyonumuz</button>
-             <button onClick={() => scrollToSection('faq')} className="text-[13px] text-slate-300 hover:text-yellow-400 font-bold uppercase tracking-[0.2em] transition-colors">S.S.S</button>
-           </div>
-           
-           <div className="flex items-center gap-6">
-             <button onClick={() => { setMode('register'); scrollToSection('auth_section'); }} className="text-xs text-slate-300 hover:text-white font-bold tracking-widest uppercase transition-colors hidden sm:block">Kayıt Ol</button>
-             <button onClick={() => { setMode('login'); scrollToSection('auth_section'); }} className="px-8 py-3.5 bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-black text-[13px] font-black uppercase tracking-[0.2em] rounded-xl shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all hover:scale-105">
-               Sisteme Gir
-             </button>
-           </div>
+      <motion.nav 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="w-full flex justify-between items-center px-10 py-6 absolute top-0 left-0 z-50 border-b border-white/5 backdrop-blur-md bg-black/20"
+      >
+        <div className="flex items-center gap-4 group">
+          <div className="relative w-12 h-12 flex items-center justify-center rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 shadow-[0_0_20px_rgba(234,179,8,0.4)] group-hover:shadow-[0_0_30px_rgba(234,179,8,0.6)] transition-all duration-300">
+            <Shield className="w-6 h-6 text-[#050510] z-10" />
+            <div className="absolute inset-0 border border-yellow-200/30 rounded-2xl"></div>
+          </div>
+          <motion.div 
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-col"
+          >
+            <span className="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-amber-600 drop-shadow-sm uppercase">ISG Zeyron</span>
+            <span className="text-[0.65rem] tracking-[0.2em] text-yellow-500/70 font-semibold uppercase">Premium İş Güvenliği Asistanı</span>
+          </motion.div>
         </div>
-      </nav>
-
-      {/* Hero / Landing Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-24 overflow-hidden">
-        {/* Glows */}
-        <div className="absolute w-[1000px] h-[1000px] bg-yellow-600/15 rounded-full mix-blend-screen filter blur-[120px] opacity-70 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(45deg, #ffffff 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
         
-        {/* Big Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.015] select-none pointer-events-none">
-          <h1 className="text-[18vw] font-black text-white whitespace-nowrap tracking-[0.05em] text-center">
-            ZEYRON
-          </h1>
+        <div className="hidden md:flex gap-8 items-center text-sm font-medium tracking-wide">
+          <a href="#vision" className="text-slate-400 hover:text-yellow-400 transition-colors uppercase text-xs">VİZYON</a>
+          <a href="#features" className="text-slate-400 hover:text-yellow-400 transition-colors uppercase text-xs">ÖZELLİKLER</a>
+          <a href="#faq" className="text-slate-400 hover:text-yellow-400 transition-colors uppercase text-xs">S.S.S.</a>
+        </div>
+      </motion.nav>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col lg:flex-row relative z-10 pt-28 pb-10">
+        
+        {/* Left Column: Hero & Marketing */}
+        <div className="flex-1 px-10 lg:px-20 flex flex-col justify-center py-10 overflow-y-auto custom-scrollbar h-[calc(100vh-8rem)]">
+          
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="max-w-2xl"
+          >
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-yellow-500/20 text-yellow-500 text-xs font-bold uppercase tracking-widest mb-8 shadow-inner shadow-yellow-500/10 backdrop-blur-sm">
+              <Rocket className="w-4 h-4" />
+              <span>Geleceğin İSG Teknolojisi</span>
+            </motion.div>
+
+            <motion.h1 
+              variants={itemVariants} 
+              className="text-5xl lg:text-7xl font-black mb-6 leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-slate-500 tracking-tight"
+            >
+              Doküman Yönetiminde <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600 filter drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]">Uzay Çağına</span> Geçin.
+            </motion.h1>
+
+            <motion.p variants={itemVariants} className="text-lg lg:text-xl text-slate-400 mb-12 leading-relaxed max-w-xl font-light">
+              Yapay zeka ile güçlendirilmiş altyapı, fütüristik tasarım ve sıfır hata toleransı. 
+              İş sağlığı ve güvenliği profesyonelleri için <span className="font-semibold text-yellow-500/90">nihai komuta merkezi.</span>
+            </motion.p>
+
+            {/* Vision Cards Grid */}
+            <div id="vision" className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20 relative">
+              {/* Card glow behind cards */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-r from-yellow-500/5 via-transparent to-amber-500/5 blur-3xl rounded-full z-[-1] pointer-events-none"></div>
+              
+              <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className="group p-6 rounded-2xl bg-black/40 border border-white/10 hover:border-yellow-500/40 hover:bg-yellow-500/[0.05] transition-all duration-300 relative overflow-hidden backdrop-blur-xl shadow-xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <Cpu className="w-8 h-8 text-yellow-500 mb-4 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)] transform group-hover:scale-110 transition-transform" />
+                <h3 className="text-white font-bold text-lg mb-2">Akıllı Otomasyon</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">Binlerce veriyi saniyeler içinde analiz edip, şirketinize özel formları otomatik oluşturur.</p>
+              </motion.div>
+              
+              <motion.div variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} className="group p-6 rounded-2xl bg-black/40 border border-white/10 hover:border-yellow-500/40 hover:bg-yellow-500/[0.05] transition-all duration-300 relative overflow-hidden backdrop-blur-xl shadow-xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <Eye className="w-8 h-8 text-amber-500 mb-4 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)] transform group-hover:scale-110 transition-transform" />
+                <h3 className="text-white font-bold text-lg mb-2">Canlı Önizleme</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">Değişiklikleri iframe teknolojisiyle anında ve %100 doğrulukla tam ekranda görün.</p>
+              </motion.div>
+            </div>
+
+            {/* FAQ Section */}
+            <div id="faq" className="mt-10">
+              <motion.h2 variants={itemVariants} className="text-sm uppercase tracking-widest text-slate-500 font-bold mb-6 flex items-center gap-3">
+                <Info className="w-4 h-4 text-slate-400" /> Sıkça Sorulan Sorular
+              </motion.h2>
+              <div className="space-y-3">
+                {FAQ_ITEMS.map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    variants={itemVariants}
+                    className="p-5 rounded-xl border border-white/5 bg-white/[0.015] hover:bg-white/[0.03] transition-colors backdrop-blur-sm"
+                  >
+                    <h4 className="text-white font-medium text-sm mb-2 flex items-start gap-2">
+                      <span className="text-yellow-500 mt-0.5">•</span>
+                      {item.question}
+                    </h4>
+                    <p className="text-sm text-slate-400 pl-4">{item.answer}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+          </motion.div>
+
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-20 py-20">
-           {/* Marketing Text Left */}
-           <div className="flex-1 flex flex-col justify-center items-start text-left">
-              <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-yellow-500/30 bg-gradient-to-r from-yellow-500/10 to-transparent text-yellow-400 text-xs font-black tracking-[0.2em] uppercase mb-8">
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse shadow-[0_0_10px_rgba(250,204,21,1)]"></span> 2026 EKRAN GÜNCELLEMESİ AKTİF
+        {/* Right Column: Auth Panel */}
+        <div className="w-full lg:w-[550px] relative px-6 lg:px-12 flex items-center justify-center shrink-0 h-[calc(100vh-8rem)]">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, x: 20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 100, delay: 0.2 }}
+            className="w-full relative"
+          >
+            {/* Panel Glow */}
+            <div className="absolute -inset-0.5 bg-gradient-to-b from-yellow-500/20 to-transparent rounded-[2.5rem] blur-xl opacity-60"></div>
+            `p-4 rounded-xl mb-6 flex items-start gap-3 border text-sm font-medium ${message.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-500'}`
+            <div className="relative bg-[#090912]/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 lg:p-10 shadow-2xl shadow-black">
+              
+              <div className="mb-10 text-center">
+                <motion.div 
+                  whileHover={{ rotate: 180 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-16 h-16 mx-auto bg-gradient-to-br from-yellow-400/10 to-amber-600/10 rounded-2xl flex items-center justify-center mb-6 border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.2)]"
+                >
+                  <Fingerprint className="w-8 h-8 text-yellow-500" />
+                </motion.div>
+                <h2 className="text-2xl font-bold text-white mb-2 tracking-tight">Sisteme Giriş Yap</h2>
+                <p className="text-slate-400 text-sm">Zeyron ISG Komuta Merkezine hoş geldiniz.</p>
               </div>
-              
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-8 tracking-tighter leading-[1.05]">
-                Türkiye'nin <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-200 to-amber-500 drop-shadow-sm">En Gelişmiş İSG</span> <br/>Yönetim Platformu.
-              </h1>
-              
-              <p className="text-slate-400 text-lg md:text-xl max-w-2xl leading-relaxed mb-12 font-medium">
-                {LANDING_CONTENT.hero.subtitle} Güvenlik, Hız ve %100 Yasal Uyumluluk ile işlemlerinizi dijitalleştiriyoruz.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
-                 <button onClick={() => scrollToSection('auth_section')} className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black uppercase tracking-[0.2em] rounded-2xl shadow-[0_0_40px_rgba(250,204,21,0.4)] transition-all hover:-translate-y-1 flex items-center justify-center gap-3">
-                   HEMEN BAŞLA <ArrowRight size={22} className="animate-bounce-x"/>
-                 </button>
-                 <button onClick={() => scrollToSection('vision')} className="w-full sm:w-auto px-10 py-5 bg-[#171A23] hover:bg-[#1E2330] text-white border border-white/10 hover:border-yellow-500/50 font-bold uppercase tracking-[0.2em] rounded-2xl transition-all">
-                   SİSTEMİ İNCELE
-                 </button>
-              </div>
-           </div>
 
-           {/* Hero App Preview / Auth Block Right */}
-           <div id="auth_section" className="w-full lg:w-[500px] shrink-0 transform hover:scale-[1.02] transition-transform duration-500">
-              <div className="bg-gradient-to-b from-[#151923] to-[#0D1017] border border-white/10 p-10 sm:p-12 rounded-[2.5rem] shadow-[0_40px_80px_rgba(0,0,0,0.8)] relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500"></div>
-                
-                <div className="flex justify-between items-center mb-10">
-                  <h2 className="text-2xl font-black text-white tracking-widest uppercase">
-                    {mode === 'login' ? 'GİRİŞ YAP' : mode === 'register' ? 'YENİ KAYIT' : 'ŞİFRE SIFIRLA'}
-                  </h2>
-                  <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded bg-yellow-500/10 text-yellow-500 text-[10px] font-bold uppercase tracking-wider border border-yellow-500/20">
-                    <Lock size={12} /> SSL Secure
+              {message && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`p-4 rounded-xl mb-6 flex items-start gap-3 border text-sm font-medium ${message.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}
+                >
+                  <Info className="w-4 h-4 shrink-0 mt-0.5" />
+                  <p>{message.text}</p>
+                </motion.div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">E-Posta Adresi</label>
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Mail className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-500 transition-colors" />
+                    </div>
+                    <input
+                      required
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="block w-full pl-12 pr-4 py-4 border border-white/5 rounded-xl bg-white/[0.03] text-white placeholder-slate-600 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:bg-white/[0.05] transition-all shadow-inner"
+                      placeholder="isguzmani@firma.com"
+                    />
                   </div>
                 </div>
-                
-                {message && (
-                    <div className={`p-5 rounded-2xl mb-8 flex items-start gap-4 border ${message.type === 'success' ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-red-500/10 border-red-500/30 text-red-500'}`}>
-                  </div>
-                )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {mode === 'register' && (
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none"><UserIcon className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-400 transition-colors" /></div>
-                      <input type="text" name="name" value={formData.name} onChange={handleChange} className="block w-full pl-14 bg-[#0A0C10] border border-white/10 text-white placeholder-slate-600 rounded-2xl py-4.5 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none text-sm transition-all shadow-inner" placeholder="Ad Soyad" />
-                    </div>
-                  )}
-
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none"><Mail className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-400 transition-colors" /></div>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="block w-full pl-14 bg-[#0A0C10] border border-white/10 text-white placeholder-slate-600 rounded-2xl py-4.5 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none text-sm transition-all shadow-inner" placeholder="Kurumsal E-Posta Adresi" />
-                  </div>
-
-                  {mode !== 'forgot_password' && (
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none"><Lock className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-400 transition-colors" /></div>
-                      <input type="password" name="password" value={formData.password} onChange={handleChange} className="block w-full pl-14 bg-[#0A0C10] border border-white/10 text-white placeholder-slate-600 rounded-2xl py-4.5 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none text-sm transition-all shadow-inner tracking-widest" placeholder="••••••••" />
-                    </div>
-                  )}
-
-                  <button type="submit" className="w-full py-5 bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-black text-sm font-black uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg hover:shadow-[0_0_25px_rgba(250,204,21,0.5)] mt-4">
-                    {mode === 'login' ? 'PLATFORMA GİRİŞ' : mode === 'register' ? 'ÜYELİK OLUŞTUR' : 'BAĞLANTI GÖNDER'}
-                  </button>
-
-                  <div className="flex justify-between items-center text-xs font-bold text-slate-500 pt-6 border-t border-white/10">
-                    <button type="button" onClick={() => setMode(mode === 'login' ? 'register' : 'login')} className="hover:text-white uppercase tracking-wider transition-colors">
-                      {mode === 'login' ? 'YENİ HESAP AÇ' : 'GİRİŞ EKRANI'}
-                    </button>
-                    {mode === 'login' && (
-                      <button type="button" onClick={() => setMode('forgot_password')} className="hover:text-yellow-400 uppercase tracking-wider transition-colors">ŞİFREMİ UNUTTUM</button>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between ml-1">
+                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Şifre</label>
+                    {isLogin && (
+                      <a href="#" className="text-xs text-yellow-500 hover:text-yellow-400 transition-colors">Şifremi Unuttum</a>
                     )}
                   </div>
-                </form>
-              </div>
-           </div>
-        </div>
-        
-        {/* Scroll Down Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-500 opacity-50">
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Aşağı Kaydır</span>
-          <ChevronDown size={20} />
-        </div>
-      </section>
-
-      {/* Vision & Info Section */}
-      <section id="vision" className="py-32 bg-[#0A0C10] relative">
-         <div className="max-w-7xl mx-auto px-6">
-           <div className="text-center mb-24 relative">
-              <h2 className="text-4xl lg:text-5xl font-black text-white mb-8 tracking-widest uppercase inline-block border-b-2 border-yellow-500 pb-4">{LANDING_CONTENT.vision.title}</h2>
-              <p className="text-slate-400 max-w-4xl mx-auto text-xl leading-relaxed">{LANDING_CONTENT.vision.description}</p>
-           </div>
-           
-           <div className="grid md:grid-cols-3 gap-10">
-              {[
-                { title: 'Dinamik Şablonlar', desc: 'Binlerce varyans ve etiket alt yapısıyla tek kaynaktan yüzlerce belgeyi saniyeler içinde eksiksiz edinin.', icon: <CheckCircle size={40} className="text-yellow-500 mb-6 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]"/> },
-                { title: 'Sıfır İnsan Hatası', desc: 'Otomatik doldurulan senkronize alanlar sayesinde kopyala-yapıştır hatalarına ve eski veri unutulmalarına son verin.', icon: <CheckCircle size={40} className="text-yellow-500 mb-6 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]"/> },
-                { title: 'Ultra Güvenli Sunucular', desc: 'Bulut altyapısında dosyalarınız modern kriptografi mimarisi ile korunur, yetkisiz 3. parti erişime kapalıdır.', icon: <CheckCircle size={40} className="text-yellow-500 mb-6 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]"/> }
-              ].map((item, i) => (
-                <div key={i} className="bg-[#12151C] border border-white/5 p-10 rounded-[2.5rem] hover:border-yellow-500/50 hover:bg-[#161a23] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
-                   {item.icon}
-                   <h3 className="text-2xl font-black text-white mb-4 tracking-wide">{item.title}</h3>
-                   <p className="text-slate-400 text-[15px] leading-relaxed font-medium">{item.desc}</p>
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Lock className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-500 transition-colors" />
+                    </div>
+                    <input
+                      required
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="block w-full pl-12 pr-4 py-4 border border-white/5 rounded-xl bg-white/[0.03] text-white placeholder-slate-600 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:bg-white/[0.05] transition-all shadow-inner"
+                      placeholder="••••••••"
+                    />
+                  </div>
                 </div>
-              ))}
-           </div>
-         </div>
-      </section>
 
-      {/* FAQ Section */}
-      <section id="faq" className="py-32 bg-[#0E1117] border-y border-white/5 relative overflow-hidden">
-         {/* Background Decor */}
-         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-600/5 rounded-full filter blur-[150px] pointer-events-none"></div>
-         
-         <div className="max-w-4xl mx-auto px-6 relative z-10">
-           <h2 className="text-4xl font-black text-center text-white mb-20 uppercase tracking-[0.1em]">
-             Sıkça Sorulan <span className="text-yellow-500">Sorular</span>
-           </h2>
-           <div className="space-y-6">
-             {LANDING_CONTENT.faq.map((q, i) => (
-               <div key={i} className="bg-[#151923] border border-white/5 hover:border-yellow-500/30 rounded-[2rem] p-8 md:p-10 transition-all duration-300 shadow-lg">
-                 <h3 className="text-xl font-black text-white mb-4 flex items-start gap-4 leading-snug">
-                   <span className="text-yellow-500 flex-shrink-0 text-3xl leading-none">S:</span> {q.q}
-                 </h3>
-                 <p className="text-slate-400 text-lg leading-relaxed pl-12 font-medium">
-                   <span className="text-slate-600 font-black mr-2 text-xl">C:</span> {q.a}
-                 </p>
-               </div>
-             ))}
-           </div>
-         </div>
-      </section>
+                {!isLogin && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="space-y-2"
+                  >
+                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Doğrulama Kodu</label>
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <Shield className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-500 transition-colors" />
+                      </div>
+                      <input
+                        required={!isLogin}
+                        type="text"
+                        className="block w-full pl-12 pr-4 py-4 border border-white/5 rounded-xl bg-white/[0.03] text-white placeholder-slate-600 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:bg-white/[0.05] transition-all shadow-inner"
+                        placeholder="Şirket Kodu"
+                      />
+                    </div>
+                  </motion.div>
+                )}
 
-      {/* Footer */}
-      <footer className="py-16 bg-[#07090E] text-center">
-         <div className="flex justify-center items-center gap-6 mb-10">
-           <img src="/logo.jpeg" alt="İSG Zeyron Footer Logo" className="h-12 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all" />
-         </div>
-         <div className="flex justify-center gap-8 mb-10">
-           <a href="#" className="text-slate-600 hover:text-yellow-500 transition-colors transform hover:scale-110"><Instagram size={28} /></a>
-           <a href="#" className="text-slate-600 hover:text-yellow-500 transition-colors transform hover:scale-110"><Linkedin size={28} /></a>
-           <a href="#" className="text-slate-600 hover:text-yellow-500 transition-colors transform hover:scale-110"><Twitter size={28} /></a>
-         </div>
-         <p className="text-slate-600 text-[11px] tracking-[0.3em] uppercase font-black">© 2026 İSG ZEYRON. TÜM HAKLARI SAKLIDIR.</p>
-      </footer>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-xl text-sm font-bold text-black bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 focus:ring-offset-[#090912] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] mt-6 relative overflow-hidden group"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    {loading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                        Doğrulanıyor...
+                      </>
+                    ) : (
+                      <>
+                        {isLogin ? <LogIn className="w-5 h-5" /> : <UserPlus className="w-5 h-5" />}
+                        {isLogin ? 'Sisteme Giriş Yap' : 'Kayıt Ol'}
+                      </>
+                    )}
+                  </span>
+                  
+                  {/* Button shine effect */}
+                  <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"></div>
+                </motion.button>
+              </form>
+
+              <div className="mt-8 text-center border-t border-white/5 pt-6">
+                <button
+                  onClick={() => setIsLogin(!isLogin)}
+                  className="text-sm text-slate-400 hover:text-white transition-colors flex items-center justify-center gap-2 w-full"
+                >
+                  {isLogin ? (
+                    <>Hesabınız yok mu? <span className="text-yellow-500 font-semibold hover:underline">Hemen Oluşturun</span></>
+                  ) : (
+                    <>Zaten üye misiniz? <span className="text-yellow-500 font-semibold hover:underline">Giriş Yapın</span></>
+                  )}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
     </div>
   );
-};
+}
