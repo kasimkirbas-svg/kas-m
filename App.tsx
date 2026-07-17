@@ -1,5 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from './components/Layout';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '2rem', color: 'red', backgroundColor: '#fee' }}>
+          <h1>Sistem Hatası (Lütfen Kasıma Bildirin):</h1>
+          <pre>{this.state.error.toString()}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 import { Auth } from './pages/Auth';
 import { DocumentEditor } from './pages/DocumentEditor';
 import { APP_NAME } from './constants';
@@ -468,9 +490,9 @@ const App = () => {
   };
 
   return (
-    <>
+    <ErrorBoundary>
       {renderContent()}
-    </>
+    </ErrorBoundary>
   );
 };
 
