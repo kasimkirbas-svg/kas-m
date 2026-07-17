@@ -7,8 +7,10 @@ if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 
-const root = ReactDOM.createRoot(rootElement);
-root.render(
+if (!(rootElement as any)._reactRoot) {
+  (rootElement as any)._reactRoot = ReactDOM.createRoot(rootElement);
+}
+(rootElement as any)._reactRoot.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
