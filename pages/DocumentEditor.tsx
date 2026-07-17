@@ -53,7 +53,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     // Basic replacement for all {keys}
     Object.keys(formData).forEach(key => {
       // Regex escaping and replacement
-      const regex = new RegExp(\{\}, 'g');
+      const regex = new RegExp(`\\{${key}\\}`, 'g');
       updatedHtml = updatedHtml.replace(regex, formData[key] || '');
     });
 
