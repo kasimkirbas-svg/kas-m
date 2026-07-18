@@ -114,9 +114,9 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   const filteredFaqs = faqs.filter(f => f.q.toLowerCase().includes(searchFaq.toLowerCase()) || f.a.toLowerCase().includes(searchFaq.toLowerCase()));
 
   const advantages = [
-    { icon: <Shield className="w-6 h-6 text-yellow-500" />, title: "Mevzuata Uygunluk", desc: "Tüm form ve planlar güncel A Sınıfı İSG mevzuatına göre oluşturulur." },
-    { icon: <Cpu className="w-6 h-6 text-yellow-500" />, title: "Dijital Altyapı", desc: "Kağıt yığınlarını unutun. Sistem veriyi saniyeler içinde dokümana çevirir." },
-    { icon: <Zap className="w-6 h-6 text-yellow-500" />, title: "Pratik Kullanım", desc: "Excel veya Word bilgisi gerekmeden tek panelden otomasyon." }
+    { icon: <Shield className="w-6 h-6 text-[#FFD700]" />, title: "Mevzuata Uygunluk", desc: "Tüm form ve planlar güncel A Sınıfı İSG mevzuatına göre oluşturulur." },
+    { icon: <Cpu className="w-6 h-6 text-[#FFD700]" />, title: "Dijital Altyapı", desc: "Kağıt yığınlarını unutun. Sistem veriyi saniyeler içinde dokümana çevirir." },
+    { icon: <Zap className="w-6 h-6 text-[#FFD700]" />, title: "Pratik Kullanım", desc: "Excel veya Word bilgisi gerekmeden tek panelden otomasyon." }
   ];
 
   const targetUsers = [
@@ -128,7 +128,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   ];
 
   return (
-    <div className="min-h-screen bg-[#05060A] text-slate-300 font-sans selection:bg-yellow-500/30 selection:text-white overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#0A0A0A] text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-white overflow-x-hidden relative">
       
       {/* Dynamic Video Background Architecture */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
@@ -137,17 +137,15 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           loop 
           muted 
           playsInline 
-          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30 mix-blend-screen"
+          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-15"
         >
           <source src="/site23.mp4" type="video/mp4" />
           Tarayıcınız video etiketini desteklemiyor.
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#05060A]/80 via-[#05060A]/50 to-[#05060A]/90"></div>
-        <div className="absolute inset-0 bg-yellow-500/10 mix-blend-color"></div>
+        <div className="absolute inset-0 bg-black/85"></div>
       </div>
 
       {/* Sci-Fi Background Layer */}
-      <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,rgba(234,179,8,0.1)_0%,rgba(5,6,10,0.8)_70%)] pointer-events-none"></div>
       <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] mix-blend-overlay pointer-events-none"></div>
 
       {init && <Particles id="tsparticles" options={particlesOptions} className="fixed inset-0 z-0 pointer-events-none" />}
@@ -234,7 +232,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[1.05]"
           >
             <span className="text-white">İş Sağlığı ve Güvenliği</span> <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 drop-shadow-[0_0_30px_rgba(234,179,8,0.4)]">
+            <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]">
               Dijital Mimarisi
             </span>
           </motion.h1>
@@ -257,16 +255,16 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           >
             <button 
               onClick={onRegisterClick}
-              className="relative w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-black uppercase text-sm tracking-[0.2em] rounded-sm hover:-translate-y-1 transition-all shadow-[0_10px_30px_rgba(234,179,8,0.4)] flex items-center justify-center gap-3 overflow-hidden group"
+              className="relative w-full sm:w-auto px-10 py-5 bg-[#FFD700] text-black font-black uppercase text-sm tracking-[0.2em] hover:-translate-y-1 transition-all flex items-center justify-center gap-3 overflow-hidden group shadow-[0_0_20px_rgba(255,215,0,0.3)] border border-[#FFD700]/50"
             >
               <div className="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
               SİSTEME KAYIT OL <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button 
               onClick={onLoginClick}
-              className="w-full sm:w-auto px-10 py-5 bg-zinc-900/80 backdrop-blur-md border border-white/10 text-white font-bold uppercase text-sm tracking-[0.2em] rounded-sm hover:bg-white/5 hover:border-yellow-500/50 transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-10 py-5 bg-[#111111] text-[#FFD700] font-bold uppercase text-sm tracking-[0.2em] hover:bg-[#1a1a1a] border border-white/10 transition-all flex items-center justify-center gap-2"
             >
-              <Target className="w-5 h-5 text-yellow-500" /> SİSTEME GİRİŞ YAP
+              <Target className="w-5 h-5 text-[#FFD700]" /> SİSTEME GİRİŞ YAP
             </button>
           </motion.div>
         </div>
@@ -309,23 +307,24 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                 key={idx}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -3 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.2 }}
-                className="group relative bg-[#05060A] p-10 border border-white/5 hover:border-yellow-500/50 transition-all duration-500 overflow-hidden"
+                className="group relative bg-[#111111] p-10 border border-white/10 hover:border-[#FFD700]/50 transition-all duration-500 overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
               >
                 {/* Hover Glow */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-yellow-500/5 rounded-full blur-3xl group-hover:bg-yellow-500/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
+                <div className="absolute top-0 right-0 w-48 h-48 bg-[#FFD700]/5 rounded-full blur-3xl group-hover:bg-[#FFD700]/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
                 
                 <div className="relative z-10">
-                  <div className="w-14 h-14 bg-zinc-900 border border-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-yellow-500/50 transition-all duration-500 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                  <div className="w-14 h-14 bg-[#0A0A0A] border border-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-[#FFD700]/50 transition-all duration-500 shadow-[0_0_15px_rgba(0,0,0,0.8)]">
                     {adv.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4 tracking-wide group-hover:text-yellow-400 transition-colors">{adv.title}</h3>
+                  <h3 className="text-xl font-bold text-white mb-4 tracking-wide group-hover:text-[#FFD700] group-hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-all">{adv.title}</h3>
                   <p className="text-slate-400 font-light leading-relaxed">{adv.desc}</p>
                 </div>
                 
                 {/* Tech Line Bottom */}
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/20 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700"></div>
+                <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/40 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700"></div>
               </motion.div>
             ))}
           </div>
