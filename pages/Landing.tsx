@@ -286,47 +286,79 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         </motion.div>
       </section>
 
-      {/* Advantages Engine */}
-      <section id="avantajlar" className="py-24 relative z-10 bg-[#0A0D14] border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* Advantages Engine -> Replaced with Video Sector Showcase */}
+      <section id="avantajlar" className="py-32 relative z-10 bg-[#050505] border-y border-white/5 overflow-hidden">
+        <div className="absolute top-0 right-1/4 w-[40vw] h-[40vw] bg-[#FFD700]/5 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-20"
+            className="text-center mb-24"
           >
-            <h2 className="text-xs font-black text-yellow-500 tracking-[0.3em] uppercase mb-4 flex justify-center items-center gap-2">
-              <Activity className="w-4 h-4" /> Sistem Motoru
+            <h2 className="text-xs font-black text-[#FFD700] tracking-[0.4em] uppercase flex justify-center items-center gap-3">
+              <span className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#FFD700]"></span>
+              Sektörel Operasyon Ağı
+              <span className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#FFD700]"></span>
             </h2>
-            <p className="text-3xl md:text-5xl font-black text-white">Hiper Boşluk Altyapısı</p>
+            <p className="text-3xl md:text-5xl font-black text-white mt-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">Dijital İSG Ağları</p>
           </motion.div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {advantages.map((adv, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -3 }}
+          <div className="grid md:grid-cols-2 gap-10">
+            {/* Sector 1: Fabrika */}
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.2 }}
-                className="group relative bg-[#111111] p-10 border border-white/10 hover:border-[#FFD700]/50 transition-all duration-500 overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
-              >
-                {/* Hover Glow */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-[#FFD700]/5 rounded-full blur-3xl group-hover:bg-[#FFD700]/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-                
-                <div className="relative z-10">
-                  <div className="w-14 h-14 bg-[#0A0A0A] border border-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-[#FFD700]/50 transition-all duration-500 shadow-[0_0_15px_rgba(0,0,0,0.8)]">
-                    {adv.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-4 tracking-wide group-hover:text-[#FFD700] group-hover:drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-all">{adv.title}</h3>
-                  <p className="text-slate-400 font-light leading-relaxed">{adv.desc}</p>
+                className="group relative h-[450px] bg-[#111111] rounded-2xl overflow-hidden border-2 border-white/5 hover:border-[#FFD700]/50 transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+            >
+                {/* Background Video */}
+                <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-40 group-hover:opacity-60 transition-opacity duration-700 mix-blend-luminosity">
+                    <source src="/site23.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#FFD700]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                {/* Content */}
+                <div className="absolute inset-0 p-10 flex flex-col justify-end z-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
+                    <div className="w-16 h-16 rounded-xl bg-black/80 backdrop-blur-md border border-white/10 flex items-center justify-center mb-6 group-hover:border-[#FFD700]/50 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                       <Cpu className="w-8 h-8 text-[#FFD700]" />
+                    </div>
+                    <span className="px-4 py-1.5 bg-[#FFD700] text-black text-[10px] font-black tracking-widest uppercase rounded self-start mb-4 shadow-[0_0_15px_rgba(255,215,0,0.4)]">Endüstri 4.0</span>
+                    <h3 className="text-3xl font-black text-white mb-3">Fabrika Otonomisi</h3>
+                    <p className="text-slate-300 font-light leading-relaxed max-w-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                        Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları ve LOTO operasyonları.
+                    </p>
                 </div>
-                
-                {/* Tech Line Bottom */}
-                <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/40 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700"></div>
-              </motion.div>
-            ))}
+            </motion.div>
+
+            {/* Sector 2: Insaat/Santiye */}
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="group relative h-[450px] bg-[#111111] rounded-2xl overflow-hidden border-2 border-white/5 hover:border-[#FFD700]/50 transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+            >
+                {/* Fallback to image if video not distinct, but sticking to video player pattern */}
+                <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-40 group-hover:opacity-60 transition-opacity duration-700 mix-blend-luminosity">
+                    <source src="/site23.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-blue-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                <div className="absolute inset-0 p-10 flex flex-col justify-end z-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
+                    <div className="w-16 h-16 rounded-xl bg-black/80 backdrop-blur-md border border-white/10 flex items-center justify-center mb-6 group-hover:border-blue-500/50 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                       <Shield className="w-8 h-8 text-blue-400 group-hover:text-blue-500" />
+                    </div>
+                    <span className="px-4 py-1.5 bg-blue-500 text-white text-[10px] font-black tracking-widest uppercase rounded self-start mb-4 shadow-[0_0_15px_rgba(59,130,246,0.4)]">Ağır Risk Sınıfı</span>
+                    <h3 className="text-3xl font-black text-white mb-3">Şantiye Protokolleri</h3>
+                    <p className="text-slate-300 font-light leading-relaxed max-w-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                        Yüksekte çalışma, iskele kontrolleri ve kapalı alan izin sistemlerinin gerçek zamanlı onayı.
+                    </p>
+                </div>
+            </motion.div>
           </div>
         </div>
       </section>
