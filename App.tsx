@@ -38,11 +38,16 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
 
 const App = () => {
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('isg_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('isg_user');
+      return saved && saved !== "undefined" ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
   });
   const [currentView, setCurrentView] = useState(() => {
-    return localStorage.getItem('isg_view') || 'landing';
+    const view = localStorage.getItem('isg_view');
+    return view && view !== "undefined" ? view : 'landing';
   }); 
 
   useEffect(() => {
@@ -119,6 +124,11 @@ const App = () => {
           onSave={() => setCurrentView('dashboard')} 
         />
       );
+    }
+
+    if (currentView === 'dashboard' && !user) {
+      setCurrentView('landing');
+      return null;
     }
 
     if (user && currentView === 'dashboard') {
@@ -363,7 +373,13 @@ const App = () => {
       );
     }
 
-    return null;
+    // Ortada boş ekranda kalmaması adına güvenlik dönüşü / Yönlendirme (Eğer sayfa state uyuşmuyorsa)
+    return (
+      <Landing 
+        onLoginClick={() => setCurrentView('auth')} 
+        onRegisterClick={() => setCurrentView('auth')} 
+      />
+    );
   };
 
   return (
