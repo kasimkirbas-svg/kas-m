@@ -393,47 +393,50 @@ const App = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mb-12"
             >
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-6 relative z-10">
                 <Hexagon className="w-4 h-4 text-[#FFD700]" />
                 <h3 className="text-xs font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Sektörel Bağlantılar</h3>
-                <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent ml-4"></div>
               </div>
 
-              <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x relative z-10 -mx-4 px-4 md:mx-0 md:px-0">
+              <div className="flex gap-4 overflow-x-auto pb-6 custom-scrollbar snap-x relative z-10 -mx-4 px-4 md:mx-0 md:px-0">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`snap-start shrink-0 px-8 py-5 transition-all duration-300 relative group overflow-hidden ${
+                  className={`snap-start shrink-0 w-[200px] h-[120px] rounded-xl transition-all duration-500 relative group overflow-hidden ${
                     selectedCategory === null 
-                      ? 'bg-[#111111] border-b-2 border-[#FFD700] text-[#FFD700] shadow-[inset_0_-20px_40px_-20px_rgba(255,215,0,0.2)]' 
-                      : 'bg-[#0A0A0A] border border-white/5 text-slate-400 hover:text-white hover:border-[#FFD700]/30 hover:bg-[#111111]'
+                      ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] scale-100' 
+                      : 'border border-white/5 hover:border-[#FFD700]/50 scale-95 hover:scale-100'
                   }`}
                 >
-                  <div className={`flex items-center gap-3 relative z-10 ${selectedCategory === null ? 'scale-105' : 'group-hover:scale-105'} transition-transform`}>
-                    <ShieldAlert size={18} className={selectedCategory === null ? "text-[#FFD700]" : "text-slate-500"} />
-                    <span className="whitespace-nowrap text-xs uppercase tracking-[0.2em] font-black">TÜM MODÜLLER</span>
+                  <div className="absolute inset-0 bg-[#0A0A0A]">
+                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity mix-blend-luminosity"></div>
+                    <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === null ? 'from-[#FFD700]/40 to-black/80' : 'from-black to-black/50'}`}></div>
                   </div>
-                  {selectedCategory === null && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#FFD700]/5 to-transparent pointer-events-none"></div>
-                  )}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10">
+                    <ShieldAlert size={28} className={selectedCategory === null ? "text-black drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "text-[#FFD700]"} />
+                    <span className={`text-xs uppercase tracking-[0.2em] font-black ${selectedCategory === null ? "text-white" : "text-slate-300"} group-hover:text-white`}>TÜMÜ</span>
+                  </div>
                 </button>
                 
                 {uniqueCategories.map((category) => (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`snap-start shrink-0 px-8 py-5 transition-all duration-300 group overflow-hidden ${
+                    className={`snap-start shrink-0 w-[200px] h-[120px] rounded-xl transition-all duration-500 relative group overflow-hidden ${
                       selectedCategory === category 
-                        ? 'bg-[#111111] border-b-2 border-[#FFD700] text-[#FFD700] shadow-[inset_0_-20px_40px_-20px_rgba(255,215,0,0.2)]' 
-                        : 'bg-[#0A0A0A] border border-white/5 text-slate-400 hover:text-white hover:border-[#FFD700]/30 hover:bg-[#111111]'
+                        ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] scale-100' 
+                        : 'border border-white/5 hover:border-[#FFD700]/50 scale-95 hover:scale-100'
                     }`}
                   >
-                    <div className="flex items-center gap-3 relative z-10 group-hover:scale-105 transition-transform">
-                      {getCategoryIcon(category)}
-                      <span className="whitespace-nowrap text-xs uppercase tracking-[0.2em] font-bold">{category}</span>
+                    <div className="absolute inset-0 bg-[#0A0A0A]">
+                      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity mix-blend-luminosity"></div>
+                      <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === category ? 'from-[#FFD700]/40 to-black/80' : 'from-black to-black/50'}`}></div>
                     </div>
-                    {selectedCategory === category && (
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#FFD700]/5 to-transparent pointer-events-none"></div>
-                    )}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 p-4 text-center">
+                      <div className={selectedCategory === category ? "text-black drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "text-[#FFD700]"}>
+                        {getCategoryIcon(category)}
+                      </div>
+                      <span className={`text-[10px] leading-tight uppercase tracking-[0.2em] font-bold ${selectedCategory === category ? "text-white" : "text-slate-300"} group-hover:text-white`}>{category}</span>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -444,14 +447,16 @@ const App = () => {
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                transition={{ duration: 0.8, delay: 0.5 }}
+               className="bg-[#0A0A0A] rounded-2xl border border-white/5 p-8 relative overflow-hidden"
             >
-              <div className="flex items-center gap-3 mb-8">
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/4"></div>
+              
+              <div className="flex items-center gap-3 mb-8 relative z-10">
                 <div className="w-2 h-2 bg-[#FFD700] rounded-full shadow-[0_0_15px_rgba(255,215,0,1)] animate-pulse"></div>
-                <h3 className="text-sm font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Veritabanı Sonuçları ({filteredTemplates.length})</h3>
-                <div className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
+                <h3 className="text-sm font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Arşiv Sonuçları ({filteredTemplates.length})</h3>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
                 <AnimatePresence>
                   {filteredTemplates.map((template, idx) => (
                     <motion.div 
