@@ -77,12 +77,14 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
          )}
          
          <div className="flex items-center gap-3">
-             {/* Siyahlıksız temizlenmiş logo */}
-               <div className="w-16 h-16 flex items-center justify-center shrink-0 mix-blend-screen bg-transparent rounded-full overflow-hidden shadow-inner border border-white/5">
-                  <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[120%] h-auto object-contain mix-blend-screen mix-blend-lighten filter brightness-110 drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] transition-transform duration-500 hover:scale-110" />
+             {/* Sci-Fi Hexagon Logo Container */}
+             <div className="relative w-12 h-12 flex items-center justify-center shrink-0">
+               <div className="absolute inset-0 bg-yellow-500/20 rotate-45 transform blur-sm transition-all duration-300"></div>
+               <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#eab308" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute z-20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
              </div>
-             <span className="text-2xl font-black tracking-tight text-white hidden sm:block">
-               İSG <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]">Zeyron</span>
+             <span className="text-xl font-black tracking-[0.2em] text-white hidden sm:block">
+               SYS_<span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]">ZEYRON</span>
              </span>
           </div>
       </motion.div>

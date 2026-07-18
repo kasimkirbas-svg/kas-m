@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Database, CheckCircle, Smartphone, Lock, Rocket, Sparkles, Building2, HardHat, Factory, Briefcase } from "lucide-react";
+import React, { useEffect, useState, useMemo } from 'react';
+import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, Hexagon, ShieldAlert, Target } from 'lucide-react';
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import type { Engine } from "@tsparticles/engine";
 
-export default function Landing({ onStart }: { onStart: () => void }) {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [isScrolled, setIsScrolled] = useState(false);
+interface LandingProps {
+  onLoginClick: () => void;
+  onRegisterClick: () => void;
+}
+
+export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick }) => {
   const [init, setInit] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     initParticlesEngine(async (engine: Engine) => {
@@ -18,10 +21,10 @@ export default function Landing({ onStart }: { onStart: () => void }) {
     });
 
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const particlesOptions = useMemo(() => ({
@@ -35,23 +38,23 @@ export default function Landing({ onStart }: { onStart: () => void }) {
       events: {
         onHover: {
           enable: true,
-          mode: "repulse",
+          mode: "grab",
         },
       },
       modes: {
-        repulse: {
-          distance: 120,
-          duration: 0.8,
+        grab: {
+          distance: 140,
+          links: { opacity: 0.5, color: "#eab308" }
         },
       },
     },
     particles: {
       color: {
-        value: "#eab308", // Gold color match
+        value: "#eab308",
       },
       links: {
         color: "#eab308",
-        distance: 150,
+        distance: 120,
         enable: true,
         opacity: 0.15,
         width: 1,
@@ -60,9 +63,9 @@ export default function Landing({ onStart }: { onStart: () => void }) {
         direction: "none" as const,
         enable: true,
         outModes: {
-          default: "bounce" as const,
+          default: "out" as const,
         },
-        random: false,
+        random: true,
         speed: 0.5,
         straight: false,
       },
@@ -71,294 +74,225 @@ export default function Landing({ onStart }: { onStart: () => void }) {
           enable: true,
           area: 800,
         },
-        value: 30,
+        value: 40,
       },
       opacity: {
-        value: 0.2,
+        value: 0.3,
+        animation: { enable: true, speed: 1, minimumValue: 0.1 }
       },
       shape: {
-        type: "circle",
+        type: "triangle",
       },
       size: {
-        value: { min: 1, max: 3 },
+        value: { min: 1, max: 2 },
       },
     },
-    detectRetina: true,
+    detectRetina: false,
   }), []);
 
-  const navItems = ["Hakkımızda", "Özellikler", "Hedef Kitle", "SSS", "İletişim"];
+  const navItems = ["Sistem_Mimarisi", "Modüller", "Protokoller"];
 
   const features = [
     {
-      title: "Tamamen Web Tabanlı",
-      desc: "Herhangi bir indirme gerektirmez. Windows, macOS ve mobil cihazlardan anında erişim.",
-      icon: <Smartphone className="w-6 h-6 text-yellow-500" />,
-      colSpan: "md:col-span-2 lg:col-span-1"
+      icon: <Activity className="w-8 h-8 text-yellow-500" />,
+      title: "Dinamik HUD Modülü",
+      description: "Gerçek zamanlı veri senkronizasyonu ile belgelerinizi ışık hızında güncelleyin."
     },
     {
-      title: "Kendi Notlarınızı Ekleyin",
-      desc: "Sadece standart şablonlar değil, kendi tespit ve değerlendirmelerinizi risk analizlerine entegre edin.",
-      icon: <Database className="w-6 h-6 text-yellow-500" />,
-      colSpan: "md:col-span-2 lg:col-span-2"
+      icon: <Cpu className="w-8 h-8 text-yellow-500" />,
+      title: "Merkezi Veri Çekirdeği",
+      description: "Tüm form ve dokümanlarınızı kriptografik şifreleme alt yapısıyla tek çekirdekte toplayın."
     },
     {
-      title: "KVKK Uyumlu Altyapı",
-      desc: "Verileriniz güvende. Dokümanlar oluşturulur, indirilir ve cihazınızda kalır.",
-      icon: <Lock className="w-6 h-6 text-yellow-500" />,
-      colSpan: "md:col-span-2 lg:col-span-2"
-    },
-    {
-      title: "Mevzuata %100 Uygun",
-      desc: "Değişen İSG mevzuatlarına anında entegre edilen dinamik sistem.",
-      icon: <CheckCircle className="w-6 h-6 text-yellow-500" />,
-      colSpan: "md:col-span-2 lg:col-span-1"
+      icon: <ShieldAlert className="w-8 h-8 text-yellow-500" />,
+      title: "Otonom Risk Analizi",
+      description: "Sistem hatalarını ve iş güvenliği risklerini algılayan akıllı algoritmalar."
     }
   ];
 
-  const targetAudience = [
-    { title: "A, B, C Sınıfı İSG Uzmanları", icon: <HardHat className="w-8 h-8 text-slate-300" /> },
-    { title: "İSG Teknikerleri", icon: <Factory className="w-8 h-8 text-slate-300" /> },
-    { title: "OSGB Firmaları", icon: <Building2 className="w-8 h-8 text-slate-300" /> },
-    { title: "İşverenler", icon: <Briefcase className="w-8 h-8 text-slate-300" /> },
-  ];
-
-  const faqs = [
-    { q: "İSG Zeyron nedir?", a: "İSG profesyonelleri ve işletmeler için dijital İSG süreç ve doküman yönetim platformudur." },
-    { q: "Program kurulumu gerekiyor mu?", a: "Hayır, İSG Zeyron tamamen web/bulut tabanlıdır." },
-    { q: "Verilerim güvende mi?", a: "Evet, verileriniz saklanmaz, işlemler tarayıcı ve geçici bağlantılar üzerinden güvenle tamamlanır." },
-    { q: "Abonelik sistemi nasıl çalışır?", a: "Şu anda ücretsiz deneme sürümümüz bulunmuyor; tek doküman oluşturma ile sistemimizi test edebilirsiniz." },
-    { q: "Deneme sürümü sunuyor musunuz?", a: "Deneme sürümü yerine tek belge başına hizmetimizle doğrudan sürece başlayabilirsiniz." }
-  ];
-
   return (
-    <div className="min-h-screen bg-[#050510] text-white font-sans overflow-x-hidden selection:bg-yellow-500/30">
-      
-      {/* Background Particles */}
+    <div className="min-h-screen bg-[#020408] text-slate-300 font-sans selection:bg-yellow-500/30 selection:text-white">
+      {/* Sci-Fi Background Overlay */}
+      <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.03)_0%,rgba(0,0,0,0)_100%)] pointer-events-none"></div>
+      <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+
       {init && (
         <Particles
-          id="tsparticles-landing"
+          id="tsparticles"
           options={particlesOptions}
           className="fixed inset-0 z-0 pointer-events-none"
         />
       )}
 
-      {/* Navbar */}
-      <motion.nav 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300 ${isScrolled ? 'backdrop-blur-xl bg-black/80 border-b border-white/5 shadow-2xl shadow-yellow-500/5' : 'bg-transparent'}`}
-      >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            {/* Logo */}
-            <div className="w-16 h-16 flex items-center justify-center shrink-0 relative transition-transform duration-500 group-hover:scale-105 group-hover:rotate-[-2deg] bg-transparent">
-               <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-full h-full object-contain mix-blend-screen mix-blend-lighten filter brightness-110 drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] relative z-10" />
+      {/* Cybernetic Header */}
+      <header className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${scrolled ? 'bg-[#020408]/90 backdrop-blur-md border-yellow-500/20 py-2 shadow-[0_0_30px_rgba(234,179,8,0.1)]' : 'bg-transparent border-transparent py-4'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <div className="flex items-center gap-4 group cursor-pointer">
+            <div className="relative w-12 h-12 flex items-center justify-center">
+               {/* Glowing hex background instead of broken black box */}
+               <div className="absolute inset-0 bg-yellow-500/20 rotate-45 transform blur-sm group-hover:bg-yellow-500/40 transition-all duration-500"></div>
+               <Hexagon className="w-10 h-10 text-yellow-500 relative z-10 animate-pulse" />
+               <Shield className="w-5 h-5 text-white absolute z-20" />
             </div>
-            <span className="text-2xl font-black tracking-tight text-white hidden sm:block relative">
-              İSG <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]">Zeyron</span>
-            </span>
+            <span className="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-yellow-200 to-yellow-600 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">SYS_ZEYRON</span>
           </div>
 
-          <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
-            {navItems.map(item => (
-              <button 
-                key={item} 
-                onClick={() => {
-                  const el = document.getElementById(item.toLowerCase().replace(/ /g, '-'));
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }} 
-                className="hover:text-yellow-400 transition-colors relative group"
-              >
+          <nav className="hidden md:flex flex-1 justify-center space-x-12">
+            {navItems.map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] relative group overflow-hidden">
                 {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 rounded-full transition-all duration-300 group-hover:w-full"></span>
-              </button>
+                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-yellow-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+              </a>
             ))}
-          </div>
+          </nav>
 
           <div className="flex items-center gap-4">
-            <button onClick={onStart} className="text-sm font-medium text-slate-300 hover:text-white px-4 py-2 transition-colors">
-              Giriş Yap
+            <button 
+              onClick={onLoginClick}
+              className="text-xs tracking-widest text-slate-300 font-bold uppercase hover:text-yellow-500 transition-colors"
+            >
+              [ BAĞLAN ]
             </button>
-            <button onClick={onStart} className="text-sm font-bold text-black bg-gradient-to-r from-yellow-400 to-yellow-600 px-6 py-2.5 rounded-full hover:scale-105 hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] transition-all flex items-center gap-2">
-              Hemen Başla
+            <button 
+              onClick={onRegisterClick}
+              className="px-6 py-2 bg-transparent border border-yellow-500 text-yellow-500 text-xs font-bold uppercase tracking-widest hover:bg-yellow-500 hover:text-black transition-all shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:shadow-[0_0_25px_rgba(234,179,8,0.6)] relative overflow-hidden group"
+            >
+              <span className="absolute w-full h-full bg-yellow-500/20 left-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 skew-x-[-20deg]"></span>
+              <span className="relative z-10 text-shadow-sm">SİSTEME_KAYIT</span>
             </button>
           </div>
         </div>
-      </motion.nav>
+      </header>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 px-6 lg:pt-52 lg:pb-32 flex flex-col items-center justify-center min-h-screen text-center">
-        {/* Animated Background Orbs */}
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-[20%] left-[20%] w-[500px] h-[500px] bg-yellow-500/10 rounded-full blur-[150px] pointer-events-none z-0"
-        />
-        <motion.div 
-          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          className="absolute bottom-[20%] right-[20%] w-[600px] h-[600px] bg-red-600/10 mix-blend-screen rounded-full blur-[150px] pointer-events-none z-0"
-        />
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 max-w-4xl mx-auto flex flex-col items-center"
-        >
-          <div className="px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/5 text-yellow-400 text-xs sm:text-sm font-medium tracking-wide flex items-center gap-2 mb-8 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
-            <Sparkles className="w-4 h-4" />
-            Bulut Tabanlı Yeni Nesil İSG Platformu 🚀
-          </div>
-
-          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[1.1]">
-            İş Sağlığı ve Güvenliği Süreçlerinizi <br className="hidden md:block"/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)] font-extrabold pr-2">Dijitalleştirin.</span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl font-light leading-relaxed">
-            İSG profesyonelleri, OSGB&apos;ler ve işletmeler için akıllı yönetim platformu. Doküman hazırlama ve arşivleme süreçlerinizi tek bir sistemde toplayın, evrak yükünüzü hafifletin.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-center">
-            <button onClick={onStart} className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-extrabold rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] transition-all active:scale-95">
-              Tek Doküman Oluşturarak Dene
-            </button>
-            <button onClick={() => document.getElementById("özellikler")?.scrollIntoView({ behavior: "smooth" })} className="w-full sm:w-auto px-8 py-4 border border-white/20 text-white font-semibold rounded-full hover:bg-white/5 transition-all">
-              Özellikleri Keşfet
-            </button>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Hakkımızda */}
-      <section id="hakkımızda" className="py-24 px-6 relative z-10 border-t border-white/5 bg-zinc-950/20 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="flex-1 space-y-6"
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-yellow-500/20 bg-yellow-500/10 text-yellow-500 text-sm font-bold uppercase tracking-widest mb-4">
-              Kurumsal Kimlik
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight">Geleceğin İSG Ekosistemine <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">Öncülük Ediyoruz!</span></h2>
-            <p className="text-slate-400 text-lg leading-relaxed font-light">
-              Masaüstünüze, yerel disklere ve karmaşık Word şablonlarına mahkumiyetiniz sona erdi. Biz İSG Zeyron olarak sektörü; saniyeler içinde doküman üretebileceğiniz, her zaman yasal mevzuatlara uygun, sıfır kurulum gerektiren bir bulut devrimiyle tanıştırıyoruz.
-            </p>
-            <p className="text-slate-400 text-lg leading-relaxed font-light">
-              İSG uzmanları ve işletmeler için tasarlanmış kusursuz mimarimiz sayesinde evrak işlerine değil, sahadaki güvenliğe odaklanın.
-            </p>
-          </motion.div>
+      <section className="relative pt-40 pb-20 px-6 min-h-screen flex items-center justify-center overflow-hidden z-10">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="flex-1 relative"
-          >
-             <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/20 to-red-500/10 blur-[80px] rounded-full"></div>
-             <div className="relative p-2 flex items-center justify-center bg-transparent">
-               <img src="/logo.jpeg" alt="İSG Kurumsal" className="w-[80%] h-auto mix-blend-screen mix-blend-lighten filter brightness-110 opacity-100 hover:scale-110 drop-shadow-[0_0_20px_rgba(234,179,8,0.5)] transition-transform duration-700" />
+          <div className="relative z-10 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-4 py-2 border border-yellow-500/30 bg-yellow-500/10 rounded-none mb-8">
+              <Zap className="w-4 h-4 text-yellow-500 animate-bounce" />
+              <span className="text-yellow-500 text-xs font-bold tracking-[0.3em] uppercase">V_2.0_Çekirdek_Aktif</span>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-8 leading-[1.1]">
+              <span className="block text-white mb-2">İŞ_GÜVENLİĞİ</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-700 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">
+                KONTROL_ÜSSÜ
+              </span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed border-l-2 border-yellow-500/50 pl-4">
+              Zeyron Otonom Belge Üreticisi, manuel operasyonları hiper hıza çıkarır. 
+              Parametreleri girin, Word (.docx) algoritmalarımız saniyeler içinde binlerce 
+              sayfalık kurumsal raporları sentezlesin.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
+              <button 
+                onClick={onRegisterClick}
+                className="group relative px-8 py-4 bg-yellow-500 text-black font-black uppercase text-sm tracking-[0.2em] overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
+                <span className="flex items-center gap-2 relative z-10">
+                  SİSTEMİ_BAŞLAT <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                {/* Corner Accents */}
+                <div className="absolute top-0 left-0 w-2 h-2 bg-black"></div>
+                <div className="absolute bottom-0 right-0 w-2 h-2 bg-black"></div>
+              </button>
+              
+              <button className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold uppercase text-sm tracking-[0.2em] hover:bg-white/5 hover:border-yellow-500/50 transition-all flex items-center justify-center gap-2 group">
+                <Target className="w-5 h-5 text-slate-400 group-hover:text-yellow-500 transition-colors" /> SIMÜLASYONU_GÖR
+              </button>
+            </div>
+            
+            <div className="mt-16 flex items-center justify-center lg:justify-start gap-8 opacity-60">
+               <div className="text-xs font-bold tracking-widest text-slate-500 flex flex-col gap-1">
+                 <span className="text-yellow-500 text-xl font-black">99.9%</span>
+                 <span>SİSTEM UPTİME</span>
+               </div>
+               <div className="w-px h-8 bg-slate-800"></div>
+               <div className="text-xs font-bold tracking-widest text-slate-500 flex flex-col gap-1">
+                 <span className="text-yellow-500 text-xl font-black">2.4M+</span>
+                 <span>İŞLENEN VERİ BİTİ</span>
+               </div>
+            </div>
+          </div>
+
+          <div className="relative hidden lg:block perspective-1000">
+             {/* Sci-Fi Hologram Container */}
+             <div className="relative w-full h-[600px] border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-transparent flex items-center justify-center group transform rotate-y-[-15deg] rotate-x-[5deg] shadow-[20px_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-700 hover:rotate-0">
+               
+               {/* Grid Pattern inside container */}
+               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+               
+               {/* Scanning Line */}
+               <div className="absolute top-0 left-0 w-full h-1 bg-yellow-500/80 shadow-[0_0_15px_#eab308] animate-[scan_3s_ease-in-out_infinite]"></div>
+
+               {/* Central Emblem replacing logo.jpeg */}
+               <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-48 h-48 border-4 border-yellow-500/30 rounded-full flex items-center justify-center relative animate-[spin_10s_linear_infinite] shadow-[0_0_40px_rgba(234,179,8,0.2)]">
+                     <div className="absolute inset-[-10px] border border-yellow-500/50 rounded-full border-dashed animate-[spin_15s_linear_reverse_infinite]"></div>
+                     <Hexagon className="w-24 h-24 text-yellow-500 absolute" />
+                  </div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                     <Shield className="w-16 h-16 text-yellow-400 drop-shadow-[0_0_15px_#eab308]" />
+                  </div>
+                  
+                  <div className="mt-12 text-center relative z-20 bg-[#020408]/80 backdrop-blur px-8 py-3 border-l-4 border-yellow-500">
+                     <h2 className="text-3xl font-black tracking-[0.3em] text-white">İSG_ZEYRON</h2>
+                     <p className="text-yellow-500 text-xs tracking-[0.5em] font-bold mt-1 uppercase">Güvenlik Algoritması</p>
+                  </div>
+               </div>
+
+                {/* Corner Markers */}
+               <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-yellow-500/50"></div>
+               <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-yellow-500/50"></div>
+               <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-yellow-500/50"></div>
+               <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-yellow-500/50"></div>
              </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Neden İSG Zeyron - Bento Grid */}
-      <section id="özellikler" className="py-24 px-6 relative border-t border-white/5 bg-zinc-950/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-16 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">Neden İSG Zeyron?</h2>
-            <p className="text-slate-400 max-w-xl mx-auto">Sıradan yazılımların ötesinde, size hız ve güven katan üstün yetenekler.</p>
+      {/* Features Grid */}
+      <section className="py-32 relative z-10 bg-zinc-950/50 border-y border-white/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-sm font-bold text-yellow-500 tracking-[0.4em] uppercase mb-4">Sistem_Modülleri</h2>
+            <p className="text-3xl md:text-5xl font-black text-white">HİPER BOŞLUK TEKNOLOJİSİ</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                whileHover={{ y: -5 }}
-                className={`group p-8 rounded-3xl bg-zinc-900/50 border border-white/10 hover:border-yellow-500/30 backdrop-blur-xl transition-all shadow-xl relative overflow-hidden ${feature.colSpan}`}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center mb-6 border border-white/5 group-hover:border-yellow-500/30 group-hover:scale-110 transition-all">
+              <div key={idx} className="bg-zinc-900/50 p-10 border border-white/5 hover:border-yellow-500/50 transition-all duration-300 relative group overflow-hidden">
+                <div className="absolute top-0 right-0 bg-yellow-500/10 w-32 h-32 blur-3xl group-hover:bg-yellow-500/30 transition-all"></div>
+                <div className="mb-6 relative z-10">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-yellow-400 transition-colors">{feature.title}</h3>
-                <p className="text-slate-400 leading-relaxed text-sm">{feature.desc}</p>
-              </motion.div>
+                <h3 className="text-xl font-bold text-white mb-4 tracking-wider uppercase relative z-10">{feature.title}</h3>
+                <p className="text-slate-400 font-light leading-relaxed relative z-10">{feature.description}</p>
+                <div className="absolute bottom-4 right-4 text-slate-800 font-mono text-xs opacity-50">#00{idx + 1}</div>
+              </div>
             ))}
           </div>
         </div>
       </section>
-
-      {/* Hedef Kitle */}
-      <section className="py-24 px-6 bg-zinc-900/30 border-y border-white/5 relative">
-         <div className="max-w-6xl mx-auto relative z-10 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-16">Kimler İçin Tasarlandı?</h2>
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {targetAudience.map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    className="p-8 rounded-3xl bg-zinc-950/80 border border-white/5 flex flex-col items-center justify-center text-center gap-4 hover:bg-zinc-900 transition-colors hover:border-yellow-500/20"
-                  >
-                    <div className="w-16 h-16 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center group-hover:border-yellow-500/50 shadow-inner">
-                      {item.icon}
-                    </div>
-                    <span className="font-semibold text-slate-300">{item.title}</span>
-                  </motion.div>
-                ))}
-             </div>
-         </div>
-      </section>
-
-      {/* SSS Accordion */}
-      <section id="sss" className="py-24 px-6 max-w-3xl mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold mb-12 text-center">Sıkça Sorulan Sorular</h2>
-        
-        <div className="space-y-4">
-          {faqs.map((faq, idx) => (
-            <div key={idx} className="border border-white/10 rounded-2xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm">
-              <button 
-                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                className="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors focus:outline-none"
-              >
-                <span className="font-medium text-lg text-slate-200">{faq.q}</span>
-                <ChevronDown className={`w-5 h-5 text-yellow-500 transition-transform duration-300 ${openFaq === idx ? 'rotate-180' : ''}`} />
-              </button>
-              <AnimatePresence>
-                {openFaq === idx && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                  >
-                    <div className="px-6 pb-6 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-4">
-                      {faq.a}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-8 text-center border-t border-white/10 text-slate-500 text-sm bg-zinc-950">
-        <p>© {new Date().getFullYear()} İSG Zeyron. Tüm hakları saklıdır.</p>
-        <p className="mt-2 text-xs opacity-50">Güvenlik | Gizlilik | Şartlar</p>
-      </footer>
+      
+      {/* Sci-Fi Global CSS Overrides integrated */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes scan {
+          0% { top: 0; opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { top: 100%; opacity: 0; }
+        }
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+      `}} />
     </div>
   );
-}
+};
+
+export default Landing;
