@@ -139,41 +139,41 @@ const App = () => {
           
           {/* Global Dashboard Video Architecture */}
           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-             <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-[0.15] mix-blend-screen mix-blend-lighten filter brightness-150 contrast-125 sepia-[0.3] hue-rotate-[15deg]">
+             <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-[0.10]">
                <source src="/site23.mp4" type="video/mp4" />
              </video>
-             <div className="absolute inset-0 bg-[#05060A]/80 backdrop-blur-[2px]"></div>
+             <div className="absolute inset-0 bg-black/85 backdrop-blur-[1px]"></div>
           </div>
 
           <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 relative z-10 transition-all duration-700 fade-in">
             
             {/* Sub-Sci-Fi Effect under Content */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(234,179,8,0.03)_0%,rgba(0,0,0,0)_100%)] pointer-events-none -z-10"></div>
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(255,215,0,0.03)_0%,rgba(0,0,0,0)_100%)] pointer-events-none -z-10"></div>
             
             {/* Holographic Header Area */}
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="mb-8 p-8 rounded-3xl bg-[#030406] border border-white/5 relative overflow-hidden"
+              className="mb-8 p-8 rounded-3xl bg-[#111111] border border-white/10 relative overflow-hidden shadow-[inset_0_0_30px_rgba(0,0,0,0.8)]"
             >
                {/* Sci-Fi Decorative Grid inside Header */}
-               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay pointer-events-none"></div>
-               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent"></div>
-               <div className="absolute -right-20 -top-20 opacity-10">
-                  <div className="w-[300px] h-[300px] border border-yellow-500 rounded-full animate-[spin_40s_linear_infinite]"></div>
-                  <div className="w-[280px] h-[280px] absolute top-[10px] left-[10px] border border-yellow-500/50 rounded-full border-dashed animate-[spin_30s_linear_reverse_infinite]"></div>
+               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/50 to-transparent"></div>
+               <div className="absolute -right-20 -top-20 opacity-10 pointer-events-none">
+                  <div className="w-[300px] h-[300px] border border-[#FFD700] rounded-full animate-[spin_40s_linear_infinite]"></div>
+                  <div className="w-[280px] h-[280px] absolute top-[10px] left-[10px] border border-[#FFD700]/50 rounded-full border-dashed animate-[spin_30s_linear_reverse_infinite]"></div>
                </div>
 
                <div className="relative z-10 flex flex-col lg:flex-row gap-8 items-center justify-between">
                   <div className="flex-1 w-full lg:w-auto">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[10px] font-black tracking-[0.3em] uppercase mb-4 rounded-sm">
-                      <Flame className="w-3 h-3 text-yellow-500 animate-pulse" /> SİSTEM PANELİ_V2.0
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFD700]/10 border border-[#FFD700]/20 text-[#FFD700] text-[10px] font-black tracking-[0.3em] uppercase mb-4 rounded-sm shadow-[0_0_10px_rgba(255,215,0,0.2)]">
+                      <Flame className="w-3 h-3 text-[#FFD700] animate-pulse" /> SİSTEM PANELİ_V2.0
                     </div>
-                    <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">
-                      HOŞGELDİNİZ, <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600">{(user?.name || "UZMAN").toUpperCase()}</span>
+                    <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4 drop-shadow-md">
+                      HOŞGELDİNİZ, <span className="text-[#FFD700] drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">{(user?.name || "UZMAN").toUpperCase()}</span>
                     </h2>
-                    <p className="text-slate-400 font-light max-w-2xl text-sm leading-relaxed border-l-2 border-yellow-500/30 pl-4">
+                    <p className="text-slate-400 font-light max-w-2xl text-sm leading-relaxed border-l-2 border-[#FFD700]/30 pl-4">
                       Sistem aktif ve 2.4M veri bit/s ile senkronize çalışıyor. Merkezi arşive, İSG tutanaklarına ve dinamik şablonlara aşağıdan hızlıca filtre uygulayarak erişebilirsiniz. Parametreleriniz güvenle korunmaktadır.
                     </p>
                   </div>
@@ -181,12 +181,12 @@ const App = () => {
                   {/* Cyber Search Bar */}
                   <div className="w-full lg:w-[450px]">
                     <div className="relative group">
-                      <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/20 to-transparent rounded-sm blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
-                      <div className="relative flex items-center bg-[#07090E] border border-white/10 p-2">
-                        <Search className="w-5 h-5 text-yellow-500 ml-4 shrink-0 transition-transform group-focus-within:scale-110" />
+                      <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded-sm blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
+                      <div className="relative flex items-center bg-[#0A0A0A] border border-white/10 p-2 shadow-inner">
+                        <Search className="w-5 h-5 text-[#FFD700] ml-4 shrink-0 transition-transform group-focus-within:scale-110" />
                         <input 
                           type="text" 
-                          placeholder="Doküman Protokolü Arayın..." 
+                          placeholder="DOKÜMAN PROTOKOLÜ ARAYIN..." 
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           className="w-full bg-transparent border-none px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-0 font-medium tracking-wide text-sm"
@@ -194,7 +194,7 @@ const App = () => {
                         {searchQuery && (
                           <button 
                             onClick={() => setSearchQuery('')}
-                            className="pr-4 text-xs font-bold text-slate-500 hover:text-yellow-500 tracking-wider uppercase transition-colors"
+                            className="pr-4 text-xs font-bold text-slate-500 hover:text-[#FFD700] tracking-wider uppercase transition-colors"
                           >
                             İPTAL
                           </button>
@@ -213,35 +213,35 @@ const App = () => {
               className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
             >
                {/* Stat Card 1 */}
-               <div className="p-6 bg-[#030406] border border-white/5 relative overflow-hidden group hover:border-yellow-500/50 transition-all duration-500">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 rounded-full blur-3xl group-hover:bg-yellow-500/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
+               <div className="p-6 bg-[#111111] border border-white/5 relative overflow-hidden group hover:border-[#FFD700]/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl group-hover:bg-[#FFD700]/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
                   <div className="flex items-center gap-4 mb-4">
-                     <div className="w-12 h-12 bg-[#05060A] border border-white/10 flex items-center justify-center shadow-inner group-hover:border-yellow-500/30 transition-all">
-                       <FileArchive className="text-yellow-500 w-5 h-5 group-hover:scale-110 transition-transform" />
+                     <div className="w-12 h-12 bg-[#0A0A0A] border border-white/10 flex items-center justify-center shadow-inner group-hover:border-[#FFD700]/30 transition-all">
+                       <FileArchive className="text-[#FFD700] w-5 h-5 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)] transition-all" />
                      </div>
-                     <span className="text-slate-400 font-bold text-xs tracking-widest uppercase">Toplam Protokol</span>
+                     <span className="text-slate-400 font-bold text-xs tracking-widest uppercase group-hover:text-slate-300">Toplam Protokol</span>
                   </div>
-                  <div className="text-4xl font-black text-white group-hover:text-yellow-400 transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">1.248</div>
-                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                  <div className="text-4xl font-black text-white group-hover:text-[#FFD700] transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(255,215,0,0.4)]">1.248</div>
+                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/40 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                </div>
                
                {/* Stat Card 2 */}
-               <div className="p-6 bg-[#030406] border border-white/5 relative overflow-hidden group hover:border-red-500/50 transition-all duration-500">
+               <div className="p-6 bg-[#111111] border border-white/5 relative overflow-hidden group hover:border-red-500/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
                   <div className="flex items-center gap-4 mb-4">
-                     <div className="w-12 h-12 bg-[#05060A] border border-white/10 flex items-center justify-center shadow-inner group-hover:border-red-500/30 transition-all">
-                       <ShieldAlert className="text-red-500 w-5 h-5 group-hover:scale-110 transition-transform" />
+                     <div className="w-12 h-12 bg-[#0A0A0A] border border-white/10 flex items-center justify-center shadow-inner group-hover:border-red-500/30 transition-all">
+                       <ShieldAlert className="text-red-500 w-5 h-5 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] transition-all" />
                      </div>
-                     <span className="text-slate-400 font-bold text-xs tracking-widest uppercase">Aktif Risk Alanı</span>
+                     <span className="text-slate-400 font-bold text-xs tracking-widest uppercase group-hover:text-slate-300">Aktif Risk Alanı</span>
                   </div>
-                  <div className="text-4xl font-black text-white group-hover:text-red-400 transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">{uniqueCategories.length}</div>
-                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-red-500/30 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                  <div className="text-4xl font-black text-white group-hover:text-red-400 transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(239,68,68,0.4)]">{uniqueCategories.length}</div>
+                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-red-500/40 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                </div>
 
                {/* Stat Card 3 */}
-               <div className="p-6 bg-gradient-to-br from-yellow-600 to-yellow-900 border border-yellow-500/30 relative overflow-hidden group shadow-[0_0_20px_rgba(234,179,8,0.15)] flex flex-col justify-center">
-                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
-                  <div className="absolute -right-10 -bottom-10 opacity-20 group-hover:scale-110 transition-transform duration-700">
+               <div className="p-6 bg-[#FFD700] border border-[#FFD700] relative overflow-hidden group shadow-[0_0_20px_rgba(255,215,0,0.2)] flex flex-col justify-center hover:-translate-y-1 transition-transform">
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+                  <div className="absolute -right-10 -bottom-10 opacity-20 group-hover:scale-110 transition-transform duration-700 pointer-events-none">
                     <Hexagon className="w-40 h-40 text-black" strokeWidth={1}/>
                   </div>
                   <div className="relative z-10">
@@ -262,9 +262,9 @@ const App = () => {
               className="mb-12"
             >
               <div className="flex items-center gap-3 mb-6">
-                <Hexagon className="w-4 h-4 text-yellow-500" />
-                <h3 className="text-xs font-black text-white tracking-[0.3em] uppercase">Sektörel Bağlantılar</h3>
-                <div className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
+                <Hexagon className="w-4 h-4 text-[#FFD700]" />
+                <h3 className="text-xs font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Sektörel Bağlantılar</h3>
+                <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent ml-4"></div>
               </div>
 
               <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x relative z-10 -mx-4 px-4 md:mx-0 md:px-0">
@@ -272,8 +272,8 @@ const App = () => {
                   onClick={() => setSelectedCategory(null)}
                   className={`snap-start shrink-0 px-6 py-4 border transition-all duration-300 relative group overflow-hidden ${
                     selectedCategory === null 
-                      ? 'bg-yellow-500 text-black font-black border-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.3)]' 
-                      : 'bg-[#030406] border-white/10 text-slate-400 hover:text-white hover:border-yellow-500/50'
+                      ? 'bg-[#FFD700] text-black font-black border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.4)] hover:-translate-y-1' 
+                      : 'bg-[#111111] border-white/10 text-slate-400 hover:text-white hover:border-[#FFD700]/50 hover:-translate-y-1 shadow-inner'
                   }`}
                 >
                   <div className={`flex items-center gap-3 relative z-10 ${selectedCategory === null ? 'scale-105' : 'group-hover:scale-105'} transition-transform`}>
@@ -288,8 +288,8 @@ const App = () => {
                     onClick={() => setSelectedCategory(category)}
                     className={`snap-start shrink-0 px-6 py-4 border transition-all duration-300 group overflow-hidden ${
                       selectedCategory === category 
-                        ? 'bg-yellow-500/10 text-yellow-400 font-bold border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]' 
-                        : 'bg-[#030406] border-white/10 text-slate-400 hover:text-white hover:border-yellow-500/30 hover:bg-white/5'
+                        ? 'bg-[#FFD700]/10 text-[#FFD700] font-bold border-[#FFD700] shadow-[inset_0_0_15px_rgba(255,215,0,0.2)] hover:-translate-y-1' 
+                        : 'bg-[#111111] border-white/10 text-slate-400 hover:text-white hover:border-[#FFD700]/30 hover:bg-white/5 hover:-translate-y-1 shadow-inner'
                     }`}
                   >
                     <div className="flex items-center gap-3 relative z-10 group-hover:scale-105 transition-transform">
@@ -308,9 +308,9 @@ const App = () => {
                transition={{ duration: 0.8, delay: 0.5 }}
             >
               <div className="flex items-center gap-3 mb-8">
-                <div className="w-2 h-2 bg-yellow-500 rounded-sm"></div>
-                <h3 className="text-xs font-black text-white tracking-[0.3em] uppercase">Veritabanı Sonuçları ({filteredTemplates.length})</h3>
-                <div className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
+                <div className="w-2 h-2 bg-[#FFD700] rounded-sm shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
+                <h3 className="text-xs font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Veritabanı Sonuçları ({filteredTemplates.length})</h3>
+                <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent ml-4"></div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -323,31 +323,37 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-[#030406] border border-white/5 hover:border-yellow-500/40 p-6 relative group overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[280px]"
+                      className="bg-[#111111] border border-white/10 hover:border-[#FFD700]/50 p-6 relative group overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.8)] flex flex-col h-[280px]"
                     >
-                      {/* Abstract Card Grid */}
-                      <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-500/5 rounded-full blur-2xl group-hover:bg-yellow-500/20 transition-all duration-700"></div>
+                      {/* Abstract Card Grid Overlay */}
+                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+                      
+                      {/* Hover Glow */}
+                      <div className="absolute top-0 right-0 w-40 h-40 bg-[#FFD700]/10 rounded-full blur-3xl group-hover:bg-[#FFD700]/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
+                      
+                      {/* Bottom Glow Line */}
+                      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/50 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
 
                       <div className="flex justify-between items-start mb-4 relative z-10">
-                        <div className="w-12 h-12 bg-[#0A0D14] border border-white/10 flex items-center justify-center group-hover:border-yellow-500/50 group-hover:scale-110 transition-all duration-500 shadow-inner">
-                          <FileText className="text-yellow-500/80 group-hover:text-yellow-400 w-6 h-6" strokeWidth={1.5} />
+                        <div className="w-12 h-12 bg-[#0A0A0A] border border-white/5 flex items-center justify-center group-hover:border-[#FFD700]/50 group-hover:scale-110 transition-all duration-500 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
+                          <FileText className="text-[#FFD700]/80 group-hover:text-[#FFD700] w-6 h-6 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" strokeWidth={1.5} />
                         </div>
-                        <span className="text-[10px] font-black tracking-widest uppercase text-slate-500 bg-white/5 px-3 py-1 border border-white/5">
+                        <span className="text-[10px] font-black tracking-widest uppercase text-slate-500 bg-[#0A0A0A] px-3 py-1 border border-white/5 shadow-inner">
                             {(template.format || "PDF").toUpperCase()}
                         </span>
                       </div>
 
-                      <div className="mb-4 relative z-10 flex-1">
-                        <h4 className="text-slate-200 font-bold mb-2 leading-snug group-hover:text-white transition-colors line-clamp-2">
+                      <div className="mb-4 relative z-10 flex-1 mt-2">
+                        <h4 className="text-slate-200 font-bold mb-3 leading-snug group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all line-clamp-2">
                           {template.title}
                         </h4>
                         <div className="flex items-center gap-2">
-                           <ShieldAlert className="w-3 h-3 text-yellow-500/50" />
-                           <p className="text-yellow-500/50 text-[10px] font-bold tracking-wider uppercase truncate">{template.category}</p>
+                           <ShieldAlert className="w-3 h-3 text-[#FFD700]" />
+                           <p className="text-[#FFD700]/70 text-[10px] font-bold tracking-wider uppercase truncate group-hover:text-[#FFD700] transition-colors">{template.category}</p>
                         </div>
                       </div>
 
-                      <div className="relative z-10 border-t border-white/10 pt-4 mt-auto">
+                      <div className="relative z-10 pt-4 mt-auto">
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-slate-500 font-mono tracking-widest">{template.fields.length} VERİ</span>
                           
@@ -356,7 +362,7 @@ const App = () => {
                               setSelectedTemplate(template);
                               setCurrentView('editor');
                             }}
-                            className="flex items-center justify-center gap-2 px-6 py-2 border border-yellow-500/50 text-yellow-500 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-yellow-500 hover:text-black shadow-[0_0_15px_rgba(234,179,8,0.2)] transform translate-x-4 group-hover:translate-x-0"
+                            className="flex items-center justify-center gap-2 px-6 py-2 border border-[#FFD700]/50 text-[#FFD700] text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-[#FFD700] hover:text-black shadow-[0_0_15px_rgba(255,215,0,0.2)] transform translate-x-4 group-hover:translate-x-0"
                           >
                             BAŞLAT <ArrowRight className="w-3 h-3" />
                           </button>
@@ -364,7 +370,7 @@ const App = () => {
                       </div>
                       
                       {/* Scanning Line on Card Hover */}
-                      <div className="absolute top-0 left-0 w-full h-[2px] bg-yellow-400 shadow-[0_0_10px_#eab308] opacity-0 group-hover:opacity-100 group-hover:animate-[scan_2s_ease-in-out_infinite] z-20 pointer-events-none"></div>
+                      <div className="absolute top-0 left-0 w-full h-[1px] bg-[#FFD700] shadow-[0_0_10px_#FFD700] opacity-0 group-hover:opacity-100 group-hover:animate-[scan_2s_ease-in-out_infinite] z-20 pointer-events-none"></div>
                     </motion.div>
                   ))}
                 </AnimatePresence>
