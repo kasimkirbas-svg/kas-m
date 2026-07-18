@@ -133,7 +133,7 @@ const App = () => {
       );
     }
 
-    if (user && currentView === 'dashboard') {
+    if (user && ['dashboard', 'profile', 'settings', 'billing'].includes(currentView)) {
       return (
         <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
           
@@ -147,6 +147,42 @@ const App = () => {
 
           <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 relative z-10 transition-all duration-700 fade-in">
             
+            {/* INJECT PROFILE OR SETTINGS CONTENT IF THEY ARE SELECTED */}
+            {currentView === 'profile' && (
+               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-white/10 rounded-xl bg-[#111111]/50 backdrop-blur-md">
+                 <UserCheck className="w-16 h-16 text-[#FFD700] mb-4" />
+                 <h2 className="text-3xl font-black text-white uppercase tracking-widest">Kullanıcı Arşivi</h2>
+                 <p className="text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
+                 <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
+                    Sisteme Dön
+                 </button>
+               </div>
+            )}
+            
+            {currentView === 'settings' && (
+               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-white/10 rounded-xl bg-[#111111]/50 backdrop-blur-md">
+                 <Settings className="w-16 h-16 text-[#FFD700] mb-4 animate-spin-slow" />
+                 <h2 className="text-3xl font-black text-white uppercase tracking-widest">Sistem Ayarları</h2>
+                 <p className="text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
+                 <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
+                    Sisteme Dön
+                 </button>
+               </div>
+            )}
+
+            {currentView === 'billing' && (
+               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-white/10 rounded-xl bg-[#111111]/50 backdrop-blur-md">
+                 <Crown className="w-16 h-16 text-[#FFD700] mb-4" />
+                 <h2 className="text-3xl font-black text-[#FFD700] uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">Sistem Premium</h2>
+                 <p className="text-slate-400 mt-2">Lisans Yenileme ve Yükseltme modülü aktif ediliyor.</p>
+                 <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
+                    Sisteme Dön
+                 </button>
+               </div>
+            )}
+
+            {currentView === 'dashboard' && (
+              <>
             {/* Holographic Header Area */}
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
@@ -451,6 +487,8 @@ const App = () => {
                 )}
               </div>
             </motion.div>
+            </>
+            )}
 
           </div>
         </Layout>
