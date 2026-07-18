@@ -261,8 +261,8 @@ export default function Landing({ onStart }: { onStart: () => void }) {
             className="flex-1 relative"
           >
              <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/20 to-red-500/10 blur-[80px] rounded-full"></div>
-             <div className="relative rounded-3xl overflow-hidden border border-white/10 p-2 bg-white/5 backdrop-blur-md shadow-2xl">
-               <img src="/logo.jpeg" alt="İSG Kurumsal" className="w-full h-auto rounded-2xl mix-blend-screen opacity-90 hover:scale-105 transition-transform duration-700" />
+             <div className="relative p-2 flex items-center justify-center">
+               <img src="/logo.jpeg" alt="İSG Kurumsal" className="w-[80%] h-auto mix-blend-screen opacity-100 hover:scale-110 drop-shadow-[0_0_20px_rgba(234,179,8,0.5)] transition-transform duration-700" />
              </div>
           </motion.div>
         </div>
