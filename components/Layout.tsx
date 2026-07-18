@@ -23,10 +23,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
         
         {/* Logo / Brand Left */}
         <div 
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-3 cursor-pointer group bg-transparent"
           onClick={() => onNavigate('dashboard')}
         >
-          <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="h-12 w-auto object-contain mix-blend-screen group-hover:scale-105 transition-transform" />
+          <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="h-14 w-auto object-contain mix-blend-screen mix-blend-lighten filter brightness-110 group-hover:scale-105 transition-transform drop-shadow-[0_0_12px_rgba(234,179,8,0.5)]" />
           <div className="flex flex-col">
             <span className="font-bold text-white text-sm tracking-widest">{APP_NAME}</span>
             <span className="text-[10px] text-slate-500 font-semibold tracking-widest leading-none">PANEL YÖNETİMİ</span>

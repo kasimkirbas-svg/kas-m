@@ -16,9 +16,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
   const [docxArrayBuffer, setDocxArrayBuffer] = useState<ArrayBuffer | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setLoadError(null);
     const initialData: Record<string, any> = {};
     if (template.fields) {
       template.fields.forEach(field => {
@@ -30,7 +32,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     if (template.fileUrl) {
       fetch(template.fileUrl)
         .then(res => {
-           if(!res.ok) throw new Error("File not found");
+           if(!res.ok) throw new Error("Dosya bulunamadı veya erişilemiyor.");
            return res.arrayBuffer();
         })
         .then(buffer => {
@@ -38,6 +40,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         })
         .catch(err => {
           console.error("Doküman yüklenirken hata:", err);
+          setLoadError(template.fileUrl?.endsWith(".doc") 
+            ? "Eski tip .doc dosyaları canlı önizlemeyi desteklemez. Lütfen dosyaları .docx formatına çevirerek sisteme yükleyin." 
+            : "Dosya sunucudan yüklenemedi. Yolunu kontrol edin.");
         });
     }
   }, [template]);
@@ -170,7 +175,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         
         {/* Render Preview Area */}
         <div className="flex-1 w-full h-full overflow-y-auto p-12 lg:p-24 flex justify-center items-start custom-scrollbar bg-zinc-900/30">
-           {!docxArrayBuffer ? (
+           {loadError ? (
+              <div className="flex flex-col items-center justify-center h-[50vh] text-red-400 gap-4 max-w-sm text-center">
+                 <FileText size={48} className="opacity-20" />
+                 <p className="tracking-wide text-sm font-semibold">{loadError}</p>
+                 <button onClick={onBack} className="mt-4 px-6 py-2 rounded-full border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs font-bold uppercase tracking-wider transition-all">Geri Dön</button>
+              </div>
+           ) : !docxArrayBuffer ? (
               <div className="flex flex-col items-center justify-center h-[50vh] text-slate-500 animate-pulse gap-4">
                  <FileText size={48} className="opacity-20" />
                  <p className="tracking-widest uppercase text-xs font-bold">Şablon Yükleniyor...</p>
