@@ -49,8 +49,8 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
       setLoading(false);
       setMessage({ type: "success", text: isLogin ? "Başarıyla giriş yapıldı, yönlendiriliyorsunuz..." : "Hesap oluşturuldu, giriş yapabilirsiniz." });
       setTimeout(() => {
-        if (isLogin && onAuthSuccess) {
-          onAuthSuccess({ id: "1", name: email.split("@")[0], email, role: "PREMIUM" });
+        if (onAuthSuccess) {
+          onAuthSuccess({ id: "1", name: email.split("@")[0] || "Uzman", email, role: "PREMIUM" });
         }
       }, 1500);
     }, 1500);
