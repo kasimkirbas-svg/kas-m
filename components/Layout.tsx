@@ -26,8 +26,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
           className="flex items-center gap-4 cursor-pointer group bg-transparent"
           onClick={() => onNavigate('dashboard')}
         >
-          <div className="w-14 h-14 flex items-center justify-center -ml-2">
-             <img src="/logo.png" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] group-hover:scale-105 transition-transform duration-500" />
+          <div className="w-14 h-14 flex items-center justify-center -ml-2 rounded-full overflow-hidden mix-blend-lighten shadow-inner">
+             <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain mix-blend-screen drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] group-hover:scale-105 transition-transform duration-500" />
           </div>
           <div className="flex flex-col -ml-2">
             <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-yellow-600 text-sm tracking-[0.2em]">{APP_NAME}</span>

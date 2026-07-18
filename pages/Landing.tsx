@@ -150,9 +150,9 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             className="flex items-center gap-3 cursor-pointer group" 
             onClick={() => window.scrollTo(0, 0)}
           >
-            <div className="w-14 h-14 flex items-center justify-center -ml-2 relative">
-               <div className="absolute inset-0 bg-yellow-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-               <img src="/logo.png" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] relative z-10" />
+            <div className="w-14 h-14 flex items-center justify-center -ml-2 relative rounded-full overflow-hidden mix-blend-lighten shadow-inner">
+               <div className="absolute inset-0 bg-yellow-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
+               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain mix-blend-screen drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] relative z-10" />
             </div>
             <div className="flex flex-col -ml-1">
               <span className="text-2xl font-black tracking-[0.15em] text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">İSG ZEYRON</span>
@@ -416,8 +416,8 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
       {/* Footer */}
       <footer className="border-t border-white/5 bg-[#030406] py-16 relative z-10 text-center">
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
-          <div className="w-20 h-20 mb-8 opacity-50 hover:opacity-100 transition-opacity flex justify-center items-center">
-            <img src="/logo.png" alt="İSG Zeyron Footer Logo" className="w-[120%] h-auto object-contain grayscale hover:grayscale-0 transition-all duration-500" />
+          <div className="w-20 h-20 mb-8 opacity-50 hover:opacity-100 transition-opacity flex justify-center items-center rounded-full overflow-hidden mix-blend-lighten">
+            <img src="/logo.jpeg" alt="İSG Zeyron Footer Logo" className="w-[120%] h-auto object-contain grayscale hover:grayscale-0 mix-blend-screen transition-all duration-500" />
           </div>
           <div className="flex gap-8 mb-10 border-b border-white/5 pb-10 justify-center w-full max-w-lg">
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">Gizlilik</span>
