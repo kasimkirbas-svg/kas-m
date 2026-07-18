@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import Auth from './pages/Auth';
+import Landing from './pages/Landing';
 import { DocumentEditor } from './pages/DocumentEditor';
 import { APP_NAME } from './constants';
 import { User, DocumentTemplate } from './types';
@@ -77,13 +78,24 @@ const App = () => {
   });
 
   const renderContent = () => {
-    if (currentView === 'landing' || (!user && currentView === 'dashboard')) {
+    if (currentView === 'landing') {
+      return (
+        <Landing onStart={() => setCurrentView('auth')} />
+      );
+    }
+
+    if (currentView === 'auth') {
       return (
         <Auth 
           onAuthSuccess={handleAuthSuccess}
-          onBack={() => {}}
+          onBack={() => setCurrentView('landing')}
         />
       );
+    }
+
+    if (!user && currentView === 'dashboard') {
+       setCurrentView('auth');
+       return null;
     }
 
     if (currentView === 'editor' && selectedTemplate) {
