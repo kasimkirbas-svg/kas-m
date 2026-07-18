@@ -55,12 +55,15 @@ export default function Landing({ onStart }: { onStart: () => void }) {
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 backdrop-blur-xl bg-zinc-950/80 border-b border-white/5 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             {/* Logo */}
-            <div className="w-12 h-12 flex items-center justify-center shrink-0">
-               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-full h-full object-contain" />
+            <div className="w-16 h-16 flex items-center justify-center shrink-0 relative transition-transform duration-500 group-hover:scale-105 group-hover:rotate-[-2deg]">
+               <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] relative z-10" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-white hidden sm:block">İSG <span className="text-yellow-500">Zeyron</span></span>
+            <span className="text-2xl font-black tracking-tight text-white hidden sm:block relative">
+              İSG <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]">Zeyron</span>
+            </span>
           </div>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
