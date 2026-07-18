@@ -58,6 +58,21 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
 
   return (
     <div className="min-h-screen bg-[#050510] text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30">
+      
+      {/* Background Video Engine */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-20 mix-blend-screen mix-blend-lighten filter brightness-150 contrast-125"
+        >
+          <source src="/site23.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#050510] via-transparent to-[#050510]"></div>
+      </div>
+
       {/* Background Particles */}
       {init && (
         <Particles id="tsparticles-auth" options={particlesOptions} className="fixed inset-0 z-0 pointer-events-none" />

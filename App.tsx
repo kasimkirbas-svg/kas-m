@@ -134,7 +134,16 @@ const App = () => {
     if (user && currentView === 'dashboard') {
       return (
         <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
-          <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 relative z-10">
+          
+          {/* Global Dashboard Video Architecture */}
+          <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+             <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-[0.15] mix-blend-screen mix-blend-lighten filter brightness-150 contrast-125 sepia-[0.3] hue-rotate-[15deg]">
+               <source src="/site23.mp4" type="video/mp4" />
+             </video>
+             <div className="absolute inset-0 bg-[#05060A]/80 backdrop-blur-[2px]"></div>
+          </div>
+
+          <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 relative z-10 transition-all duration-700 fade-in">
             
             {/* Sub-Sci-Fi Effect under Content */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(234,179,8,0.03)_0%,rgba(0,0,0,0)_100%)] pointer-events-none -z-10"></div>

@@ -128,11 +128,27 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   ];
 
   return (
-    <div className="min-h-screen bg-[#05060A] text-slate-300 font-sans selection:bg-yellow-500/30 selection:text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#05060A] text-slate-300 font-sans selection:bg-yellow-500/30 selection:text-white overflow-x-hidden relative">
       
+      {/* Dynamic Video Background Architecture */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30 mix-blend-screen"
+        >
+          <source src="/site23.mp4" type="video/mp4" />
+          Tarayıcınız video etiketini desteklemiyor.
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#05060A]/80 via-[#05060A]/50 to-[#05060A]/90"></div>
+        <div className="absolute inset-0 bg-yellow-500/10 mix-blend-color"></div>
+      </div>
+
       {/* Sci-Fi Background Layer */}
-      <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,rgba(234,179,8,0.05)_0%,rgba(5,6,10,1)_70%)] pointer-events-none"></div>
-      <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
+      <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,rgba(234,179,8,0.1)_0%,rgba(5,6,10,0.8)_70%)] pointer-events-none"></div>
+      <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] mix-blend-overlay pointer-events-none"></div>
 
       {init && <Particles id="tsparticles" options={particlesOptions} className="fixed inset-0 z-0 pointer-events-none" />}
 

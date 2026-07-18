@@ -17,9 +17,9 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0A0C10] font-sans selection:bg-orange-500/30 selection:text-white pb-20">
+    <div className="flex flex-col min-h-screen bg-transparent font-sans selection:bg-yellow-500/30 selection:text-white pb-20 relative">
       {/* Top Navigation Header */}
-      <header className="flex items-center justify-between h-20 px-8 bg-[#0A0C10] border-b border-white/5 relative z-50">
+      <header className="flex items-center justify-between h-20 px-8 bg-[#05060A]/60 backdrop-blur-xl border-b border-white/5 relative z-50 shadow-[0_0_30px_rgba(234,179,8,0.05)]">
         
         {/* Logo / Brand Left Sci-Fi Theme */}
         <div 
