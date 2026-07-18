@@ -59,6 +59,13 @@ const App = () => {
     localStorage.setItem('isg_view', currentView);
   }, [currentView]);
 
+  // Route Protection - Prevent dashboard rendering without user
+  useEffect(() => {
+    if (currentView === 'dashboard' && !user) {
+      setCurrentView('landing');
+    }
+  }, [currentView, user]);
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -124,11 +131,6 @@ const App = () => {
           onSave={() => setCurrentView('dashboard')} 
         />
       );
-    }
-
-    if (currentView === 'dashboard' && !user) {
-      setCurrentView('landing');
-      return null;
     }
 
     if (user && currentView === 'dashboard') {
