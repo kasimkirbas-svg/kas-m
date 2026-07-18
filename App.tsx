@@ -171,7 +171,7 @@ const App = () => {
                       <Flame className="w-3 h-3 text-yellow-500 animate-pulse" /> SİSTEM PANELİ_V2.0
                     </div>
                     <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">
-                      HOŞGELDİNİZ, <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600">{user.name.toUpperCase()}</span>
+                      HOŞGELDİNİZ, <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600">{(user?.name || "UZMAN").toUpperCase()}</span>
                     </h2>
                     <p className="text-slate-400 font-light max-w-2xl text-sm leading-relaxed border-l-2 border-yellow-500/30 pl-4">
                       Sistem aktif ve 2.4M veri bit/s ile senkronize çalışıyor. Merkezi arşive, İSG tutanaklarına ve dinamik şablonlara aşağıdan hızlıca filtre uygulayarak erişebilirsiniz. Parametreleriniz güvenle korunmaktadır.
