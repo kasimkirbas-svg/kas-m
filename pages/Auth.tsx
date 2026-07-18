@@ -29,17 +29,17 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
 
   const particlesOptions = useMemo(() => ({
     background: { color: { value: "transparent" } },
-    fpsLimit: 120,
+    fpsLimit: 60,
     particles: {
       color: { value: "#eab308" },
-      links: { color: "#eab308", distance: 200, enable: true, opacity: 0.2, width: 1 },
-      move: { direction: "none" as const, enable: true, outModes: { default: "bounce" as const }, random: false, speed: 0.8, straight: false },
-      number: { density: { enable: true, area: 800 }, value: 120 },
-      opacity: { value: 0.4 },
+      links: { color: "#eab308", distance: 200, enable: true, opacity: 0.1, width: 1 },
+      move: { direction: "none" as const, enable: true, outModes: { default: "bounce" as const }, random: false, speed: 0.4, straight: false },
+      number: { density: { enable: true, area: 800 }, value: 40 },
+      opacity: { value: 0.2 },
       shape: { type: "circle" },
-      size: { value: { min: 1, max: 3 } },
+      size: { value: { min: 1, max: 2 } },
     },
-    detectRetina: true,
+    detectRetina: false,
   }), []);
 
   const handleSubmit = (e: React.FormEvent) => {

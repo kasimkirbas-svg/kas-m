@@ -71,10 +71,10 @@ export default function Landing({ onStart }: { onStart: () => void }) {
           enable: true,
           area: 800,
         },
-        value: 60,
+        value: 30,
       },
       opacity: {
-        value: 0.3,
+        value: 0.2,
       },
       shape: {
         type: "circle",
