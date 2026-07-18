@@ -119,6 +119,14 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
     { icon: <Zap className="w-6 h-6 text-yellow-500" />, title: "Pratik Kullanım", desc: "Excel veya Word bilgisi gerekmeden tek panelden otomasyon." }
   ];
 
+  const targetUsers = [
+    "A, B ve C sınıfı İş Güvenliği Uzmanları",
+    "İş Sağlığı ve Güvenliği Teknikerleri",
+    "Ortak Sağlık Güvenlik Birimleri (OSGB)",
+    "Az tehlikeli sınıfta kendi hizmetini yürüten İşverenler",
+    "Süreçleri dijitalleştirmek isteyen tüm işletmeler"
+  ];
+
   return (
     <div className="min-h-screen bg-[#05060A] text-slate-300 font-sans selection:bg-yellow-500/30 selection:text-white overflow-x-hidden">
       
