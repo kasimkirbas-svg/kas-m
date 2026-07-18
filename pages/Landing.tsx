@@ -30,7 +30,7 @@ export default function Landing({ onStart }: { onStart: () => void }) {
         value: "transparent",
       },
     },
-    fpsLimit: 120,
+    fpsLimit: 60,
     interactivity: {
       events: {
         onHover: {
@@ -40,8 +40,8 @@ export default function Landing({ onStart }: { onStart: () => void }) {
       },
       modes: {
         repulse: {
-          distance: 100,
-          duration: 0.4,
+          distance: 120,
+          duration: 0.8,
         },
       },
     },
@@ -51,9 +51,9 @@ export default function Landing({ onStart }: { onStart: () => void }) {
       },
       links: {
         color: "#eab308",
-        distance: 200,
+        distance: 150,
         enable: true,
-        opacity: 0.2,
+        opacity: 0.15,
         width: 1,
       },
       move: {
@@ -63,7 +63,7 @@ export default function Landing({ onStart }: { onStart: () => void }) {
           default: "bounce" as const,
         },
         random: false,
-        speed: 0.8,
+        speed: 0.5,
         straight: false,
       },
       number: {
@@ -71,10 +71,10 @@ export default function Landing({ onStart }: { onStart: () => void }) {
           enable: true,
           area: 800,
         },
-        value: 120,
+        value: 60,
       },
       opacity: {
-        value: 0.4,
+        value: 0.3,
       },
       shape: {
         type: "circle",
@@ -152,9 +152,9 @@ export default function Landing({ onStart }: { onStart: () => void }) {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             {/* Logo */}
-            <div className="w-16 h-16 flex items-center justify-center shrink-0 relative transition-transform duration-500 group-hover:scale-105 group-hover:rotate-[-2deg]">
-               <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] relative z-10" />
+            <div className="w-16 h-16 flex items-center justify-center shrink-0 relative transition-transform duration-500 group-hover:scale-105 group-hover:rotate-[-2deg] bg-transparent">
+               <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-full h-full object-contain mix-blend-screen mix-blend-lighten filter brightness-110 drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] relative z-10" />
             </div>
             <span className="text-2xl font-black tracking-tight text-white hidden sm:block relative">
               İSG <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]">Zeyron</span>
@@ -261,8 +261,8 @@ export default function Landing({ onStart }: { onStart: () => void }) {
             className="flex-1 relative"
           >
              <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/20 to-red-500/10 blur-[80px] rounded-full"></div>
-             <div className="relative p-2 flex items-center justify-center">
-               <img src="/logo.jpeg" alt="İSG Kurumsal" className="w-[80%] h-auto mix-blend-screen opacity-100 hover:scale-110 drop-shadow-[0_0_20px_rgba(234,179,8,0.5)] transition-transform duration-700" />
+             <div className="relative p-2 flex items-center justify-center bg-transparent">
+               <img src="/logo.jpeg" alt="İSG Kurumsal" className="w-[80%] h-auto mix-blend-screen mix-blend-lighten filter brightness-110 opacity-100 hover:scale-110 drop-shadow-[0_0_20px_rgba(234,179,8,0.5)] transition-transform duration-700" />
              </div>
           </motion.div>
         </div>
