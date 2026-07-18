@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, Hexagon, ShieldAlert, Target } from 'lucide-react';
+import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, Hexagon, ShieldAlert, Target, Search, ChevronDown, CheckCircle2 } from 'lucide-react';
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import type { Engine } from "@tsparticles/engine";
@@ -9,9 +9,30 @@ interface LandingProps {
   onRegisterClick: () => void;
 }
 
+const FAQItem = ({ question, answer }: { question: string, answer: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border border-white/10 rounded-lg mb-4 bg-zinc-900/30 overflow-hidden transition-all duration-300">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full text-left p-4 md:p-6 flex items-center justify-between hover:bg-yellow-500/5 transition-colors focus:outline-none"
+      >
+        <h4 className="text-sm md:text-base font-bold text-slate-200 pr-8">{question}</h4>
+        <ChevronDown className={`w-5 h-5 text-yellow-500 transition-transform duration-300 transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="p-4 md:p-6 pt-0 text-slate-400 font-light leading-relaxed border-t border-white/5">
+          {answer}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick }) => {
   const [init, setInit] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchFaq, setSearchFaq] = useState('');
 
   useEffect(() => {
     initParticlesEngine(async (engine: Engine) => {
@@ -56,7 +77,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         color: "#eab308",
         distance: 120,
         enable: true,
-        opacity: 0.15,
+        opacity: 0.1,
         width: 1,
       },
       move: {
@@ -66,22 +87,21 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           default: "out" as const,
         },
         random: true,
-        speed: 0.5,
+        speed: 0.3,
         straight: false,
       },
       number: {
         density: {
           enable: true,
-          area: 800,
+          area: 1200,
         },
-        value: 40,
+        value: 30,
       },
       opacity: {
-        value: 0.3,
-        animation: { enable: true, speed: 1, minimumValue: 0.1 }
+        value: 0.2,
       },
       shape: {
-        type: "triangle",
+        type: "circle",
       },
       size: {
         value: { min: 1, max: 2 },
@@ -90,31 +110,73 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
     detectRetina: false,
   }), []);
 
-  const navItems = ["Sistem_Mimarisi", "Modüller", "Protokoller"];
+  const navItems = [
+    { label: "HAKKIMIZDA", id: "hakkimizda" },
+    { label: "AVANTAJLAR", id: "avantajlar" },
+    { label: "S.S.S", id: "sss" }
+  ];
 
-  const features = [
-    {
-      icon: <Activity className="w-8 h-8 text-yellow-500" />,
-      title: "Dinamik HUD Modülü",
-      description: "Gerçek zamanlı veri senkronizasyonu ile belgelerinizi ışık hızında güncelleyin."
-    },
-    {
-      icon: <Cpu className="w-8 h-8 text-yellow-500" />,
-      title: "Merkezi Veri Çekirdeği",
-      description: "Tüm form ve dokümanlarınızı kriptografik şifreleme alt yapısıyla tek çekirdekte toplayın."
-    },
-    {
-      icon: <ShieldAlert className="w-8 h-8 text-yellow-500" />,
-      title: "Otonom Risk Analizi",
-      description: "Sistem hatalarını ve iş güvenliği risklerini algılayan akıllı algoritmalar."
+  const scrollToSection = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 80,
+        behavior: 'smooth'
+      });
     }
+  };
+
+  const faqs = [
+    { q: "1. İSG Zeyron nedir?", a: "İSG Zeyron; İş Sağlığı ve Güvenliği uzmanları, İSG teknikerleri, OSGB'ler ve işverenler için geliştirilen web tabanlı (SaaS) bir İSG doküman ve süreç yönetim platformudur." },
+    { q: "2. İSG Zeyron'u kimler kullanabilir?", a: "A, B ve C sınıfı İş Güvenliği Uzmanları, İSG Teknikerleri, OSGB'ler, az tehlikeli sınıfta kendi İSG hizmetini yürüten işverenler ve İSG süreçlerini dijital ortamda yönetmek isteyen tüm işletmeler kullanabilir." },
+    { q: "3. Program kurulumu gerekiyor mu?", a: "Hayır. İSG Zeyron tamamen web tabanlıdır. Herhangi bir program indirmenize veya kurmanıza gerek yoktur." },
+    { q: "4. Hangi cihazlardan kullanabilirim?", a: "Bilgisayar, dizüstü bilgisayar, tablet ve internet tarayıcısı bulunan tüm akıllı telefonlardan güvenle kullanılabilir." },
+    { q: "5. Mobil uygulaması var mı?", a: "Hayır. İSG Zeyron, tarayıcı üzerinden çalışan bir platformdur. İsterseniz telefonunuzun 'Ana Ekrana Ekle' özelliğiyle uygulama benzeri şekilde kullanabilirsiniz." },
+    { q: "6. Mac bilgisayarlarda çalışıyor mu?", a: "Evet. Windows, macOS ve Linux işletim sistemlerinde güncel internet tarayıcıları üzerinden kullanılabilir." },
+    { q: "7. İnternet olmadan kullanılabilir mi?", a: "Hayır. İSG Zeyron bulut tabanlı bir platform olduğu için aktif internet bağlantısı gerektirir." },
+    { q: "8. Dokümanlar sistemde kayıt altına alınıyor mu?", a: "Hayır. İş yerlerine ait oluşturulan risk değerlendirmeleri, planlar, tutanaklar ve diğer İSG dokümanları sistemimizde kalıcı olarak saklanmaz. Hazırlanan belgeler kullanıcı tarafından kendi cihazına indirilir." },
+    { q: "9. Verilerim güvende mi?", a: "Evet. İSG Zeyron, kullanıcı bilgilerinin korunmasına önem verir ve gerekli teknik ve idari güvenlik tedbirlerini uygular. Hizmetlerimiz KVKK hükümleri doğrultusunda yürütülmektedir." },
+    { q: "10. Excel veya Word bilgisi gerekiyor mu?", a: "Hayır. Platform, teknik bilgi gerektirmeyecek şekilde tasarlanmıştır. Kullanıcı dostu arayüz sayesinde işlemler kolayca gerçekleştirilebilir." },
+    { q: "11. Dokümanlar güncel mevzuata uygun mu?", a: "İSG Zeyron, yürürlükteki mevzuat esas alınarak geliştirilmektedir. Mevzuat değişiklikleri doğrultusunda sistem düzenli olarak güncellenir." },
+    { q: "12. Oluşturduğum dokümanları düzenleyebilir miyim?", a: "İndirilen dokümanlar üzerinde dilediğiniz düzenlemeleri yapabilir ve iş yerinizin ihtiyaçlarına göre uyarlayabilirsiniz." },
+    { q: "14. Aboneliğimi istediğim zaman iptal edebilir miyim?", a: "Evet. Aboneliğinizi, yürürlükteki abonelik ve kullanım koşullarımız çerçevesinde iptal edebilirsiniz." },
+    { q: "15. Güncellemeler için ek ücret ödeyecek miyim?", a: "Hayır. Aktif aboneliğiniz süresince yayınlanan sistem güncellemelerinden ek ücret ödemeden yararlanabilirsiniz." },
+    { q: "16. Teknik destek hizmeti sunuyor musunuz?", a: "Evet. Kullanıcılarımız, ihtiyaç duyduklarında teknik destek ekibimizle iletişime geçebilirler." },
+    { q: "17. Hesabımı farklı cihazlardan kullanabilir miyim?", a: "Evet. Hesabınıza internet bağlantısı bulunan farklı cihazlardan güvenli şekilde giriş yapabilirsiniz." },
+    { q: "20. Yeni özellikler eklenecek mi?", a: "Evet. İSG Zeyron sürekli geliştirilen bir platformdur. Kullanıcı geri bildirimleri ve sektörel ihtiyaçlar doğrultusunda yeni modüller ve özellikler düzenli olarak sisteme eklenmektedir." },
+    { q: "24. Dokümanları PDF olarak indirebilir miyim?", a: "Evet. Oluşturduğunuz dokümanları indirerek kendi bilgisayarınızda veya mobil cihazınızda saklayabilir ve dilediğiniz zaman yazdırabilirsiniz." },
+    { q: "26. Aylık kullanım haklarım bir sonraki aya devreder mi?", a: "Hayır. İSG Zeyron'da kullanım hakları satın aldığınız abonelik paketine göre aylık olarak tanımlanır. Kullanılmayan haklar bir sonraki aya devredilmez." },
+    { q: "27. Deneme sürümü sunuyor musunuz?", a: "Hayır. Kötüye kullanımı önlemek amacıyla ücretsiz deneme sürümü sunmuyoruz. Bunun yerine tek doküman oluşturma hizmetiyle sistemi düşük maliyetle test edebilirsiniz." },
+    { q: "28. Kendi notlarımı oluşturduğum dokümanlara ekleyebilir miyim?", a: "Evet. İSG Zeyron, uzmanların kendi tespitlerini, değerlendirmelerini ve özel notlarını ekleyebileceği alanlar sunar. Sadece standart şablonlardan ibaret değildir." }
+  ];
+
+  const filteredFaqs = faqs.filter(f => f.q.toLowerCase().includes(searchFaq.toLowerCase()) || f.a.toLowerCase().includes(searchFaq.toLowerCase()));
+
+  const advantages = [
+    "Mevzuata uygun doküman yönetimi",
+    "Hazır ve düzenlenebilir belge altyapısı",
+    "Dokümanların dijital ortamda oluşturulması",
+    "Tutanak, form, plan ve raporların tek panelden yönetilmesi",
+    "Kolay kullanılabilir, eğitim gerektirmeyen arayüz",
+    "Excel veya Word bilgisi gerektirmeyen pratik kullanım",
+    "Bulut tabanlı, her cihazdan güvenli erişim",
+    "Düzenli arşivleme ve hızlı doküman yönetimi",
+    "Sürekli geliştirilen sistem altyapısı"
+  ];
+
+  const targetUsers = [
+    "A, B ve C sınıfı İş Güvenliği Uzmanları",
+    "İş Sağlığı ve Güvenliği Teknikerleri",
+    "Ortak Sağlık Güvenlik Birimleri (OSGB)",
+    "Az tehlikeli sınıfta kendi hizmetini yürüten İşverenler",
+    "Süreçleri dijitalleştirmek isteyen tüm işletmeler"
   ];
 
   return (
-    <div className="min-h-screen bg-[#020408] text-slate-300 font-sans selection:bg-yellow-500/30 selection:text-white">
-      {/* Sci-Fi Background Overlay */}
-      <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.03)_0%,rgba(0,0,0,0)_100%)] pointer-events-none"></div>
-      <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+    <div className="min-h-screen bg-[#07090E] text-slate-300 font-sans selection:bg-yellow-500/30 selection:text-white">
+      {/* Sci-Fi Background Overlay - Extremely lightweight, zero lag */}
+      <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.02)_0%,rgba(0,0,0,0)_100%)] pointer-events-none"></div>
 
       {init && (
         <Particles
@@ -124,24 +186,25 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         />
       )}
 
-      {/* Cybernetic Header */}
-      <header className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${scrolled ? 'bg-[#020408]/90 backdrop-blur-md border-yellow-500/20 py-2 shadow-[0_0_30px_rgba(234,179,8,0.1)]' : 'bg-transparent border-transparent py-4'}`}>
+      {/* Header */}
+      <header className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${scrolled ? 'bg-[#07090E]/90 backdrop-blur-md border-yellow-500/20 py-3 shadow-[0_0_30px_rgba(234,179,8,0.05)]' : 'bg-transparent border-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-4 group cursor-pointer">
-            <div className="relative w-12 h-12 flex items-center justify-center">
-               {/* Glowing hex background instead of broken black box */}
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo(0,0)}>
+            <div className="relative w-10 h-10 flex items-center justify-center">
                <div className="absolute inset-0 bg-yellow-500/20 rotate-45 transform blur-sm group-hover:bg-yellow-500/40 transition-all duration-500"></div>
-               <Hexagon className="w-10 h-10 text-yellow-500 relative z-10 animate-pulse" />
-               <Shield className="w-5 h-5 text-white absolute z-20" />
+               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#eab308" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+               <Shield className="w-4 h-4 text-white absolute z-20" />
             </div>
-            <span className="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-yellow-200 to-yellow-600 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]">SYS_ZEYRON</span>
+            <div className="flex flex-col">
+              <span className="text-xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-yellow-200 to-yellow-600 drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]">İSG ZEYRON</span>
+              <span className="text-[10px] text-yellow-500/70 font-bold tracking-[0.2em] uppercase leading-none mt-1">Teknoloji</span>
+            </div>
           </div>
 
           <nav className="hidden md:flex flex-1 justify-center space-x-12">
             {navItems.map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] relative group overflow-hidden">
-                {item}
-                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-yellow-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+              <a key={item.id} href={`#${item.id}`} onClick={(e) => scrollToSection(item.id, e)} className="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-[0.1em] transition-colors">
+                {item.label}
               </a>
             ))}
           </nav>
@@ -149,16 +212,15 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           <div className="flex items-center gap-4">
             <button 
               onClick={onLoginClick}
-              className="text-xs tracking-widest text-slate-300 font-bold uppercase hover:text-yellow-500 transition-colors"
+              className="text-sm font-bold text-slate-300 hover:text-yellow-500 transition-colors"
             >
-              [ BAĞLAN ]
+              GİRİŞ
             </button>
             <button 
               onClick={onRegisterClick}
-              className="px-6 py-2 bg-transparent border border-yellow-500 text-yellow-500 text-xs font-bold uppercase tracking-widest hover:bg-yellow-500 hover:text-black transition-all shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:shadow-[0_0_25px_rgba(234,179,8,0.6)] relative overflow-hidden group"
+              className="px-6 py-2 border border-yellow-500 text-yellow-500 text-sm font-bold uppercase hover:bg-yellow-500 hover:text-black transition-all shadow-[0_0_15px_rgba(234,179,8,0.1)] rounded-md"
             >
-              <span className="absolute w-full h-full bg-yellow-500/20 left-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 skew-x-[-20deg]"></span>
-              <span className="relative z-10 text-shadow-sm">SİSTEME_KAYIT</span>
+              KAYIT OL
             </button>
           </div>
         </div>
@@ -166,131 +228,147 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 px-6 min-h-screen flex items-center justify-center overflow-hidden z-10">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-4xl mx-auto text-center">
           
-          <div className="relative z-10 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-4 py-2 border border-yellow-500/30 bg-yellow-500/10 rounded-none mb-8">
-              <Zap className="w-4 h-4 text-yellow-500 animate-bounce" />
-              <span className="text-yellow-500 text-xs font-bold tracking-[0.3em] uppercase">V_2.0_Çekirdek_Aktif</span>
-            </div>
-            
-            <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-8 leading-[1.1]">
-              <span className="block text-white mb-2">İŞ_GÜVENLİĞİ</span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-700 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">
-                KONTROL_ÜSSÜ
-              </span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed border-l-2 border-yellow-500/50 pl-4">
-              Zeyron Otonom Belge Üreticisi, manuel operasyonları hiper hıza çıkarır. 
-              Parametreleri girin, Word (.docx) algoritmalarımız saniyeler içinde binlerce 
-              sayfalık kurumsal raporları sentezlesin.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-              <button 
-                onClick={onRegisterClick}
-                className="group relative px-8 py-4 bg-yellow-500 text-black font-black uppercase text-sm tracking-[0.2em] overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
-                <span className="flex items-center gap-2 relative z-10">
-                  SİSTEMİ_BAŞLAT <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-                {/* Corner Accents */}
-                <div className="absolute top-0 left-0 w-2 h-2 bg-black"></div>
-                <div className="absolute bottom-0 right-0 w-2 h-2 bg-black"></div>
-              </button>
-              
-              <button className="px-8 py-4 bg-zinc-900 border border-white/10 text-white font-bold uppercase text-sm tracking-[0.2em] hover:bg-white/5 hover:border-yellow-500/50 transition-all flex items-center justify-center gap-2 group">
-                <Target className="w-5 h-5 text-slate-400 group-hover:text-yellow-500 transition-colors" /> SIMÜLASYONU_GÖR
-              </button>
-            </div>
-            
-            <div className="mt-16 flex items-center justify-center lg:justify-start gap-8 opacity-60">
-               <div className="text-xs font-bold tracking-widest text-slate-500 flex flex-col gap-1">
-                 <span className="text-yellow-500 text-xl font-black">99.9%</span>
-                 <span>SİSTEM UPTİME</span>
-               </div>
-               <div className="w-px h-8 bg-slate-800"></div>
-               <div className="text-xs font-bold tracking-widest text-slate-500 flex flex-col gap-1">
-                 <span className="text-yellow-500 text-xl font-black">2.4M+</span>
-                 <span>İŞLENEN VERİ BİTİ</span>
-               </div>
-            </div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 border border-yellow-500/30 bg-yellow-500/5 rounded-full mb-8">
+            <Zap className="w-4 h-4 text-yellow-500 animate-pulse" />
+            <span className="text-yellow-500 text-xs font-bold tracking-[0.1em] uppercase">SaaS Yönetim Platformu</span>
           </div>
-
-          <div className="relative hidden lg:block perspective-1000">
-             {/* Sci-Fi Hologram Container */}
-             <div className="relative w-full h-[600px] border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-transparent flex items-center justify-center group transform rotate-y-[-15deg] rotate-x-[5deg] shadow-[20px_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-700 hover:rotate-0">
-               
-               {/* Grid Pattern inside container */}
-               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-               
-               {/* Scanning Line */}
-               <div className="absolute top-0 left-0 w-full h-1 bg-yellow-500/80 shadow-[0_0_15px_#eab308] animate-[scan_3s_ease-in-out_infinite]"></div>
-
-               {/* Central Emblem replacing logo.jpeg */}
-               <div className="relative z-10 flex flex-col items-center">
-                  <div className="w-48 h-48 border-4 border-yellow-500/30 rounded-full flex items-center justify-center relative animate-[spin_10s_linear_infinite] shadow-[0_0_40px_rgba(234,179,8,0.2)]">
-                     <div className="absolute inset-[-10px] border border-yellow-500/50 rounded-full border-dashed animate-[spin_15s_linear_reverse_infinite]"></div>
-                     <Hexagon className="w-24 h-24 text-yellow-500 absolute" />
-                  </div>
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-                     <Shield className="w-16 h-16 text-yellow-400 drop-shadow-[0_0_15px_#eab308]" />
-                  </div>
-                  
-                  <div className="mt-12 text-center relative z-20 bg-[#020408]/80 backdrop-blur px-8 py-3 border-l-4 border-yellow-500">
-                     <h2 className="text-3xl font-black tracking-[0.3em] text-white">İSG_ZEYRON</h2>
-                     <p className="text-yellow-500 text-xs tracking-[0.5em] font-bold mt-1 uppercase">Güvenlik Algoritması</p>
-                  </div>
-               </div>
-
-                {/* Corner Markers */}
-               <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-yellow-500/50"></div>
-               <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-yellow-500/50"></div>
-               <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-yellow-500/50"></div>
-               <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-yellow-500/50"></div>
-             </div>
+          
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight mb-8 leading-[1.1]">
+            İş Sağlığı ve Güvenliği Süreçlerini <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_20px_rgba(234,179,8,0.3)]">
+              Dijitalleştiren Akıllı Platform
+            </span>
+          </h1>
+          
+          <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-3xl mx-auto font-light leading-relaxed">
+            İSG süreçlerinde en fazla zaman alan işlemleri tek bir sistem altında bir araya getirerek, 
+            uzmanlara, OSGB'lere ve işverenlere hızlı, düzenli ve pratik bir çalışma ortamı sunar.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button 
+              onClick={onRegisterClick}
+              className="px-8 py-4 bg-yellow-500 text-black font-black uppercase text-sm tracking-[0.1em] rounded-lg hover:bg-yellow-400 transition-colors shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:scale-105 transform duration-300 flex items-center justify-center gap-2"
+            >
+              SİSTEME KAYIT OL <ChevronRight className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={onLoginClick}
+              className="px-8 py-4 bg-zinc-900 border border-white/20 text-white font-bold uppercase text-sm tracking-[0.1em] rounded-lg hover:bg-zinc-800 transition-colors flex items-center justify-center"
+            >
+              GİRİŞ YAP
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-32 relative z-10 bg-zinc-950/50 border-y border-white/5">
+      {/* About Section */}
+      <section id="hakkimizda" className="py-24 relative z-10 bg-[#0A0D14] border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-sm font-bold text-yellow-500 tracking-[0.4em] uppercase mb-4">Sistem_Modülleri</h2>
-            <p className="text-3xl md:text-5xl font-black text-white">HİPER BOŞLUK TEKNOLOJİSİ</p>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-6">Neden <span className="text-yellow-500">İSG Zeyron?</span></h2>
+              <div className="space-y-6 text-slate-400 font-light leading-relaxed">
+                <p>
+                  İSG uygulamalarında zamanın büyük bir bölümü belge hazırlamak, düzenlemek ve kontrol etmekle geçmektedir. İSG Zeyron, bu süreçleri dijital ortama taşıyarak iş yükünü azaltmayı ve kullanıcıların asıl odak noktası olan iş sağlığı ve güvenliği faaliyetlerine daha fazla zaman ayırmasını hedefler.
+                </p>
+                <p>
+                  Modern altyapısı sayesinde kullanıcılar internet bağlantısı olan her yerden sisteme güvenli şekilde erişebilir, ihtiyaç duydukları işlemleri tek panel üzerinden yönetebilir.
+                </p>
+                <p className="p-4 border-l-4 border-yellow-500 bg-yellow-500/5 text-slate-300 italic">
+                  İSG Zeyron; yalnızca bir doküman sistemi değil, İSG profesyonellerinin iş süreçlerini kolaylaştıran kapsamlı bir dijital çalışma platformu olma hedefiyle geliştirilmektedir.
+                </p>
+              </div>
+            </div>
+            
+            <div className="bg-zinc-900/50 border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl"></div>
+               <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                 <Target className="w-6 h-6 text-yellow-500" />
+                 Kimler İçin Uygundur?
+               </h3>
+               <ul className="space-y-4">
+                 {targetUsers.map((user, idx) => (
+                   <li key={idx} className="flex items-start gap-3">
+                     <CheckCircle2 className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
+                     <span className="text-slate-300 leading-snug">{user}</span>
+                   </li>
+                 ))}
+               </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Advantages Section */}
+      <section id="avantajlar" className="py-24 relative z-10 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-sm font-bold text-yellow-500 tracking-[0.2em] uppercase mb-4">Sistem Altyapısı</h2>
+            <p className="text-3xl md:text-5xl font-black text-white">Platformun Sağladığı Avantajlar</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, idx) => (
-              <div key={idx} className="bg-zinc-900/50 p-10 border border-white/5 hover:border-yellow-500/50 transition-all duration-300 relative group overflow-hidden">
-                <div className="absolute top-0 right-0 bg-yellow-500/10 w-32 h-32 blur-3xl group-hover:bg-yellow-500/30 transition-all"></div>
-                <div className="mb-6 relative z-10">
-                  {feature.icon}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {advantages.map((adv, idx) => (
+              <div key={idx} className="bg-zinc-900/40 p-6 rounded-xl border border-white/5 hover:border-yellow-500/30 transition-all duration-300 hover:-translate-y-1">
+                <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center mb-4">
+                  <ShieldAlert className="w-5 h-5 text-yellow-500" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-4 tracking-wider uppercase relative z-10">{feature.title}</h3>
-                <p className="text-slate-400 font-light leading-relaxed relative z-10">{feature.description}</p>
-                <div className="absolute bottom-4 right-4 text-slate-800 font-mono text-xs opacity-50">#00{idx + 1}</div>
+                <p className="text-slate-300 font-medium">{adv}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <section id="sss" className="py-24 relative z-10 bg-[#0A0D14] border-t border-white/5">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-sm font-bold text-yellow-500 tracking-[0.2em] uppercase mb-4">Destek Merkezi</h2>
+            <p className="text-3xl md:text-5xl font-black text-white mb-8">Sık Sorulan Sorular</p>
+            
+            <div className="relative max-w-xl mx-auto">
+              <input 
+                type="text" 
+                placeholder="Konu veya soru arayın..." 
+                value={searchFaq}
+                onChange={(e) => setSearchFaq(e.target.value)}
+                className="w-full bg-zinc-900 border border-white/10 rounded-full px-6 py-4 pl-12 text-white outline-none focus:border-yellow-500/50 transition-colors"
+              />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500 w-5 h-5" />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            {filteredFaqs.length > 0 ? (
+              filteredFaqs.map((faq, idx) => (
+                <FAQItem key={idx} question={faq.q} answer={faq.a} />
+              ))
+            ) : (
+              <div className="text-center py-10 text-slate-500">
+                Aramanıza uygun soru bulunamadı.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 bg-[#050608] py-12 relative z-10 text-center">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-center gap-3 mb-6 opacity-80">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eab308" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            <span className="text-lg font-black tracking-widest text-slate-300">İSG ZEYRON</span>
+          </div>
+          <p className="text-slate-500 text-sm">
+            © {new Date().getFullYear()} İSG Zeyron Teknoloji. Tüm hakları saklıdır.
+          </p>
+        </div>
+      </footer>
       
-      {/* Sci-Fi Global CSS Overrides integrated */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes scan {
-          0% { top: 0; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: 100%; opacity: 0; }
-        }
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-      `}} />
     </div>
   );
 };
