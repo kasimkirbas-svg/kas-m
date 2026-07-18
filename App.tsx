@@ -183,87 +183,102 @@ const App = () => {
 
             {currentView === 'dashboard' && (
               <>
-            {/* Holographic Header Area with Integrated Actions */}
+            {/* Header Layout Engine - Redesigned Grid */}
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="mb-8 p-10 relative overflow-hidden bg-[#111111]/40 border border-white/5 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-xl group flex flex-col xl:flex-row gap-8 items-center justify-between"
+              className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 relative z-10"
             >
-               <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-[#FFD700]/10 transition-colors duration-1000"></div>
-               <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#FFD700]/30 to-transparent"></div>
-               
-               {/* Left: Giant Welcome */}
-               <div className="relative z-10 w-full xl:w-auto text-center xl:text-left flex-shrink-0">
-                  <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2 leading-[1.05]">
-                    HOŞGELDİNİZ, <br className="lg:hidden" />
-                    <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.4)]">{(user?.name || "UZMAN").toUpperCase()}</span>
-                  </h2>
-               </div>
-
-               {/* Right: Son İşlemler (Moved & Redesigned) & Actions */}
-               <div className="relative z-10 flex-1 w-full flex flex-col lg:flex-row gap-6 items-center justify-end">
-                  
-                  {/* Cyber Search Bar */}
-                  <div className="w-full lg:w-[350px] relative group shrink-0">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded-sm blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
-                    <div className="relative flex items-center bg-[#0A0A0A] border border-white/10 p-2 shadow-inner">
-                      <Search className="w-5 h-5 text-[#FFD700] ml-4 shrink-0 transition-transform group-focus-within:scale-110" />
-                      <input 
-                        type="text" 
-                        placeholder="NET ARAMA..." 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-transparent border-none px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-0 font-bold tracking-wide text-xs"
-                      />
-                      {searchQuery && (
-                        <button onClick={() => setSearchQuery('')} className="pr-4 text-[10px] font-black text-slate-500 hover:text-[#FFD700] tracking-wider uppercase transition-colors">İPTAL</button>
-                      )}
+              {/* Main Welcome & Search Panel (Left Side - 3 Cols Wide) */}
+              <div className="lg:col-span-3 bg-[#111111]/40 border border-white/5 p-8 rounded-xl shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-xl relative overflow-hidden group flex flex-col justify-between">
+                 <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-[#FFD700]/10 transition-colors duration-1000"></div>
+                 <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#FFD700]/30 to-transparent"></div>
+                 
+                 <div className="flex flex-col md:flex-row gap-8 items-center justify-between relative z-10">
+                    <div className="text-center md:text-left flex-1">
+                      <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2 leading-[1.05]">
+                        HOŞGELDİNİZ, <br className="lg:hidden" />
+                        <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.4)]">{(user?.name || "UZMAN").toUpperCase()}</span>
+                      </h2>
                     </div>
-                  </div>
 
-                  {/* Son İşlemler Mini Module */}
-                  <div className="w-full lg:w-auto flex-1 max-w-[400px] bg-[#0A0A0A] border border-white/5 p-3 rounded-lg shadow-inner flex flex-col gap-2 relative group hover:border-[#FFD700]/30 transition-all">
-                     <div className="flex items-center justify-between px-2 mb-1">
-                        <div className="flex items-center gap-2">
-                           <FileClock size={12} className="text-[#FFD700]" />
-                           <span className="text-[9px] uppercase tracking-widest font-black text-slate-400">Son İşlemler</span>
-                        </div>
-                        <button onClick={() => setCurrentView('profile')} className="text-[9px] text-[#FFD700] hover:text-white uppercase font-bold tracking-widest">Tümü <ArrowRight size={10} className="inline ml-1" /></button>
-                     </div>
-                     
-                     <div className="flex items-center justify-between bg-[#111111] p-2 rounded hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-[#FFD700]/20">
-                        <div className="flex items-center gap-3">
-                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700] animate-pulse"></div>
-                           <span className="text-xs font-bold text-slate-300">İskele Kontrol Formu</span>
-                        </div>
-                        <span className="text-[9px] uppercase font-bold text-slate-500">Taslak</span>
-                     </div>
-                     <div className="flex items-center justify-between bg-[#111111] p-2 rounded hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-green-500/20">
-                        <div className="flex items-center gap-3">
-                           <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                           <span className="text-xs font-bold text-slate-300">Puantaj Tablosu</span>
-                        </div>
-                        <span className="text-[9px] uppercase font-bold text-slate-500">Onaylandı</span>
-                     </div>
-                  </div>
+                    {/* Compact Cyber Search Bar */}
+                    <div className="w-full md:w-[350px] relative">
+                      <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded-sm blur opacity-50 focus-within:opacity-100 transition duration-500"></div>
+                      <div className="relative flex items-center bg-[#0A0A0A] border border-white/10 p-2 shadow-inner rounded focus-within:border-[#FFD700]/50 transition-colors">
+                        <Search className="w-5 h-5 text-[#FFD700] ml-3 shrink-0" />
+                        <input 
+                          type="text" 
+                          placeholder="ARŞİVDE ARAYIN..." 
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full bg-transparent border-none px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none font-bold tracking-wide text-xs"
+                        />
+                        {searchQuery && (
+                          <button onClick={() => setSearchQuery('')} className="pr-3 text-[10px] font-black text-slate-500 hover:text-[#FFD700] tracking-wider uppercase transition-colors">SİL</button>
+                        )}
+                      </div>
+                    </div>
+                 </div>
 
-                  {/* Action Blocks integrated into Header */}
-                  <div className="flex flex-row lg:flex-col xl:flex-row gap-3">
+                 {/* Inline Fast Action Buttons in Main Panel */}
+                 <div className="flex flex-wrap gap-4 mt-8 relative z-10 pt-6 border-t border-white/5">
                      <button onClick={() => {
                         const targetTemp = safeTemplates[0];
                         if(targetTemp) { setSelectedTemplate(targetTemp); setCurrentView('editor'); }
-                      }} className="flex-1 px-4 py-3 bg-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/50 rounded text-[10px] uppercase tracking-[0.2em] font-black text-slate-300 hover:text-white transition-all group flex items-center justify-center gap-2 shadow-inner hover:shadow-[0_0_15px_rgba(255,215,0,0.2)]">
-                       <FileText size={14} className="text-[#FFD700]" /> Form
+                      }} className="px-6 py-3 bg-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/50 rounded-lg text-xs uppercase tracking-[0.2em] font-black text-slate-300 hover:text-white transition-all group flex items-center gap-3 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                       <FileText size={16} className="text-[#FFD700] group-hover:scale-110 transition-transform" /> Hızlı Form
                      </button>
-                     <button onClick={() => setCurrentView('settings')} className="flex-1 px-4 py-3 bg-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/50 rounded text-[10px] uppercase tracking-[0.2em] font-black text-slate-300 hover:text-white transition-all group flex items-center justify-center gap-2 shadow-inner hover:shadow-[0_0_15px_rgba(255,215,0,0.2)]">
-                       <Settings size={14} className="text-slate-400 group-hover:text-white" /> Ayar
+                     <button onClick={() => setCurrentView('settings')} className="px-6 py-3 bg-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/50 rounded-lg text-xs uppercase tracking-[0.2em] font-black text-slate-300 hover:text-white transition-all group flex items-center gap-3 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                       <Settings size={16} className="text-slate-400 group-hover:rotate-90 transition-transform" /> Sistem Ayarları
                      </button>
-                     <button onClick={() => setCurrentView('billing')} className="flex-1 px-4 py-3 bg-[#FFD700] border border-[#FFD700] rounded text-[10px] uppercase tracking-[0.2em] font-black text-black hover:bg-white hover:border-white transition-all group flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.4)]">
-                       <Crown size={14} /> VIP
+                     <button onClick={() => setCurrentView('billing')} className="px-6 py-3 bg-[#111111] border border-[#FFD700]/50 hover:bg-[#FFD700] rounded-lg text-xs uppercase tracking-[0.2em] font-black text-[#FFD700] hover:text-black transition-all group flex items-center gap-3 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] ml-auto">
+                       <Crown size={16} className="group-hover:scale-110 transition-transform" /> PREMIUM'A GEÇ
                      </button>
-                  </div>
-               </div>
+                 </div>
+              </div>
+
+              {/* Right Side: Clean Protocol Log (1 Col Wide) */}
+              <div className="lg:col-span-1 bg-[#111111]/40 border border-white/5 p-6 rounded-xl shadow-inner backdrop-blur-xl flex flex-col relative group hover:border-[#FFD700]/30 transition-all duration-500">
+                 <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
+                    <div className="flex items-center gap-2">
+                       <div className="relative flex items-center justify-center">
+                         <div className="absolute w-6 h-6 bg-[#FFD700]/20 rounded-full animate-ping"></div>
+                         <FileClock size={16} className="text-[#FFD700] relative z-10" />
+                       </div>
+                       <span className="text-xs uppercase tracking-[0.2em] font-black text-white drop-shadow-md">Protokol Geçmişi</span>
+                    </div>
+                 </div>
+                 
+                 <div className="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar">
+                     <div className="bg-[#0A0A0A] p-3 rounded-lg border border-white/5 hover:border-[#FFD700]/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-bold text-slate-300 group-hover/item:text-white transition-colors truncate pr-2">İskele Kontrol Formu</span>
+                          <ArrowRight size={12} className="text-slate-600 group-hover/item:text-[#FFD700] group-hover/item:translate-x-1 transition-all" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]"></div>
+                           <span className="text-[8px] uppercase font-black tracking-widest text-[#FFD700]/70">Taslak • 14:30</span>
+                        </div>
+                     </div>
+
+                     <div className="bg-[#0A0A0A] p-3 rounded-lg border border-white/5 hover:border-green-500/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-bold text-slate-300 group-hover/item:text-white transition-colors truncate pr-2">Aylık Puantaj Tablosu</span>
+                          <ArrowRight size={12} className="text-slate-600 group-hover/item:text-green-500 group-hover/item:translate-x-1 transition-all" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                           <span className="text-[8px] uppercase font-black tracking-widest text-green-500/70">Onaylandı • Dün</span>
+                        </div>
+                     </div>
+                 </div>
+                 
+                 <button onClick={() => setCurrentView('profile')} className="mt-4 w-full py-2 bg-[#0A0A0A] rounded border border-white/5 hover:border-[#FFD700]/30 text-[10px] uppercase font-black tracking-[0.2em] text-slate-400 hover:text-[#FFD700] transition-colors">
+                    TÜMÜNÜ GÖSTER
+                 </button>
+              </div>
             </motion.div>
 
             {/* Sub System Engine (Categories) First */}
