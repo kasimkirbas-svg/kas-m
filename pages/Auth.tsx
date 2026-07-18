@@ -78,8 +78,8 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
          
          <div className="flex items-center gap-3">
              {/* Siyahlıksız temizlenmiş logo */}
-             <div className="w-12 h-12 flex items-center justify-center shrink-0 mix-blend-screen overflow-hidden">
-                <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-full h-full object-contain" />
+               <div className="w-16 h-16 flex items-center justify-center shrink-0 mix-blend-screen bg-transparent rounded-full overflow-hidden shadow-inner border border-white/5">
+                  <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[120%] h-auto object-contain mix-blend-screen mix-blend-lighten filter brightness-110 drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] transition-transform duration-500 hover:scale-110" />
              </div>
              <span className="text-2xl font-black tracking-tight text-white hidden sm:block">
                İSG <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]">Zeyron</span>

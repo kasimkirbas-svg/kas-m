@@ -56,17 +56,27 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
                 <span className="font-bold text-slate-200 text-sm group-hover:text-white transition-colors">{user.name.split(' ')[0]}</span>
                 <span className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">{user.role === 'GUEST' ? 'KULLANICI' : 'PREMIUM'}</span>
               </div>
-              <div className="w-10 h-10 bg-[#1A1D27] rounded-full flex items-center justify-center text-slate-300 font-bold border border-white/5 group-hover:border-orange-500/50 transition-colors">
+              <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center text-slate-300 font-bold border border-white/5 group-hover:border-yellow-500/50 transition-colors">
                 {user.name.charAt(0).toUpperCase()}
               </div>
             </div>
+
+            {/* Logout button */}
+            <button 
+              onClick={onLogout}
+              className="text-slate-500 hover:text-red-500 transition-colors pointer-events-auto ml-2 border border-white/5 bg-white/5 rounded-lg p-2"
+              title="Çıkış Yap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
           </div>
         </header>
 
         {/* Main Content Area */}
-      <main className="flex-1 w-full bg-[#0A0C10] overflow-hidden relative flex flex-col">
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+      <main className="flex-1 w-full bg-zinc-950 overflow-hidden relative flex flex-col">
+        {/* Subtle nice background, removed mazgal grid */}
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 to-zinc-900 pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-yellow-500/5 rounded-full blur-[120px] pointer-events-none"></div>
         
         {/* Content container */}
         <div className="relative z-10 w-full flex-1 overflow-y-auto overflow-x-hidden flex flex-col pb-20">

@@ -170,13 +170,13 @@ const App = () => {
                 {/* Search Bar */}
                 <div className="relative max-w-lg group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-slate-500 group-focus-within:text-orange-400 transition-colors" />
+                    <Search className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-400 transition-colors" />
                   </div>
                   <input 
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="block w-full pl-12 pr-4 py-4 bg-[#1A1D27] border border-white/5 text-slate-200 placeholder-slate-500 rounded-xl outline-none focus:border-orange-500/50 focus:bg-[#1D212E] transition-all text-sm shadow-inner"
+                    className="block w-full pl-12 pr-4 py-4 bg-[#1A1D27] border border-white/5 text-slate-200 placeholder-slate-500 rounded-xl outline-none focus:border-yellow-500/50 focus:bg-[#1D212E] transition-all text-sm shadow-inner"
                     placeholder="Şablon, belge veya kategori ara... (örn: Hijyen)"
                   />
                   {searchQuery && (
@@ -191,9 +191,9 @@ const App = () => {
               </div>
 
               {/* Stats / Quick Info Panel right side of Hero */}
-              <div className="w-full md:w-[350px] bg-[#0A0C10]/50 backdrop-blur-xl border-l border-white/5 p-8 flex flex-col justify-center gap-6">
+              <div className="w-full md:w-[350px] bg-zinc-950/50 backdrop-blur-xl border-l border-white/5 p-8 flex flex-col justify-center gap-6">
                 <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 border border-orange-500/20">
+                   <div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-500 border border-yellow-500/20">
                      <FileText size={20} />
                    </div>
                    <div>
@@ -202,18 +202,13 @@ const App = () => {
                    </div>
                 </div>
                 <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
+                   <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20">
                      <ShieldAlert size={20} />
                    </div>
                    <div>
                      <p className="text-xs text-slate-500 font-bold tracking-widest uppercase">Aktif Sektör</p>
                      <p className="text-2xl font-black text-white">{uniqueCategories.length}</p>
-                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Categories Carousel */}
+              {/* Categories Carousel */}
             <div className="mb-10">
               <h3 className="text-sm font-bold text-slate-400 tracking-widest uppercase mb-4">Sektörel Kategoriler</h3>
               <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x">
