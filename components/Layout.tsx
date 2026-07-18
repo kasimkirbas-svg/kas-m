@@ -24,22 +24,24 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
       {/* Top Navigation Header */}
       <header className="flex items-center justify-between h-20 px-8 bg-[#0A0A0A]/90 backdrop-blur-md border-b border-white/5 relative z-50">
         
-        {/* Logo / Brand Left Sci-Fi Theme */}
+        {/* Empty left space for symmetry */}
+        <div className="flex-1"></div>
+
+        {/* Logo / Brand Center Sci-Fi Theme */}
         <div 
-          className="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity"
+          className="flex-shrink-0 flex items-center justify-center cursor-pointer hover:scale-105 transition-transform group"
           onClick={() => onNavigate('dashboard')}
         >
-          <div className="w-12 h-12 flex items-center justify-center rounded-full overflow-hidden">
-             <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[120%] h-auto object-contain" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-black text-white text-sm tracking-[0.2em]">{APP_NAME}</span>
-            <span className="text-[9px] text-[#FFD700] font-bold tracking-[0.3em] leading-none uppercase mt-1">Sistem_Aktif</span>
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 flex items-center justify-center rounded-full overflow-hidden bg-[#111111] shadow-[0_0_15px_rgba(255,215,0,0.2)] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] transition-shadow border border-[#FFD700]/10">
+               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[120%] h-auto object-contain" />
+             </div>
+             <span className="font-black text-white text-xl tracking-[0.3em] uppercase drop-shadow-md">İSG ZEYRON</span>
           </div>
         </div>
 
         {/* User / Actions Right */}
-        <div className="flex items-center gap-6">
+        <div className="flex-1 flex justify-end items-center gap-6">
           <button 
             className="text-slate-400 hover:text-[#FFD700] transition-colors relative"
             title="Bildirimler"
