@@ -80,7 +80,10 @@ const App = () => {
   const renderContent = () => {
     if (currentView === 'landing') {
       return (
-        <Landing onStart={() => setCurrentView('auth')} />
+        <Landing 
+          onLoginClick={() => setCurrentView('auth')} 
+          onRegisterClick={() => setCurrentView('auth')} 
+        />
       );
     }
 
