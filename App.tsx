@@ -9,7 +9,7 @@ import {
   Car, Building2, Trees, Activity, Building, Zap, MapPin, SearchCode,
   FileBox, UserCheck, CheckSquare, Award, FileClock, FolderOpen, ArrowRight,
   ShieldAlert, UserPlus, FileArchive, Settings, Crown, ChevronRight, CheckCircle2,
-  Hexagon, Flame
+  Hexagon, Flame, Target
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
