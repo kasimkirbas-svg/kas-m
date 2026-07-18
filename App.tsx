@@ -183,215 +183,95 @@ const App = () => {
 
             {currentView === 'dashboard' && (
               <>
-            {/* Holographic Header Area */}
+            {/* Holographic Header Area with Integrated Actions */}
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="mb-8 p-10 relative overflow-hidden bg-[#111111]/40 border border-white/5 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-xl group"
+              className="mb-8 p-10 relative overflow-hidden bg-[#111111]/40 border border-white/5 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-xl group flex flex-col xl:flex-row gap-8 items-center justify-between"
             >
                <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-[#FFD700]/10 transition-colors duration-1000"></div>
                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#FFD700]/30 to-transparent"></div>
                
-               <div className="relative z-10 flex flex-col lg:flex-row gap-8 items-center justify-between">
-                  <div className="flex-1 w-full lg:w-auto text-center lg:text-left">
-                    <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-4 leading-[1.05]">
-                      HOŞGELDİNİZ, <br className="lg:hidden" />
-                      <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.4)]">{(user?.name || "UZMAN").toUpperCase()}</span>
-                    </h2>
-                    <div className="flex items-center gap-3 justify-center lg:justify-start">
-                       <span className="flex h-3 w-3 relative">
-                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD700] opacity-75"></span>
-                         <span className="relative inline-flex rounded-full h-3 w-3 bg-[#FFD700]"></span>
-                       </span>
-                       <p className="text-slate-400 font-light max-w-2xl text-lg leading-relaxed">
-                         Sistem <strong className="text-white">veri hattı</strong> aktif ve senkronize çalışıyor. Merkezi bilgi arşivine doğrudan erişiminiz sağlandı.
-                       </p>
-                    </div>
-                  </div>
+               {/* Left: Giant Welcome */}
+               <div className="relative z-10 w-full xl:w-auto text-center xl:text-left flex-shrink-0">
+                  <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2 leading-[1.05]">
+                    HOŞGELDİNİZ, <br className="lg:hidden" />
+                    <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.4)]">{(user?.name || "UZMAN").toUpperCase()}</span>
+                  </h2>
+               </div>
+
+               {/* Right: Son İşlemler (Moved & Redesigned) & Actions */}
+               <div className="relative z-10 flex-1 w-full flex flex-col lg:flex-row gap-6 items-center justify-end">
                   
                   {/* Cyber Search Bar */}
-                  <div className="w-full lg:w-[450px]">
-                    <div className="relative group">
-                      <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded-sm blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
-                      <div className="relative flex items-center bg-[#0A0A0A] border border-white/10 p-2 shadow-inner">
-                        <Search className="w-5 h-5 text-[#FFD700] ml-4 shrink-0 transition-transform group-focus-within:scale-110" />
-                        <input 
-                          type="text" 
-                          placeholder="DOKÜMAN PROTOKOLÜ ARAYIN..." 
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full bg-transparent border-none px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-0 font-medium tracking-wide text-sm"
-                        />
-                        {searchQuery && (
-                          <button 
-                            onClick={() => setSearchQuery('')}
-                            className="pr-4 text-xs font-bold text-slate-500 hover:text-[#FFD700] tracking-wider uppercase transition-colors"
-                          >
-                            İPTAL
-                          </button>
-                        )}
-                      </div>
+                  <div className="w-full lg:w-[350px] relative group shrink-0">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded-sm blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
+                    <div className="relative flex items-center bg-[#0A0A0A] border border-white/10 p-2 shadow-inner">
+                      <Search className="w-5 h-5 text-[#FFD700] ml-4 shrink-0 transition-transform group-focus-within:scale-110" />
+                      <input 
+                        type="text" 
+                        placeholder="NET ARAMA..." 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-transparent border-none px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-0 font-bold tracking-wide text-xs"
+                      />
+                      {searchQuery && (
+                        <button onClick={() => setSearchQuery('')} className="pr-4 text-[10px] font-black text-slate-500 hover:text-[#FFD700] tracking-wider uppercase transition-colors">İPTAL</button>
+                      )}
                     </div>
+                  </div>
+
+                  {/* Son İşlemler Mini Module */}
+                  <div className="w-full lg:w-auto flex-1 max-w-[400px] bg-[#0A0A0A] border border-white/5 p-3 rounded-lg shadow-inner flex flex-col gap-2 relative group hover:border-[#FFD700]/30 transition-all">
+                     <div className="flex items-center justify-between px-2 mb-1">
+                        <div className="flex items-center gap-2">
+                           <FileClock size={12} className="text-[#FFD700]" />
+                           <span className="text-[9px] uppercase tracking-widest font-black text-slate-400">Son İşlemler</span>
+                        </div>
+                        <button onClick={() => setCurrentView('profile')} className="text-[9px] text-[#FFD700] hover:text-white uppercase font-bold tracking-widest">Tümü <ArrowRight size={10} className="inline ml-1" /></button>
+                     </div>
+                     
+                     <div className="flex items-center justify-between bg-[#111111] p-2 rounded hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-[#FFD700]/20">
+                        <div className="flex items-center gap-3">
+                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700] animate-pulse"></div>
+                           <span className="text-xs font-bold text-slate-300">İskele Kontrol Formu</span>
+                        </div>
+                        <span className="text-[9px] uppercase font-bold text-slate-500">Taslak</span>
+                     </div>
+                     <div className="flex items-center justify-between bg-[#111111] p-2 rounded hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-green-500/20">
+                        <div className="flex items-center gap-3">
+                           <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                           <span className="text-xs font-bold text-slate-300">Puantaj Tablosu</span>
+                        </div>
+                        <span className="text-[9px] uppercase font-bold text-slate-500">Onaylandı</span>
+                     </div>
+                  </div>
+
+                  {/* Action Blocks integrated into Header */}
+                  <div className="flex flex-row lg:flex-col xl:flex-row gap-3">
+                     <button onClick={() => {
+                        const targetTemp = safeTemplates[0];
+                        if(targetTemp) { setSelectedTemplate(targetTemp); setCurrentView('editor'); }
+                      }} className="flex-1 px-4 py-3 bg-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/50 rounded text-[10px] uppercase tracking-[0.2em] font-black text-slate-300 hover:text-white transition-all group flex items-center justify-center gap-2 shadow-inner hover:shadow-[0_0_15px_rgba(255,215,0,0.2)]">
+                       <FileText size={14} className="text-[#FFD700]" /> Form
+                     </button>
+                     <button onClick={() => setCurrentView('settings')} className="flex-1 px-4 py-3 bg-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/50 rounded text-[10px] uppercase tracking-[0.2em] font-black text-slate-300 hover:text-white transition-all group flex items-center justify-center gap-2 shadow-inner hover:shadow-[0_0_15px_rgba(255,215,0,0.2)]">
+                       <Settings size={14} className="text-slate-400 group-hover:text-white" /> Ayar
+                     </button>
+                     <button onClick={() => setCurrentView('billing')} className="flex-1 px-4 py-3 bg-[#FFD700] border border-[#FFD700] rounded text-[10px] uppercase tracking-[0.2em] font-black text-black hover:bg-white hover:border-white transition-all group flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,215,0,0.4)]">
+                       <Crown size={14} /> VIP
+                     </button>
                   </div>
                </div>
             </motion.div>
 
-            {/* Main Control Hub Overlay & Actions */}
+            {/* Sub System Engine (Categories) First */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-12"
-            >
-              {/* Left Column: Quick Analytics */}
-              <div className="flex flex-col gap-5 xl:col-span-1">
-                 {/* Stat Card 1 */}
-                 <div className="p-5 bg-[#111111] border border-white/5 relative overflow-hidden group hover:border-[#FFD700]/50 transition-all duration-500 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-between">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl group-hover:bg-[#FFD700]/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-                    <div>
-                       <div className="flex items-center gap-3 mb-2">
-                          <FileArchive className="text-[#FFD700] w-4 h-4 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)] transition-all" />
-                          <span className="text-slate-400 font-bold text-[10px] tracking-widest uppercase group-hover:text-slate-300">Merkezi Protokol</span>
-                       </div>
-                       <div className="text-2xl font-black text-white group-hover:text-[#FFD700] transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(255,215,0,0.4)]">1.248</div>
-                    </div>
-                 </div>
-                 
-                 {/* Stat Card 2 */}
-                 <div className="p-5 bg-[#111111] border border-white/5 relative overflow-hidden group hover:border-red-500/50 transition-all duration-500 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-between">
-                    <div className="absolute bottom-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 translate-y-1/2"></div>
-                    <div>
-                       <div className="flex items-center gap-3 mb-2">
-                          <ShieldAlert className="text-red-500 w-4 h-4 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] transition-all" />
-                          <span className="text-slate-400 font-bold text-[10px] tracking-widest uppercase group-hover:text-slate-300">Aktif Risk Sınıfı</span>
-                       </div>
-                       <div className="text-2xl font-black text-white group-hover:text-red-400 transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(239,68,68,0.4)]">{uniqueCategories.length}</div>
-                    </div>
-                 </div>
-
-                 {/* Stat Card 3 Premium */}
-                 <div onClick={() => setCurrentView('billing')} className="cursor-pointer p-5 bg-[#FFD700]/10 border border-[#FFD700]/30 relative overflow-hidden group hover:bg-[#FFD700]/20 hover:border-[#FFD700] transition-all duration-500 flex items-center justify-between">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/10 rounded-full blur-3xl group-hover:bg-[#FFD700]/30 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-                    <div>
-                       <div className="flex items-center gap-3 mb-2">
-                          <Crown className="text-[#FFD700] w-4 h-4 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.8)] transition-all" />
-                          <span className="text-[#FFD700] font-bold text-[10px] tracking-widest uppercase">Lisans Statüsü</span>
-                       </div>
-                       <div className="text-2xl font-black text-[#FFD700] drop-shadow-[0_0_10px_rgba(255,215,0,0.2)] group-hover:drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]">{user.role}</div>
-                    </div>
-                 </div>
-              </div>
-
-              {/* Middle Column: Recent Activity Log */}
-              <div className="bg-[#111111] border border-white/10 p-6 shadow-[inset_0_0_30px_rgba(0,0,0,0.5)] flex flex-col relative overflow-hidden xl:col-span-1">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4 relative z-10">
-                  <div className="flex items-center gap-3">
-                    <FileClock className="w-5 h-5 text-[#FFD700]" />
-                    <h3 className="text-xs font-black text-white tracking-[0.2em] uppercase drop-shadow-md">Son İşlemler</h3>
-                  </div>
-                  <button onClick={() => setCurrentView('profile')} className="px-3 py-1.5 border border-[#FFD700]/30 rounded text-[9px] uppercase tracking-widest font-black text-[#FFD700] hover:bg-[#FFD700] hover:text-black hover:border-[#FFD700] transition-colors group flex items-center gap-2" title="Tüm Arşivi Aç">
-                     <FolderOpen size={12} className="group-hover:text-black transition-colors" /> Arşive Git
-                  </button>
-                </div>
-                
-                <div className="flex-1 flex flex-col gap-2 relative z-10 overflow-y-auto custom-scrollbar pr-2 h-[200px]">
-                  <div className="flex justify-between items-center bg-[#0A0A0A] border border-white/5 p-3 hover:border-[#FFD700]/50 transition-all cursor-pointer group rounded shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 flex items-center justify-center bg-white/5 rounded text-slate-400 group-hover:text-black group-hover:bg-[#FFD700] transition-colors shadow-inner">
-                        <FileText size={16} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black text-slate-200 group-hover:text-white transition-colors tracking-wide">İskele Kontrol Formu</span>
-                        <div className="flex items-center gap-2 mt-1">
-                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700] animate-pulse"></div>
-                           <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Bugün, 14:30 • TASLAK</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-600 group-hover:border-[#FFD700] group-hover:text-[#FFD700] transition-colors">
-                      <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center bg-[#0A0A0A] border border-white/5 p-3 hover:border-green-500/50 transition-all cursor-pointer group rounded shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 flex items-center justify-center bg-white/5 rounded text-slate-400 group-hover:text-black group-hover:bg-green-500 transition-colors shadow-inner">
-                        <CheckSquare size={16} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black text-slate-200 group-hover:text-white transition-colors tracking-wide">Puantaj Tablosu - Eylül</span>
-                        <div className="flex items-center gap-2 mt-1">
-                           <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                           <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Dün, 09:15 • ONAYLANDI</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-600 group-hover:border-green-500 group-hover:text-green-500 transition-colors">
-                      <Download size={14} className="group-hover:translate-y-0.5 transition-transform" />
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center bg-[#0A0A0A] border border-white/5 p-3 hover:border-[#FFD700]/50 transition-all cursor-pointer group rounded shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 flex items-center justify-center bg-white/5 rounded text-slate-400 group-hover:text-black group-hover:bg-[#FFD700] transition-colors shadow-inner">
-                        <FileText size={16} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black text-slate-200 group-hover:text-white transition-colors tracking-wide">Acil Durum Eylem Planı</span>
-                        <div className="flex items-center gap-2 mt-1">
-                           <div className="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
-                           <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold">22 Nis, 16:45 • İNDİRİLDİ</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-slate-600 group-hover:border-[#FFD700] group-hover:text-[#FFD700] transition-colors">
-                      <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Mission Control Actions */}
-              <div className="bg-[#111111] border border-white/10 p-6 shadow-[inset_0_0_30px_rgba(0,0,0,0.5)] flex flex-col relative overflow-hidden xl:col-span-1">
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-4 relative z-10">
-                  <Zap className="w-5 h-5 text-[#FFD700]" />
-                  <h3 className="text-xs font-black text-white tracking-[0.2em] uppercase drop-shadow-md">Hızlı İşlemler</h3>
-                </div>
-                
-                <div className="grid grid-cols-2 grid-rows-2 gap-3 flex-1 relative z-10">
-                  <button onClick={() => {
-                        const targetTemp = safeTemplates[0]; // Gets the first template randomly for "Hızlı şablon"
-                        if(targetTemp) { setSelectedTemplate(targetTemp); setCurrentView('editor'); }
-                      }} className="bg-[#0A0A0A] border border-white/5 rounded hover:border-[#FFD700]/50 hover:-translate-y-1 transition-all group flex flex-col items-center justify-center gap-2 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                     <FileText size={20} strokeWidth={1.5} className="text-slate-400 group-hover:text-[#FFD700] group-hover:scale-110 transition-all drop-shadow-sm" />
-                     <span className="text-[9px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white">Form Oluştur</span>
-                  </button>
-                  <button onClick={() => setCurrentView('settings')} className="bg-[#0A0A0A] border border-white/5 rounded hover:border-[#FFD700]/50 hover:-translate-y-1 transition-all group flex flex-col items-center justify-center gap-2 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                     <Settings size={20} strokeWidth={1.5} className="text-slate-400 group-hover:text-[#FFD700] group-hover:rotate-45 transition-all drop-shadow-sm" />
-                     <span className="text-[9px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white">Ayarlar</span>
-                  </button>
-                  <button onClick={() => setCurrentView('profile')} className="bg-[#0A0A0A] border border-white/5 rounded hover:border-[#FFD700]/50 hover:-translate-y-1 transition-all group flex flex-col items-center justify-center gap-2 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                     <Building size={20} strokeWidth={1.5} className="text-slate-400 group-hover:text-[#FFD700] group-hover:scale-110 transition-all drop-shadow-sm" />
-                     <span className="text-[9px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white">Firma Profili</span>
-                  </button>
-                  <button onClick={() => setCurrentView('billing')} className="bg-[#1a1a1a] border border-[#FFD700]/30 rounded hover:border-[#FFD700] hover:bg-[#FFD700] transition-all group flex flex-col items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] relative overflow-hidden">
-                     <div className="absolute -right-4 -top-4 w-12 h-12 bg-white/10 rounded-full blur-md group-hover:scale-150 transition-transform"></div>
-                     <Crown size={20} className="text-[#FFD700] group-hover:text-black group-hover:scale-110 transition-all z-10" />
-                     <span className="text-[9px] font-black uppercase tracking-widest text-[#FFD700] group-hover:text-black z-10">Premium Al</span>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Sub System Engine (Categories) */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="mb-12"
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 0.6, delay: 0.3 }}
+               className="mb-12"
             >
               <div className="flex items-center gap-3 mb-6 relative z-10">
                 <Hexagon className="w-4 h-4 text-[#FFD700]" />
