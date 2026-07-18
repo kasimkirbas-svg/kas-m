@@ -139,42 +139,33 @@ const App = () => {
           
           {/* Global Dashboard Video Architecture */}
           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-             <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-[0.10]">
+             <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-15">
                <source src="/site23.mp4" type="video/mp4" />
              </video>
-             <div className="absolute inset-0 bg-black/85 backdrop-blur-[1px]"></div>
+             <div className="absolute inset-0 bg-black/85"></div>
           </div>
 
           <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 relative z-10 transition-all duration-700 fade-in">
-            
-            {/* Sub-Sci-Fi Effect under Content */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(255,215,0,0.03)_0%,rgba(0,0,0,0)_100%)] pointer-events-none -z-10"></div>
             
             {/* Holographic Header Area */}
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="mb-8 p-8 rounded-3xl bg-[#111111] border border-white/10 relative overflow-hidden shadow-[inset_0_0_30px_rgba(0,0,0,0.8)]"
+              className="mb-8 p-8 relative overflow-hidden"
             >
-               {/* Sci-Fi Decorative Grid inside Header */}
-               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
-               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/50 to-transparent"></div>
-               <div className="absolute -right-20 -top-20 opacity-10 pointer-events-none">
-                  <div className="w-[300px] h-[300px] border border-[#FFD700] rounded-full animate-[spin_40s_linear_infinite]"></div>
-                  <div className="w-[280px] h-[280px] absolute top-[10px] left-[10px] border border-[#FFD700]/50 rounded-full border-dashed animate-[spin_30s_linear_reverse_infinite]"></div>
-               </div>
-
                <div className="relative z-10 flex flex-col lg:flex-row gap-8 items-center justify-between">
-                  <div className="flex-1 w-full lg:w-auto">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFD700]/10 border border-[#FFD700]/20 text-[#FFD700] text-[10px] font-black tracking-[0.3em] uppercase mb-4 rounded-sm shadow-[0_0_10px_rgba(255,215,0,0.2)]">
-                      <Flame className="w-3 h-3 text-[#FFD700] animate-pulse" /> SİSTEM PANELİ_V2.0
+                  <div className="flex-1 w-full lg:w-auto text-center lg:text-left">
+                    <div className="inline-flex items-center gap-2 px-5 py-2 border border-[#FFD700]/30 bg-[#FFD700]/5 backdrop-blur-md rounded-full mb-6 shadow-[0_0_20px_rgba(255,215,0,0.1)]">
+                      <div className="w-2 h-2 rounded-full bg-[#FFD700] animate-ping"></div>
+                      <span className="text-[#FFD700] text-xs font-black tracking-[0.2em] uppercase">Sistem Paneli_V2.0</span>
                     </div>
-                    <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4 drop-shadow-md">
-                      HOŞGELDİNİZ, <span className="text-[#FFD700] drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">{(user?.name || "UZMAN").toUpperCase()}</span>
+                    <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-4 leading-[1.05]">
+                      HOŞGELDİNİZ, <br className="lg:hidden" />
+                      <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.4)]">{(user?.name || "UZMAN").toUpperCase()}</span>
                     </h2>
-                    <p className="text-slate-400 font-light max-w-2xl text-sm leading-relaxed border-l-2 border-[#FFD700]/30 pl-4">
-                      Sistem aktif ve 2.4M veri bit/s ile senkronize çalışıyor. Merkezi arşive, İSG tutanaklarına ve dinamik şablonlara aşağıdan hızlıca filtre uygulayarak erişebilirsiniz. Parametreleriniz güvenle korunmaktadır.
+                    <p className="text-slate-400 font-light max-w-2xl text-lg leading-relaxed mx-auto lg:mx-0">
+                      Sistem aktif ve 2.4M veri bit/s ile senkronize çalışıyor. Merkezi arşive aşağıdan filtre uygulayarak erişebilirsiniz.
                     </p>
                   </div>
                   
