@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+﻿import React, { useEffect, useState, useMemo } from 'react';
 import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, Hexagon, ShieldAlert, Target, Search, ChevronDown, CheckCircle2 } from 'lucide-react';
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
@@ -190,12 +190,11 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
       <header className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${scrolled ? 'bg-[#07090E]/90 backdrop-blur-md border-yellow-500/20 py-3 shadow-[0_0_30px_rgba(234,179,8,0.05)]' : 'bg-transparent border-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo(0,0)}>
-            <div className="relative w-10 h-10 flex items-center justify-center">
-               <div className="absolute inset-0 bg-yellow-500/20 rotate-45 transform blur-sm group-hover:bg-yellow-500/40 transition-all duration-500"></div>
-               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#eab308" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-               <Shield className="w-4 h-4 text-white absolute z-20" />
+            {/* Orijinal logo özel CSS filtresi ile siyah arkaplanı şeffaflaştırılmış şekilde */}
+            <div className="w-16 h-16 flex items-center justify-center -ml-2">
+               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain mix-blend-screen mix-blend-lighten filter brightness-110 drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col -ml-2">
               <span className="text-xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-yellow-200 to-yellow-600 drop-shadow-[0_0_10px_rgba(234,179,8,0.3)]">İSG ZEYRON</span>
               <span className="text-[10px] text-yellow-500/70 font-bold tracking-[0.2em] uppercase leading-none mt-1">Teknoloji</span>
             </div>

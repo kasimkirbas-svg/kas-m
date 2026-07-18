@@ -26,13 +26,10 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
           className="flex items-center gap-4 cursor-pointer group bg-transparent"
           onClick={() => onNavigate('dashboard')}
         >
-          {/* Neon Hexagon Logo instead of img */}
-          <div className="relative w-10 h-10 flex items-center justify-center">
-             <div className="absolute inset-0 bg-yellow-500/20 rotate-45 transform blur-sm group-hover:bg-yellow-500/50 transition-all duration-300"></div>
-             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#eab308" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute z-20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <div className="w-14 h-14 flex items-center justify-center -ml-2">
+             <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain mix-blend-screen mix-blend-lighten filter brightness-110 drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] group-hover:scale-105 transition-transform duration-500" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col -ml-2">
             <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-yellow-600 text-sm tracking-[0.2em]">{APP_NAME}</span>
             <span className="text-[9px] text-yellow-500/70 font-bold tracking-[0.3em] leading-none uppercase mt-1">Sistem_Aktif</span>
           </div>
