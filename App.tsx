@@ -333,7 +333,7 @@ const App = () => {
                           <FileText className="text-yellow-500/80 group-hover:text-yellow-400 w-6 h-6" strokeWidth={1.5} />
                         </div>
                         <span className="text-[10px] font-black tracking-widest uppercase text-slate-500 bg-white/5 px-3 py-1 border border-white/5">
-                          {template.format.toUpperCase()}
+                            {(template.format || "PDF").toUpperCase()}
                         </span>
                       </div>
 
