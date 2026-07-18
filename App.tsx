@@ -115,17 +115,53 @@ const App = () => {
         <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
           <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 animate-in fade-in duration-700">
             
+            {/* Bento Grid Stats Section */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+               <div className="p-6 rounded-[2rem] bg-zinc-900 border border-white/5 relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+                  <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="flex items-center gap-4 mb-4">
+                     <div className="w-12 h-12 rounded-xl bg-zinc-950 flex items-center justify-center border border-white/5 shadow-inner">
+                       <FileText className="text-yellow-500 w-6 h-6" />
+                     </div>
+                     <span className="text-slate-400 font-medium">Toplam Doküman</span>
+                  </div>
+                  <div className="text-4xl font-black text-white group-hover:text-yellow-400 transition-colors">1.248</div>
+               </div>
+               
+               <div className="p-6 rounded-[2rem] bg-zinc-900 border border-white/5 relative overflow-hidden group hover:border-red-500/30 transition-all">
+                  <div className="absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="flex items-center gap-4 mb-4">
+                     <div className="w-12 h-12 rounded-xl bg-zinc-950 flex items-center justify-center border border-white/5 shadow-inner">
+                       <Award className="text-red-500 w-6 h-6" />
+                     </div>
+                     <span className="text-slate-400 font-medium">Sertifika & Eğitimler</span>
+                  </div>
+                  <div className="text-4xl font-black text-white group-hover:text-red-400 transition-colors">342</div>
+               </div>
+               
+               <div className="p-6 rounded-[2rem] bg-zinc-900 border border-white/5 relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+                  <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="flex items-center gap-4 mb-4">
+                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center border border-yellow-200">
+                       <CheckCircle2 className="text-black w-6 h-6" />
+                     </div>
+                     <span className="text-slate-400 font-medium">Bugün Üretilen</span>
+                  </div>
+                  <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">14</div>
+               </div>
+            </div>
+
             {/* Main Dashboard Hero Section */}
-            <div className="relative rounded-[2rem] overflow-hidden mb-8 border border-white/5 bg-[#13161F] flex flex-col md:flex-row shadow-[0_0_40px_rgba(0,0,0,0.4)]">
+            <div className="relative rounded-[2rem] overflow-hidden mb-8 border border-white/5 bg-zinc-900 flex flex-col md:flex-row shadow-2xl">
               {/* Abstract Background Elements */}
-              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-600/10 rounded-full mix-blend-screen filter blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-yellow-600/10 rounded-full mix-blend-screen filter blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
               
               <div className="p-8 md:p-12 relative z-10 flex-1 flex flex-col justify-center">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-[10px] font-bold tracking-widest uppercase mb-6 w-max">
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"></span> HOŞ GELDİN, {user.name.split(' ')[0]}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold tracking-widest uppercase mb-6 w-max shadow-inner shadow-yellow-500/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span> HOŞ GELDİN, {user.name.split(' ')[0]}
                 </div>
                 <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
-                  Yönetim <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">Platformu</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-md">Kontrol Merkezi</span>
                 </h1>
                 <p className="text-slate-400 max-w-xl text-sm leading-relaxed mb-8">
                   Tüm iş sağlığı ve güvenliği şablonlarınıza, dökümanlarınıza ve operasyonel verilerinize tek bir ekrandan anında erişin.
@@ -185,8 +221,8 @@ const App = () => {
                   onClick={() => setSelectedCategory(null)}
                   className={`snap-start shrink-0 px-6 py-4 rounded-xl border flex items-center gap-3 transition-all ${
                     selectedCategory === null 
-                      ? 'bg-orange-500 text-slate-900 font-bold border-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)]' 
-                      : 'bg-[#151921] border-[#2A3143] text-slate-400 hover:text-white hover:border-slate-600'
+                      ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-extrabold border-yellow-400 shadow-[0_0_20px_rgba(234,179,8,0.4)]' 
+                      : 'bg-zinc-900 border-white/10 text-slate-400 hover:text-white hover:border-yellow-500/50'
                   }`}
                 >
                   <FileBox size={18} />
@@ -198,8 +234,8 @@ const App = () => {
                     onClick={() => setSelectedCategory(category)}
                     className={`snap-start shrink-0 px-6 py-4 rounded-xl border flex items-center gap-3 transition-all ${
                       selectedCategory === category 
-                        ? 'bg-orange-500 text-slate-900 font-bold border-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)]' 
-                        : 'bg-[#151921] border-[#2A3143] text-slate-400 hover:text-white hover:border-slate-600'
+                        ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-extrabold border-yellow-400 shadow-[0_0_20px_rgba(234,179,8,0.4)]' 
+                        : 'bg-zinc-900 border-white/10 text-slate-400 hover:text-white hover:border-yellow-500/50'
                     }`}
                   >
                     {getCategoryIcon(category)}
@@ -220,28 +256,29 @@ const App = () => {
                 filteredTemplates.map(template => (
                   <div 
                     key={template.id} 
-                    className="group relative bg-[#151921] border border-[#2A3143] hover:border-orange-500/50 rounded-2xl p-6 transition-all duration-300 hover:shadow-[0_10_30px_rgba(249,115,22,0.1)] hover:-translate-y-1 flex flex-col"
+                    className="group relative bg-zinc-900 border border-white/10 hover:border-yellow-500/50 rounded-3xl p-6 transition-all duration-300 hover:shadow-[0_10_40px_rgba(234,179,8,0.15)] hover:-translate-y-2 flex flex-col overflow-hidden"
                   >
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="w-10 h-10 rounded-lg bg-[#1A1F2B] border border-white/5 flex items-center justify-center text-slate-400">
-                        <FileText size={18} />
+                    <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="flex justify-between items-start mb-6 relative">
+                      <div className="w-12 h-12 rounded-xl bg-zinc-950 border border-white/5 flex items-center justify-center text-slate-400 group-hover:text-yellow-400 shadow-inner group-hover:scale-110 transition-all">
+                        {getCategoryIcon(template.category)}
                       </div>
-                      <span className="px-2.5 py-1 bg-[#1A1F2B] border border-[#2A3143] rounded text-slate-500 text-[9px] uppercase font-bold tracking-widest max-w-[120px] truncate">
+                      <span className="px-3 py-1.5 bg-zinc-950 border border-white/10 rounded-lg text-yellow-500/70 text-[9px] uppercase font-bold tracking-widest max-w-[150px] truncate shadow-inner">
                         {template.category}
                       </span>
                     </div>
                     
-                    <h3 className="text-slate-200 font-bold text-sm leading-snug mb-2 line-clamp-2 min-h-[40px] group-hover:text-orange-400 transition-colors">
+                    <h3 className="text-white font-bold text-base leading-snug mb-3 line-clamp-2 min-h-[48px] group-hover:text-yellow-400 transition-colors relative">
                       {template.title}
                     </h3>
                     
-                    <p className="text-slate-500 text-xs line-clamp-2 mb-6 flex-1">
-                      Bu doküman {template.fields?.length || 0} adet dinamik veri alanı içermektedir. Yönetmelik standartlarına uygundur.
+                    <p className="text-slate-400 text-xs line-clamp-3 overflow-hidden mb-6 flex-1 font-light relative">
+                      {template.fields?.length ? `${template.fields.length} adet akıllı değişken (Magic Variable) hazır. ` : ''}Saniyeler içinde otomatik doldurun ve anında DOCX / PDF olarak indirin. Mevzuata %100 uyumludur.
                     </p>
                     
-                    <div className="mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
-                      <div className="flex items-center text-[10px] uppercase tracking-wider font-bold text-slate-600">
-                        <CheckCircle2 size={12} className="mr-1 text-emerald-500" /> Güncel
+                    <div className="mt-auto pt-4 border-t border-white/10 flex justify-between items-center relative">
+                      <div className="flex items-center text-[10px] uppercase tracking-wider font-bold text-slate-500 group-hover:text-slate-300 transition-colors">
+                        <CheckCircle2 size={14} className="mr-1.5 text-emerald-500 shadow-emerald-500/50" /> Şablon Güncel
                       </div>
                       
                       <button
@@ -249,9 +286,9 @@ const App = () => {
                           setSelectedTemplate(template);
                           setCurrentView('editor');
                         }}
-                        className="w-8 h-8 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-orange-500 hover:text-slate-900"
+                        className="px-4 py-2 rounded-full border border-yellow-500/30 text-yellow-500 text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all hover:bg-yellow-500 hover:text-black shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:scale-105"
                       >
-                        <ChevronRight size={16} />
+                        Oluştur
                       </button>
                     </div>
                   </div>

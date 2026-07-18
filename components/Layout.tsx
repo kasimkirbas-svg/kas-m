@@ -26,7 +26,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
           className="flex items-center gap-3 cursor-pointer group"
           onClick={() => onNavigate('dashboard')}
         >
-          <img src="/site logo.jpeg" alt="İSG Zeyron Logo" className="h-10 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]" />
+          <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="h-12 w-auto object-contain mix-blend-screen group-hover:scale-105 transition-transform" />
           <div className="flex flex-col">
             <span className="font-bold text-white text-sm tracking-widest">{APP_NAME}</span>
             <span className="text-[10px] text-slate-500 font-semibold tracking-widest leading-none">PANEL YÖNETİMİ</span>
@@ -39,7 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) =>
           {/* User / Actions Right */}
           <div className="flex items-center gap-4 md:gap-6">
             <button 
-              className="text-slate-400 hover:text-orange-400 transition-colors pointer-events-auto"
+                className="text-slate-400 hover:text-yellow-400 transition-colors pointer-events-auto"
               title="Bildirimler"
               aria-label="Bildirimler"
             >
