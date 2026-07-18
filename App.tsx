@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import Landing from './pages/Landing';
 import Auth from './pages/Auth';
 import { DocumentEditor } from './pages/DocumentEditor';
@@ -37,8 +37,23 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
 }
 
 const App = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [currentView, setCurrentView] = useState('landing'); 
+  const [user, setUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('isg_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [currentView, setCurrentView] = useState(() => {
+    return localStorage.getItem('isg_view') || 'landing';
+  }); 
+
+  useEffect(() => {
+    if (user) localStorage.setItem('isg_user', JSON.stringify(user));
+    else localStorage.removeItem('isg_user');
+  }, [user]);
+
+  useEffect(() => {
+    localStorage.setItem('isg_view', currentView);
+  }, [currentView]);
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
