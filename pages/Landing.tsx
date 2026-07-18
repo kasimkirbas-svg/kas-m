@@ -1,11 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Database, Eye, CheckCircle, Smartphone, Lock, Rocket, Sparkles, Building2, HardHat, Factory, Briefcase } from "lucide-react";
+import { ChevronDown, Database, CheckCircle, Smartphone, Lock, Rocket, Sparkles, Building2, HardHat, Factory, Briefcase } from "lucide-react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+import type { Engine } from "@tsparticles/engine";
 
 export default function Landing({ onStart }: { onStart: () => void }) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [init, setInit] = useState(false);
 
-  const navItems = ["Hakkımızda", "Özellikler", "SSS", "İletişim"];
+  useEffect(() => {
+    initParticlesEngine(async (engine: Engine) => {
+      await loadSlim(engine);
+    }).then(() => {
+      setInit(true);
+    });
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const particlesOptions = useMemo(() => ({
+    background: {
+      color: {
+        value: "transparent",
+      },
+    },
+    fpsLimit: 120,
+    interactivity: {
+      events: {
+        onHover: {
+          enable: true,
+          mode: "repulse",
+        },
+      },
+      modes: {
+        repulse: {
+          distance: 100,
+          duration: 0.4,
+        },
+      },
+    },
+    particles: {
+      color: {
+        value: "#eab308", // Gold color match
+      },
+      links: {
+        color: "#eab308",
+        distance: 200,
+        enable: true,
+        opacity: 0.2,
+        width: 1,
+      },
+      move: {
+        direction: "none" as const,
+        enable: true,
+        outModes: {
+          default: "bounce" as const,
+        },
+        random: false,
+        speed: 0.8,
+        straight: false,
+      },
+      number: {
+        density: {
+          enable: true,
+          area: 800,
+        },
+        value: 120,
+      },
+      opacity: {
+        value: 0.4,
+      },
+      shape: {
+        type: "circle",
+      },
+      size: {
+        value: { min: 1, max: 3 },
+      },
+    },
+    detectRetina: true,
+  }), []);
+
+  const navItems = ["Hakkımızda", "Özellikler", "Hedef Kitle", "SSS", "İletişim"];
 
   const features = [
     {
@@ -50,10 +131,24 @@ export default function Landing({ onStart }: { onStart: () => void }) {
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans overflow-x-hidden selection:bg-yellow-500/30">
+    <div className="min-h-screen bg-[#050510] text-white font-sans overflow-x-hidden selection:bg-yellow-500/30">
       
+      {/* Background Particles */}
+      {init && (
+        <Particles
+          id="tsparticles-landing"
+          options={particlesOptions}
+          className="fixed inset-0 z-0 pointer-events-none"
+        />
+      )}
+
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 backdrop-blur-xl bg-zinc-950/80 border-b border-white/5 transition-all">
+      <motion.nav 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+        className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300 ${isScrolled ? 'backdrop-blur-xl bg-black/80 border-b border-white/5 shadow-2xl shadow-yellow-500/5' : 'bg-transparent'}`}
+      >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             {/* Logo */}
@@ -66,9 +161,19 @@ export default function Landing({ onStart }: { onStart: () => void }) {
             </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+          <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
             {navItems.map(item => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-yellow-400 transition-colors">{item}</a>
+              <button 
+                key={item} 
+                onClick={() => {
+                  const el = document.getElementById(item.toLowerCase().replace(/ /g, '-'));
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }} 
+                className="hover:text-yellow-400 transition-colors relative group"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 rounded-full transition-all duration-300 group-hover:w-full"></span>
+              </button>
             ))}
           </div>
 
@@ -81,17 +186,26 @@ export default function Landing({ onStart }: { onStart: () => void }) {
             </button>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 px-6 lg:pt-52 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-screen text-center">
-        {/* Background Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-yellow-500/10 blur-[120px] rounded-full pointer-events-none"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-red-600/10 blur-[100px] rounded-full pointer-events-none mix-blend-screen"></div>
+      <section className="relative pt-40 pb-20 px-6 lg:pt-52 lg:pb-32 flex flex-col items-center justify-center min-h-screen text-center">
+        {/* Animated Background Orbs */}
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-[20%] left-[20%] w-[500px] h-[500px] bg-yellow-500/10 rounded-full blur-[150px] pointer-events-none z-0"
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          className="absolute bottom-[20%] right-[20%] w-[600px] h-[600px] bg-red-600/10 mix-blend-screen rounded-full blur-[150px] pointer-events-none z-0"
+        />
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-10 max-w-4xl mx-auto flex flex-col items-center"
         >
           <div className="px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/5 text-yellow-400 text-xs sm:text-sm font-medium tracking-wide flex items-center gap-2 mb-8 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
@@ -117,6 +231,41 @@ export default function Landing({ onStart }: { onStart: () => void }) {
             </button>
           </div>
         </motion.div>
+      </section>
+
+      {/* Hakkımızda */}
+      <section id="hakkımızda" className="py-24 px-6 relative z-10 border-t border-white/5 bg-zinc-950/20 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="flex-1 space-y-6"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-yellow-500/20 bg-yellow-500/10 text-yellow-500 text-sm font-bold uppercase tracking-widest mb-4">
+              Kurumsal Kimlik
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold leading-tight">Geleceğin İSG Ekosistemine <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">Öncülük Ediyoruz!</span></h2>
+            <p className="text-slate-400 text-lg leading-relaxed font-light">
+              Masaüstünüze, yerel disklere ve karmaşık Word şablonlarına mahkumiyetiniz sona erdi. Biz İSG Zeyron olarak sektörü; saniyeler içinde doküman üretebileceğiniz, her zaman yasal mevzuatlara uygun, sıfır kurulum gerektiren bir bulut devrimiyle tanıştırıyoruz.
+            </p>
+            <p className="text-slate-400 text-lg leading-relaxed font-light">
+              İSG uzmanları ve işletmeler için tasarlanmış kusursuz mimarimiz sayesinde evrak işlerine değil, sahadaki güvenliğe odaklanın.
+            </p>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="flex-1 relative"
+          >
+             <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/20 to-red-500/10 blur-[80px] rounded-full"></div>
+             <div className="relative rounded-3xl overflow-hidden border border-white/10 p-2 bg-white/5 backdrop-blur-md shadow-2xl">
+               <img src="/logo.jpeg" alt="İSG Kurumsal" className="w-full h-auto rounded-2xl mix-blend-screen opacity-90 hover:scale-105 transition-transform duration-700" />
+             </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* Neden İSG Zeyron - Bento Grid */}
