@@ -196,128 +196,127 @@ const App = () => {
                </div>
             </motion.div>
 
-            {/* Dashboard Stats */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
-            >
-               {/* Stat Card 1 */}
-               <div className="p-6 bg-[#111111] border border-white/5 relative overflow-hidden group hover:border-[#FFD700]/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl group-hover:bg-[#FFD700]/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-                  <div className="flex items-center gap-4 mb-4">
-                     <div className="w-12 h-12 bg-[#0A0A0A] border border-white/10 flex items-center justify-center shadow-inner group-hover:border-[#FFD700]/30 transition-all">
-                       <FileArchive className="text-[#FFD700] w-5 h-5 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)] transition-all" />
-                     </div>
-                     <span className="text-slate-400 font-bold text-xs tracking-widest uppercase group-hover:text-slate-300">Toplam Protokol</span>
-                  </div>
-                  <div className="text-4xl font-black text-white group-hover:text-[#FFD700] transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(255,215,0,0.4)]">1.248</div>
-                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/40 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-               </div>
-               
-               {/* Stat Card 2 */}
-               <div className="p-6 bg-[#111111] border border-white/5 relative overflow-hidden group hover:border-red-500/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-                  <div className="flex items-center gap-4 mb-4">
-                     <div className="w-12 h-12 bg-[#0A0A0A] border border-white/10 flex items-center justify-center shadow-inner group-hover:border-red-500/30 transition-all">
-                       <ShieldAlert className="text-red-500 w-5 h-5 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] transition-all" />
-                     </div>
-                     <span className="text-slate-400 font-bold text-xs tracking-widest uppercase group-hover:text-slate-300">Aktif Risk Alanı</span>
-                  </div>
-                  <div className="text-4xl font-black text-white group-hover:text-red-400 transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(239,68,68,0.4)]">{uniqueCategories.length}</div>
-                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-red-500/40 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-               </div>
-
-               {/* Stat Card 3 */}
-               <div className="p-6 bg-[#FFD700] border border-[#FFD700] relative overflow-hidden group shadow-[0_0_20px_rgba(255,215,0,0.2)] flex flex-col justify-center hover:-translate-y-1 transition-transform">
-                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
-                  <div className="absolute -right-10 -bottom-10 opacity-20 group-hover:scale-110 transition-transform duration-700 pointer-events-none">
-                    <Hexagon className="w-40 h-40 text-black" strokeWidth={1}/>
-                  </div>
-                  <div className="relative z-10">
-                    <p className="text-black/80 font-black text-xs tracking-[0.2em] uppercase mb-2">Lisans Sektörü</p>
-                    <div className="flex items-center gap-3">
-                       <Crown className="w-7 h-7 text-black drop-shadow-md" />
-                       <span className="text-xl md:text-2xl font-black text-black tracking-tighter drop-shadow-sm">{user.role}</span>
-                    </div>
-                  </div>
-               </div>
-            </motion.div>
-
-            {/* Quick Actions & Recent Documents Panel */}
+            {/* Main Control Hub Overlay & Actions */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"
+              className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-12"
             >
-              {/* Recent Documents */}
-              <div className="bg-[#111111] border border-white/10 p-6 shadow-inner flex flex-col relative overflow-hidden">
+              {/* Left Column: Quick Analytics */}
+              <div className="flex flex-col gap-6 xl:col-span-1">
+                 {/* Stat Card 1 */}
+                 <div className="p-6 bg-[#111111] border border-white/5 relative overflow-hidden group hover:border-[#FFD700]/50 transition-all duration-500 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-between">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl group-hover:bg-[#FFD700]/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
+                    <div>
+                       <div className="flex items-center gap-3 mb-2">
+                          <FileArchive className="text-[#FFD700] w-4 h-4 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)] transition-all" />
+                          <span className="text-slate-400 font-bold text-[10px] tracking-widest uppercase group-hover:text-slate-300">Merkezi Protokol</span>
+                       </div>
+                       <div className="text-3xl font-black text-white group-hover:text-[#FFD700] transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(255,215,0,0.4)]">1.248</div>
+                    </div>
+                    <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-slate-600 group-hover:border-[#FFD700]/50 group-hover:text-[#FFD700] transition-colors">
+                      <ArrowRight size={18} className="-rotate-45" />
+                    </div>
+                 </div>
+                 
+                 {/* Stat Card 2 */}
+                 <div className="p-6 bg-[#111111] border border-white/5 relative overflow-hidden group hover:border-red-500/50 transition-all duration-500 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-between">
+                    <div className="absolute bottom-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 translate-y-1/2"></div>
+                    <div>
+                       <div className="flex items-center gap-3 mb-2">
+                          <ShieldAlert className="text-red-500 w-4 h-4 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] transition-all" />
+                          <span className="text-slate-400 font-bold text-[10px] tracking-widest uppercase group-hover:text-slate-300">Aktif Risk Sınıfı</span>
+                       </div>
+                       <div className="text-3xl font-black text-white group-hover:text-red-400 transition-colors drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(239,68,68,0.4)]">{uniqueCategories.length}</div>
+                    </div>
+                    <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-slate-600 group-hover:border-red-500/50 group-hover:text-red-500 transition-colors">
+                      <Activity size={18} />
+                    </div>
+                 </div>
+              </div>
+
+              {/* Middle Column: Recent Activity Log */}
+              <div className="bg-[#111111] border border-white/10 p-6 shadow-[inset_0_0_30px_rgba(0,0,0,0.5)] flex flex-col relative overflow-hidden xl:col-span-1">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+                <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4 relative z-10">
                   <div className="flex items-center gap-3">
                     <FileClock className="w-5 h-5 text-[#FFD700]" />
-                    <h3 className="text-xs font-black text-white tracking-[0.2em] uppercase">Son İşlemler</h3>
+                    <h3 className="text-xs font-black text-white tracking-[0.2em] uppercase drop-shadow-md">Son İşlemler</h3>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest bg-white/5 px-2 py-1">Otomatik Kayıt</span>
+                  <button onClick={() => setCurrentView('profile')} className="p-2 border border-white/10 rounded bg-[#0A0A0A] hover:bg-[#FFD700] hover:text-black hover:border-[#FFD700] transition-colors group" title="Tüm Arşive Git">
+                    <FolderOpen size={14} className="text-slate-400 group-hover:text-black transition-colors" />
+                  </button>
                 </div>
                 
-                <div className="flex-1 flex flex-col gap-3 relative z-10">
-                  <div className="flex items-center justify-between bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/30 transition-colors cursor-pointer group">
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-[#FFD700] transition-colors">
+                <div className="flex-1 flex flex-col gap-2 relative z-10 overflow-y-auto custom-scrollbar pr-2 h-[180px]">
+                  <div className="flex justify-between items-center bg-[#0A0A0A] border border-white/5 p-3 hover:border-[#FFD700]/30 transition-all cursor-pointer group rounded-sm shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 flex items-center justify-center bg-white/5 text-slate-400 group-hover:text-[#FFD700] group-hover:bg-[#FFD700]/10 transition-colors">
                         <FileText size={14} />
                       </div>
-                      <div>
-                        <p className="text-sm font-bold text-white group-hover:text-[#FFD700] transition-colors truncate w-[200px] md:w-auto">Risk Analizi Rev. 3</p>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">İnşaat Sektörü • Bugün 14:30</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-slate-200 group-hover:text-white transition-colors">İskele Kontrol Formu</span>
+                        <span className="text-[9px] text-[#FFD700]/70 uppercase tracking-widest mt-0.5">Bugün, 14:30 • Düzenlendi</span>
                       </div>
                     </div>
-                    <ChevronRight size={16} className="text-slate-600 group-hover:text-[#FFD700] group-hover:translate-x-1 transition-all" />
+                    <ArrowRight size={14} className="text-slate-600 group-hover:text-[#FFD700] group-hover:translate-x-1 transition-all" />
                   </div>
-                  
-                  <div className="flex items-center justify-between bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/30 transition-colors cursor-pointer group">
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-[#FFD700] transition-colors">
-                        <FileText size={14} />
+
+                  <div className="flex justify-between items-center bg-[#0A0A0A] border border-white/5 p-3 hover:border-[#FFD700]/30 transition-all cursor-pointer group rounded-sm shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 flex items-center justify-center bg-white/5 text-slate-400 group-hover:text-[#FFD700] group-hover:bg-[#FFD700]/10 transition-colors">
+                        <CheckSquare size={14} />
                       </div>
-                      <div>
-                        <p className="text-sm font-bold text-white group-hover:text-[#FFD700] transition-colors truncate w-[200px] md:w-auto">Acil Durum Planı Taslağı</p>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Fabrika İşletmesi • Dün</p>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-slate-200 group-hover:text-white transition-colors">Yangın Söndürme Cihazı</span>
+                        <span className="text-[9px] text-green-500/70 uppercase tracking-widest mt-0.5">Dün, 09:15 • İndirildi</span>
                       </div>
                     </div>
-                    <ChevronRight size={16} className="text-slate-600 group-hover:text-[#FFD700] group-hover:translate-x-1 transition-all" />
+                    <ArrowRight size={14} className="text-slate-600 group-hover:text-[#FFD700] group-hover:translate-x-1 transition-all" />
+                  </div>
+
+                  <div className="flex justify-between items-center bg-[#0A0A0A] border border-white/5 p-3 hover:border-[#FFD700]/30 transition-all cursor-pointer group rounded-sm shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 flex items-center justify-center bg-white/5 text-slate-400 group-hover:text-[#FFD700] group-hover:bg-[#FFD700]/10 transition-colors">
+                        <FileText size={14} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-slate-200 group-hover:text-white transition-colors">Acil Durum Eylem Planı</span>
+                        <span className="text-[9px] text-[#FFD700]/70 uppercase tracking-widest mt-0.5">22 Nis, 16:45 • Düzenlendi</span>
+                      </div>
+                    </div>
+                    <ArrowRight size={14} className="text-slate-600 group-hover:text-[#FFD700] group-hover:translate-x-1 transition-all" />
                   </div>
                 </div>
               </div>
 
-              {/* Quick Suggestion Actions */}
-              <div className="bg-[#111111] border border-white/10 p-6 shadow-inner flex flex-col relative overflow-hidden">
+              {/* Right Column: Mission Control Actions */}
+              <div className="bg-[#111111] border border-white/10 p-6 shadow-[inset_0_0_30px_rgba(0,0,0,0.5)] flex flex-col relative overflow-hidden xl:col-span-1">
                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
+                <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-4 relative z-10">
                   <Zap className="w-5 h-5 text-[#FFD700]" />
-                  <h3 className="text-xs font-black text-white tracking-[0.2em] uppercase">Hızlı Seçenekler</h3>
+                  <h3 className="text-xs font-black text-white tracking-[0.2em] uppercase drop-shadow-md">Operasyonlar</h3>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4 relative z-10">
-                  <div className="bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 transition-all text-center group cursor-pointer flex flex-col items-center justify-center h-28 gap-2">
-                    <UserPlus size={20} className="text-slate-400 group-hover:text-[#FFD700] transition-colors" />
-                    <span className="text-xs font-bold text-slate-300 group-hover:text-white uppercase tracking-widest">Çalışan Ekle</span>
-                  </div>
-                  <div className="bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 transition-all text-center group cursor-pointer flex flex-col items-center justify-center h-28 gap-2">
-                    <ShieldAlert size={20} className="text-slate-400 group-hover:text-[#FFD700] transition-colors" />
-                    <span className="text-xs font-bold text-slate-300 group-hover:text-white uppercase tracking-widest">Yeni Tutanak</span>
-                  </div>
-                  <div className="bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 transition-all text-center group cursor-pointer flex flex-col items-center justify-center h-28 gap-2">
-                    <Award size={20} className="text-slate-400 group-hover:text-[#FFD700] transition-colors" />
-                    <span className="text-xs font-bold text-slate-300 group-hover:text-white uppercase tracking-widest">Eğitim Formu</span>
-                  </div>
-                  <div onClick={() => setCurrentView('billing')} className="bg-[#0A0A0A] border border-[#FFD700]/20 p-4 hover:border-[#FFD700] hover:bg-[#FFD700]/10 transition-all text-center group cursor-pointer flex flex-col items-center justify-center h-28 gap-2 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[#FFD700]/5 hover:bg-transparent transition-colors"></div>
-                    <Crown size={20} className="text-[#FFD700] group-hover:scale-110 transition-transform relative z-10" />
-                    <span className="text-xs font-bold text-[#FFD700] uppercase tracking-widest relative z-10">Premium Al</span>
-                  </div>
+                <div className="grid grid-cols-2 grid-rows-2 gap-3 flex-1 relative z-10">
+                  <button onClick={() => setCurrentView('editor')} className="bg-[#0A0A0A] border border-white/5 rounded hover:border-[#FFD700]/50 hover:-translate-y-1 transition-all group flex flex-col items-center justify-center gap-2 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                     <FileText size={20} strokeWidth={1.5} className="text-slate-400 group-hover:text-[#FFD700] group-hover:scale-110 transition-all drop-shadow-sm" />
+                     <span className="text-[9px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white">Form Oluştur</span>
+                  </button>
+                  <button onClick={() => setCurrentView('settings')} className="bg-[#0A0A0A] border border-white/5 rounded hover:border-[#FFD700]/50 hover:-translate-y-1 transition-all group flex flex-col items-center justify-center gap-2 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                     <Settings size={20} strokeWidth={1.5} className="text-slate-400 group-hover:text-[#FFD700] group-hover:rotate-45 transition-all drop-shadow-sm" />
+                     <span className="text-[9px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white">Ayarlar</span>
+                  </button>
+                  <button className="bg-[#0A0A0A] border border-white/5 rounded hover:border-[#FFD700]/50 hover:-translate-y-1 transition-all group flex flex-col items-center justify-center gap-2 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                     <UserCheck size={20} strokeWidth={1.5} className="text-slate-400 group-hover:text-[#FFD700] group-hover:scale-110 transition-all drop-shadow-sm" />
+                     <span className="text-[9px] font-black uppercase tracking-widest text-slate-300 group-hover:text-white">Çalışan Yönetimi</span>
+                  </button>
+                  <button onClick={() => setCurrentView('billing')} className="bg-[#1a1a1a] border border-[#FFD700]/30 rounded hover:border-[#FFD700] hover:bg-[#FFD700] transition-all group flex flex-col items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] relative overflow-hidden">
+                     <div className="absolute -right-4 -top-4 w-12 h-12 bg-white/10 rounded-full blur-md group-hover:scale-150 transition-transform"></div>
+                     <Crown size={20} className="text-[#FFD700] group-hover:text-black group-hover:scale-110 transition-all z-10" />
+                     <span className="text-[9px] font-black uppercase tracking-widest text-[#FFD700] group-hover:text-black z-10">Premium Al</span>
+                  </button>
                 </div>
               </div>
             </motion.div>
