@@ -402,32 +402,38 @@ const App = () => {
               <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x relative z-10 -mx-4 px-4 md:mx-0 md:px-0">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`snap-start shrink-0 px-6 py-4 border transition-all duration-300 relative group overflow-hidden ${
+                  className={`snap-start shrink-0 px-8 py-5 transition-all duration-300 relative group overflow-hidden ${
                     selectedCategory === null 
-                      ? 'bg-[#FFD700] text-black font-black border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.4)] hover:-translate-y-1' 
-                      : 'bg-[#111111] border-white/10 text-slate-400 hover:text-white hover:border-[#FFD700]/50 hover:-translate-y-1 shadow-inner'
+                      ? 'bg-[#111111] border-b-2 border-[#FFD700] text-[#FFD700] shadow-[inset_0_-20px_40px_-20px_rgba(255,215,0,0.2)]' 
+                      : 'bg-[#0A0A0A] border border-white/5 text-slate-400 hover:text-white hover:border-[#FFD700]/30 hover:bg-[#111111]'
                   }`}
                 >
                   <div className={`flex items-center gap-3 relative z-10 ${selectedCategory === null ? 'scale-105' : 'group-hover:scale-105'} transition-transform`}>
-                    <ShieldAlert size={18} />
-                    <span className="whitespace-nowrap text-xs uppercase tracking-widest font-bold">TÜM MODÜLLER</span>
+                    <ShieldAlert size={18} className={selectedCategory === null ? "text-[#FFD700]" : "text-slate-500"} />
+                    <span className="whitespace-nowrap text-xs uppercase tracking-[0.2em] font-black">TÜM MODÜLLER</span>
                   </div>
+                  {selectedCategory === null && (
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#FFD700]/5 to-transparent pointer-events-none"></div>
+                  )}
                 </button>
                 
                 {uniqueCategories.map((category) => (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`snap-start shrink-0 px-6 py-4 border transition-all duration-300 group overflow-hidden ${
+                    className={`snap-start shrink-0 px-8 py-5 transition-all duration-300 group overflow-hidden ${
                       selectedCategory === category 
-                        ? 'bg-[#FFD700]/10 text-[#FFD700] font-bold border-[#FFD700] shadow-[inset_0_0_15px_rgba(255,215,0,0.2)] hover:-translate-y-1' 
-                        : 'bg-[#111111] border-white/10 text-slate-400 hover:text-white hover:border-[#FFD700]/30 hover:bg-white/5 hover:-translate-y-1 shadow-inner'
+                        ? 'bg-[#111111] border-b-2 border-[#FFD700] text-[#FFD700] shadow-[inset_0_-20px_40px_-20px_rgba(255,215,0,0.2)]' 
+                        : 'bg-[#0A0A0A] border border-white/5 text-slate-400 hover:text-white hover:border-[#FFD700]/30 hover:bg-[#111111]'
                     }`}
                   >
                     <div className="flex items-center gap-3 relative z-10 group-hover:scale-105 transition-transform">
                       {getCategoryIcon(category)}
-                      <span className="whitespace-nowrap text-xs uppercase tracking-widest">{category}</span>
+                      <span className="whitespace-nowrap text-xs uppercase tracking-[0.2em] font-bold">{category}</span>
                     </div>
+                    {selectedCategory === category && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#FFD700]/5 to-transparent pointer-events-none"></div>
+                    )}
                   </button>
                 ))}
               </div>
@@ -440,9 +446,9 @@ const App = () => {
                transition={{ duration: 0.8, delay: 0.5 }}
             >
               <div className="flex items-center gap-3 mb-8">
-                <div className="w-2 h-2 bg-[#FFD700] rounded-sm shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
-                <h3 className="text-xs font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Veritabanı Sonuçları ({filteredTemplates.length})</h3>
-                <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent ml-4"></div>
+                <div className="w-2 h-2 bg-[#FFD700] rounded-full shadow-[0_0_15px_rgba(255,215,0,1)] animate-pulse"></div>
+                <h3 className="text-sm font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Veritabanı Sonuçları ({filteredTemplates.length})</h3>
+                <div className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4"></div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -455,54 +461,53 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-[#111111] border border-white/10 hover:border-[#FFD700]/50 p-6 relative group overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.8)] flex flex-col h-[280px]"
+                      className="bg-gradient-to-br from-[#111111] to-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/30 p-6 relative group overflow-hidden transition-all duration-500 hover:-translate-y-1 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex flex-col h-[280px] rounded-lg"
                     >
-                      {/* Abstract Card Grid Overlay */}
-                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+                      {/* Background Detail */}
+                      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity pointer-events-none">
+                         <Hexagon className="w-32 h-32 text-white" strokeWidth={0.5} />
+                      </div>
                       
-                      {/* Hover Glow */}
-                      <div className="absolute top-0 right-0 w-40 h-40 bg-[#FFD700]/10 rounded-full blur-3xl group-hover:bg-[#FFD700]/20 transition-all duration-700 pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-                      
-                      {/* Bottom Glow Line */}
-                      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/50 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
+                      {/* Top Accent Line */}
+                      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:via-[#FFD700]/50 transition-colors duration-500"></div>
 
-                      <div className="flex justify-between items-start mb-4 relative z-10">
-                        <div className="w-12 h-12 bg-[#0A0A0A] border border-white/5 flex items-center justify-center group-hover:border-[#FFD700]/50 group-hover:scale-110 transition-all duration-500 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
-                          <FileText className="text-[#FFD700]/80 group-hover:text-[#FFD700] w-6 h-6 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" strokeWidth={1.5} />
+                      <div className="flex justify-between items-start mb-6 relative z-10">
+                        <div className="w-12 h-12 bg-black/50 border border-white/5 rounded flex items-center justify-center group-hover:bg-[#FFD700]/5 group-hover:border-[#FFD700]/30 transition-all duration-500">
+                          <FileText className="text-slate-400 group-hover:text-[#FFD700] w-6 h-6" strokeWidth={1.5} />
                         </div>
-                        <span className="text-[10px] font-black tracking-widest uppercase text-slate-500 bg-[#0A0A0A] px-3 py-1 border border-white/5 shadow-inner">
+                        <span className="text-[9px] font-black tracking-[0.2em] uppercase text-white/50 bg-black px-3 py-1.5 rounded border border-white/5 shadow-inner">
                             {(template.format || "PDF").toUpperCase()}
                         </span>
                       </div>
 
-                      <div className="mb-4 relative z-10 flex-1 mt-2">
-                        <h4 className="text-slate-200 font-bold mb-3 leading-snug group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] transition-all line-clamp-2">
+                      <div className="mb-4 relative z-10 flex-1">
+                        <h4 className="text-slate-300 font-bold mb-3 leading-snug group-hover:text-white transition-all line-clamp-2 text-sm tracking-wide">
                           {template.title}
                         </h4>
-                        <div className="flex items-center gap-2">
-                           <ShieldAlert className="w-3 h-3 text-[#FFD700]" />
-                           <p className="text-[#FFD700]/70 text-[10px] font-bold tracking-wider uppercase truncate group-hover:text-[#FFD700] transition-colors">{template.category}</p>
+                        <div className="flex items-center gap-2 mt-auto">
+                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/50 group-hover:bg-[#FFD700] group-hover:shadow-[0_0_8px_#FFD700] transition-all"></div>
+                           <p className="text-slate-500 text-[9px] font-bold tracking-[0.2em] uppercase truncate group-hover:text-slate-300 transition-colors">{template.category}</p>
                         </div>
                       </div>
 
-                      <div className="relative z-10 pt-4 mt-auto">
+                      <div className="relative z-10 pt-4 mt-auto border-t border-white/5 border-dashed">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-slate-500 font-mono tracking-widest">{template.fields.length} VERİ</span>
+                          <span className="text-[10px] text-slate-500 font-bold tracking-[0.1em] uppercase flex items-center gap-2">
+                            <Target size={12} /> {template.fields.length} VERİ ALANI
+                          </span>
                           
                           <button 
                             onClick={() => {
                               setSelectedTemplate(template);
                               setCurrentView('editor');
                             }}
-                            className="flex items-center justify-center gap-2 px-6 py-2 border border-[#FFD700]/50 text-[#FFD700] text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-[#FFD700] hover:text-black shadow-[0_0_15px_rgba(255,215,0,0.2)] transform translate-x-4 group-hover:translate-x-0"
+                            className="bg-transparent border border-[#FFD700] text-[#FFD700] p-2 rounded-full hover:bg-[#FFD700] hover:text-black transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]"
+                            title="Protokolü Başlat"
                           >
-                            BAŞLAT <ArrowRight className="w-3 h-3" />
+                            <ArrowRight className="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" />
                           </button>
                         </div>
                       </div>
-                      
-                      {/* Scanning Line on Card Hover */}
-                      <div className="absolute top-0 left-0 w-full h-[1px] bg-[#FFD700] shadow-[0_0_10px_#FFD700] opacity-0 group-hover:opacity-100 group-hover:animate-[scan_2s_ease-in-out_infinite] z-20 pointer-events-none"></div>
                     </motion.div>
                   ))}
                 </AnimatePresence>
