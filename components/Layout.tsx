@@ -11,7 +11,7 @@ interface LayoutProps {
   onLogout: () => void;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLogout }) => {
   if (!user) {
     return <div className="min-h-screen bg-[#07090E]">{children}</div>;
   }
