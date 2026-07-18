@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Mail, Lock, LogIn, UserPlus, Fingerprint, Shield, Star, Rocket, Cpu, Eye, Info, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, LogIn, UserPlus, Fingerprint, Shield, Star, Rocket, Cpu, Eye, Info, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Particles from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
@@ -7,7 +7,9 @@ import type { Engine } from '@tsparticles/engine';
 import { initParticlesEngine } from '@tsparticles/react';
 
 interface AuthProps {
-  onLogin: () => void;
+  onAuthSuccess?: (user: any) => void;
+  onLogin?: () => void;
+  onBack?: () => void;
 }
 
 const FAQ_ITEMS = [
@@ -17,7 +19,7 @@ const FAQ_ITEMS = [
   { question: 'Nasıl Başlayabilirim?', answer: 'Hemen ücretsiz bir hesap oluşturarak 14 günlük deneme sürenizi başlatabilir, İSG süreçlerinizi dijitalleştirmeye adım atabilirsiniz.' }
 ];
 
-export default function Auth({ onLogin }: AuthProps) {
+export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -171,7 +173,16 @@ export default function Auth({ onLogin }: AuthProps) {
         transition={{ duration: 0.8, ease: 'easeOut' }}
         className="w-full flex justify-between items-center px-10 py-6 absolute top-0 left-0 z-50 border-b border-white/5 backdrop-blur-md bg-black/20"
       >
-        <div className="flex items-center gap-4 group">
+        <div className="flex items-center gap-6 group">
+          {onBack && (
+            <button 
+              onClick={onBack}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-yellow-500/20 text-slate-400 hover:text-yellow-400 transition-all border border-white/10 hover:border-yellow-500/50"
+              title="Ana Sayfaya Dön"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
           <div className="relative w-12 h-12 flex items-center justify-center rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 shadow-[0_0_20px_rgba(234,179,8,0.4)] group-hover:shadow-[0_0_30px_rgba(234,179,8,0.6)] transition-all duration-300">
             <Shield className="w-6 h-6 text-[#050510] z-10" />
             <div className="absolute inset-0 border border-yellow-200/30 rounded-2xl"></div>
