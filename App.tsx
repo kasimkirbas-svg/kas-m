@@ -208,7 +208,12 @@ const App = () => {
                    <div>
                      <p className="text-xs text-slate-500 font-bold tracking-widest uppercase">Aktif Sektör</p>
                      <p className="text-2xl font-black text-white">{uniqueCategories.length}</p>
-              {/* Categories Carousel */}
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Categories Carousel */}
             <div className="mb-10">
               <h3 className="text-sm font-bold text-slate-400 tracking-widest uppercase mb-4">Sektörel Kategoriler</h3>
               <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x">
