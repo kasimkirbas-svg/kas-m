@@ -56,14 +56,11 @@ export default function Landing({ onStart }: { onStart: () => void }) {
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 backdrop-blur-xl bg-zinc-950/80 border-b border-white/5 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Yer Tutucu Logo */}
-            <div className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
-               <img src="/Adsız tasarım-Photoroom.jpg" alt="Logo" className="w-full h-full object-cover opacity-50" onError={(e) => {
-                 (e.target as HTMLElement).style.display = "none"
-               }}/>
-               <span className="text-yellow-500 font-bold absolute text-xs">İSG</span>
+            {/* Logo */}
+            <div className="w-12 h-12 flex items-center justify-center shrink-0">
+               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-full h-full object-contain" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-white">İSG <span className="text-yellow-500">Zeyron</span></span>
+            <span className="text-xl font-bold tracking-tight text-white hidden sm:block">İSG <span className="text-yellow-500">Zeyron</span></span>
           </div>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
