@@ -254,6 +254,83 @@ const App = () => {
                </div>
             </motion.div>
 
+            {/* Quick Actions & Recent Documents Panel */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"
+            >
+              {/* Recent Documents */}
+              <div className="bg-[#111111] border border-white/10 p-6 shadow-inner flex flex-col relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+                  <div className="flex items-center gap-3">
+                    <FileClock className="w-5 h-5 text-[#FFD700]" />
+                    <h3 className="text-xs font-black text-white tracking-[0.2em] uppercase">Son İşlemler</h3>
+                  </div>
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest bg-white/5 px-2 py-1">Otomatik Kayıt</span>
+                </div>
+                
+                <div className="flex-1 flex flex-col gap-3 relative z-10">
+                  <div className="flex items-center justify-between bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/30 transition-colors cursor-pointer group">
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-[#FFD700] transition-colors">
+                        <FileText size={14} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-white group-hover:text-[#FFD700] transition-colors truncate w-[200px] md:w-auto">Risk Analizi Rev. 3</p>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">İnşaat Sektörü • Bugün 14:30</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={16} className="text-slate-600 group-hover:text-[#FFD700] group-hover:translate-x-1 transition-all" />
+                  </div>
+                  
+                  <div className="flex items-center justify-between bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/30 transition-colors cursor-pointer group">
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-[#FFD700] transition-colors">
+                        <FileText size={14} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-white group-hover:text-[#FFD700] transition-colors truncate w-[200px] md:w-auto">Acil Durum Planı Taslağı</p>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Fabrika İşletmesi • Dün</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={16} className="text-slate-600 group-hover:text-[#FFD700] group-hover:translate-x-1 transition-all" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Suggestion Actions */}
+              <div className="bg-[#111111] border border-white/10 p-6 shadow-inner flex flex-col relative overflow-hidden">
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#FFD700]/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
+                  <Zap className="w-5 h-5 text-[#FFD700]" />
+                  <h3 className="text-xs font-black text-white tracking-[0.2em] uppercase">Hızlı Seçenekler</h3>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 relative z-10">
+                  <div className="bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 transition-all text-center group cursor-pointer flex flex-col items-center justify-center h-28 gap-2">
+                    <UserPlus size={20} className="text-slate-400 group-hover:text-[#FFD700] transition-colors" />
+                    <span className="text-xs font-bold text-slate-300 group-hover:text-white uppercase tracking-widest">Çalışan Ekle</span>
+                  </div>
+                  <div className="bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 transition-all text-center group cursor-pointer flex flex-col items-center justify-center h-28 gap-2">
+                    <ShieldAlert size={20} className="text-slate-400 group-hover:text-[#FFD700] transition-colors" />
+                    <span className="text-xs font-bold text-slate-300 group-hover:text-white uppercase tracking-widest">Yeni Tutanak</span>
+                  </div>
+                  <div className="bg-[#0A0A0A] border border-white/5 p-4 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 transition-all text-center group cursor-pointer flex flex-col items-center justify-center h-28 gap-2">
+                    <Award size={20} className="text-slate-400 group-hover:text-[#FFD700] transition-colors" />
+                    <span className="text-xs font-bold text-slate-300 group-hover:text-white uppercase tracking-widest">Eğitim Formu</span>
+                  </div>
+                  <div onClick={() => setCurrentView('billing')} className="bg-[#0A0A0A] border border-[#FFD700]/20 p-4 hover:border-[#FFD700] hover:bg-[#FFD700]/10 transition-all text-center group cursor-pointer flex flex-col items-center justify-center h-28 gap-2 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[#FFD700]/5 hover:bg-transparent transition-colors"></div>
+                    <Crown size={20} className="text-[#FFD700] group-hover:scale-110 transition-transform relative z-10" />
+                    <span className="text-xs font-bold text-[#FFD700] uppercase tracking-widest relative z-10">Premium Al</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
             {/* Sub System Engine (Categories) */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
