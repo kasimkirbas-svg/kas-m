@@ -137,9 +137,9 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           loop 
           muted 
           playsInline 
-          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-15"
+          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-25"
         >
-          <source src="/site23.mp4" type="video/mp4" />
+          <source src="/159052-818026310_medium.mp4" type="video/mp4" />
           Tarayıcınız video etiketini desteklemiyor.
         </video>
         <div className="absolute inset-0 bg-black/85"></div>
@@ -193,15 +193,6 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             <button onClick={onLoginClick} className="hidden md:block text-sm font-bold text-slate-300 hover:text-yellow-400 transition-colors tracking-wider">
               GİRİŞ YAP
             </button>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onRegisterClick}
-              className="relative px-6 py-2.5 bg-transparent border-2 border-yellow-500/80 text-yellow-400 text-sm font-black uppercase tracking-widest hover:bg-yellow-500 hover:text-black transition-all shadow-[0_0_15px_rgba(234,179,8,0.15)] hover:shadow-[0_0_25px_rgba(234,179,8,0.4)] overflow-hidden group rounded-sm"
-            >
-              <span className="absolute inset-0 w-full h-full bg-yellow-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out z-0"></span>
-              <span className="relative z-10">KAYIT OL</span>
-            </motion.button>
           </div>
         </div>
       </motion.header>
@@ -215,20 +206,10 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
         <div className="max-w-5xl mx-auto text-center relative z-20">
           
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="inline-flex items-center gap-3 px-5 py-2 border border-yellow-500/30 bg-yellow-500/5 backdrop-blur-md rounded-full mb-10 shadow-[0_0_20px_rgba(234,179,8,0.1)]"
-          >
-            <div className="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></div>
-            <span className="text-yellow-400 text-xs font-black tracking-[0.2em] uppercase">SaaS Yönetim Platformu Aktif</span>
-          </motion.div>
-          
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[1.05]"
           >
             <span className="text-white">İş Sağlığı ve Güvenliği</span> <br/>
@@ -270,209 +251,108 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         </div>
       </section>
 
-      {/* Hero Video Carousel Engine */}
-      <section className="relative z-20 -mt-10 overflow-hidden pb-32">
-        <div className="flex gap-6 overflow-x-auto pb-10 px-10 custom-scrollbar snap-x snap-mandatory">
-            {/* Sector 1: Fabrika */}
-            <motion.div 
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                className="snap-center shrink-0 w-[80vw] md:w-[60vw] lg:w-[40vw] group relative h-[500px] bg-[#111111] rounded-3xl overflow-hidden border border-white/10 hover:border-[#FFD700]/50 transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
-            >
-                <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-70 transition-opacity duration-700 mix-blend-luminosity group-hover:mix-blend-normal">
-                    <source src="/fabrika.mp4" type="video/mp4" />
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/50 to-transparent"></div>
-                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#FFD700]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-                <div className="absolute inset-0 p-10 flex flex-col justify-end z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 flex items-center justify-center mb-6 group-hover:border-[#FFD700]/50 shadow-2xl group-hover:-translate-y-4 transition-all duration-500">
-                       <Factory className="w-8 h-8 text-[#FFD700]" />
-                    </div>
-                    <span className="px-4 py-1.5 bg-[#FFD700] text-black text-[10px] font-black tracking-widest uppercase rounded self-start mb-4 shadow-[0_0_15px_rgba(255,215,0,0.4)]">Endüstri 4.0</span>
-                    <h3 className="text-4xl font-black text-white mb-3 tracking-tighter">İmalat Tesisleri</h3>
-                    <p className="text-slate-300 font-light leading-relaxed max-w-sm transform group-hover:-translate-y-2 transition-transform duration-500">
-                        Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları ve risk değerlendirmeleri.
-                    </p>
+      {/* Elegant Sectors Grid */}
+      <section className="relative z-20 overflow-hidden pb-32 px-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[ 
+              { icon: <Factory className="w-8 h-8 text-[#FFD700]"/>, title: "İmalat Tesisleri", desc: "Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları.", video: "/fabrika.mp4", category: "Endüstri 4.0", color: "#FFD700" },
+              { icon: <Zap className="w-8 h-8 text-blue-400"/>, title: "Enerji Santralleri", desc: "Yüksek gerilim işlemleri, RES/GES risk rejimleri ve trafo bakım talimatnameleri.", video: "/enerji.mp4", category: "Kritik Tesis", color: "blue-500" },
+              { icon: <HardHat className="w-8 h-8 text-orange-500"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", video: "/67467-522170635_medium.mp4", category: "Ağır Risk", color: "orange-500" },
+              { icon: <Activity className="w-8 h-8 text-pink-500"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", video: "/40353-425442466_medium.mp4", category: "Kritik Operasyon", color: "pink-500" }
+            ].map((item, i) => (
+             <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative h-[380px] bg-[#111111] rounded-3xl overflow-hidden border border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex-1">
+                <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-60 transition-opacity duration-700 mix-blend-luminosity"><source src={item.video} type="video/mp4" /></video>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent"></div>
+                <div className="absolute inset-0 p-8 flex flex-col justify-end z-10">
+                    <div className="mb-auto mt-4 w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-500 shadow-2xl">{item.icon}</div>
+                    <span className="px-3 py-1 bg-white/10 text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-4 backdrop-blur-md">{item.category}</span>
+                    <h3 className="text-2xl font-black text-white mb-3 tracking-tight group-hover:text-yellow-400 transition-colors">{item.title}</h3>
+                    <p className="text-slate-300 text-sm font-light leading-relaxed max-w-xs opacity-80 group-hover:opacity-100 transition-opacity">{item.desc}</p>
                 </div>
-            </motion.div>
-
-            {/* Sector 2: Enerji */}
-            <motion.div 
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                className="snap-center shrink-0 w-[80vw] md:w-[60vw] lg:w-[40vw] group relative h-[500px] bg-[#111111] rounded-3xl overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
-            >
-                <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-70 transition-opacity duration-700 mix-blend-luminosity group-hover:mix-blend-normal">
-                    <source src="/enerji.mp4" type="video/mp4" />
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/50 to-transparent"></div>
-                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-                <div className="absolute inset-0 p-10 flex flex-col justify-end z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 flex items-center justify-center mb-6 group-hover:border-blue-500/50 shadow-2xl group-hover:-translate-y-4 transition-all duration-500">
-                       <Zap className="w-8 h-8 text-blue-400 group-hover:text-blue-500" />
-                    </div>
-                    <span className="px-4 py-1.5 bg-blue-500 text-white text-[10px] font-black tracking-widest uppercase rounded self-start mb-4 shadow-[0_0_15px_rgba(59,130,246,0.4)]">Kritik Tesis</span>
-                    <h3 className="text-4xl font-black text-white mb-3 tracking-tighter">Enerji Santralleri</h3>
-                    <p className="text-slate-300 font-light leading-relaxed max-w-sm transform group-hover:-translate-y-2 transition-transform duration-500">
-                        Yüksek gerilim işlemleri (EKAT), RES/GES risk rejimleri ve trafo bakım talimatnameleri.
-                    </p>
-                </div>
-            </motion.div>
-
-            {/* Sector 3: Insaat/Santiye */}
-            <motion.div 
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="snap-center shrink-0 w-[80vw] md:w-[60vw] lg:w-[40vw] group relative h-[500px] bg-[#111111] rounded-3xl overflow-hidden border border-white/10 hover:border-orange-500/50 transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
-            >
-                <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-70 transition-opacity duration-700 mix-blend-luminosity group-hover:mix-blend-normal">
-                    <source src="/67467-522170635_medium.mp4" type="video/mp4" />
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/50 to-transparent"></div>
-                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-                <div className="absolute inset-0 p-10 flex flex-col justify-end z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 flex items-center justify-center mb-6 group-hover:border-orange-500/50 shadow-2xl group-hover:-translate-y-4 transition-all duration-500">
-                       <HardHat className="w-8 h-8 text-orange-500 group-hover:text-orange-400" />
-                    </div>
-                    <span className="px-4 py-1.5 bg-orange-600 text-white text-[10px] font-black tracking-widest uppercase rounded self-start mb-4 shadow-[0_0_15px_rgba(234,88,12,0.4)]">Ağır Risk Sınıfı</span>
-                    <h3 className="text-4xl font-black text-white mb-3 tracking-tighter">İnşaat Protokolleri</h3>
-                    <p className="text-slate-300 font-light leading-relaxed max-w-sm transform group-hover:-translate-y-2 transition-transform duration-500">
-                        Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri ve şantiye genel durum formları.
-                    </p>
-                </div>
-            </motion.div>
-
-            {/* Sector 4: Havacilik */}
-            <motion.div 
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="snap-center shrink-0 w-[80vw] md:w-[60vw] lg:w-[40vw] group relative h-[500px] bg-[#111111] rounded-3xl overflow-hidden border border-white/10 hover:border-pink-500/50 transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
-            >
-                <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-70 transition-opacity duration-700 mix-blend-luminosity group-hover:mix-blend-normal">
-                    <source src="/40353-425442466_medium.mp4" type="video/mp4" />
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/50 to-transparent"></div>
-                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-                <div className="absolute inset-0 p-10 flex flex-col justify-end z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 flex items-center justify-center mb-6 group-hover:border-pink-500/50 shadow-2xl group-hover:-translate-y-4 transition-all duration-500">
-                       <Activity className="w-8 h-8 text-pink-500 group-hover:text-pink-400" />
-                    </div>
-                    <span className="px-4 py-1.5 bg-pink-600 text-white text-[10px] font-black tracking-widest uppercase rounded self-start mb-4 shadow-[0_0_15px_rgba(219,39,119,0.4)]">Kritik Operasyon</span>
-                    <h3 className="text-4xl font-black text-white mb-3 tracking-tighter">Havacılık Tesisleri</h3>
-                    <p className="text-slate-300 font-light leading-relaxed max-w-sm transform group-hover:-translate-y-2 transition-transform duration-500">
-                        Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki standart işletme rejimleri.
-                    </p>
-                </div>
-            </motion.div>
+             </motion.div>
+            ))}
         </div>
       </section>
 
-      {/* Target Audience / About Grid */}
-      <section id="hakkimizda" className="py-24 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs font-bold tracking-widest uppercase mb-6"># Neden Biz?</div>
-              <h2 className="text-4xl lg:text-5xl font-black text-white mb-8 leading-tight">İSG Operasyonlarında <br/><span className="text-yellow-500">Mutlak Hakimiyet</span></h2>
-              
-              <div className="space-y-6 text-slate-400 font-light text-lg">
-                <p>Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. İSG Zeyron bu yükü dijital ortama taşıyarak, dikkatinizi asıl noktanıza, "Güvenliğe" vermenizi sağlar.</p>
-                <div className="flex items-start gap-4 p-5 bg-zinc-900/50 border-l-4 border-yellow-500 rounded-r-lg">
-                  <ShieldAlert className="w-8 h-8 text-yellow-500 shrink-0" />
-                  <p className="text-sm font-medium text-slate-300 italic">Sadece bir belge deposu değil; iş süreçlerini optimize eden aktif, otomatize bir SaaS çalışma istasyonudur.</p>
-                </div>
-              </div>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              {/* Sci-Fi Target Interface */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/5 to-transparent rounded-3xl transform rotate-3"></div>
-              <div className="bg-[#0A0D14] border border-white/10 rounded-3xl p-8 lg:p-12 relative z-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-                <div className="absolute top-4 right-4 flex gap-2">
-                   <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-                   <div className="w-2 h-2 bg-white/20 rounded-full"></div>
-                </div>
-                
-                <h3 className="text-2xl font-black text-white mb-8 border-b border-white/5 pb-4">Hedef Çekirdek Kitle</h3>
-                <ul className="space-y-5">
-                  {targetUsers.map((user, idx) => (
-                    <motion.li 
-                      key={idx} 
-                      whileHover={{ x: 10 }}
-                      className="flex items-center gap-4 text-slate-300 font-medium group cursor-default"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-white/5 flex items-center justify-center shrink-0 group-hover:bg-yellow-500/20 group-hover:border-yellow-500/50 transition-all">
-                        <CheckCircle2 className="w-4 h-4 text-slate-500 group-hover:text-yellow-500" />
-                      </div>
-                      <span className="group-hover:text-white transition-colors">{user}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
-          </div>
+            {/* Target Audience / About Grid */}
+      <section id="hakkimizda" className="py-24 relative z-10 mx-auto px-6 max-w-7xl">
+        <div className="relative rounded-[3rem] overflow-hidden bg-[#0A0D14] border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)] min-h-[500px] flex items-center">
+             <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity">
+                <source src="/159052-818026310_medium.mp4" type="video/mp4" />
+             </video>
+             <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-transparent"></div>
+             
+             <div className="relative z-10 p-12 lg:p-20 grid lg:grid-cols-2 gap-16 items-center w-full">
+                <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/20 border border-yellow-500/30 text-yellow-500 text-xs font-bold tracking-widest uppercase mb-8 rounded-full shadow-[0_0_20px_rgba(234,179,8,0.15)]">Hakkımızda</div>
+                  <h2 className="text-4xl lg:text-5xl font-black text-white mb-6 leading-tight">İSG Operasyonlarında <br/><span className="text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]">Tam Hakimiyet</span></h2>
+                  <div className="space-y-6 text-slate-300 font-light text-lg">
+                    <p>Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. İSG Zeyron bu yükü dijital ortama taşıyarak, dikkatinizi asıl noktanıza, "Güvenliğe" vermenizi sağlar.</p>
+                    <div className="flex items-start gap-4 p-6 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl">
+                      <ShieldAlert className="w-8 h-8 text-yellow-500 shrink-0 mt-1" />
+                      <p className="text-sm font-medium text-slate-200 italic">Sadece bir belge deposu değil; iş süreçlerini optimize eden aktif, otomatize bir SaaS çalışma istasyonudur.</p>
+                    </div>
+                  </div>
+                </motion.div>
+             </div>
         </div>
       </section>
-
-      {/* Cyber FAQ Section */}
+{/* Cyber FAQ Section */}
       <section id="sss" className="py-32 relative z-10 bg-[#020305] border-t border-white/5">
         <div className="fixed left-0 w-full h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(234,179,8,0.03)_0%,rgba(0,0,0,0)_100%)] pointer-events-none z-0"></div>
-        <div className="max-w-4xl mx-auto px-6 relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-sm font-bold text-yellow-500 tracking-[0.4em] uppercase mb-4">Veritabanı Araması</h2>
-            <p className="text-4xl md:text-5xl font-black text-white mb-10">Kapsamlı Soru Ağı</p>
-            
-            <div className="relative max-w-2xl mx-auto group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/20 via-yellow-500/5 to-yellow-500/20 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-              <input 
-                type="text" 
-                placeholder="Örn: Abonelik İptali, Güvenlik, Excel..." 
-                value={searchFaq}
-                onChange={(e) => setSearchFaq(e.target.value)}
-                className="relative w-full bg-[#0A0D14] border border-white/20 rounded-full px-8 py-5 pl-14 text-white placeholder-slate-500 outline-none focus:border-yellow-500 transition-all shadow-inner font-medium text-lg"
-              />
-              <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-yellow-500 w-6 h-6" />
-            </div>
-          </motion.div>
-          
-          <div className="space-y-4">
-            {filteredFaqs.length > 0 ? (
-              filteredFaqs.map((faq, idx) => (
-                <FAQItem key={idx} idx={idx} question={faq.q} answer={faq.a} />
-              ))
-            ) : (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-zinc-900/20 rounded-2xl border border-white/5 border-dashed">
-                <ShieldAlert className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
-                <p className="text-slate-400 font-medium text-lg">Bu sorguya eşleşen veri protokolü bulunamadı.</p>
-              </motion.div>
-            )}
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16">
+             <motion.div 
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="relative"
+             >
+               <h2 className="text-sm font-bold text-yellow-500 tracking-[0.4em] uppercase mb-4">Kapsamlı Soru Ağı</h2>
+               <p className="text-4xl md:text-5xl font-black text-white mb-10">Merak Ettiklerinizi Hemen Yanıtlayın</p>
+               <div className="relative w-full group mb-10">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/20 via-yellow-500/5 to-yellow-500/20 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                  <input 
+                    type="text" 
+                    placeholder="Soru arayın... (Örn: Güvenlik, Excel)" 
+                    value={searchFaq}
+                    onChange={(e) => setSearchFaq(e.target.value)}
+                    className="relative w-full bg-[#0A0D14] border border-white/20 rounded-full px-8 py-5 pl-14 text-white placeholder-slate-500 outline-none focus:border-yellow-500 transition-all shadow-inner font-medium text-lg"
+                  />
+                  <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-yellow-500 w-6 h-6" />
+               </div>
+
+               <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] h-[350px]">
+                  <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity">
+                    <source src="/292294_medium.mp4" type="video/mp4" />
+                  </video>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#020305] via-transparent to-transparent"></div>
+               </div>
+             </motion.div>
+             
+             <motion.div 
+               initial={{ opacity: 0, x: 20 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               className="space-y-4"
+             >
+                {filteredFaqs.length > 0 ? (
+                  filteredFaqs.map((faq, idx) => (
+                    <FAQItem key={idx} idx={idx} question={faq.q} answer={faq.a} />
+                  ))
+                ) : (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-zinc-900/20 rounded-2xl border border-white/5 border-dashed">
+                    <ShieldAlert className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
+                    <p className="text-slate-400 font-medium text-lg">Bu sorguya eşleşen veri protokolü bulunamadı.</p>
+                  </motion.div>
+                )}
+             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
+{/* Footer */}
       <footer className="border-t border-white/5 bg-[#030406] py-16 relative z-10 text-center">
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
           <div className="w-20 h-20 mb-8 opacity-50 hover:opacity-100 transition-opacity flex justify-center items-center rounded-full overflow-hidden mix-blend-lighten">

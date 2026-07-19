@@ -1,0 +1,3174 @@
+[
+  {
+    "fileUrlMatcher": "(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısıı.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "isRES",
+        "label": "isRES (Görünsün mü?)",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "key": "companyName",
+        "label": "Company ame",
+        "type": "text"
+      },
+      {
+        "key": "tesisAdi",
+        "label": "Tesis di",
+        "type": "text"
+      },
+      {
+        "key": "tesisAdresi",
+        "label": "Tesis dresi",
+        "type": "text"
+      },
+      {
+        "key": "telefon",
+        "label": "Telefon",
+        "type": "text"
+      },
+      {
+        "key": "eicKodu",
+        "label": "Eic odu",
+        "type": "text"
+      },
+      {
+        "key": "evrakNo",
+        "label": "Evrak o",
+        "type": "text"
+      },
+      {
+        "key": "date",
+        "label": "Date",
+        "type": "date"
+      },
+      {
+        "key": "muhendisAdSoyad",
+        "label": "Muhendis d oyad",
+        "type": "text"
+      },
+      {
+        "key": "muhendisUnvan",
+        "label": "Muhendis nvan",
+        "type": "text"
+      },
+      {
+        "key": "tcKimlikNo",
+        "label": "Tc imlik o",
+        "type": "text"
+      },
+      {
+        "key": "emoSicilNo",
+        "label": "Emo icil o",
+        "type": "text"
+      },
+      {
+        "key": "smmTescilNo",
+        "label": "Smm escil o",
+        "type": "text"
+      },
+      {
+        "key": "isletmeBelgeNo",
+        "label": "Isletme elge o",
+        "type": "text"
+      },
+      {
+        "key": "belgeGecerlilik",
+        "label": "Belge ecerlilik",
+        "type": "text"
+      },
+      {
+        "key": "muhendisIletisim",
+        "label": "Muhendis letisim",
+        "type": "text"
+      },
+      {
+        "key": "kuruluGuc",
+        "label": "Kurulu uc",
+        "type": "text"
+      },
+      {
+        "key": "gerilimSeviyesi",
+        "label": "Gerilim eviyesi",
+        "type": "text"
+      },
+      {
+        "key": "trafoMerkezi",
+        "label": "Trafo erkezi",
+        "type": "text"
+      },
+      {
+        "key": "gucTrafosu",
+        "label": "Guc rafosu",
+        "type": "text"
+      },
+      {
+        "key": "ogHucre",
+        "label": "Og ucre",
+        "type": "text"
+      },
+      {
+        "key": "preparedBy",
+        "label": "Prepared y",
+        "type": "text"
+      },
+      {
+        "key": "yetkiliUnvan",
+        "label": "Yetkili nvan",
+        "type": "text"
+      },
+      {
+        "key": "isGES",
+        "label": "isGES (Görünsün mü?)",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "key": "isHES",
+        "label": "isHES (Görünsün mü?)",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "key": "isTermik",
+        "label": "isTermik (Görünsün mü?)",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "EKAT_Yetki_Belgesi_Takip_Cizelgesi_Sablonu.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Dokuman o",
+        "type": "text"
+      },
+      {
+        "key": "date",
+        "label": "Date",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNoTarih",
+        "label": "Revizyon o arih",
+        "type": "date"
+      },
+      {
+        "key": "tesisAdi",
+        "label": "Tesis di",
+        "type": "text"
+      },
+      {
+        "key": "tesisAdresi",
+        "label": "Tesis dresi",
+        "type": "text"
+      },
+      {
+        "key": "companyName",
+        "label": "Company ame",
+        "type": "text"
+      },
+      {
+        "key": "isverenAdSoyad",
+        "label": "Isveren d oyad",
+        "type": "text"
+      },
+      {
+        "key": "isverenUnvan",
+        "label": "Isveren nvan",
+        "type": "text"
+      },
+      {
+        "key": "personeller",
+        "label": "personeller Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "siraNo",
+        "label": "Sira o",
+        "type": "text"
+      },
+      {
+        "key": "adSoyad",
+        "label": "Ad oyad",
+        "type": "text"
+      },
+      {
+        "key": "gorevi",
+        "label": "Gorevi",
+        "type": "text"
+      },
+      {
+        "key": "belgeNo",
+        "label": "Belge o",
+        "type": "text"
+      },
+      {
+        "key": "belgeTuru",
+        "label": "Belge uru",
+        "type": "text"
+      },
+      {
+        "key": "kurum",
+        "label": "Kurum",
+        "type": "text"
+      },
+      {
+        "key": "duzenlenmeTarihi",
+        "label": "Duzenlenme arihi",
+        "type": "date"
+      },
+      {
+        "key": "yenilemeTarihi",
+        "label": "Yenileme arihi",
+        "type": "date"
+      },
+      {
+        "key": "durum",
+        "label": "Durum",
+        "type": "text"
+      },
+      {
+        "key": "isgUzmani",
+        "label": "Isg zmani",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "LOTO_Formu_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "formNo",
+        "label": "Form o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNoTarihi",
+        "label": "Revizyon o arihi",
+        "type": "date"
+      },
+      {
+        "key": "sayfaNo",
+        "label": "Sayfa o",
+        "type": "text"
+      },
+      {
+        "key": "hazirlayanIsg",
+        "label": "Hazirlayan sg",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanIsveren",
+        "label": "Onaylayan sveren",
+        "type": "text"
+      },
+      {
+        "key": "isletmeBolum",
+        "label": "Isletme olum",
+        "type": "text"
+      },
+      {
+        "key": "islemTarihi",
+        "label": "Islem arihi",
+        "type": "date"
+      },
+      {
+        "key": "ekipmanAdiKodu",
+        "label": "Ekipman di odu",
+        "type": "text"
+      },
+      {
+        "key": "calismaSaati",
+        "label": "Calisma aati",
+        "type": "text"
+      },
+      {
+        "key": "isTuru",
+        "label": "Is uru",
+        "type": "text"
+      },
+      {
+        "key": "isIzinNo",
+        "label": "Is zin o",
+        "type": "text"
+      },
+      {
+        "key": "isiTalepEden",
+        "label": "Isi alep den",
+        "type": "text"
+      },
+      {
+        "key": "isiYurutenEkip",
+        "label": "Isi uruten kip",
+        "type": "text"
+      },
+      {
+        "key": "enerjiKaynaklari",
+        "label": "enerjiKaynaklari Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "siraNo",
+        "label": "Sira o",
+        "type": "text"
+      },
+      {
+        "key": "enerjiTuru",
+        "label": "Enerji uru",
+        "type": "text"
+      },
+      {
+        "key": "kaynakNoktasi",
+        "label": "Kaynak oktasi",
+        "type": "text"
+      },
+      {
+        "key": "izolasyonYontemi",
+        "label": "Izolasyon ontemi",
+        "type": "text"
+      },
+      {
+        "key": "kilitNo",
+        "label": "Kilit o",
+        "type": "text"
+      },
+      {
+        "key": "etiketNo",
+        "label": "Etiket o",
+        "type": "text"
+      },
+      {
+        "key": "depolanmisEnerjiDurumu",
+        "label": "Depolanmis nerji urumu",
+        "type": "text"
+      },
+      {
+        "key": "uygulayanKisi",
+        "label": "Uygulayan isi",
+        "type": "text"
+      },
+      {
+        "key": "kontrolAdimlari",
+        "label": "kontrolAdimlari Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "adimNo",
+        "label": "Adim o",
+        "type": "text"
+      },
+      {
+        "key": "yapilacakIslem",
+        "label": "Yapilacak slem",
+        "type": "text"
+      },
+      {
+        "key": "uygulandiMi",
+        "label": "Uygulandi i",
+        "type": "text"
+      },
+      {
+        "key": "islemSaati",
+        "label": "Islem aati",
+        "type": "text"
+      },
+      {
+        "key": "imza",
+        "label": "Imza",
+        "type": "text"
+      },
+      {
+        "key": "grupKilitleme",
+        "label": "grupKilitleme Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "kilitSahibi",
+        "label": "Kilit ahibi",
+        "type": "text"
+      },
+      {
+        "key": "gorevi",
+        "label": "Gorevi",
+        "type": "text"
+      },
+      {
+        "key": "takmaSaati",
+        "label": "Takma aati",
+        "type": "text"
+      },
+      {
+        "key": "cikarmaSaati",
+        "label": "Cikarma aati",
+        "type": "text"
+      },
+      {
+        "key": "enerjiVermeAdimlari",
+        "label": "enerjiVermeAdimlari Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "yapildiMi",
+        "label": "Yapildi i",
+        "type": "text"
+      },
+      {
+        "key": "yurutenAdSoyad",
+        "label": "Yuruten d oyad",
+        "type": "text"
+      },
+      {
+        "key": "onayTarihi",
+        "label": "Onay arihi",
+        "type": "date"
+      },
+      {
+        "key": "kontrolEdenAdSoyad",
+        "label": "Kontrol den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanAdSoyad",
+        "label": "Onaylayan d oyad",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "PKD_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "isyeriUnvani",
+        "label": "Isyeri nvani",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Dokuman o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNoTarihi",
+        "label": "Revizyon o arihi",
+        "type": "date"
+      },
+      {
+        "key": "hazirlayanIsgUzmani",
+        "label": "Hazirlayan sg zmani",
+        "type": "text"
+      },
+      {
+        "key": "kontrolEdenHekim",
+        "label": "Kontrol den ekim",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanIsveren",
+        "label": "Onaylayan sveren",
+        "type": "text"
+      },
+      {
+        "key": "gecerlilikSuresi",
+        "label": "Gecerlilik uresi",
+        "type": "text"
+      },
+      {
+        "key": "isyeriAdresi",
+        "label": "Isyeri dresi",
+        "type": "text"
+      },
+      {
+        "key": "faaliyetKonusu",
+        "label": "Faaliyet onusu",
+        "type": "text"
+      },
+      {
+        "key": "tehlikeSinifi",
+        "label": "Tehlike inifi",
+        "type": "text"
+      },
+      {
+        "key": "calisanSayisi",
+        "label": "Calisan ayisi",
+        "type": "text"
+      },
+      {
+        "key": "kapaliAlan",
+        "label": "Kapali lan",
+        "type": "text"
+      },
+      {
+        "key": "vardiyaDuzeni",
+        "label": "Vardiya uzeni",
+        "type": "text"
+      },
+      {
+        "key": "prosesAkisiOzet",
+        "label": "Proses kisi zet",
+        "type": "text"
+      },
+      {
+        "key": "kimyasalEnvanter",
+        "label": "kimyasalEnvanter Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "maddeAdi",
+        "label": "Madde di",
+        "type": "text"
+      },
+      {
+        "key": "fizikselHal",
+        "label": "Fiziksel al",
+        "type": "text"
+      },
+      {
+        "key": "parlamaNoktasi",
+        "label": "Parlama oktasi",
+        "type": "text"
+      },
+      {
+        "key": "lelUelOrani",
+        "label": "Lel el rani",
+        "type": "text"
+      },
+      {
+        "key": "tutusmaSicakligi",
+        "label": "Tutusma icakligi",
+        "type": "text"
+      },
+      {
+        "key": "kullanimDepolamaYeri",
+        "label": "Kullanim epolama eri",
+        "type": "text"
+      },
+      {
+        "key": "ateslemeKaynaklari",
+        "label": "ateslemeKaynaklari Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "siraNo",
+        "label": "Sira o",
+        "type": "text"
+      },
+      {
+        "key": "ateslemeKaynagi",
+        "label": "Atesleme aynagi",
+        "type": "text"
+      },
+      {
+        "key": "bulunduguYer",
+        "label": "Bulundugu er",
+        "type": "text"
+      },
+      {
+        "key": "mevcutDurum",
+        "label": "Mevcut urum",
+        "type": "text"
+      },
+      {
+        "key": "tehlikeliBolgeler",
+        "label": "tehlikeliBolgeler Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "sahaEkipman",
+        "label": "Saha kipman",
+        "type": "text"
+      },
+      {
+        "key": "bolgeTipi",
+        "label": "Bolge ipi",
+        "type": "text"
+      },
+      {
+        "key": "yayilimAlani",
+        "label": "Yayilim lani",
+        "type": "text"
+      },
+      {
+        "key": "gerekce",
+        "label": "Gerekce",
+        "type": "text"
+      },
+      {
+        "key": "riskDegerlendirmesi",
+        "label": "riskDegerlendirmesi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "tehlikeSenaryosu",
+        "label": "Tehlike enaryosu",
+        "type": "text"
+      },
+      {
+        "key": "bolge",
+        "label": "Bolge",
+        "type": "text"
+      },
+      {
+        "key": "olasilik",
+        "label": "Olasilik",
+        "type": "text"
+      },
+      {
+        "key": "siddet",
+        "label": "Siddet",
+        "type": "text"
+      },
+      {
+        "key": "riskSkoru",
+        "label": "Risk koru",
+        "type": "text"
+      },
+      {
+        "key": "onlemler",
+        "label": "Onlemler",
+        "type": "text"
+      },
+      {
+        "key": "artikRisk",
+        "label": "Artik isk",
+        "type": "text"
+      },
+      {
+        "key": "hazirlayanAdSoyad",
+        "label": "Hazirlayan d oyad",
+        "type": "text"
+      },
+      {
+        "key": "hazirlayanUnvan",
+        "label": "Hazirlayan nvan",
+        "type": "text"
+      },
+      {
+        "key": "onayTarihi",
+        "label": "Onay arihi",
+        "type": "date"
+      },
+      {
+        "key": "kontrolEdenAdSoyad",
+        "label": "Kontrol den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "kontrolEdenUnvan",
+        "label": "Kontrol den nvan",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanAdSoyad",
+        "label": "Onaylayan d oyad",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanUnvan",
+        "label": "Onaylayan nvan",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Hijyen_Sanitasyon_Talimati_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenAdSoyad",
+        "label": "Teblig den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebligTarihi",
+        "label": "Teblig arihi",
+        "type": "date"
+      },
+      {
+        "key": "tebellugEdenAdSoyad",
+        "label": "Tebellug den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebellugTarihi",
+        "label": "Tebellug arihi",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Soguk_Oda_Talimati_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenAdSoyad",
+        "label": "Teblig den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenGorevi",
+        "label": "Teblig den orevi",
+        "type": "text"
+      },
+      {
+        "key": "tebligTarihi",
+        "label": "Teblig arihi",
+        "type": "date"
+      },
+      {
+        "key": "tebellugEdenAdSoyad",
+        "label": "Tebellug den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebellugEdenGoreviSicil",
+        "label": "Tebellug den orevi icil",
+        "type": "text"
+      },
+      {
+        "key": "tebellugTarihi",
+        "label": "Tebellug arihi",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Apron_Guvenligi_Talimati_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenAdSoyad",
+        "label": "Teblig den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebligTarihi",
+        "label": "Teblig arihi",
+        "type": "date"
+      },
+      {
+        "key": "tebellugEdenAdSoyad",
+        "label": "Tebellug den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebellugTarihi",
+        "label": "Tebellug arihi",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Liman_Operasyon_Guvenlik_Plani_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "revizyonTablosu",
+        "label": "revizyonTablosu Tablosu",
+        "type": "list",
+        "options": [
+          "revNo",
+          "tarih",
+          "revizyonAciklama",
+          "hazirlayan",
+          "onaylayan"
+        ]
+      },
+      {
+        "key": "dagitimListesi",
+        "label": "dagitimListesi Tablosu",
+        "type": "list",
+        "options": [
+          "isveren",
+          "isgUzmani",
+          "isyeriHekimi",
+          "operasyonSorumlusu",
+          "calisanTemsilcisi",
+          "limanBaskanligi"
+        ]
+      },
+      {
+        "key": "isgOrganizasyonu",
+        "label": "isgOrganizasyonu Tablosu",
+        "type": "list",
+        "options": [
+          "adSoyad",
+          "gorev",
+          "iletisim"
+        ]
+      },
+      {
+        "key": "riskDegerlendirmesi",
+        "label": "riskDegerlendirmesi Tablosu",
+        "type": "list",
+        "options": [
+          "siraNo",
+          "tehlikeTanimi",
+          "riskTanimi",
+          "kabulEdilebilirSebiye",
+          "alinmasiGerekenOnlem"
+        ]
+      },
+      {
+        "key": "kkdMatrisi",
+        "label": "kkdMatrisi Tablosu",
+        "type": "list",
+        "options": [
+          "gorev",
+          "teslimTarihi",
+          "teslimAlan",
+          "imza"
+        ]
+      },
+      {
+        "key": "acilDurumEkipleri",
+        "label": "acilDurumEkipleri Tablosu",
+        "type": "list",
+        "options": [
+          "siraNo",
+          "adSoyad",
+          "ekipGorevi",
+          "iletisim"
+        ]
+      },
+      {
+        "key": "acilTelefonlar",
+        "label": "acilTelefonlar Tablosu",
+        "type": "list",
+        "options": [
+          "gerekliKurum",
+          "il",
+          "telNo"
+        ]
+      },
+      {
+        "key": "periyodikKontroller",
+        "label": "periyodikKontroller Tablosu",
+        "type": "list",
+        "options": [
+          "siraNo",
+          "ekipmanAdi",
+          "kontrolPeriyodu",
+          "sonKontrol"
+        ]
+      },
+      {
+        "key": "egitimPlani",
+        "label": "egitimPlani Tablosu",
+        "type": "list",
+        "options": [
+          "siraNo",
+          "egitimKonusu",
+          "planlananTarih",
+          "egitici"
+        ]
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Lashing_Talimati_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Dokuman o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNo",
+        "label": "Revizyon o",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenAdSoyad",
+        "label": "Teblig den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebligTarihi",
+        "label": "Teblig arihi",
+        "type": "date"
+      },
+      {
+        "key": "tebellugEdenAdSoyad",
+        "label": "Tebellug den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebellugTarihi",
+        "label": "Tebellug arihi",
+        "type": "date"
+      },
+      {
+        "key": "kontrolTarihi",
+        "label": "Kontrol arihi",
+        "type": "date"
+      },
+      {
+        "key": "seferNo",
+        "label": "Sefer o",
+        "type": "text"
+      },
+      {
+        "key": "aracPlakasi",
+        "label": "Arac lakasi",
+        "type": "text"
+      },
+      {
+        "key": "dorseNo",
+        "label": "Dorse o",
+        "type": "text"
+      },
+      {
+        "key": "surucuAdi",
+        "label": "Surucu di",
+        "type": "text"
+      },
+      {
+        "key": "konteynerNo",
+        "label": "Konteyner o",
+        "type": "text"
+      },
+      {
+        "key": "yukCinsi",
+        "label": "Yuk insi",
+        "type": "text"
+      },
+      {
+        "key": "toplamAgirlik",
+        "label": "Toplam girlik",
+        "type": "text"
+      },
+      {
+        "key": "yuklemeYeri",
+        "label": "Yukleme eri",
+        "type": "text"
+      },
+      {
+        "key": "bosaltmaYeri",
+        "label": "Bosaltma eri",
+        "type": "text"
+      },
+      {
+        "key": "lashingKontrolMaddeleri",
+        "label": "lashingKontrolMaddeleri Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "kontrolMaddesi",
+        "label": "Kontrol addesi",
+        "type": "text"
+      },
+      {
+        "key": "evet",
+        "label": "Evet",
+        "type": "text"
+      },
+      {
+        "key": "hayir",
+        "label": "Hayir",
+        "type": "text"
+      },
+      {
+        "key": "ud",
+        "label": "Ud",
+        "type": "text"
+      },
+      {
+        "key": "aciklama",
+        "label": "Aciklama",
+        "type": "text"
+      },
+      {
+        "key": "yuklemeyiYapan",
+        "label": "Yuklemeyi apan",
+        "type": "text"
+      },
+      {
+        "key": "yuklemeyiYapanGorevi",
+        "label": "Yuklemeyi apan orevi",
+        "type": "text"
+      },
+      {
+        "key": "kontrolEden",
+        "label": "Kontrol den",
+        "type": "text"
+      },
+      {
+        "key": "kontrolEdenGorevi",
+        "label": "Kontrol den orevi",
+        "type": "text"
+      },
+      {
+        "key": "onaylayan",
+        "label": "Onaylayan",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanGorevi",
+        "label": "Onaylayan orevi",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Maden_PKD_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "isletmeAdi",
+        "label": "Isletme di",
+        "type": "text"
+      },
+      {
+        "key": "sgkSicilNo",
+        "label": "Sgk icil o",
+        "type": "text"
+      },
+      {
+        "key": "isyeriAdresi",
+        "label": "Isyeri dresi",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Dokuman o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNoTarihi",
+        "label": "Revizyon o arihi",
+        "type": "date"
+      },
+      {
+        "key": "hazirlayanAdSoyad",
+        "label": "Hazirlayan d oyad",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanAdSoyad",
+        "label": "Onaylayan d oyad",
+        "type": "text"
+      },
+      {
+        "key": "revizyonTablosu",
+        "label": "revizyonTablosu Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "revNo",
+        "label": "Rev o",
+        "type": "text"
+      },
+      {
+        "key": "revTarihi",
+        "label": "Rev arihi",
+        "type": "date"
+      },
+      {
+        "key": "revAciklama",
+        "label": "Rev ciklama",
+        "type": "text"
+      },
+      {
+        "key": "revHazirlayan",
+        "label": "Rev azirlayan",
+        "type": "text"
+      },
+      {
+        "key": "revOnaylayan",
+        "label": "Rev naylayan",
+        "type": "text"
+      },
+      {
+        "key": "faaliyetKonusu",
+        "label": "Faaliyet onusu",
+        "type": "text"
+      },
+      {
+        "key": "uretimYontemi",
+        "label": "Uretim ontemi",
+        "type": "text"
+      },
+      {
+        "key": "calisanSayisi",
+        "label": "Calisan ayisi",
+        "type": "text"
+      },
+      {
+        "key": "vardiyaDuzeni",
+        "label": "Vardiya uzeni",
+        "type": "text"
+      },
+      {
+        "key": "ocakDerinligi",
+        "label": "Ocak erinligi",
+        "type": "text"
+      },
+      {
+        "key": "havalandirmaSistemi",
+        "label": "Havalandirma istemi",
+        "type": "text"
+      },
+      {
+        "key": "metanIcerigi",
+        "label": "Metan cerigi",
+        "type": "text"
+      },
+      {
+        "key": "komurTozuOzelligi",
+        "label": "Komur ozu zelligi",
+        "type": "text"
+      },
+      {
+        "key": "zonSiniflandirma",
+        "label": "zonSiniflandirma Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "zonNo",
+        "label": "Zon o",
+        "type": "text"
+      },
+      {
+        "key": "alanEkipman",
+        "label": "Alan kipman",
+        "type": "text"
+      },
+      {
+        "key": "yaniciMadde",
+        "label": "Yanici adde",
+        "type": "text"
+      },
+      {
+        "key": "salimDerecesi",
+        "label": "Salim erecesi",
+        "type": "text"
+      },
+      {
+        "key": "zonTipi",
+        "label": "Zon ipi",
+        "type": "text"
+      },
+      {
+        "key": "zonAciklama",
+        "label": "Zon ciklama",
+        "type": "text"
+      },
+      {
+        "key": "riskDegerlendirme",
+        "label": "riskDegerlendirme Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "riskNo",
+        "label": "Risk o",
+        "type": "text"
+      },
+      {
+        "key": "tehlikeSenaryosu",
+        "label": "Tehlike enaryosu",
+        "type": "text"
+      },
+      {
+        "key": "mevcutDurum",
+        "label": "Mevcut urum",
+        "type": "text"
+      },
+      {
+        "key": "olasilik",
+        "label": "Olasilik",
+        "type": "text"
+      },
+      {
+        "key": "siddet",
+        "label": "Siddet",
+        "type": "text"
+      },
+      {
+        "key": "riskSkoru",
+        "label": "Risk koru",
+        "type": "text"
+      },
+      {
+        "key": "alinacakOnlem",
+        "label": "Alinacak nlem",
+        "type": "text"
+      },
+      {
+        "key": "kalanRisk",
+        "label": "Kalan isk",
+        "type": "text"
+      },
+      {
+        "key": "hazirlayanGorevi",
+        "label": "Hazirlayan orevi",
+        "type": "text"
+      },
+      {
+        "key": "kontrolEdenGorevi",
+        "label": "Kontrol den orevi",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanGorevi",
+        "label": "Onaylayan orevi",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Sicak_Metal_Transfer_Talimati_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenAdSoyad",
+        "label": "Teblig den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebligTarihi",
+        "label": "Teblig arihi",
+        "type": "date"
+      },
+      {
+        "key": "tebellugEdenAdSoyad",
+        "label": "Tebellug den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebellugTarihi",
+        "label": "Tebellug arihi",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Acil_Durum_Ekip_Atama.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "sirketIsmi",
+        "label": "Sirket smi",
+        "type": "text"
+      },
+      {
+        "key": "ekipler",
+        "label": "ekipler Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "binaAdi",
+        "label": "Bina di",
+        "type": "text"
+      },
+      {
+        "key": "adSoyad",
+        "label": "Ad oyad",
+        "type": "text"
+      },
+      {
+        "key": "gorevi",
+        "label": "Gorevi",
+        "type": "text"
+      },
+      {
+        "key": "yetkiliIsim",
+        "label": "Yetkili sim",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Acil_Durum_Eylem_Plani_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "isyeriUnvani",
+        "label": "Isyeri nvani",
+        "type": "text"
+      },
+      {
+        "key": "isyeriAdresi",
+        "label": "Isyeri dresi",
+        "type": "text"
+      },
+      {
+        "key": "telefonFaks",
+        "label": "Telefon aks",
+        "type": "text"
+      },
+      {
+        "key": "ePosta",
+        "label": "E osta",
+        "type": "text"
+      },
+      {
+        "key": "naceKodu",
+        "label": "Nace odu",
+        "type": "text"
+      },
+      {
+        "key": "tehlikeSinifi",
+        "label": "Tehlike inifi",
+        "type": "text"
+      },
+      {
+        "key": "sgkSicilNo",
+        "label": "Sgk icil o",
+        "type": "text"
+      },
+      {
+        "key": "toplamCalisan",
+        "label": "Toplam alisan",
+        "type": "text"
+      },
+      {
+        "key": "kadinCalisan",
+        "label": "Kadin alisan",
+        "type": "text"
+      },
+      {
+        "key": "erkekCalisan",
+        "label": "Erkek alisan",
+        "type": "text"
+      },
+      {
+        "key": "engelliCalisan",
+        "label": "Engelli alisan",
+        "type": "text"
+      },
+      {
+        "key": "isverenVekili",
+        "label": "Isveren ekili",
+        "type": "text"
+      },
+      {
+        "key": "isgUzmani",
+        "label": "Isg zmani",
+        "type": "text"
+      },
+      {
+        "key": "isyeriHekimi",
+        "label": "Isyeri ekimi",
+        "type": "text"
+      },
+      {
+        "key": "hazirlanmaTarihi",
+        "label": "Hazirlanma arihi",
+        "type": "date"
+      },
+      {
+        "key": "gecerlilikSuresi",
+        "label": "Gecerlilik uresi",
+        "type": "text"
+      },
+      {
+        "key": "revizyonNoTarihi",
+        "label": "Revizyon o arihi",
+        "type": "date"
+      },
+      {
+        "key": "yapiSistemi",
+        "label": "Yapi istemi",
+        "type": "text"
+      },
+      {
+        "key": "katSayisi",
+        "label": "Kat ayisi",
+        "type": "text"
+      },
+      {
+        "key": "kullanimAlani",
+        "label": "Kullanim lani",
+        "type": "text"
+      },
+      {
+        "key": "bolumlerBirimler",
+        "label": "Bolumler irimler",
+        "type": "text"
+      },
+      {
+        "key": "kacisYoluCikisSayisi",
+        "label": "Kacis olu ikis ayisi",
+        "type": "text"
+      },
+      {
+        "key": "acilAydinlatma",
+        "label": "Acil ydinlatma",
+        "type": "text"
+      },
+      {
+        "key": "yanginAlgilama",
+        "label": "Yangin lgilama",
+        "type": "text"
+      },
+      {
+        "key": "yanginSondurme",
+        "label": "Yangin ondurme",
+        "type": "text"
+      },
+      {
+        "key": "elektrikPanolari",
+        "label": "Elektrik anolari",
+        "type": "text"
+      },
+      {
+        "key": "vanaNoktalari",
+        "label": "Vana oktalari",
+        "type": "text"
+      },
+      {
+        "key": "engelliDuzenlemeleri",
+        "label": "Engelli uzenlemeleri",
+        "type": "text"
+      },
+      {
+        "key": "acilDurumRiskleri",
+        "label": "acilDurumRiskleri Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "acilDurumTuru",
+        "label": "Acil urum uru",
+        "type": "text"
+      },
+      {
+        "key": "olasilik",
+        "label": "Olasilik",
+        "type": "text"
+      },
+      {
+        "key": "siddet",
+        "label": "Siddet",
+        "type": "text"
+      },
+      {
+        "key": "riskSkoru",
+        "label": "Risk koru",
+        "type": "text"
+      },
+      {
+        "key": "riskDuzeyi",
+        "label": "Risk uzeyi",
+        "type": "text"
+      },
+      {
+        "key": "koordinatorAsilAd",
+        "label": "Koordinator sil d",
+        "type": "text"
+      },
+      {
+        "key": "koordinatorAsilGorev",
+        "label": "Koordinator sil orev",
+        "type": "text"
+      },
+      {
+        "key": "koordinatorAsilTel",
+        "label": "Koordinator sil el",
+        "type": "text"
+      },
+      {
+        "key": "koordinatorYedekAd",
+        "label": "Koordinator edek d",
+        "type": "text"
+      },
+      {
+        "key": "koordinatorYedekGorev",
+        "label": "Koordinator edek orev",
+        "type": "text"
+      },
+      {
+        "key": "koordinatorYedekTel",
+        "label": "Koordinator edek el",
+        "type": "text"
+      },
+      {
+        "key": "yanginEkibi",
+        "label": "yanginEkibi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "siraNo",
+        "label": "Sira o",
+        "type": "text"
+      },
+      {
+        "key": "adSoyad",
+        "label": "Ad oyad",
+        "type": "text"
+      },
+      {
+        "key": "gorevUnvan",
+        "label": "Gorev nvan",
+        "type": "text"
+      },
+      {
+        "key": "telefon",
+        "label": "Telefon",
+        "type": "text"
+      },
+      {
+        "key": "egitimTarihi",
+        "label": "Egitim arihi",
+        "type": "date"
+      },
+      {
+        "key": "kurtarmaEkibi",
+        "label": "kurtarmaEkibi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "ilkyardimEkibi",
+        "label": "ilkyardimEkibi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "sertifikaBilgisi",
+        "label": "Sertifika ilgisi",
+        "type": "text"
+      },
+      {
+        "key": "haberlesmeEkibi",
+        "label": "haberlesmeEkibi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "birincilToplanmaYeri",
+        "label": "Birincil oplanma eri",
+        "type": "text"
+      },
+      {
+        "key": "ikincilToplanmaYeri",
+        "label": "Ikincil oplanma eri",
+        "type": "text"
+      },
+      {
+        "key": "toplanmaSorumlusu",
+        "label": "Toplanma orumlusu",
+        "type": "text"
+      },
+      {
+        "key": "sayimYontemi",
+        "label": "Sayim ontemi",
+        "type": "text"
+      },
+      {
+        "key": "tabelaIsaretleme",
+        "label": "Tabela saretleme",
+        "type": "text"
+      },
+      {
+        "key": "iletisimListesi",
+        "label": "iletisimListesi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "kurulusKisi",
+        "label": "Kurulus isi",
+        "type": "text"
+      },
+      {
+        "key": "telefonNo",
+        "label": "Telefon o",
+        "type": "text"
+      },
+      {
+        "key": "aciklama",
+        "label": "Aciklama",
+        "type": "text"
+      },
+      {
+        "key": "isgUzmaniAd",
+        "label": "Isg zmani d",
+        "type": "text"
+      },
+      {
+        "key": "isgSertifikaNo",
+        "label": "Isg ertifika o",
+        "type": "text"
+      },
+      {
+        "key": "onayTarihi",
+        "label": "Onay arihi",
+        "type": "date"
+      },
+      {
+        "key": "hekimAd",
+        "label": "Hekim d",
+        "type": "text"
+      },
+      {
+        "key": "hekimDiplomaNo",
+        "label": "Hekim iploma o",
+        "type": "text"
+      },
+      {
+        "key": "isverenAd",
+        "label": "Isveren d",
+        "type": "text"
+      },
+      {
+        "key": "isverenUnvan",
+        "label": "Isveren nvan",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Calisan_Temsilcisi_Atama_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "sirketUnvani",
+        "label": "Sirket nvani",
+        "type": "text"
+      },
+      {
+        "key": "evrakNo",
+        "label": "Evrak o",
+        "type": "text"
+      },
+      {
+        "key": "tarih",
+        "label": "Tarih",
+        "type": "date"
+      },
+      {
+        "key": "temsilciAdSoyad",
+        "label": "Temsilci d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tcKimlikNo",
+        "label": "Tc imlik o",
+        "type": "text"
+      },
+      {
+        "key": "sicilNo",
+        "label": "Sicil o",
+        "type": "text"
+      },
+      {
+        "key": "gorevi",
+        "label": "Gorevi",
+        "type": "text"
+      },
+      {
+        "key": "isverenAdSoyad",
+        "label": "Isveren d oyad",
+        "type": "text"
+      },
+      {
+        "key": "isverenUnvan",
+        "label": "Isveren nvan",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Destek_Elemani_Atama_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "sirketUnvani",
+        "label": "Sirket nvani",
+        "type": "text"
+      },
+      {
+        "key": "evrakNo",
+        "label": "Evrak o",
+        "type": "text"
+      },
+      {
+        "key": "tarih",
+        "label": "Tarih",
+        "type": "date"
+      },
+      {
+        "key": "destekElemanAdSoyad",
+        "label": "Destek leman d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tcKimlikNo",
+        "label": "Tc imlik o",
+        "type": "text"
+      },
+      {
+        "key": "sicilNo",
+        "label": "Sicil o",
+        "type": "text"
+      },
+      {
+        "key": "gorevi",
+        "label": "Gorevi",
+        "type": "text"
+      },
+      {
+        "key": "gorevAlani",
+        "label": "Gorev lani",
+        "type": "text"
+      },
+      {
+        "key": "isverenAdSoyad",
+        "label": "Isveren d oyad",
+        "type": "text"
+      },
+      {
+        "key": "isverenUnvan",
+        "label": "Isveren nvan",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "ISG_Kurul_Tutanagi_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "toplantiNo",
+        "label": "Toplanti o",
+        "type": "text"
+      },
+      {
+        "key": "tarihSaat",
+        "label": "Tarih aat",
+        "type": "date"
+      },
+      {
+        "key": "toplantiYeri",
+        "label": "Toplanti eri",
+        "type": "text"
+      },
+      {
+        "key": "baskanAd",
+        "label": "Baskan d",
+        "type": "text"
+      },
+      {
+        "key": "katilimcilar",
+        "label": "katilimcilar Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "adSoyad",
+        "label": "Ad oyad",
+        "type": "text"
+      },
+      {
+        "key": "gorevi",
+        "label": "Gorevi",
+        "type": "text"
+      },
+      {
+        "key": "durum",
+        "label": "Durum",
+        "type": "text"
+      },
+      {
+        "key": "gundem",
+        "label": "gundem Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "siraNo",
+        "label": "Sira o",
+        "type": "text"
+      },
+      {
+        "key": "konu",
+        "label": "Konu",
+        "type": "text"
+      },
+      {
+        "key": "kararlar",
+        "label": "kararlar Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "kararNo",
+        "label": "Karar o",
+        "type": "text"
+      },
+      {
+        "key": "karar",
+        "label": "Karar",
+        "type": "text"
+      },
+      {
+        "key": "sorumlu",
+        "label": "Sorumlu",
+        "type": "text"
+      },
+      {
+        "key": "termin",
+        "label": "Termin",
+        "type": "text"
+      },
+      {
+        "key": "raportorAd",
+        "label": "Raportor d",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Isyeri_Hijyen_Sanitasyon_Talimati_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenAdSoyad",
+        "label": "Teblig den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenGorevi",
+        "label": "Teblig den orevi",
+        "type": "text"
+      },
+      {
+        "key": "tebligTarihi",
+        "label": "Teblig arihi",
+        "type": "date"
+      },
+      {
+        "key": "tebellugEdenAdSoyad",
+        "label": "Tebellug den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebellugEdenGorevi",
+        "label": "Tebellug den orevi",
+        "type": "text"
+      },
+      {
+        "key": "tebellugTarihi",
+        "label": "Tebellug arihi",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Kaza_RamakKala_Bildirim_Detayli_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "formNo",
+        "label": "Form o",
+        "type": "text"
+      },
+      {
+        "key": "revizyonNo",
+        "label": "Revizyon o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "olaySiraNo",
+        "label": "Olay ira o",
+        "type": "text"
+      },
+      {
+        "key": "isyeriUnvani",
+        "label": "Isyeri nvani",
+        "type": "text"
+      },
+      {
+        "key": "sgkSicilNo",
+        "label": "Sgk icil o",
+        "type": "text"
+      },
+      {
+        "key": "isyeriAdresi",
+        "label": "Isyeri dresi",
+        "type": "text"
+      },
+      {
+        "key": "naceKodu",
+        "label": "Nace odu",
+        "type": "text"
+      },
+      {
+        "key": "tehlikeSinifi",
+        "label": "Tehlike inifi",
+        "type": "text"
+      },
+      {
+        "key": "olayTarihiSaati",
+        "label": "Olay arihi aati",
+        "type": "date"
+      },
+      {
+        "key": "ogrenilmeTarihiSaati",
+        "label": "Ogrenilme arihi aati",
+        "type": "date"
+      },
+      {
+        "key": "olayYeri",
+        "label": "Olay eri",
+        "type": "text"
+      },
+      {
+        "key": "vardiya",
+        "label": "Vardiya",
+        "type": "text"
+      },
+      {
+        "key": "ortamKosullari",
+        "label": "Ortam osullari",
+        "type": "text"
+      },
+      {
+        "key": "kazazedeAdSoyad",
+        "label": "Kazazede d oyad",
+        "type": "text"
+      },
+      {
+        "key": "kazazedeTc",
+        "label": "Kazazede c",
+        "type": "text"
+      },
+      {
+        "key": "kazazedeDogumYasi",
+        "label": "Kazazede ogum asi",
+        "type": "text"
+      },
+      {
+        "key": "kazazedeGorevi",
+        "label": "Kazazede orevi",
+        "type": "text"
+      },
+      {
+        "key": "kazazedeIseGiris",
+        "label": "Kazazede se iris",
+        "type": "text"
+      },
+      {
+        "key": "kazazedeKidem",
+        "label": "Kazazede idem",
+        "type": "text"
+      },
+      {
+        "key": "iseBaslamaEgitimi",
+        "label": "Ise aslama gitimi",
+        "type": "text"
+      },
+      {
+        "key": "sonTemelIsgEgitimi",
+        "label": "Son emel sg gitimi",
+        "type": "text"
+      },
+      {
+        "key": "sonPeriyodikMuayene",
+        "label": "Son eriyodik uayene",
+        "type": "text"
+      },
+      {
+        "key": "kkdDurumu",
+        "label": "Kkd urumu",
+        "type": "text"
+      },
+      {
+        "key": "olayAnlatimi",
+        "label": "Olay nlatimi",
+        "type": "text"
+      },
+      {
+        "key": "kazaTipi",
+        "label": "Kaza ipi",
+        "type": "text"
+      },
+      {
+        "key": "yaralanmaTuru",
+        "label": "Yaralanma uru",
+        "type": "text"
+      },
+      {
+        "key": "vucuttakiYeri",
+        "label": "Vucuttaki eri",
+        "type": "text"
+      },
+      {
+        "key": "ilkMudahale",
+        "label": "Ilk udahale",
+        "type": "text"
+      },
+      {
+        "key": "sevkDurumu",
+        "label": "Sevk urumu",
+        "type": "text"
+      },
+      {
+        "key": "tibbiSonucIstirahat",
+        "label": "Tibbi onuc stirahat",
+        "type": "text"
+      },
+      {
+        "key": "taniklar",
+        "label": "Taniklar",
+        "type": "text"
+      },
+      {
+        "key": "bildirimTakibi",
+        "label": "bildirimTakibi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "bildirimMercii",
+        "label": "Bildirim ercii",
+        "type": "text"
+      },
+      {
+        "key": "yasalSure",
+        "label": "Yasal ure",
+        "type": "text"
+      },
+      {
+        "key": "yapilanTarih",
+        "label": "Yapilan arih",
+        "type": "date"
+      },
+      {
+        "key": "durum",
+        "label": "Durum",
+        "type": "text"
+      },
+      {
+        "key": "kokNedenAnalizi",
+        "label": "kokNedenAnalizi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "nedenSorusu",
+        "label": "Neden orusu",
+        "type": "text"
+      },
+      {
+        "key": "nedenCevabi",
+        "label": "Neden evabi",
+        "type": "text"
+      },
+      {
+        "key": "dofListesi",
+        "label": "dofListesi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "dofNo",
+        "label": "Dof o",
+        "type": "text"
+      },
+      {
+        "key": "faaliyet",
+        "label": "Faaliyet",
+        "type": "text"
+      },
+      {
+        "key": "tur",
+        "label": "Tur",
+        "type": "text"
+      },
+      {
+        "key": "sorumlu",
+        "label": "Sorumlu",
+        "type": "text"
+      },
+      {
+        "key": "termin",
+        "label": "Termin",
+        "type": "text"
+      },
+      {
+        "key": "isgUzmaniAd",
+        "label": "Isg zmani d",
+        "type": "text"
+      },
+      {
+        "key": "onayTarihi",
+        "label": "Onay arihi",
+        "type": "date"
+      },
+      {
+        "key": "isyeriHekimiAd",
+        "label": "Isyeri ekimi d",
+        "type": "text"
+      },
+      {
+        "key": "calisanTemsilcisiAd",
+        "label": "Calisan emsilcisi d",
+        "type": "text"
+      },
+      {
+        "key": "birimAmiriAd",
+        "label": "Birim miri d",
+        "type": "text"
+      },
+      {
+        "key": "isverenAd",
+        "label": "Isveren d",
+        "type": "text"
+      },
+      {
+        "key": "rkBildirimNo",
+        "label": "Rk ildirim o",
+        "type": "text"
+      },
+      {
+        "key": "rkBildirimTarihiSaati",
+        "label": "Rk ildirim arihi aati",
+        "type": "date"
+      },
+      {
+        "key": "rkOlayTarihiSaati",
+        "label": "Rk lay arihi aati",
+        "type": "date"
+      },
+      {
+        "key": "rkBildiren",
+        "label": "Rk ildiren",
+        "type": "text"
+      },
+      {
+        "key": "rkOlayYeri",
+        "label": "Rk lay eri",
+        "type": "text"
+      },
+      {
+        "key": "rkOlayTuru",
+        "label": "Rk lay uru",
+        "type": "text"
+      },
+      {
+        "key": "rkOlayAnlatimi",
+        "label": "Rk lay nlatimi",
+        "type": "text"
+      },
+      {
+        "key": "rkOlasiSonuc",
+        "label": "Rk lasi onuc",
+        "type": "text"
+      },
+      {
+        "key": "rkPotansiyelSiddet",
+        "label": "Rk otansiyel iddet",
+        "type": "text"
+      },
+      {
+        "key": "rkOlasilik",
+        "label": "Rk lasilik",
+        "type": "text"
+      },
+      {
+        "key": "rkRiskOnceligi",
+        "label": "Rk isk nceligi",
+        "type": "text"
+      },
+      {
+        "key": "rkDofListesi",
+        "label": "rkDofListesi Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "rkDofNo",
+        "label": "Rk of o",
+        "type": "text"
+      },
+      {
+        "key": "rkFaaliyet",
+        "label": "Rk aaliyet",
+        "type": "text"
+      },
+      {
+        "key": "rkTur",
+        "label": "Rk ur",
+        "type": "text"
+      },
+      {
+        "key": "rkSorumlu",
+        "label": "Rk orumlu",
+        "type": "text"
+      },
+      {
+        "key": "rkTermin",
+        "label": "Rk ermin",
+        "type": "text"
+      },
+      {
+        "key": "rkDurum",
+        "label": "Rk urum",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Personel_ISG_Ihtar_Detayli_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Dokuman o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNo",
+        "label": "Revizyon o",
+        "type": "text"
+      },
+      {
+        "key": "isyeriUnvani",
+        "label": "Isyeri nvani",
+        "type": "text"
+      },
+      {
+        "key": "sgkSicilNo",
+        "label": "Sgk icil o",
+        "type": "text"
+      },
+      {
+        "key": "isyeriAdresi",
+        "label": "Isyeri dresi",
+        "type": "text"
+      },
+      {
+        "key": "tehlikeSinifi",
+        "label": "Tehlike inifi",
+        "type": "text"
+      },
+      {
+        "key": "isgKatipOsgb",
+        "label": "Isg atip sgb",
+        "type": "text"
+      },
+      {
+        "key": "personelAdSoyad",
+        "label": "Personel d oyad",
+        "type": "text"
+      },
+      {
+        "key": "personelTc",
+        "label": "Personel c",
+        "type": "text"
+      },
+      {
+        "key": "personelSgkSicil",
+        "label": "Personel gk icil",
+        "type": "text"
+      },
+      {
+        "key": "personelGorevi",
+        "label": "Personel orevi",
+        "type": "text"
+      },
+      {
+        "key": "personelBolumu",
+        "label": "Personel olumu",
+        "type": "text"
+      },
+      {
+        "key": "personelIseGiris",
+        "label": "Personel se iris",
+        "type": "text"
+      },
+      {
+        "key": "uyariTarihiSaati",
+        "label": "Uyari arihi aati",
+        "type": "date"
+      },
+      {
+        "key": "kacinciUyari",
+        "label": "Kacinci yari",
+        "type": "text"
+      },
+      {
+        "key": "oncekiUyariTarihi",
+        "label": "Onceki yari arihi",
+        "type": "date"
+      },
+      {
+        "key": "uyariTuru",
+        "label": "Uyari uru",
+        "type": "text"
+      },
+      {
+        "key": "yasalDayanak",
+        "label": "Yasal ayanak",
+        "type": "text"
+      },
+      {
+        "key": "olayTarihiSaati",
+        "label": "Olay arihi aati",
+        "type": "date"
+      },
+      {
+        "key": "olayYeri",
+        "label": "Olay eri",
+        "type": "text"
+      },
+      {
+        "key": "uygunsuzluk1",
+        "label": "Uygunsuzluk1",
+        "type": "text"
+      },
+      {
+        "key": "uygunsuzluk2",
+        "label": "Uygunsuzluk2",
+        "type": "text"
+      },
+      {
+        "key": "uygunsuzluk3",
+        "label": "Uygunsuzluk3",
+        "type": "text"
+      },
+      {
+        "key": "personelSavunmasi",
+        "label": "Personel avunmasi",
+        "type": "text"
+      },
+      {
+        "key": "isgUzmaniAd",
+        "label": "Isg zmani d",
+        "type": "text"
+      },
+      {
+        "key": "isverenAd",
+        "label": "Isveren d",
+        "type": "text"
+      },
+      {
+        "key": "tanikAd",
+        "label": "Tanik d",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "SERTİFİKA.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "kursiyerAdSoyad",
+        "label": "Kursiyer d oyad",
+        "type": "text"
+      },
+      {
+        "key": "gorevi",
+        "label": "Gorevi",
+        "type": "text"
+      },
+      {
+        "key": "egitimTarihi",
+        "label": "Egitim arihi",
+        "type": "date"
+      },
+      {
+        "key": "egitimSuresi",
+        "label": "Egitim uresi",
+        "type": "text"
+      },
+      {
+        "key": "egitimSekli",
+        "label": "Egitim ekli",
+        "type": "text"
+      },
+      {
+        "key": "egitmenAdSoyad",
+        "label": "Egitmen d oyad",
+        "type": "text"
+      },
+      {
+        "key": "egitmenUnvan",
+        "label": "Egitmen nvan",
+        "type": "text"
+      },
+      {
+        "key": "isverenAdSoyad",
+        "label": "Isveren d oyad",
+        "type": "text"
+      },
+      {
+        "key": "isyeriUnvani",
+        "label": "Isyeri nvani",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Yangindan_Korunma_Dokumani_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Dokuman o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNoTarihi",
+        "label": "Revizyon o arihi",
+        "type": "date"
+      },
+      {
+        "key": "kapsamAlanlari",
+        "label": "Kapsam lanlari",
+        "type": "text"
+      },
+      {
+        "key": "revizyonTablosu",
+        "label": "revizyonTablosu Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "revNo",
+        "label": "Rev o",
+        "type": "text"
+      },
+      {
+        "key": "revTarihi",
+        "label": "Rev arihi",
+        "type": "date"
+      },
+      {
+        "key": "revOzeti",
+        "label": "Rev zeti",
+        "type": "text"
+      },
+      {
+        "key": "revHazirlayan",
+        "label": "Rev azirlayan",
+        "type": "text"
+      },
+      {
+        "key": "revOnaylayan",
+        "label": "Rev naylayan",
+        "type": "text"
+      },
+      {
+        "key": "isyeriUnvani",
+        "label": "Isyeri nvani",
+        "type": "text"
+      },
+      {
+        "key": "yanginRiskleri",
+        "label": "yanginRiskleri Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "riskNo",
+        "label": "Risk o",
+        "type": "text"
+      },
+      {
+        "key": "tehlikeKaynagi",
+        "label": "Tehlike aynagi",
+        "type": "text"
+      },
+      {
+        "key": "olasiTehlike",
+        "label": "Olasi ehlike",
+        "type": "text"
+      },
+      {
+        "key": "olasilik",
+        "label": "Olasilik",
+        "type": "text"
+      },
+      {
+        "key": "siddet",
+        "label": "Siddet",
+        "type": "text"
+      },
+      {
+        "key": "riskSkoru",
+        "label": "Risk koru",
+        "type": "text"
+      },
+      {
+        "key": "mevcutOnlem",
+        "label": "Mevcut nlem",
+        "type": "text"
+      },
+      {
+        "key": "onerilenOnlem",
+        "label": "Onerilen nlem",
+        "type": "text"
+      },
+      {
+        "key": "sondurmeSistemleri",
+        "label": "sondurmeSistemleri Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "sistemNo",
+        "label": "Sistem o",
+        "type": "text"
+      },
+      {
+        "key": "lokasyon",
+        "label": "Lokasyon",
+        "type": "text"
+      },
+      {
+        "key": "sistemTipi",
+        "label": "Sistem ipi",
+        "type": "text"
+      },
+      {
+        "key": "kapasiteAdet",
+        "label": "Kapasite det",
+        "type": "text"
+      },
+      {
+        "key": "sonKontrol",
+        "label": "Son ontrol",
+        "type": "text"
+      },
+      {
+        "key": "durum",
+        "label": "Durum",
+        "type": "text"
+      },
+      {
+        "key": "acilDurumEkipleri",
+        "label": "acilDurumEkipleri Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "ekipAdi",
+        "label": "Ekip di",
+        "type": "text"
+      },
+      {
+        "key": "gorevTanimi",
+        "label": "Gorev animi",
+        "type": "text"
+      },
+      {
+        "key": "liderAsil",
+        "label": "Lider sil",
+        "type": "text"
+      },
+      {
+        "key": "liderYedek",
+        "label": "Lider edek",
+        "type": "text"
+      },
+      {
+        "key": "uyeSayisi",
+        "label": "Uye ayisi",
+        "type": "text"
+      },
+      {
+        "key": "egitimTatbikatPlani",
+        "label": "egitimTatbikatPlani Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "egitimAdi",
+        "label": "Egitim di",
+        "type": "text"
+      },
+      {
+        "key": "hedefKitle",
+        "label": "Hedef itle",
+        "type": "text"
+      },
+      {
+        "key": "sure",
+        "label": "Sure",
+        "type": "text"
+      },
+      {
+        "key": "periyot",
+        "label": "Periyot",
+        "type": "text"
+      },
+      {
+        "key": "sorumlu",
+        "label": "Sorumlu",
+        "type": "text"
+      },
+      {
+        "key": "hazirlayanGorevi",
+        "label": "Hazirlayan orevi",
+        "type": "text"
+      },
+      {
+        "key": "kontrolEdenGorevi",
+        "label": "Kontrol den orevi",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanGorevi",
+        "label": "Onaylayan orevi",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Orman_Kesim_Proseduru_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Dokuman o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNo",
+        "label": "Revizyon o",
+        "type": "text"
+      },
+      {
+        "key": "sayfaNo",
+        "label": "Sayfa o",
+        "type": "text"
+      },
+      {
+        "key": "revizyonTablosu",
+        "label": "revizyonTablosu Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "revNo",
+        "label": "Rev o",
+        "type": "text"
+      },
+      {
+        "key": "revTarihi",
+        "label": "Rev arihi",
+        "type": "date"
+      },
+      {
+        "key": "revAciklama",
+        "label": "Rev ciklama",
+        "type": "text"
+      },
+      {
+        "key": "revHazirlayan",
+        "label": "Rev azirlayan",
+        "type": "text"
+      },
+      {
+        "key": "hazirlayanAdSoyad",
+        "label": "Hazirlayan d oyad",
+        "type": "text"
+      },
+      {
+        "key": "kontrolEdenAdSoyad",
+        "label": "Kontrol den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "onaylayanAdSoyad",
+        "label": "Onaylayan d oyad",
+        "type": "text"
+      },
+      {
+        "key": "kkdKontrolTablosu",
+        "label": "kkdKontrolTablosu Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "siraNo",
+        "label": "Sira o",
+        "type": "text"
+      },
+      {
+        "key": "kkdAdi",
+        "label": "Kkd di",
+        "type": "text"
+      },
+      {
+        "key": "ilgiliStandart",
+        "label": "Ilgili tandart",
+        "type": "text"
+      },
+      {
+        "key": "kullanimZorunlulugu",
+        "label": "Kullanim orunlulugu",
+        "type": "text"
+      },
+      {
+        "key": "kontrolDurumu",
+        "label": "Kontrol urumu",
+        "type": "text"
+      },
+      {
+        "key": "gunlukGuvenlikKontrol",
+        "label": "gunlukGuvenlikKontrol Tablosu",
+        "type": "list",
+        "options": [
+          "veri1",
+          "veri2",
+          "veri3",
+          "veri4",
+          "veri5"
+        ]
+      },
+      {
+        "key": "kontrolMaddesi",
+        "label": "Kontrol addesi",
+        "type": "text"
+      },
+      {
+        "key": "evetDurumu",
+        "label": "Evet urumu",
+        "type": "text"
+      },
+      {
+        "key": "hayirDurumu",
+        "label": "Hayir urumu",
+        "type": "text"
+      },
+      {
+        "key": "aciklama",
+        "label": "Aciklama",
+        "type": "text"
+      },
+      {
+        "key": "kontrolYapanAd",
+        "label": "Kontrol apan d",
+        "type": "text"
+      },
+      {
+        "key": "kontrolTarihi",
+        "label": "Kontrol arihi",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "fileUrlMatcher": "Pestisit_Talimati_Sablon.docx",
+    "fields": [
+      {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Dokuman o",
+        "type": "text"
+      },
+      {
+        "key": "yayinTarihi",
+        "label": "Yayin arihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNo",
+        "label": "Revizyon o",
+        "type": "text"
+      },
+      {
+        "key": "sayfaNo",
+        "label": "Sayfa o",
+        "type": "text"
+      },
+      {
+        "key": "tebligEdenAdSoyad",
+        "label": "Teblig den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebligTarihi",
+        "label": "Teblig arihi",
+        "type": "date"
+      },
+      {
+        "key": "tebellugEdenAdSoyad",
+        "label": "Tebellug den d oyad",
+        "type": "text"
+      },
+      {
+        "key": "tebellugTarihi",
+        "label": "Tebellug arihi",
+        "type": "date"
+      }
+    ]
+  }
+]
