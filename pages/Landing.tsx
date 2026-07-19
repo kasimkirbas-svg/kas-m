@@ -150,37 +150,37 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
       {init && <Particles id="tsparticles" options={particlesOptions} className="fixed inset-0 z-0 pointer-events-none" />}
 
-      {/* Navbar (HUD) */}
+      {/* Island Navbar */}
       <motion.header 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${scrolled ? 'bg-[#05060A]/80 backdrop-blur-xl border-yellow-500/20 py-3 shadow-[0_4px_30px_rgba(234,179,8,0.1)]' : 'bg-transparent border-transparent py-6'}`}
+        className="fixed top-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-6xl z-50 transition-all duration-500 rounded-full border border-white/10 bg-[#050510]/80 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] flex items-center justify-between px-6 py-3"
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div className="flex items-center justify-between w-full">
           
           <motion.div 
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-3 cursor-pointer group" 
             onClick={() => window.scrollTo(0, 0)}
           >
-            <div className="w-14 h-14 flex items-center justify-center -ml-2 relative rounded-full overflow-hidden mix-blend-lighten shadow-inner">
+            <div className="w-12 h-12 flex items-center justify-center relative rounded-full overflow-hidden mix-blend-lighten shadow-inner">
                <div className="absolute inset-0 bg-yellow-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
                <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain mix-blend-screen drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] relative z-10" />
             </div>
             <div className="flex flex-col -ml-1">
-              <span className="text-2xl font-black tracking-[0.15em] text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">İSG ZEYRON</span>
-              <span className="text-[10px] text-yellow-500/80 font-bold tracking-[0.3em] uppercase leading-none mt-1">Teknoloji</span>
+              <span className="text-xl font-black tracking-[0.15em] text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">İSG ZEYRON</span>
+              <span className="text-[9px] text-yellow-500/80 font-bold tracking-[0.3em] uppercase leading-none mt-1">Teknoloji</span>
             </div>
           </motion.div>
 
-          <nav className="hidden lg:flex flex-1 justify-center space-x-12">
+          <nav className="hidden lg:flex flex-1 justify-center space-x-10">
             {navItems.map((item, idx) => (
               <motion.a 
                 key={item.id} 
                 href={`#${item.id}`} 
                 onClick={(e) => scrollToSection(item.id, e)} 
-                className="relative text-xs font-bold text-slate-400 hover:text-white uppercase tracking-[0.15em] transition-colors group py-2"
+                className="relative text-[11px] font-black text-slate-300 hover:text-yellow-400 uppercase tracking-[0.15em] transition-colors group py-2"
                 whileHover={{ y: -2 }}
               >
                 {item.label}
@@ -190,7 +190,11 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           </nav>
 
           <div className="flex items-center gap-6">
-            <button onClick={onLoginClick} className="hidden md:block text-sm font-bold text-slate-300 hover:text-yellow-400 transition-colors tracking-wider">
+            <button onClick={onRegisterClick} className="hidden md:block text-xs font-black text-white hover:text-yellow-500 transition-colors tracking-widest uppercase">
+              KAYIT OL
+            </button>
+            <div className="hidden md:block w-px h-6 bg-white/20"></div>
+            <button onClick={onLoginClick} className="hidden md:block text-xs font-black text-yellow-500 hover:text-white transition-colors tracking-widest uppercase">
               GİRİŞ YAP
             </button>
           </div>
