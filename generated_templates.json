@@ -8,9 +8,157 @@
     "fileUrl": "/templates/Enerji Santralleri/(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısıı.docx",
     "fields": [
       {
-        "key": "Gp",
-        "label": "Gp",
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
         "type": "text"
+      },
+      {
+        "key": "companyName",
+        "label": "Firma Adı",
+        "type": "text",
+        "placeholder": "Firma Adını Giriniz"
+      },
+      {
+        "key": "tesisAdi",
+        "label": "Tesis Adı",
+        "type": "text",
+        "placeholder": "Örn: XYZ Rüzgar Enerji Santrali"
+      },
+      {
+        "key": "tesisAdresi",
+        "label": "Tesis Adresi",
+        "type": "textarea"
+      },
+      {
+        "key": "telefon",
+        "label": "Telefon",
+        "type": "text"
+      },
+      {
+        "key": "eicKodu",
+        "label": "EIC Kodu",
+        "type": "text"
+      },
+      {
+        "key": "evrakNo",
+        "label": "Evrak No",
+        "type": "text"
+      },
+      {
+        "key": "date",
+        "label": "Tarih",
+        "type": "date"
+      },
+      {
+        "key": "muhendisAdSoyad",
+        "label": "Mühendis Ad Soyad",
+        "type": "text"
+      },
+      {
+        "key": "muhendisUnvan",
+        "label": "Mühendis Ünvanı",
+        "type": "text"
+      },
+      {
+        "key": "tcKimlikNo",
+        "label": "TC Kimlik No",
+        "type": "text"
+      },
+      {
+        "key": "emoSicilNo",
+        "label": "EMO Sicil No",
+        "type": "text"
+      },
+      {
+        "key": "smmTescilNo",
+        "label": "SMM Tescil No",
+        "type": "text"
+      },
+      {
+        "key": "isletmeBelgeNo",
+        "label": "İşletme Sorumluluğu Yetki Belgesi No",
+        "type": "text"
+      },
+      {
+        "key": "belgeGecerlilik",
+        "label": "Belge Geçerlilik Tarihi",
+        "type": "date"
+      },
+      {
+        "key": "muhendisIletisim",
+        "label": "Mühendis İletişim",
+        "type": "text"
+      },
+      {
+        "key": "kuruluGuc",
+        "label": "Kurulu Güç (MW/kVA)",
+        "type": "text"
+      },
+      {
+        "key": "gerilimSeviyesi",
+        "label": "Gerilim Seviyesi (kV)",
+        "type": "text"
+      },
+      {
+        "key": "trafoMerkezi",
+        "label": "Bağlı Olunan Trafo Merkezi / Fider",
+        "type": "text"
+      },
+      {
+        "key": "gucTrafosu",
+        "label": "Güç Trafosu Adedi / Güçleri",
+        "type": "text"
+      },
+      {
+        "key": "ogHucre",
+        "label": "OG Hücre Adedi / Tipi",
+        "type": "text"
+      },
+      {
+        "key": "preparedBy",
+        "label": "İşveren / Yetkili Ad Soyad",
+        "type": "text"
+      },
+      {
+        "key": "yetkiliUnvan",
+        "label": "Yetkili Ünvanı",
+        "type": "text"
+      },
+      {
+        "key": "isRES",
+        "label": "RES mi?",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "key": "isGES",
+        "label": "GES mi?",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "key": "isHES",
+        "label": "HES mi?",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
+      },
+      {
+        "key": "isTermik",
+        "label": "Termik mi?",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
       }
     ]
   },
@@ -23,8 +171,53 @@
     "fileUrl": "/templates/Enerji Santralleri/EKAT_Yetki_Belgesi_Takip_Cizelgesi_Sablonu.docx",
     "fields": [
       {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
+        "key": "dokumanNo",
+        "label": "Doküman No",
+        "type": "text"
+      },
+      {
+        "key": "date",
+        "label": "İlk Yayın Tarihi",
+        "type": "date"
+      },
+      {
+        "key": "revizyonNoTarih",
+        "label": "Revizyon No / Tarihi",
+        "type": "text"
+      },
+      {
+        "key": "tesisAdi",
+        "label": "Tesis Adı",
+        "type": "text"
+      },
+      {
+        "key": "tesisAdresi",
+        "label": "Tesis Adresi",
+        "type": "textarea"
+      },
+      {
         "key": "companyName",
         "label": "Firma Adı",
+        "type": "text"
+      },
+      {
+        "key": "isverenAdSoyad",
+        "label": "İşveren Yetkilisi Ad Soyad",
+        "type": "text"
+      },
+      {
+        "key": "isverenUnvan",
+        "label": "İşveren Yetkilisi Ünvanı",
+        "type": "text"
+      },
+      {
+        "key": "isgUzmani",
+        "label": "İSG Uzmanı Ad Soyad",
         "type": "text"
       }
     ]
