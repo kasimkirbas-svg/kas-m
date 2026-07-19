@@ -130,21 +130,6 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-white overflow-x-hidden relative">
       
-      {/* Dynamic Video Background Architecture */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30"
-        >
-          <source src="/67467-522170635_medium.mp4" type="video/mp4" />
-          Tarayıcınız video etiketini desteklemiyor.
-        </video>
-        <div className="absolute inset-0 bg-black/50"></div>
-      </div>
-
       {/* Sci-Fi Background Layer */}
       <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] mix-blend-overlay pointer-events-none"></div>
 
@@ -205,6 +190,15 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-32 px-6 min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
+        
+        {/* Section Video Background */}
+        <div className="absolute inset-0 z-0">
+           <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-50 mix-blend-luminosity">
+              <source src="/13232-246463976_medium.mp4" type="video/mp4" />
+           </video>
+           <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/40 via-transparent to-[#0A0A0A]"></div>
+        </div>
+
         <div className="max-w-6xl mx-auto w-full relative z-20 mt-10">
              
              <div className="relative z-10 px-8 py-20 lg:py-32 lg:px-24 text-center">
@@ -254,26 +248,48 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         </div>
       </section>
 
-      {/* Elegant Sectors Grid */}
-      <section className="relative z-20 overflow-hidden pb-32 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[ 
-              { icon: <Factory className="w-8 h-8 text-[#FFD700]"/>, title: "İmalat Tesisleri", desc: "Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları.", video: "/fabrika.mp4", category: "Endüstri 4.0", color: "#FFD700" },
-              { icon: <Zap className="w-8 h-8 text-blue-400"/>, title: "Enerji Santralleri", desc: "Yüksek gerilim işlemleri, RES/GES risk rejimleri ve trafo bakım talimatnameleri.", video: "/enerji.mp4", category: "Kritik Tesis", color: "blue-500" },
-              { icon: <HardHat className="w-8 h-8 text-orange-500"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", video: "/67467-522170635_medium.mp4", category: "Ağır Risk", color: "orange-500" },
-              { icon: <Activity className="w-8 h-8 text-pink-500"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", video: "/40353-425442466_medium.mp4", category: "Kritik Operasyon", color: "pink-500" }
-            ].map((item, i) => (
-             <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative h-[380px] bg-[#111111] rounded-3xl overflow-hidden border border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex-1">
-                <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-60 transition-opacity duration-700 mix-blend-luminosity"><source src={item.video} type="video/mp4" /></video>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent"></div>
-                <div className="absolute inset-0 p-8 flex flex-col justify-end z-10">
-                    <div className="mb-auto mt-4 w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-500 shadow-2xl">{item.icon}</div>
-                    <span className="px-3 py-1 bg-white/10 text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-4 backdrop-blur-md">{item.category}</span>
-                    <h3 className="text-2xl font-black text-white mb-3 tracking-tight group-hover:text-yellow-400 transition-colors">{item.title}</h3>
-                    <p className="text-slate-300 text-sm font-light leading-relaxed max-w-xs opacity-80 group-hover:opacity-100 transition-opacity">{item.desc}</p>
-                </div>
-             </motion.div>
-            ))}
+      {/* Elegant Sectors Section */}
+      <section className="relative z-20 pb-32 px-6 pt-20 border-t border-white/5 bg-[#0A0D14]">
+        
+        {/* Section Video Background */}
+        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
+           <video autoPlay loop muted playsInline className="w-full h-full object-cover grayscale">
+              <source src="/159052-818026310_medium.mp4" type="video/mp4" />
+           </video>
+           <div className="absolute inset-0 bg-gradient-to-b from-[#0A0D14] via-transparent to-[#0A0D14]"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto w-full relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-5xl font-black text-white tracking-tight mb-4">Kapsamlı <span className="text-yellow-500">Sektör</span> Çözümleri</h2>
+            <p className="text-slate-400 font-light text-lg">Her endüstrinin dinamiğine uygun güvenli altyapı protokolleri</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[ 
+                { icon: <Factory className="w-8 h-8 text-[#FFD700]"/>, title: "İmalat Tesisleri", desc: "Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları.", video: "/fabrika.mp4", category: "Endüstri 4.0", color: "#FFD700" },
+                { icon: <Zap className="w-8 h-8 text-blue-400"/>, title: "Enerji Santralleri", desc: "Yüksek gerilim işlemleri, RES/GES risk rejimleri ve trafo bakım talimatnameleri.", video: "/enerji.mp4", category: "Kritik Tesis", color: "blue-500" },
+                { icon: <HardHat className="w-8 h-8 text-orange-500"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", video: "/67467-522170635_medium.mp4", category: "Ağır Risk", color: "orange-500" },
+                { icon: <Activity className="w-8 h-8 text-pink-500"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", video: "/40353-425442466_medium.mp4", category: "Kritik Operasyon", color: "pink-500" }
+              ].map((item, i) => (
+               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative h-[420px] bg-transparent overflow-hidden transition-all duration-500 flex-1 border-t border-white/10 pt-6">
+                  <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                    <video autoPlay loop muted playsInline className="w-full h-full object-cover mix-blend-luminosity opacity-40"><source src={item.video} type="video/mp4" /></video>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0D14] via-[#0A0D14]/80 to-transparent"></div>
+                  </div>
+                  
+                  <div className="relative z-10 flex flex-col h-full">
+                      <div className="mb-6 w-16 h-16 rounded-3xl bg-black/40 border border-white/5 flex items-center justify-center group-hover:bg-yellow-500/10 transition-all duration-500">{item.icon}</div>
+                      <span className="px-3 py-1 bg-white/10 text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6">{item.category}</span>
+                      <h3 className="text-3xl font-black text-white mb-4 tracking-tight group-hover:text-yellow-400 transition-colors">{item.title}</h3>
+                      <p className="text-slate-400 text-sm font-light leading-relaxed max-w-xs group-hover:text-slate-200 transition-colors mt-auto mb-4">{item.desc}</p>
+                      <div className="w-full h-1 bg-white/10 mt-auto">
+                        <div className="h-full bg-yellow-500 w-0 group-hover:w-full transition-all duration-700"></div>
+                      </div>
+                  </div>
+               </motion.div>
+              ))}
+          </div>
         </div>
       </section>
 
