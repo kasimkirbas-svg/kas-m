@@ -120,6 +120,17 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, fieldKey: string) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, [fieldKey]: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleDownload = () => {
     if (!docxArrayBuffer) return;
     try {
@@ -208,7 +219,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                   <label className="block text-[11px] font-bold text-slate-400 mb-2 uppercase tracking-wide group-focus-within:text-yellow-500 transition-colors">
                     {field.label}
                   </label>
-                  {field.type === "text" && (
+                  {field.type === "text" && field.key === "logo" && (
+                    <div className="relative w-full">
+                       <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, field.key)} className="hidden" id={`logo-upload-${field.key}`} />
+                       <label htmlFor={`logo-upload-${field.key}`} className="w-full flex items-center justify-between px-4 py-3.5 bg-black/40 border border-white/10 hover:border-yellow-500/50 rounded-xl cursor-pointer transition-all shadow-inner text-sm text-slate-400 group-focus-within:ring-1 focus-within:ring-yellow-500">
+                          <span className="truncate flex-1">{formData[field.key] ? 'Logo Yüklendi ✅' : 'Logo Seçin...'}</span>
+                          <span className="text-yellow-500 text-xs font-bold bg-yellow-500/10 px-2 py-1 rounded">Gözat</span>
+                       </label>
+                    </div>
+                  )}
+                  {field.type === "text" && field.key !== "logo" && (
                     <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || "Veri giriniz..."} />
                   )}
                   {field.type === "date" && (
