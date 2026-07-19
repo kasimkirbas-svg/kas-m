@@ -128,7 +128,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-50 dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-slate-900 dark:text-white overflow-x-hidden relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-white overflow-x-hidden relative">
       
       {/* Global Background Video */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
@@ -137,12 +137,12 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           loop 
           muted 
           playsInline 
-          className="absolute top-0 left-0 w-full h-full object-cover opacity-30"
+          className="absolute top-0 left-0 w-full h-full object-cover opacity-10 dark:opacity-30 mix-blend-multiply dark:mix-blend-normal"
         >
           <source src="/19024-298313254_medium.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/50"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/50 to-[#0a0a0a]"></div>
+        <div className="absolute inset-0 bg-white/20 dark:bg-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-50 dark:via-[#0a0a0a]/50 dark:to-[#0a0a0a]"></div>
       </div>
 
       {/* Sci-Fi Background Layer */}
