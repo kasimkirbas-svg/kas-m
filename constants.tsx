@@ -546,21 +546,6 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     ]
   },
   {
-    "id": "doc_4",
-    "title": "LOTO Formu Sablon dosyalar",
-    "category": "Fabrikalar ve İmalathaneler",
-    "description": "Bu doküman Fabrikalar ve İmalathaneler kategorisive özel İSG Zeyron şablonudur.",
-    "isPremium": false,
-    "fileUrl": "/templates/Fabrikalar ve İmalathaneler/LOTO_Formu_Sablon_dosyalar",
-    "fields": [
-      {
-        "key": "companyName",
-        "label": "Firma Adı",
-        "type": "text"
-      }
-    ]
-  },
-  {
     "id": "doc_5",
     "title": "PKD Sablon",
     "category": "Fabrikalar ve İmalathaneler",
@@ -839,21 +824,6 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     ]
   },
   {
-    "id": "doc_6",
-    "title": "PKD Sablon dosyalar",
-    "category": "Fabrikalar ve İmalathaneler",
-    "description": "Bu doküman Fabrikalar ve İmalathaneler kategorisive özel İSG Zeyron şablonudur.",
-    "isPremium": false,
-    "fileUrl": "/templates/Fabrikalar ve İmalathaneler/PKD_Sablon_dosyalar",
-    "fields": [
-      {
-        "key": "companyName",
-        "label": "Firma Adı",
-        "type": "text"
-      }
-    ]
-  },
-  {
     "id": "doc_7",
     "title": "Hijyen Sanitasyon Talimati Sablon",
     "category": "Gıda Fabrikaları",
@@ -1081,36 +1051,6 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
           "planlananTarih",
           "egitici"
         ]
-      }
-    ]
-  },
-  {
-    "id": "doc_11",
-    "title": "Liman Operasyon Guvenlik Plani Sablon dosyalar",
-    "category": "Liman İşletmeciliği",
-    "description": "Bu doküman Liman İşletmeciliği kategorisive özel İSG Zeyron şablonudur.",
-    "isPremium": false,
-    "fileUrl": "/templates/Liman İşletmeciliği/Liman_Operasyon_Guvenlik_Plani_Sablon_dosyalar",
-    "fields": [
-      {
-        "key": "logo",
-        "label": "Logo Resmi (Base64)",
-        "type": "text"
-      },
-      {
-        "key": "companyName",
-        "label": "Firma Adı/Liman Adı",
-        "type": "text"
-      },
-      {
-        "key": "date",
-        "label": "Tarih",
-        "type": "date"
-      },
-      {
-        "key": "liman_tesis_sorumlusu",
-        "label": "Tesis Sorumlusu",
-        "type": "text"
       }
     ]
   },
