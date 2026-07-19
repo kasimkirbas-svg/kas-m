@@ -4,6 +4,7 @@ import { ArrowLeft, Save, Download, Printer, Settings2, FileText, CheckCircle2 }
 import { renderAsync } from "docx-preview";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
+import ImageModule from "docxtemplater-image-module-free";
 import { saveAs } from "file-saver";
 
 interface DocumentEditorProps {
@@ -55,7 +56,39 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const updatePreview = async (buffer: ArrayBuffer, data: Record<string, any>) => {
     try {
       const zip = new PizZip(buffer);
-      const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+      
+      const imageOptions = {
+        centered: false,
+        getImage(tagValue: string, tagName: string) {
+          if (tagName === "logo" && tagValue) {
+             const base64Regex = /^data:image\/(png|jpg|jpeg|svg|svg\+xml);base64,/;
+             if(base64Regex.test(tagValue)) {
+                const base64Data = tagValue.replace(base64Regex, "");
+                let binaryString = window.atob(base64Data);
+                let len = binaryString.length;
+                let bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes.buffer;
+             }
+          }
+          return new ArrayBuffer(0); // If no image, return empty buffer
+        },
+        getSize(img: any, tagValue: string, tagName: string) {
+          if (tagName === "logo") return [150, 150]; // Default logo size
+          return [150, 150];
+        }
+      };
+      
+      const imageModule = new ImageModule(imageOptions);
+      
+      const doc = new Docxtemplater(zip, { 
+         paragraphLoop: true, 
+         linebreaks: true,
+         modules: [imageModule],
+         nullGetter(part) { if (!part.module) { return ""; } if (part.module === "rawxml") { return ""; } return ""; }
+      });
       doc.setData(data);
       doc.render();
 
@@ -90,7 +123,39 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     if (!docxArrayBuffer) return;
     try {
       const zip = new PizZip(docxArrayBuffer);
-      const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+      
+      const imageOptions = {
+        centered: false,
+        getImage(tagValue: string, tagName: string) {
+          if (tagName === "logo" && tagValue) {
+             const base64Regex = /^data:image\/(png|jpg|jpeg|svg|svg\+xml);base64,/;
+             if(base64Regex.test(tagValue)) {
+                const base64Data = tagValue.replace(base64Regex, "");
+                let binaryString = window.atob(base64Data);
+                let len = binaryString.length;
+                let bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes.buffer;
+             }
+          }
+           return new ArrayBuffer(0);
+        },
+        getSize(img: any, tagValue: string, tagName: string) {
+          if (tagName === "logo") return [150, 150];
+          return [150, 150];
+        }
+      };
+      
+      const imageModule = new ImageModule(imageOptions);
+
+      const doc = new Docxtemplater(zip, { 
+        paragraphLoop: true, 
+        linebreaks: true,
+        modules: [imageModule],
+        nullGetter(part) { if (!part.module) { return ""; } if (part.module === "rawxml") { return ""; } return ""; }
+      });
       
       doc.setData(formData);
       doc.render();
