@@ -231,9 +231,49 @@
     "fileUrl": "/templates/Fabrikalar ve İmalathaneler/LOTO_Formu_Sablon.doc",
     "fields": [
       {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
         "key": "companyName",
         "label": "Firma Adı",
         "type": "text"
+      },
+      {
+        "key": "date",
+        "label": "Tarih",
+        "type": "date"
+      },
+      {
+        "key": "preparedBy",
+        "label": "Hazırlayan",
+        "type": "text"
+      },
+      {
+        "key": "makine_adi",
+        "label": "Makine/Ekipman Adı",
+        "type": "text"
+      },
+      {
+        "key": "loto_nedeni",
+        "label": "Uygulama Nedeni",
+        "type": "select",
+        "options": [
+          "Bakım",
+          "Onarım",
+          "Temizlik",
+          "Arıza"
+        ]
+      },
+      {
+        "key": "enerji_kaynaklari",
+        "label": "Enerji Kaynakları Var Mı?",
+        "type": "select",
+        "options": [
+          "true",
+          "false"
+        ]
       }
     ]
   },
@@ -261,9 +301,24 @@
     "fileUrl": "/templates/Fabrikalar ve İmalathaneler/PKD_Sablon.doc",
     "fields": [
       {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
         "key": "companyName",
         "label": "Firma Adı",
         "type": "text"
+      },
+      {
+        "key": "date",
+        "label": "Tarih",
+        "type": "date"
+      },
+      {
+        "key": "hazirlayanlar",
+        "label": "Hazırlayan Ekip (Döngü)",
+        "type": "list"
       }
     ]
   },
@@ -391,8 +446,23 @@
     "fileUrl": "/templates/Liman İşletmeciliği/Liman_Operasyon_Guvenlik_Plani_Sablon.doc",
     "fields": [
       {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
         "key": "companyName",
-        "label": "Firma Adı",
+        "label": "Firma Adı/Liman Adı",
+        "type": "text"
+      },
+      {
+        "key": "date",
+        "label": "Tarih",
+        "type": "date"
+      },
+      {
+        "key": "liman_tesis_sorumlusu",
+        "label": "Tesis Sorumlusu",
         "type": "text"
       }
     ]
@@ -406,8 +476,23 @@
     "fileUrl": "/templates/Liman İşletmeciliği/Liman_Operasyon_Guvenlik_Plani_Sablon_dosyalar",
     "fields": [
       {
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
+        "type": "text"
+      },
+      {
         "key": "companyName",
-        "label": "Firma Adı",
+        "label": "Firma Adı/Liman Adı",
+        "type": "text"
+      },
+      {
+        "key": "date",
+        "label": "Tarih",
+        "type": "date"
+      },
+      {
+        "key": "liman_tesis_sorumlusu",
+        "label": "Tesis Sorumlusu",
         "type": "text"
       }
     ]
@@ -836,303 +921,23 @@
     "fileUrl": "/templates/STANDART DOKÜMANLAR/Acil_Durum_Eylem_Plani_Sablon.doc",
     "fields": [
       {
-        "key": "isyeriUnvani",
-        "label": "isyeriUnvani",
+        "key": "logo",
+        "label": "Logo Resmi (Base64)",
         "type": "text"
       },
       {
-        "key": "isyeriAdresi",
-        "label": "isyeriAdresi",
+        "key": "companyName",
+        "label": "Firma Adı/Liman Adı",
         "type": "text"
       },
       {
-        "key": "telefonFaks",
-        "label": "telefonFaks",
-        "type": "text"
-      },
-      {
-        "key": "ePosta",
-        "label": "ePosta",
-        "type": "text"
-      },
-      {
-        "key": "naceKodu",
-        "label": "naceKodu",
-        "type": "text"
-      },
-      {
-        "key": "tehlikeSinifi",
-        "label": "tehlikeSinifi",
-        "type": "text"
-      },
-      {
-        "key": "sgkSicilNo",
-        "label": "sgkSicilNo",
-        "type": "text"
-      },
-      {
-        "key": "toplamCalisan",
-        "label": "toplamCalisan",
-        "type": "text"
-      },
-      {
-        "key": "kadinCalisan",
-        "label": "kadinCalisan",
-        "type": "text"
-      },
-      {
-        "key": "erkekCalisan",
-        "label": "erkekCalisan",
-        "type": "text"
-      },
-      {
-        "key": "engelliCalisan",
-        "label": "engelliCalisan",
-        "type": "text"
-      },
-      {
-        "key": "isverenVekili",
-        "label": "isverenVekili",
-        "type": "text"
-      },
-      {
-        "key": "isgUzmani",
-        "label": "isgUzmani",
-        "type": "text"
-      },
-      {
-        "key": "isyeriHekimi",
-        "label": "isyeriHekimi",
-        "type": "text"
-      },
-      {
-        "key": "hazirlanmaTarihi",
-        "label": "hazirlanmaTarihi",
+        "key": "date",
+        "label": "Tarih",
         "type": "date"
       },
       {
-        "key": "gecerlilikSuresi",
-        "label": "gecerlilikSuresi",
-        "type": "text"
-      },
-      {
-        "key": "revizyonNoTarihi",
-        "label": "revizyonNoTarihi",
-        "type": "date"
-      },
-      {
-        "key": "yapiSistemi",
-        "label": "yapiSistemi",
-        "type": "text"
-      },
-      {
-        "key": "katSayisi",
-        "label": "katSayisi",
-        "type": "text"
-      },
-      {
-        "key": "kullanimAlani",
-        "label": "kullanimAlani",
-        "type": "text"
-      },
-      {
-        "key": "bolumlerBirimler",
-        "label": "bolumlerBirimler",
-        "type": "text"
-      },
-      {
-        "key": "kacisYoluCikisSayisi",
-        "label": "kacisYoluCikisSayisi",
-        "type": "text"
-      },
-      {
-        "key": "acilAydinlatma",
-        "label": "acilAydinlatma",
-        "type": "text"
-      },
-      {
-        "key": "yanginAlgilama",
-        "label": "yanginAlgilama",
-        "type": "text"
-      },
-      {
-        "key": "yanginSondurme",
-        "label": "yanginSondurme",
-        "type": "text"
-      },
-      {
-        "key": "elektrikPanolari",
-        "label": "elektrikPanolari",
-        "type": "text"
-      },
-      {
-        "key": "vanaNoktalari",
-        "label": "vanaNoktalari",
-        "type": "text"
-      },
-      {
-        "key": "engelliDuzenlemeleri",
-        "label": "engelliDuzenlemeleri",
-        "type": "text"
-      },
-      {
-        "key": "acilDurumTuru",
-        "label": "acilDurumTuru",
-        "type": "text"
-      },
-      {
-        "key": "olasilik",
-        "label": "olasilik",
-        "type": "text"
-      },
-      {
-        "key": "siddet",
-        "label": "siddet",
-        "type": "text"
-      },
-      {
-        "key": "riskSkoru",
-        "label": "riskSkoru",
-        "type": "text"
-      },
-      {
-        "key": "riskDuzeyi",
-        "label": "riskDuzeyi",
-        "type": "text"
-      },
-      {
-        "key": "koordinatorAsilAd",
-        "label": "koordinatorAsilAd",
-        "type": "text"
-      },
-      {
-        "key": "koordinatorAsilGorev",
-        "label": "koordinatorAsilGorev",
-        "type": "text"
-      },
-      {
-        "key": "koordinatorAsilTel",
-        "label": "koordinatorAsilTel",
-        "type": "text"
-      },
-      {
-        "key": "koordinatorYedekAd",
-        "label": "koordinatorYedekAd",
-        "type": "text"
-      },
-      {
-        "key": "koordinatorYedekGorev",
-        "label": "koordinatorYedekGorev",
-        "type": "text"
-      },
-      {
-        "key": "koordinatorYedekTel",
-        "label": "koordinatorYedekTel",
-        "type": "text"
-      },
-      {
-        "key": "siraNo",
-        "label": "siraNo",
-        "type": "text"
-      },
-      {
-        "key": "adSoyad",
-        "label": "adSoyad",
-        "type": "text"
-      },
-      {
-        "key": "gorevUnvan",
-        "label": "gorevUnvan",
-        "type": "text"
-      },
-      {
-        "key": "telefon",
-        "label": "telefon",
-        "type": "text"
-      },
-      {
-        "key": "egitimTarihi",
-        "label": "egitimTarihi",
-        "type": "date"
-      },
-      {
-        "key": "sertifikaBilgisi",
-        "label": "sertifikaBilgisi",
-        "type": "text"
-      },
-      {
-        "key": "birincilToplanmaYeri",
-        "label": "birincilToplanmaYeri",
-        "type": "text"
-      },
-      {
-        "key": "ikincilToplanmaYeri",
-        "label": "ikincilToplanmaYeri",
-        "type": "text"
-      },
-      {
-        "key": "toplanmaSorumlusu",
-        "label": "toplanmaSorumlusu",
-        "type": "text"
-      },
-      {
-        "key": "sayimYontemi",
-        "label": "sayimYontemi",
-        "type": "text"
-      },
-      {
-        "key": "tabelaIsaretleme",
-        "label": "tabelaIsaretleme",
-        "type": "text"
-      },
-      {
-        "key": "kurulusKisi",
-        "label": "kurulusKisi",
-        "type": "text"
-      },
-      {
-        "key": "telefonNo",
-        "label": "telefonNo",
-        "type": "text"
-      },
-      {
-        "key": "aciklama",
-        "label": "aciklama",
-        "type": "text"
-      },
-      {
-        "key": "isgUzmaniAd",
-        "label": "isgUzmaniAd",
-        "type": "text"
-      },
-      {
-        "key": "isgSertifikaNo",
-        "label": "isgSertifikaNo",
-        "type": "text"
-      },
-      {
-        "key": "onayTarihi",
-        "label": "onayTarihi",
-        "type": "date"
-      },
-      {
-        "key": "hekimAd",
-        "label": "hekimAd",
-        "type": "text"
-      },
-      {
-        "key": "hekimDiplomaNo",
-        "label": "hekimDiplomaNo",
-        "type": "text"
-      },
-      {
-        "key": "isverenAd",
-        "label": "isverenAd",
-        "type": "text"
-      },
-      {
-        "key": "isverenUnvan",
-        "label": "isverenUnvan",
+        "key": "liman_tesis_sorumlusu",
+        "label": "Tesis Sorumlusu",
         "type": "text"
       }
     ]
