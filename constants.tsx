@@ -207,13 +207,8 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
       },
       {
         "key": "date",
-        "label": "İlk Yayın Tarihi",
+        "label": "Tarih",
         "type": "date"
-      },
-      {
-        "key": "revizyonNoTarih",
-        "label": "Revizyon No / Tarihi",
-        "type": "text"
       },
       {
         "key": "tesisAdi",
@@ -221,29 +216,25 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
         "type": "text"
       },
       {
-        "key": "tesisAdresi",
-        "label": "Tesis Adresi",
-        "type": "textarea"
-      },
-      {
         "key": "companyName",
         "label": "Firma Adı",
         "type": "text"
       },
       {
-        "key": "isverenAdSoyad",
-        "label": "İşveren Yetkilisi Ad Soyad",
-        "type": "text"
-      },
-      {
-        "key": "isverenUnvan",
-        "label": "İşveren Yetkilisi Ünvanı",
-        "type": "text"
-      },
-      {
-        "key": "isgUzmani",
-        "label": "İSG Uzmanı Ad Soyad",
-        "type": "text"
+        "key": "personeller",
+        "label": "Personeller Tablosu",
+        "type": "list",
+        "options": [
+          "siraNo",
+          "adSoyad",
+          "gorevi",
+          "belgeNo",
+          "belgeTuru",
+          "kurum",
+          "duzenlenmeTarihi",
+          "yenilemeTarihi",
+          "durum"
+        ]
       }
     ]
   },
@@ -343,7 +334,12 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
       {
         "key": "hazirlayanlar",
         "label": "Hazırlayan Ekip (Döngü)",
-        "type": "list"
+        "type": "list",
+        "options": [
+          "isimSoyisim",
+          "unvan",
+          "imza"
+        ]
       }
     ]
   },

@@ -131,6 +131,29 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     }
   };
 
+  const handleListAdd = (fieldKey: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [fieldKey]: [...(prev[fieldKey] || []), {}]
+    }));
+  };
+
+  const handleListRemove = (fieldKey: string, index: number) => {
+    setFormData(prev => {
+      const newList = [...(prev[fieldKey] || [])];
+      newList.splice(index, 1);
+      return { ...prev, [fieldKey]: newList };
+    });
+  };
+
+  const handleListChange = (fieldKey: string, index: number, subKey: string, value: string) => {
+    setFormData(prev => {
+      const newList = [...(prev[fieldKey] || [])];
+      newList[index] = { ...newList[index], [subKey]: value };
+      return { ...prev, [fieldKey]: newList };
+    });
+  };
+
   const handleDownload = () => {
     if (!docxArrayBuffer) return;
     try {
@@ -244,6 +267,31 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                         <option key={opt} value={opt}>{opt}</option>
                       ))}
                     </select>
+                  )}
+                  {field.type === "list" && (
+                     <div className="bg-black/20 border border-white/5 rounded-xl p-4 space-y-4">
+                        {(formData[field.key] || []).map((item: any, idx: number) => (
+                           <div key={idx} className="relative group border border-white/10 rounded-lg p-3 bg-black/40">
+                              <button onClick={() => handleListRemove(field.key, idx)} className="absolute top-2 right-2 text-red-500/50 hover:text-red-500 z-10 transition-colors bg-red-500/10 rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs" title="Kaldır">X</button>
+                              
+                              <div className="grid grid-cols-2 gap-3 mt-4">
+                                {field.options ? field.options.map(subFieldName => (
+                                  <div key={subFieldName} className="col-span-1">
+                                    <label className="block text-[10px] text-slate-500 mb-1">{subFieldName}</label>
+                                    <input type="text" value={item[subFieldName] || ""} onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs" placeholder="..." />
+                                  </div>
+                                )) : (
+                                  <div className="col-span-2">
+                                     <input type="text" value={item['value'] || ""} onChange={(e) => handleListChange(field.key, idx, 'value', e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-sm" placeholder="Değer giriniz..." />
+                                  </div>
+                                )}
+                              </div>
+                           </div>
+                        ))}
+                        <button onClick={() => handleListAdd(field.key)} className="w-full py-2 border border-dashed border-yellow-500/30 text-yellow-500/70 hover:text-yellow-500 hover:border-yellow-500/60 rounded-lg text-xs font-bold uppercase transition-colors">
+                           + Yeni Ekle
+                        </button>
+                     </div>
                   )}
                 </div>
               );
