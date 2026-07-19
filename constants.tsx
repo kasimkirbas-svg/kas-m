@@ -244,7 +244,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Fabrikalar ve İmalathaneler",
     "description": "Bu doküman Fabrikalar ve İmalathaneler kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Fabrikalar ve İmalathaneler/LOTO_Formu_Sablon.doc",
+    "fileUrl": "/templates/Fabrikalar ve İmalathaneler/LOTO_Formu_Sablon.docx",
     "fields": [
       {
         "key": "logo",
@@ -314,7 +314,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Fabrikalar ve İmalathaneler",
     "description": "Bu doküman Fabrikalar ve İmalathaneler kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Fabrikalar ve İmalathaneler/PKD_Sablon.doc",
+    "fileUrl": "/templates/Fabrikalar ve İmalathaneler/PKD_Sablon.docx",
     "fields": [
       {
         "key": "logo",
@@ -364,7 +364,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Gıda Fabrikaları",
     "description": "Bu doküman Gıda Fabrikaları kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Gıda Fabrikaları/Hijyen_Sanitasyon_Talimati_Sablon.doc",
+    "fileUrl": "/templates/Gıda Fabrikaları/Hijyen_Sanitasyon_Talimati_Sablon.docx",
     "fields": [
       {
         "key": "tebligEdenAdSoyad",
@@ -394,7 +394,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Gıda Fabrikaları",
     "description": "Bu doküman Gıda Fabrikaları kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Gıda Fabrikaları/Soguk_Oda_Talimati_Sablon.doc",
+    "fileUrl": "/templates/Gıda Fabrikaları/Soguk_Oda_Talimati_Sablon.docx",
     "fields": [
       {
         "key": "tebligEdenAdSoyad",
@@ -434,7 +434,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Hava Limanları",
     "description": "Bu doküman Hava Limanları kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Hava Limanları/Apron_Guvenligi_Talimati_Sablon.doc",
+    "fileUrl": "/templates/Hava Limanları/Apron_Guvenligi_Talimati_Sablon.docx",
     "fields": [
       {
         "key": "tebligEdenAdSoyad",
@@ -464,7 +464,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Liman İşletmeciliği",
     "description": "Bu doküman Liman İşletmeciliği kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Liman İşletmeciliği/Liman_Operasyon_Guvenlik_Plani_Sablon.doc",
+    "fileUrl": "/templates/Liman İşletmeciliği/Liman_Operasyon_Guvenlik_Plani_Sablon.docx",
     "fields": [
       {
         "key": "logo",
@@ -524,7 +524,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Lojistik ve Taşımacılık Yükleme Güvenliği",
     "description": "Bu doküman Lojistik ve Taşımacılık Yükleme Güvenliği kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Lojistik ve Taşımacılık Yükleme Güvenliği/Lashing_Talimati_Sablon.doc",
+    "fileUrl": "/templates/Lojistik ve Taşımacılık Yükleme Güvenliği/Lashing_Talimati_Sablon.docx",
     "fields": [
       {
         "key": "dokumanNo",
@@ -674,7 +674,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Maden İşletmeleri",
     "description": "Bu doküman Maden İşletmeleri kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Maden İşletmeleri/Maden_PKD_Sablon.doc",
+    "fileUrl": "/templates/Maden İşletmeleri/Maden_PKD_Sablon.docx",
     "fields": [
       {
         "key": "isletmeAdi",
@@ -874,7 +874,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Metal ve Döküm",
     "description": "Bu doküman Metal ve Döküm kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Metal ve Döküm/Sicak_Metal_Transfer_Talimati_Sablon.doc",
+    "fileUrl": "/templates/Metal ve Döküm/Sicak_Metal_Transfer_Talimati_Sablon.docx",
     "fields": [
       {
         "key": "tebligEdenAdSoyad",
@@ -904,7 +904,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/Acil_Durum_Ekip_Atama.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/Acil_Durum_Ekip_Atama.docx",
     "fields": [
       {
         "key": "sirketIsmi",
@@ -939,7 +939,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/Acil_Durum_Eylem_Plani_Sablon.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/Acil_Durum_Eylem_Plani_Sablon.docx",
     "fields": [
       {
         "key": "logo",
@@ -969,7 +969,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/Calisan_Temsilcisi_Atama_Sablon.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/Calisan_Temsilcisi_Atama_Sablon.docx",
     "fields": [
       {
         "key": "sirketUnvani",
@@ -1024,7 +1024,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/Destek_Elemani_Atama_Sablon.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/Destek_Elemani_Atama_Sablon.docx",
     "fields": [
       {
         "key": "sirketUnvani",
@@ -1084,7 +1084,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/ISG_Kurul_Tutanagi_Sablon.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/ISG_Kurul_Tutanagi_Sablon.docx",
     "fields": [
       {
         "key": "toplantiNo",
@@ -1164,7 +1164,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/Isyeri_Hijyen_Sanitasyon_Talimati_Sablon.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/Isyeri_Hijyen_Sanitasyon_Talimati_Sablon.docx",
     "fields": [
       {
         "key": "tebligEdenAdSoyad",
@@ -1204,7 +1204,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/Kaza_RamakKala_Bildirim_Detayli_Sablon.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/Kaza_RamakKala_Bildirim_Detayli_Sablon.docx",
     "fields": [
       {
         "key": "formNo",
@@ -1544,7 +1544,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/Personel_ISG_Ihtar_Detayli_Sablon.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/Personel_ISG_Ihtar_Detayli_Sablon.docx",
     "fields": [
       {
         "key": "dokumanNo",
@@ -1694,7 +1694,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/SERTİFİKA.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/SERTİFİKA.docx",
     "fields": [
       {
         "key": "companyName",
@@ -1709,7 +1709,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "STANDART DOKÜMANLAR",
     "description": "Bu doküman STANDART DOKÜMANLAR kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/STANDART DOKÜMANLAR/Yangindan_Korunma_Dokumani_Sablon.doc",
+    "fileUrl": "/templates/STANDART DOKÜMANLAR/Yangindan_Korunma_Dokumani_Sablon.docx",
     "fields": [
       {
         "key": "dokumanNo",
@@ -1904,7 +1904,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Tarım, Hayvancılık ve Ormancılık",
     "description": "Bu doküman Tarım, Hayvancılık ve Ormancılık kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Tarım, Hayvancılık ve Ormancılık/Orman_Kesim_Proseduru_Sablon.doc",
+    "fileUrl": "/templates/Tarım, Hayvancılık ve Ormancılık/Orman_Kesim_Proseduru_Sablon.docx",
     "fields": [
       {
         "key": "dokumanNo",
@@ -2024,7 +2024,7 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
     "category": "Tarım, Hayvancılık ve Ormancılık",
     "description": "Bu doküman Tarım, Hayvancılık ve Ormancılık kategorisive özel İSG Zeyron şablonudur.",
     "isPremium": false,
-    "fileUrl": "/templates/Tarım, Hayvancılık ve Ormancılık/Pestisit_Talimati_Sablon.doc",
+    "fileUrl": "/templates/Tarım, Hayvancılık ve Ormancılık/Pestisit_Talimati_Sablon.docx",
     "fields": [
       {
         "key": "dokumanNo",
