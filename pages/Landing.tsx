@@ -294,36 +294,46 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         </div>
       </section>
 
-            {/* Target Audience / About Section */}
+            {/* Superior About Section */}
       <section id="hakkimizda" className="py-32 relative z-10 bg-transparent">
-        <div className="max-w-4xl mx-auto px-6 text-center relative">
-             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-yellow-500/5 blur-[120px] rounded-full pointer-events-none"></div>
-             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative z-10">
+        <div className="max-w-6xl mx-auto px-6 text-center relative">
+             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-[400px] bg-yellow-500/5 blur-[150px] rounded-full pointer-events-none"></div>
+             
+             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative z-10 mb-16">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-[10px] font-black tracking-[0.3em] uppercase mb-8 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.2)]">
-                  <ShieldAlert className="w-3 h-3" /> Hakkımızda
+                  <ShieldAlert className="w-3 h-3" /> Neden İSG Zeyron?
                 </div>
-                <h2 className="text-4xl lg:text-7xl font-black text-white mb-10 leading-[1.1] tracking-tight">
-                  İSG Operasyonlarında <br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">
-                    Tam Hakimiyet
-                  </span>
+                <h2 className="text-4xl lg:text-6xl font-black text-white mb-6 leading-tight tracking-tight">
+                  Sıfır Hata, <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">Tam Hakimiyet</span>
                 </h2>
-                <div className="space-y-8 text-slate-300 font-light text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed">
-                  <p className="opacity-90">Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. İSG Zeyron bu yükü dijital ortama taşıyarak, dikkatinizi asıl noktanıza, <strong className="text-white font-bold">"Güvenliğe"</strong> vermenizi sağlar.</p>
-                  
-                  <div className="relative mt-12 p-1 rounded-2xl bg-gradient-to-b from-white/10 to-transparent">
-                    <div className="flex flex-col items-center gap-6 p-10 bg-black/60 backdrop-blur-xl rounded-xl relative overflow-hidden group">
-                      <div className="absolute -inset-24 bg-gradient-to-r from-yellow-500/0 via-yellow-500/10 to-yellow-500/0 group-hover:translate-x-full transition-transform duration-1000 origin-left skew-x-12 opacity-50"></div>
-                      <div className="w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 relative z-10 shadow-[0_0_30px_rgba(234,179,8,0.15)] group-hover:scale-110 transition-transform duration-500">
-                        <Hexagon className="w-8 h-8 text-yellow-500" />
-                      </div>
-                      <p className="text-base lg:text-lg font-medium text-slate-200 relative z-10 leading-relaxed font-sans">
-                        Sadece bir belge deposu değil;<br/> <span className="text-yellow-400">iş süreçlerini optimize eden</span> aktif, otomatize bir SaaS çalışma istasyonudur.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <p className="text-slate-400 font-light text-xl max-w-2xl mx-auto leading-relaxed">
+                  Basit bir belge deposu değil; iş süreçlerini baştan sona optimize eden otonom bir <strong className="text-white font-medium">SaaS İş İstasyonudur.</strong>
+                </p>
              </motion.div>
+
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 max-w-5xl mx-auto">
+                <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent group">
+                  <div className="bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-white/5 group-hover:border-yellow-500/20 transition-all duration-500 overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 blur-[50px] rounded-full group-hover:bg-yellow-500/10 transition-colors"></div>
+                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30 transition-all duration-500 shadow-lg">
+                      <FileText className="w-6 h-6 text-slate-300 group-hover:text-yellow-400 transition-colors" />
+                    </div>
+                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight">Otonom Belgelendirme</h3>
+                    <p className="text-slate-400 leading-relaxed font-light">Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. Dijital altyapımız ile bu yükü sıfıra indirerek asıl odak noktanız olan <span className="text-yellow-500 font-medium">"Güvenliğe"</span> odaklanmanızı sağlıyoruz.</p>
+                  </div>
+                </motion.div>
+
+                <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-yellow-500/20 to-transparent group">
+                  <div className="bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-[50px] rounded-full group-hover:bg-yellow-500/20 transition-colors"></div>
+                    <div className="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/20 transition-all duration-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+                      <Cpu className="w-6 h-6 text-yellow-400" />
+                    </div>
+                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight">Akıllı SaaS İstasyonu</h3>
+                    <p className="text-slate-400 leading-relaxed font-light">Ekiplerinizi, sahadaki riskleri ve mevzuat süreçlerini tek bir platformda birleştirin. Süreçlerinizi hızlandırırken maliyet ve zamandan tasarruf edin.</p>
+                  </div>
+                </motion.div>
+             </div>
         </div>
       </section>
 {/* Cyber FAQ Section */}
