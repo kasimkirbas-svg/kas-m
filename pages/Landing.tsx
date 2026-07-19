@@ -174,18 +174,18 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             </div>
           </motion.div>
 
-          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block">
-            <nav className="flex justify-center space-x-8 rounded-2xl border border-white/20 bg-black/60 relative overflow-hidden px-8 py-3 backdrop-blur-3xl shadow-[0_0_30px_rgba(0,0,0,0.8)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:-translate-x-full hover:before:translate-x-full before:transition-transform before:duration-1000">
+          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block border border-white/10 bg-[#050510]/50 backdrop-blur-md rounded-full px-6 py-2 shadow-lg">
+            <nav className="flex justify-center space-x-6 items-center">
               {navItems.map((item, idx) => (
                 <motion.a 
                   key={item.id} 
                   href={`#${item.id}`} 
                   onClick={(e) => scrollToSection(item.id, e)} 
-                  className="relative text-[11px] font-black text-slate-300 hover:text-yellow-400 uppercase tracking-[0.2em] transition-colors group py-2 px-3 rounded-lg hover:bg-white/5"
-                  whileHover={{ y: -2 }}
+                  className="relative text-[10px] font-bold text-slate-300 hover:text-white uppercase tracking-[0.25em] transition-all group py-2 px-4 rounded-full hover:bg-white/5"
+                  whileHover={{ y: -1 }}
                 >
                   {item.label}
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_10px_rgba(234,179,8,0.8)]"></span>
+                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_8px_rgba(234,179,8,1)]"></span>
                 </motion.a>
               ))}
             </nav>
