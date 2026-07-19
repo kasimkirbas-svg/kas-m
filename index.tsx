@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { ThemeProvider } from 'next-themes';
 import App from './App';
 
 const rootElement = document.getElementById('root');
@@ -9,6 +10,8 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );

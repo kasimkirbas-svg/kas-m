@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import type { User } from '../types';
-import { Bell, Menu, Crown, Instagram, Twitter, Linkedin, HeadphonesIcon, LogOut, ChevronDown, CheckCircle2, User as UserIcon } from 'lucide-react';
+import { Bell, Menu, Crown, Instagram, Twitter, Linkedin, HeadphonesIcon, LogOut, ChevronDown, CheckCircle2, User as UserIcon, Moon, Sun } from 'lucide-react';
 import { APP_NAME } from '../constants';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from 'next-themes';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,9 +15,10 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLogout }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   if (!user) {
-    return <div className="min-h-screen bg-[#0A0A0A]">{children}</div>;
+    return <div className="min-h-screen bg-transparent">{children}</div>;
   }
 
   return (
@@ -120,17 +122,27 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
         </footer>
       </main>
 
-      {/* Floating 7/24 Destek Button */}
-      <button 
-        onClick={() => {
-          const w = window.open('', '_blank', 'width=400,height=500');
-          if (w) w.document.write('<html><body style="font-family:sans-serif;padding:20px;text-align:center;background:#0A0A0A;color:white;"><h2>Canlı Destek</h2><p style="color:#FFD700">Müşteri hizmetleri yetkilimiz birazdan size katılacak...</p></body></html>');
-        }}
-        className="fixed bottom-8 right-8 bg-[#111111] hover:bg-[#1a1a1a] text-[#FFD700] px-5 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(255,215,0,0.1)] hover:shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:-translate-y-1 transition-all border border-[#FFD700]/30 flex items-center gap-2 z-50 text-sm cursor-pointer">
-        <HeadphonesIcon size={20} />
-        7/24 Canlı Destek
-        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#0A0A0A] animate-pulse"></span>
-      </button>
+      {/* Floating Buttons: Help & Theme Toggle */}
+      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="bg-[#111111] dark:bg-[#111111] bg-white border border-[#FFD700]/30 hover:border-[#FFD700] text-[#FFD700] dark:text-[#FFD700] w-12 h-12 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,215,0,0.1)] hover:-translate-y-1 transition-all mx-auto dark:bg-opacity-100 bg-opacity-90"
+          title={theme === 'dark' ? 'Açık Temaya Geç' : 'Karanlık Temaya Geç'}
+        >
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+
+        <button 
+          onClick={() => {
+            const w = window.open('', '_blank', 'width=400,height=500');
+            if (w) w.document.write('<html><body style="font-family:sans-serif;padding:20px;text-align:center;background:#0A0A0A;color:white;"><h2>Canlı Destek</h2><p style="color:#FFD700">Müşteri hizmetleri yetkilimiz birazdan size katılacak...</p></body></html>');
+          }}
+          className="bg-[#111111] hover:bg-[#1a1a1a] text-[#FFD700] px-5 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(255,215,0,0.1)] hover:shadow-[0_0_20px_rgba(255,215,0,0.3)] hover:-translate-y-1 transition-all border border-[#FFD700]/30 flex items-center gap-2 text-sm cursor-pointer shadow-lg">
+          <HeadphonesIcon size={20} />
+          7/24 Canlı Destek
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#111111] animate-pulse"></span>
+        </button>
+      </div>
 
     </div>
   );

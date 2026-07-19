@@ -26,6 +26,12 @@
 
 @layer base {
   body {
-    @apply bg-[#050510];
+    @apply transition-colors duration-500;
+  }
+  .dark body {
+    @apply bg-[#050510] text-slate-300;
+  }
+  body:not(.dark) {
+    @apply bg-slate-50 text-slate-900;
   }
 }
