@@ -139,7 +139,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           playsInline 
           className="absolute top-0 left-0 w-full h-full object-cover opacity-30"
         >
-          <source src="/13232-246463976_medium.mp4" type="video/mp4" />
+          <source src="/19024-298313254_medium.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/50 to-[#0a0a0a]"></div>
