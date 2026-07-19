@@ -74,10 +74,13 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-0 top-14 w-48 bg-[#111111] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-[100] flex flex-col"
+                  className="absolute right-0 top-14 w-56 bg-[#111111] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-[100] flex flex-col"
                 >
                   <button onClick={() => { onNavigate('profile'); setShowUserMenu(false); }} className="w-full text-left px-4 py-3 text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors flex items-center gap-2 border-b border-white/5">
                     <UserIcon size={16} /> Profilim
+                  </button>
+                  <button onClick={() => { setTheme(theme === 'dark' ? 'light' : 'dark'); setShowUserMenu(false); }} className="w-full text-left px-4 py-3 text-sm text-slate-300 hover:bg-white/5 hover:text-[#FFD700] transition-colors flex items-center gap-2 border-b border-white/5">
+                    {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />} Tema Değiştir
                   </button>
                   <button onClick={() => { onNavigate('settings'); setShowUserMenu(false); }} className="w-full text-left px-4 py-3 text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors flex items-center gap-2 border-b border-white/5">
                     <Menu size={16} /> Ayarlar
@@ -122,16 +125,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
         </footer>
       </main>
 
-      {/* Floating Buttons: Help & Theme Toggle */}
+      {/* Floating Buttons: Help */}
       <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
-        <button
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="bg-[#111111] dark:bg-[#111111] bg-white border border-[#FFD700]/30 hover:border-[#FFD700] text-[#FFD700] dark:text-[#FFD700] w-12 h-12 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,215,0,0.1)] hover:-translate-y-1 transition-all mx-auto dark:bg-opacity-100 bg-opacity-90"
-          title={theme === 'dark' ? 'Açık Temaya Geç' : 'Karanlık Temaya Geç'}
-        >
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-
         <button 
           onClick={() => {
             const w = window.open('', '_blank', 'width=400,height=500');
