@@ -9,7 +9,14 @@ export default {
   ],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        darkbg: '#0A0A0A',
+        darkbox: '#111111',
+        lightbg: '#F8FAFC',
+        lightbox: '#FFFFFF',
+      }
+    },
   },
   plugins: [],
 }

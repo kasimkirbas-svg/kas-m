@@ -18,15 +18,15 @@ const FAQItem = ({ question, answer, idx }: { question: string, answer: string, 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: idx * 0.1 }}
-      className={`border ${isOpen ? 'border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.15)] bg-yellow-500/5' : 'border-white/10 bg-zinc-900/30 hover:border-yellow-500/30 hover:bg-zinc-800/50'} rounded-lg mb-4 overflow-hidden transition-all duration-300`}
+      className={`border ${isOpen ? 'border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.15)] bg-yellow-500/5' : 'border-slate-300 dark:border-white/10 bg-zinc-900/30 hover:border-yellow-500/30 hover:bg-zinc-800/50'} rounded-lg mb-4 overflow-hidden transition-all duration-300`}
     >
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="w-full text-left p-4 md:p-6 flex items-center justify-between focus:outline-none"
       >
-        <h4 className={`text-sm md:text-base font-bold pr-8 transition-colors ${isOpen ? 'text-yellow-400' : 'text-slate-200'}`}>{question}</h4>
+        <h4 className={`text-sm md:text-base font-bold pr-8 transition-colors ${isOpen ? 'text-yellow-400' : 'text-slate-800 dark:text-slate-200'}`}>{question}</h4>
         <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isOpen ? 'bg-yellow-500/20' : 'bg-white/5'}`}>
-          <ChevronDown className={`w-5 h-5 transition-transform duration-500 transform ${isOpen ? 'rotate-180 text-yellow-400' : 'text-slate-400'}`} />
+          <ChevronDown className={`w-5 h-5 transition-transform duration-500 transform ${isOpen ? 'rotate-180 text-yellow-400' : 'text-slate-600 dark:text-slate-400'}`} />
         </div>
       </button>
       <AnimatePresence>
@@ -38,7 +38,7 @@ const FAQItem = ({ question, answer, idx }: { question: string, answer: string, 
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="p-4 md:p-6 pt-0 text-slate-400 font-light leading-relaxed border-t border-white/5">
+            <div className="p-4 md:p-6 pt-0 text-slate-600 dark:text-slate-400 font-light leading-relaxed border-t border-slate-200 dark:border-white/5">
               {answer}
             </div>
           </motion.div>
@@ -128,7 +128,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-white overflow-x-hidden relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-slate-900 dark:text-white overflow-x-hidden relative">
       
       {/* Global Background Video */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
@@ -169,19 +169,19 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain mix-blend-screen drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] relative z-10" />
             </div>
             <div className="flex flex-col -ml-1">
-              <span className="text-xl font-black tracking-[0.15em] text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">İSG ZEYRON</span>
+              <span className="text-xl font-black tracking-[0.15em] text-slate-900 dark:text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">İSG ZEYRON</span>
               <span className="text-[9px] text-yellow-500/80 font-bold tracking-[0.3em] uppercase leading-none mt-1">Teknoloji</span>
             </div>
           </motion.div>
 
-          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block border border-white/10 bg-[#050510]/50 backdrop-blur-md rounded-full px-6 py-2 shadow-lg">
+          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block border border-slate-300 dark:border-white/10 bg-white dark:bg-[#050510]/50 backdrop-blur-md rounded-full px-6 py-2 shadow-lg">
             <nav className="flex justify-center space-x-6 items-center">
               {navItems.map((item, idx) => (
                 <motion.a 
                   key={item.id} 
                   href={`#${item.id}`} 
                   onClick={(e) => scrollToSection(item.id, e)} 
-                  className="relative text-[10px] font-bold text-slate-300 hover:text-white uppercase tracking-[0.25em] transition-all group py-2 px-4 rounded-full hover:bg-white/5"
+                  className="relative text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white uppercase tracking-[0.25em] transition-all group py-2 px-4 rounded-full hover:bg-white/5"
                   whileHover={{ y: -1 }}
                 >
                   {item.label}
@@ -192,11 +192,11 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           </div>
 
           <div className="flex items-center gap-6 z-10">
-            <button onClick={onRegisterClick} className="hidden md:block text-xs font-black text-white hover:text-yellow-500 transition-colors tracking-widest uppercase">
+            <button onClick={onRegisterClick} className="hidden md:block text-xs font-black text-slate-900 dark:text-white hover:text-yellow-500 transition-colors tracking-widest uppercase">
               KAYIT OL
             </button>
             <div className="hidden md:block w-px h-6 bg-white/20"></div>
-            <button onClick={onLoginClick} className="hidden md:block text-xs font-black text-yellow-500 hover:text-white transition-colors tracking-widest uppercase">
+            <button onClick={onLoginClick} className="hidden md:block text-xs font-black text-yellow-500 hover:text-slate-900 dark:text-white transition-colors tracking-widest uppercase">
               GİRİŞ YAP
             </button>
           </div>
@@ -215,7 +215,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[1.05]"
                  >
-                    <span className="text-white">İş Sağlığı ve Güvenliği</span> <br/>
+                    <span className="text-slate-900 dark:text-white">İş Sağlığı ve Güvenliği</span> <br/>
                     <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]">
                       Dijital Mimarisi
                     </span>
@@ -225,7 +225,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-lg md:text-2xl text-slate-300 mb-14 max-w-3xl mx-auto font-light leading-relaxed"
+                    className="text-lg md:text-2xl text-slate-700 dark:text-slate-300 mb-14 max-w-3xl mx-auto font-light leading-relaxed"
                  >
                     Gerçek zamanlı form yönetimi, mevzuata tam uyumlu otonom belgeler ve 
                     kapsamlı OSGB altyapısı ile operasyonlarınızı ışık hızında yönetin.
@@ -259,8 +259,8 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
       <section className="relative z-20 pb-32 px-6 pt-32">
         <div className="max-w-7xl mx-auto w-full relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-5xl font-black text-white tracking-tight mb-4">Kapsamlı <span className="text-yellow-500">Sektör</span> Çözümleri</h2>
-            <p className="text-slate-400 font-light text-lg">Her endüstrinin dinamiğine uygun güvenli altyapı protokolleri</p>
+            <h2 className="text-3xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4">Kapsamlı <span className="text-yellow-500">Sektör</span> Çözümleri</h2>
+            <p className="text-slate-600 dark:text-slate-400 font-light text-lg">Her endüstrinin dinamiğine uygun güvenli altyapı protokolleri</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -270,7 +270,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                 { icon: <HardHat className="w-8 h-8 text-orange-500"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", category: "Ağır Risk", color: "orange-500", video: "209883_medium.mp4" },
                 { icon: <Activity className="w-8 h-8 text-pink-500"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", category: "Kritik Operasyon", color: "pink-500", video: "40353-425442466_medium.mp4" }
               ].map((item, i) => (
-               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative rounded-3xl overflow-hidden p-8 border border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[380px]">
+               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative rounded-3xl overflow-hidden p-8 border border-slate-300 dark:border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[380px]">
                   <video 
                       autoPlay 
                       loop 
@@ -283,10 +283,10 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                   <div className="absolute inset-0 bg-gradient-to-t from-[#050510]/95 via-[#050510]/70 to-transparent group-hover:via-[#050510]/50 transition-all duration-500"></div>
                   
                   <div className="relative z-10 flex flex-col h-full">
-                    <div className="mb-6 w-16 h-16 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center group-hover:bg-yellow-500/20 group-hover:border-yellow-500/50 backdrop-blur-md transition-all duration-500 group-hover:scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]">{item.icon}</div>
-                    <span className="px-3 py-1 bg-black/50 border border-white/10 backdrop-blur-md text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6 group-hover:border-yellow-500/30 transition-colors">{item.category}</span>
-                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight drop-shadow-lg group-hover:text-yellow-400 transition-colors">{item.title}</h3>
-                    <p className="text-slate-300 text-sm font-light leading-relaxed group-hover:text-white transition-colors mt-auto mb-4 drop-shadow-md">{item.desc}</p>
+                    <div className="mb-6 w-16 h-16 rounded-2xl bg-white/80 dark:bg-black/60 border border-slate-300 dark:border-white/10 flex items-center justify-center group-hover:bg-yellow-500/20 group-hover:border-yellow-500/50 backdrop-blur-md transition-all duration-500 group-hover:scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]">{item.icon}</div>
+                    <span className="px-3 py-1 bg-black/50 border border-slate-300 dark:border-white/10 backdrop-blur-md text-slate-900 dark:text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6 group-hover:border-yellow-500/30 transition-colors">{item.category}</span>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight drop-shadow-lg group-hover:text-yellow-400 transition-colors">{item.title}</h3>
+                    <p className="text-slate-700 dark:text-slate-300 text-sm font-light leading-relaxed group-hover:text-slate-900 dark:text-white transition-colors mt-auto mb-4 drop-shadow-md">{item.desc}</p>
                   </div>
                </motion.div>
               ))}
@@ -303,34 +303,34 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-[10px] font-black tracking-[0.3em] uppercase mb-8 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.2)]">
                   <ShieldAlert className="w-3 h-3" /> Neden İSG Zeyron?
                 </div>
-                <h2 className="text-4xl lg:text-6xl font-black text-white mb-6 leading-tight tracking-tight">
+                <h2 className="text-4xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
                   Sıfır Hata, <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">Tam Hakimiyet</span>
                 </h2>
-                <p className="text-slate-400 font-light text-xl max-w-2xl mx-auto leading-relaxed">
-                  Basit bir belge deposu değil; iş süreçlerini baştan sona optimize eden otonom bir <strong className="text-white font-medium">SaaS İş İstasyonudur.</strong>
+                <p className="text-slate-600 dark:text-slate-400 font-light text-xl max-w-2xl mx-auto leading-relaxed">
+                  Basit bir belge deposu değil; iş süreçlerini baştan sona optimize eden otonom bir <strong className="text-slate-900 dark:text-white font-medium">SaaS İş İstasyonudur.</strong>
                 </p>
              </motion.div>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 max-w-5xl mx-auto">
                 <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent group">
-                  <div className="bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-white/5 group-hover:border-yellow-500/20 transition-all duration-500 overflow-hidden relative">
+                  <div className="bg-white dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/20 transition-all duration-500 overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 blur-[50px] rounded-full group-hover:bg-yellow-500/10 transition-colors"></div>
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30 transition-all duration-500 shadow-lg">
-                      <FileText className="w-6 h-6 text-slate-300 group-hover:text-yellow-400 transition-colors" />
+                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-slate-300 dark:border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30 transition-all duration-500 shadow-lg">
+                      <FileText className="w-6 h-6 text-slate-700 dark:text-slate-300 group-hover:text-yellow-400 transition-colors" />
                     </div>
-                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight">Otonom Belgelendirme</h3>
-                    <p className="text-slate-400 leading-relaxed font-light">Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. Dijital altyapımız ile bu yükü sıfıra indirerek asıl odak noktanız olan <span className="text-yellow-500 font-medium">"Güvenliğe"</span> odaklanmanızı sağlıyoruz.</p>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Otonom Belgelendirme</h3>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. Dijital altyapımız ile bu yükü sıfıra indirerek asıl odak noktanız olan <span className="text-yellow-500 font-medium">"Güvenliğe"</span> odaklanmanızı sağlıyoruz.</p>
                   </div>
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-yellow-500/20 to-transparent group">
-                  <div className="bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
+                  <div className="bg-white dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-[50px] rounded-full group-hover:bg-yellow-500/20 transition-colors"></div>
                     <div className="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/20 transition-all duration-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
                       <Cpu className="w-6 h-6 text-yellow-400" />
                     </div>
-                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight">Akıllı SaaS İstasyonu</h3>
-                    <p className="text-slate-400 leading-relaxed font-light">Ekiplerinizi, sahadaki riskleri ve mevzuat süreçlerini tek bir platformda birleştirin. Süreçlerinizi hızlandırırken maliyet ve zamandan tasarruf edin.</p>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Akıllı SaaS İstasyonu</h3>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">Ekiplerinizi, sahadaki riskleri ve mevzuat süreçlerini tek bir platformda birleştirin. Süreçlerinizi hızlandırırken maliyet ve zamandan tasarruf edin.</p>
                   </div>
                 </motion.div>
              </div>
@@ -341,7 +341,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         <div className="max-w-4xl mx-auto px-6 relative z-10">
              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
                <h2 className="text-sm font-bold text-yellow-500 tracking-[0.4em] uppercase mb-4">Sıkça Sorulan Sorular</h2>
-               <p className="text-4xl md:text-5xl font-black text-white mb-10">Merak Ettiklerinizi Hemen Yanıtlayın</p>
+               <p className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-10">Merak Ettiklerinizi Hemen Yanıtlayın</p>
                <div className="relative w-full group mb-16 max-w-2xl mx-auto">
                   <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/20 via-yellow-500/5 to-yellow-500/20 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                   <input 
@@ -349,7 +349,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     placeholder="Soru arayın... (Örn: Güvenlik, Excel)" 
                     value={searchFaq}
                     onChange={(e) => setSearchFaq(e.target.value)}
-                    className="relative w-full bg-[#0A0D14]/80 backdrop-blur-md border border-white/20 rounded-full px-8 py-5 pl-14 text-white placeholder-slate-500 outline-none focus:border-yellow-500 transition-all shadow-inner font-medium text-lg"
+                    className="relative w-full bg-[#0A0D14]/80 backdrop-blur-md border border-slate-400 dark:border-white/20 rounded-full px-8 py-5 pl-14 text-slate-900 dark:text-white placeholder-slate-500 outline-none focus:border-yellow-500 transition-all shadow-inner font-medium text-lg"
                   />
                   <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-yellow-500 w-6 h-6" />
                </div>
@@ -360,9 +360,9 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                       <FAQItem key={idx} idx={idx} question={faq.q} answer={faq.a} />
                     ))
                   ) : (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-zinc-900/20 rounded-2xl border border-white/5 border-dashed">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-zinc-900/20 rounded-2xl border border-slate-200 dark:border-white/5 border-dashed">
                       <ShieldAlert className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
-                      <p className="text-slate-400 font-medium text-lg">Bu sorguya eşleşen veri protokolü bulunamadı.</p>
+                      <p className="text-slate-600 dark:text-slate-400 font-medium text-lg">Bu sorguya eşleşen veri protokolü bulunamadı.</p>
                     </motion.div>
                   )}
                </div>
@@ -382,21 +382,21 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">İletişim</span>
           </div>
           <div className="flex gap-6 mb-10 justify-center w-full max-w-lg">
-             <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
+             <a href="#" className="w-10 h-10 rounded-full border border-slate-300 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
                <Instagram className="w-4 h-4" />
              </a>
-             <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
+             <a href="#" className="w-10 h-10 rounded-full border border-slate-300 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
                <Linkedin className="w-4 h-4" />
              </a>
-             <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
+             <a href="#" className="w-10 h-10 rounded-full border border-slate-300 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
                <Facebook className="w-4 h-4" />
              </a>
-             <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
+             <a href="#" className="w-10 h-10 rounded-full border border-slate-300 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
                <Twitter className="w-4 h-4" />
              </a>
           </div>
           <p className="text-slate-600 text-sm font-medium tracking-wide">
-            © {new Date().getFullYear()} <span className="text-slate-400">İSG Zeyron Teknoloji.</span> Tüm hakları gizlilik kalkanı altındadır.
+            © {new Date().getFullYear()} <span className="text-slate-600 dark:text-slate-400">İSG Zeyron Teknoloji.</span> Tüm hakları gizlilik kalkanı altındadır.
           </p>
         </div>
       </footer>

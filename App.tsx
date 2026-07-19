@@ -149,10 +149,10 @@ const App = () => {
             
             {/* INJECT PROFILE OR SETTINGS CONTENT IF THEY ARE SELECTED */}
             {currentView === 'profile' && (
-               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-white/10 rounded-xl bg-[#111111]/50 backdrop-blur-md">
+               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
                  <UserCheck className="w-16 h-16 text-[#FFD700] mb-4" />
-                 <h2 className="text-3xl font-black text-white uppercase tracking-widest">Kullanıcı Arşivi</h2>
-                 <p className="text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
+                 <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-widest">Kullanıcı Arşivi</h2>
+                 <p className="text-slate-600 dark:text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
                  <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
                     Sisteme Dön
                  </button>
@@ -160,10 +160,10 @@ const App = () => {
             )}
             
             {currentView === 'settings' && (
-               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-white/10 rounded-xl bg-[#111111]/50 backdrop-blur-md">
+               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
                  <Settings className="w-16 h-16 text-[#FFD700] mb-4 animate-spin-slow" />
-                 <h2 className="text-3xl font-black text-white uppercase tracking-widest">Sistem Ayarları</h2>
-                 <p className="text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
+                 <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-widest">Sistem Ayarları</h2>
+                 <p className="text-slate-600 dark:text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
                  <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
                     Sisteme Dön
                  </button>
@@ -171,10 +171,10 @@ const App = () => {
             )}
 
             {currentView === 'billing' && (
-               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-white/10 rounded-xl bg-[#111111]/50 backdrop-blur-md">
+               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
                  <Crown className="w-16 h-16 text-[#FFD700] mb-4" />
                  <h2 className="text-3xl font-black text-[#FFD700] uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">Sistem Premium</h2>
-                 <p className="text-slate-400 mt-2">Lisans Yenileme ve Yükseltme modülü aktif ediliyor.</p>
+                 <p className="text-slate-600 dark:text-slate-400 mt-2">Lisans Yenileme ve Yükseltme modülü aktif ediliyor.</p>
                  <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
                     Sisteme Dön
                  </button>
@@ -191,13 +191,13 @@ const App = () => {
               className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 relative z-10"
             >
               {/* Main Welcome & Search Panel (Left Side - 3 Cols Wide) */}
-              <div className="lg:col-span-3 bg-[#111111]/40 border border-white/5 p-8 rounded-xl shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-xl relative overflow-hidden group flex flex-col justify-between">
+              <div className="lg:col-span-3 bg-lightbox dark:bg-darkbox/40 border border-slate-200 dark:border-white/5 p-8 rounded-xl shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-xl relative overflow-hidden group flex flex-col justify-between">
                  <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-[#FFD700]/10 transition-colors duration-1000"></div>
                  <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#FFD700]/30 to-transparent"></div>
                  
                  <div className="flex flex-col md:flex-row gap-8 items-center justify-between relative z-10">
                     <div className="text-center md:text-left flex-1">
-                      <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2 leading-[1.05]">
+                      <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-2 leading-[1.05]">
                         HOŞGELDİNİZ, <br className="lg:hidden" />
                         <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.4)]">{(user?.name || "UZMAN").toUpperCase()}</span>
                       </h2>
@@ -206,14 +206,14 @@ const App = () => {
                     {/* Compact Cyber Search Bar */}
                     <div className="w-full md:w-[350px] relative">
                       <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded-sm blur opacity-50 focus-within:opacity-100 transition duration-500"></div>
-                      <div className="relative flex items-center bg-[#0A0A0A] border border-white/10 p-2 shadow-inner rounded focus-within:border-[#FFD700]/50 transition-colors">
+                      <div className="relative flex items-center bg-slate-100 dark:bg-[#0A0A0A] border border-slate-300 dark:border-white/10 p-2 shadow-inner rounded focus-within:border-[#FFD700]/50 transition-colors">
                         <Search className="w-5 h-5 text-[#FFD700] ml-3 shrink-0" />
                         <input 
                           type="text" 
                           placeholder="ARŞİVDE ARAYIN..." 
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full bg-transparent border-none px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none font-bold tracking-wide text-xs"
+                          className="w-full bg-transparent border-none px-4 py-2.5 text-slate-900 dark:text-white placeholder-slate-600 focus:outline-none font-bold tracking-wide text-xs"
                         />
                         {searchQuery && (
                           <button onClick={() => setSearchQuery('')} className="pr-3 text-[10px] font-black text-slate-500 hover:text-[#FFD700] tracking-wider uppercase transition-colors">SİL</button>
@@ -223,39 +223,39 @@ const App = () => {
                  </div>
 
                  {/* Inline Fast Action Buttons in Main Panel */}
-                 <div className="flex flex-wrap gap-4 mt-8 relative z-10 pt-6 border-t border-white/5">
+                 <div className="flex flex-wrap gap-4 mt-8 relative z-10 pt-6 border-t border-slate-200 dark:border-white/5">
                      <button onClick={() => {
                         const targetTemp = safeTemplates[0];
                         if(targetTemp) { setSelectedTemplate(targetTemp); setCurrentView('editor'); }
-                      }} className="px-6 py-3 bg-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/50 rounded-lg text-xs uppercase tracking-[0.2em] font-black text-slate-300 hover:text-white transition-all group flex items-center gap-3 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                      }} className="px-6 py-3 bg-slate-100 dark:bg-[#0A0A0A] border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 rounded-lg text-xs uppercase tracking-[0.2em] font-black text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white transition-all group flex items-center gap-3 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
                        <FileText size={16} className="text-[#FFD700] group-hover:scale-110 transition-transform" /> Hızlı Form
                      </button>
-                     <button onClick={() => setCurrentView('settings')} className="px-6 py-3 bg-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/50 rounded-lg text-xs uppercase tracking-[0.2em] font-black text-slate-300 hover:text-white transition-all group flex items-center gap-3 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                       <Settings size={16} className="text-slate-400 group-hover:rotate-90 transition-transform" /> Sistem Ayarları
+                     <button onClick={() => setCurrentView('settings')} className="px-6 py-3 bg-slate-100 dark:bg-[#0A0A0A] border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 rounded-lg text-xs uppercase tracking-[0.2em] font-black text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white transition-all group flex items-center gap-3 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                       <Settings size={16} className="text-slate-600 dark:text-slate-400 group-hover:rotate-90 transition-transform" /> Sistem Ayarları
                      </button>
-                     <button onClick={() => setCurrentView('billing')} className="px-6 py-3 bg-[#111111] border border-[#FFD700]/50 hover:bg-[#FFD700] rounded-lg text-xs uppercase tracking-[0.2em] font-black text-[#FFD700] hover:text-black transition-all group flex items-center gap-3 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] ml-auto">
+                     <button onClick={() => setCurrentView('billing')} className="px-6 py-3 bg-lightbox dark:bg-darkbox border border-[#FFD700]/50 hover:bg-[#FFD700] rounded-lg text-xs uppercase tracking-[0.2em] font-black text-[#FFD700] hover:text-black transition-all group flex items-center gap-3 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] ml-auto">
                        <Crown size={16} className="group-hover:scale-110 transition-transform" /> PREMIUM'A GEÇ
                      </button>
                  </div>
               </div>
 
               {/* Right Side: Clean Protocol Log (1 Col Wide) */}
-              <div className="lg:col-span-1 bg-[#111111]/40 border border-white/5 p-6 rounded-xl shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-xl flex flex-col relative group hover:border-[#FFD700]/30 transition-all duration-500">
-                 <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
+              <div className="lg:col-span-1 bg-lightbox dark:bg-darkbox/40 border border-slate-200 dark:border-white/5 p-6 rounded-xl shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-xl flex flex-col relative group hover:border-[#FFD700]/30 transition-all duration-500">
+                 <div className="flex items-center justify-between mb-4 border-b border-slate-200 dark:border-white/5 pb-4">
                     <div className="flex items-center gap-2">
                        <div className="relative flex items-center justify-center">
                          <div className="absolute w-6 h-6 bg-[#FFD700]/20 rounded-full animate-ping"></div>
                          <FileClock size={16} className="text-[#FFD700] relative z-10" />
                        </div>
-                       <span className="text-xs uppercase tracking-[0.2em] font-black text-white drop-shadow-md">Protokol Geçmişi</span>
+                       <span className="text-xs uppercase tracking-[0.2em] font-black text-slate-900 dark:text-white drop-shadow-md">Protokol Geçmişi</span>
                     </div>
                  </div>
                  
                  <div className="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar">
-                     <div className="bg-[#050510] p-4 rounded-lg border border-white/5 hover:border-[#FFD700]/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.4)] relative overflow-hidden">
+                     <div className="bg-white dark:bg-[#050510] p-4 rounded-lg border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.4)] relative overflow-hidden">
                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-500/50 group-hover/item:bg-yellow-500 transition-colors"></div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[11px] font-bold text-slate-300 group-hover/item:text-white transition-colors truncate pr-2">Ağır Sanayi Risk Analizi</span>
+                          <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 group-hover/item:text-slate-900 dark:text-white transition-colors truncate pr-2">Ağır Sanayi Risk Analizi</span>
                           <ArrowRight size={12} className="text-slate-600 group-hover/item:text-[#FFD700] group-hover/item:translate-x-1 transition-all" />
                         </div>
                         <div className="flex items-center gap-2">
@@ -264,10 +264,10 @@ const App = () => {
                         </div>
                      </div>
 
-                     <div className="bg-[#050510] p-4 rounded-lg border border-white/5 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.4)] relative overflow-hidden">
+                     <div className="bg-white dark:bg-[#050510] p-4 rounded-lg border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.4)] relative overflow-hidden">
                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500/50 group-hover/item:bg-emerald-500 transition-colors"></div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[11px] font-bold text-slate-300 group-hover/item:text-white transition-colors truncate pr-2">Aylık Puantaj Tablosu</span>
+                          <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 group-hover/item:text-slate-900 dark:text-white transition-colors truncate pr-2">Aylık Puantaj Tablosu</span>
                           <ArrowRight size={12} className="text-slate-600 group-hover/item:text-emerald-500 group-hover/item:translate-x-1 transition-all" />
                         </div>
                         <div className="flex items-center gap-2">
@@ -277,7 +277,7 @@ const App = () => {
                      </div>
                  </div>
                  
-                 <button onClick={() => setCurrentView('profile')} className="mt-4 w-full py-2 bg-[#0A0A0A] rounded border border-white/5 hover:border-[#FFD700]/30 text-[10px] uppercase font-black tracking-[0.2em] text-slate-400 hover:text-[#FFD700] transition-colors">
+                 <button onClick={() => setCurrentView('profile')} className="mt-4 w-full py-2 bg-slate-100 dark:bg-[#0A0A0A] rounded border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/30 text-[10px] uppercase font-black tracking-[0.2em] text-slate-600 dark:text-slate-400 hover:text-[#FFD700] transition-colors">
                     TÜMÜNÜ GÖSTER
                  </button>
               </div>
@@ -292,7 +292,7 @@ const App = () => {
             >
               <div className="flex items-center gap-3 mb-6 relative z-10">
                 <Hexagon className="w-4 h-4 text-[#FFD700]" />
-                <h3 className="text-xs font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Sektörel Bağlantılar</h3>
+                <h3 className="text-xs font-black text-slate-900 dark:text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Sektörel Bağlantılar</h3>
               </div>
 
               <div className="flex gap-4 overflow-x-auto pb-6 custom-scrollbar snap-x relative z-10 -mx-4 px-4 md:mx-0 md:px-0">
@@ -301,16 +301,16 @@ const App = () => {
                   className={`snap-start shrink-0 w-[200px] h-[120px] rounded-xl transition-all duration-500 relative group overflow-hidden ${
                     selectedCategory === null 
                       ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] scale-100' 
-                      : 'border border-white/5 hover:border-[#FFD700]/50 scale-95 hover:scale-100'
+                      : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 scale-95 hover:scale-100'
                   }`}
                 >
-                  <div className="absolute inset-0 bg-[#0A0A0A]">
+                  <div className="absolute inset-0 bg-slate-100 dark:bg-[#0A0A0A]">
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity mix-blend-luminosity"></div>
                     <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === null ? 'from-[#FFD700]/40 to-black/80' : 'from-black to-black/50'}`}></div>
                   </div>
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10">
                     <ShieldAlert size={28} className={selectedCategory === null ? "text-black drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "text-[#FFD700]"} />
-                    <span className={`text-xs uppercase tracking-[0.2em] font-black ${selectedCategory === null ? "text-white" : "text-slate-300"} group-hover:text-white`}>TÜMÜ</span>
+                    <span className={`text-xs uppercase tracking-[0.2em] font-black ${selectedCategory === null ? "text-slate-900 dark:text-white" : "text-slate-700 dark:text-slate-300"} group-hover:text-slate-900 dark:text-white`}>TÜMÜ</span>
                   </div>
                 </button>
                 
@@ -321,10 +321,10 @@ const App = () => {
                     className={`snap-start shrink-0 w-[200px] h-[120px] rounded-xl transition-all duration-500 relative group overflow-hidden ${
                       selectedCategory === category 
                         ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] scale-100' 
-                        : 'border border-white/5 hover:border-[#FFD700]/50 scale-95 hover:scale-100'
+                        : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 scale-95 hover:scale-100'
                     }`}
                   >
-                    <div className="absolute inset-0 bg-[#0A0A0A]">
+                    <div className="absolute inset-0 bg-slate-100 dark:bg-[#0A0A0A]">
                       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity mix-blend-luminosity"></div>
                       <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === category ? 'from-[#FFD700]/40 to-black/80' : 'from-black to-black/50'}`}></div>
                     </div>
@@ -332,7 +332,7 @@ const App = () => {
                       <div className={selectedCategory === category ? "text-black drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "text-[#FFD700]"}>
                         {getCategoryIcon(category)}
                       </div>
-                      <span className={`text-[10px] leading-tight uppercase tracking-[0.2em] font-bold ${selectedCategory === category ? "text-white" : "text-slate-300"} group-hover:text-white`}>{category}</span>
+                      <span className={`text-[10px] leading-tight uppercase tracking-[0.2em] font-bold ${selectedCategory === category ? "text-slate-900 dark:text-white" : "text-slate-700 dark:text-slate-300"} group-hover:text-slate-900 dark:text-white`}>{category}</span>
                     </div>
                   </button>
                 ))}
@@ -344,13 +344,13 @@ const App = () => {
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                transition={{ duration: 0.8, delay: 0.5 }}
-               className="bg-[#0A0A0A] rounded-2xl border border-white/5 p-8 relative overflow-hidden"
+               className="bg-slate-100 dark:bg-[#0A0A0A] rounded-2xl border border-slate-200 dark:border-white/5 p-8 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/4"></div>
               
               <div className="flex items-center gap-3 mb-8 relative z-10">
                 <div className="w-2 h-2 bg-[#FFD700] rounded-full shadow-[0_0_15px_rgba(255,215,0,1)] animate-pulse"></div>
-                <h3 className="text-sm font-black text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Arşiv Sonuçları ({filteredTemplates.length})</h3>
+                <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Arşiv Sonuçları ({filteredTemplates.length})</h3>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
@@ -363,36 +363,36 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-gradient-to-br from-[#111111] to-[#0A0A0A] border border-white/5 hover:border-[#FFD700]/30 p-6 relative group overflow-hidden transition-all duration-500 hover:-translate-y-1 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex flex-col h-[280px] rounded-lg"
+                      className="bg-gradient-to-br from-[#111111] to-[#0A0A0A] border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/30 p-6 relative group overflow-hidden transition-all duration-500 hover:-translate-y-1 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex flex-col h-[280px] rounded-lg"
                     >
                       {/* Background Detail */}
                       <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity pointer-events-none">
-                         <Hexagon className="w-32 h-32 text-white" strokeWidth={0.5} />
+                         <Hexagon className="w-32 h-32 text-slate-900 dark:text-white" strokeWidth={0.5} />
                       </div>
                       
                       {/* Top Accent Line */}
                       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:via-[#FFD700]/50 transition-colors duration-500"></div>
 
                       <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className="w-12 h-12 bg-black/50 border border-white/5 rounded flex items-center justify-center group-hover:bg-[#FFD700]/5 group-hover:border-[#FFD700]/30 transition-all duration-500">
-                          <FileText className="text-slate-400 group-hover:text-[#FFD700] w-6 h-6" strokeWidth={1.5} />
+                        <div className="w-12 h-12 bg-black/50 border border-slate-200 dark:border-white/5 rounded flex items-center justify-center group-hover:bg-[#FFD700]/5 group-hover:border-[#FFD700]/30 transition-all duration-500">
+                          <FileText className="text-slate-600 dark:text-slate-400 group-hover:text-[#FFD700] w-6 h-6" strokeWidth={1.5} />
                         </div>
-                        <span className="text-[9px] font-black tracking-[0.2em] uppercase text-white/50 bg-black px-3 py-1.5 rounded border border-white/5 shadow-inner">
+                        <span className="text-[9px] font-black tracking-[0.2em] uppercase text-slate-900 dark:text-white/50 bg-black px-3 py-1.5 rounded border border-slate-200 dark:border-white/5 shadow-inner">
                             {(template.format || "PDF").toUpperCase()}
                         </span>
                       </div>
 
                       <div className="mb-4 relative z-10 flex-1">
-                        <h4 className="text-slate-300 font-bold mb-3 leading-snug group-hover:text-white transition-all line-clamp-2 text-sm tracking-wide">
+                        <h4 className="text-slate-700 dark:text-slate-300 font-bold mb-3 leading-snug group-hover:text-slate-900 dark:text-white transition-all line-clamp-2 text-sm tracking-wide">
                           {template.title}
                         </h4>
                         <div className="flex items-center gap-2 mt-auto">
                            <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/50 group-hover:bg-[#FFD700] group-hover:shadow-[0_0_8px_#FFD700] transition-all"></div>
-                           <p className="text-slate-500 text-[9px] font-bold tracking-[0.2em] uppercase truncate group-hover:text-slate-300 transition-colors">{template.category}</p>
+                           <p className="text-slate-500 text-[9px] font-bold tracking-[0.2em] uppercase truncate group-hover:text-slate-700 dark:text-slate-300 transition-colors">{template.category}</p>
                         </div>
                       </div>
 
-                      <div className="relative z-10 pt-4 mt-auto border-t border-white/5 border-dashed">
+                      <div className="relative z-10 pt-4 mt-auto border-t border-slate-200 dark:border-white/5 border-dashed">
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] text-slate-500 font-bold tracking-[0.1em] uppercase flex items-center gap-2">
                             <Target size={12} /> {template.fields.length} VERİ ALANI
@@ -415,9 +415,9 @@ const App = () => {
                 </AnimatePresence>
                 
                 {filteredTemplates.length === 0 && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="col-span-full py-20 flex flex-col items-center justify-center text-center bg-[#030406] border border-white/5 border-dashed rounded-xl">
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="col-span-full py-20 flex flex-col items-center justify-center text-center bg-[#030406] border border-slate-200 dark:border-white/5 border-dashed rounded-xl">
                     <Target className="w-12 h-12 text-slate-600 mb-4 opacity-50" />
-                    <p className="text-slate-400 font-medium tracking-wide">Bu algoritmaya uygun protokol bulunamadı.</p>
+                    <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wide">Bu algoritmaya uygun protokol bulunamadı.</p>
                     <button onClick={() => setSearchQuery('')} className="mt-4 text-yellow-500 text-xs font-bold uppercase tracking-widest hover:underline">Aramayı Temizle</button>
                   </motion.div>
                 )}
