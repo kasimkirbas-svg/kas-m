@@ -175,17 +175,17 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           </motion.div>
 
           <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block">
-            <nav className="flex justify-center space-x-10 rounded-full border border-white/10 bg-[#050510]/80 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] px-10 py-3">
+            <nav className="flex justify-center space-x-8 rounded-2xl border border-white/20 bg-black/60 relative overflow-hidden px-8 py-3 backdrop-blur-3xl shadow-[0_0_30px_rgba(0,0,0,0.8)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:-translate-x-full hover:before:translate-x-full before:transition-transform before:duration-1000">
               {navItems.map((item, idx) => (
                 <motion.a 
                   key={item.id} 
                   href={`#${item.id}`} 
                   onClick={(e) => scrollToSection(item.id, e)} 
-                  className="relative text-[11px] font-black text-slate-300 hover:text-yellow-400 uppercase tracking-[0.15em] transition-colors group py-1"
+                  className="relative text-[11px] font-black text-slate-300 hover:text-yellow-400 uppercase tracking-[0.2em] transition-colors group py-2 px-3 rounded-lg hover:bg-white/5"
                   whileHover={{ y: -2 }}
                 >
                   {item.label}
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_10px_rgba(234,179,8,0.8)]"></span>
                 </motion.a>
               ))}
             </nav>
@@ -270,22 +270,23 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                 { icon: <HardHat className="w-8 h-8 text-orange-500"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", category: "Ağır Risk", color: "orange-500", video: "209883_medium.mp4" },
                 { icon: <Activity className="w-8 h-8 text-pink-500"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", category: "Kritik Operasyon", color: "pink-500", video: "40353-425442466_medium.mp4" }
               ].map((item, i) => (
-               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative bg-[#05050A]/60 backdrop-blur-xl rounded-3xl overflow-hidden p-8 border border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[380px]">
+               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative rounded-3xl overflow-hidden p-8 border border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[380px]">
                   <video 
                       autoPlay 
                       loop 
                       muted 
                       playsInline 
-                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-30 transition-opacity duration-700"
+                      className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-all duration-1000"
                   >
                       <source src={`/${item.video}`} type="video/mp4" />
                   </video>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050510]/95 via-[#050510]/70 to-transparent group-hover:via-[#050510]/50 transition-all duration-500"></div>
+                  
                   <div className="relative z-10 flex flex-col h-full">
-                    <div className="mb-6 w-16 h-16 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-center group-hover:bg-yellow-500/10 transition-all duration-500 group-hover:scale-110">{item.icon}</div>
-                    <span className="px-3 py-1 bg-white/5 text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6">{item.category}</span>
-                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight group-hover:text-yellow-400 transition-colors">{item.title}</h3>
-                    <p className="text-slate-400 text-sm font-light leading-relaxed group-hover:text-slate-200 transition-colors mt-auto mb-4">{item.desc}</p>
+                    <div className="mb-6 w-16 h-16 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center group-hover:bg-yellow-500/20 group-hover:border-yellow-500/50 backdrop-blur-md transition-all duration-500 group-hover:scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]">{item.icon}</div>
+                    <span className="px-3 py-1 bg-black/50 border border-white/10 backdrop-blur-md text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6 group-hover:border-yellow-500/30 transition-colors">{item.category}</span>
+                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight drop-shadow-lg group-hover:text-yellow-400 transition-colors">{item.title}</h3>
+                    <p className="text-slate-300 text-sm font-light leading-relaxed group-hover:text-white transition-colors mt-auto mb-4 drop-shadow-md">{item.desc}</p>
                   </div>
                </motion.div>
               ))}
