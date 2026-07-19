@@ -137,12 +137,12 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           loop 
           muted 
           playsInline 
-          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-[0.15] mix-blend-luminosity grayscale"
+          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-[0.25] mix-blend-luminosity grayscale"
         >
-          <source src="/13232-246463976_medium.mp4" type="video/mp4" />
+          <source src="/159052-818026310_medium.mp4" type="video/mp4" />
           Tarayıcınız video etiketini desteklemiyor.
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/95 to-[#0a0a0a]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/50 via-[#0a0a0a]/80 to-[#0a0a0a]"></div>
       </div>
 
       {/* Sci-Fi Background Layer */}
@@ -203,15 +203,10 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         </div>
       </motion.header>
 
-      {/* Hero Section floating Island */}
+      {/* Hero Section */}
       <section className="relative pt-40 pb-32 px-6 min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
-        <div className="max-w-6xl mx-auto w-full relative z-20 rounded-[3rem] overflow-hidden bg-[#0A0D14]/80 backdrop-blur-2xl border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)] mt-10">
-             <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-luminosity">
-                <source src="/159052-818026310_medium.mp4" type="video/mp4" />
-             </video>
-             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/80 to-black/60"></div>
-             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(234,179,8,0.1)_0%,rgba(0,0,0,0)_80%)]"></div>
-
+        <div className="max-w-6xl mx-auto w-full relative z-20 mt-10">
+             
              <div className="relative z-10 px-8 py-20 lg:py-32 lg:px-24 text-center">
                  <motion.h1 
                     initial={{ opacity: 0, y: 30 }}
