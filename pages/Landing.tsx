@@ -139,7 +139,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           playsInline 
           className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30"
         >
-          <source src="/13232-246463976_medium.mp4" type="video/mp4" />
+          <source src="/67467-522170635_medium.mp4" type="video/mp4" />
           Tarayıcınız video etiketini desteklemiyor.
         </video>
         <div className="absolute inset-0 bg-black/50"></div>
