@@ -128,7 +128,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-slate-900 dark:text-white overflow-x-hidden relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-50 dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-slate-900 dark:text-white overflow-x-hidden relative">
       
       {/* Global Background Video */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
@@ -174,7 +174,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             </div>
           </motion.div>
 
-          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block border border-slate-300 dark:border-white/10 bg-white dark:bg-[#050510]/50 backdrop-blur-md rounded-full px-6 py-2 shadow-lg">
+          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block border border-slate-300 dark:border-white/10 bg-white dark:bg-white dark:bg-[#050510]/50 backdrop-blur-md rounded-full px-6 py-2 shadow-lg">
             <nav className="flex justify-center space-x-6 items-center">
               {navItems.map((item, idx) => (
                 <motion.a 
@@ -313,7 +313,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 max-w-5xl mx-auto">
                 <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent group">
-                  <div className="bg-white dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/20 transition-all duration-500 overflow-hidden relative">
+                  <div className="bg-white dark:bg-white dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/20 transition-all duration-500 overflow-hidden relative">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 blur-[50px] rounded-full group-hover:bg-yellow-500/10 transition-colors"></div>
                     <div className="w-14 h-14 rounded-2xl bg-white/5 border border-slate-300 dark:border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30 transition-all duration-500 shadow-lg">
                       <FileText className="w-6 h-6 text-slate-700 dark:text-slate-300 group-hover:text-yellow-400 transition-colors" />
@@ -324,7 +324,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-yellow-500/20 to-transparent group">
-                  <div className="bg-white dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
+                  <div className="bg-white dark:bg-white dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-[50px] rounded-full group-hover:bg-yellow-500/20 transition-colors"></div>
                     <div className="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/20 transition-all duration-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
                       <Cpu className="w-6 h-6 text-yellow-400" />

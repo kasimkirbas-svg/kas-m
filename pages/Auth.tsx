@@ -57,7 +57,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30 w-screen">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0A] text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30 w-screen">
       
       {/* Background Video Engine */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
@@ -104,7 +104,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
 
       {/* Auth Card Content */}
       <div className="relative z-10 w-full max-w-md p-6 mt-16">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }} className="relative bg-[#0d1017]/80 backdrop-blur-2xl border border-white/10 p-8 sm:p-10 rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }} className="relative bg-white dark:bg-[#0d1017]/80 backdrop-blur-2xl border border-white/10 p-8 sm:p-10 rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[80px] pointer-events-none mix-blend-screen"></div>
 
           <div className="text-center mb-8">
