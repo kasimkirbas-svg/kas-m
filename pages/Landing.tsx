@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState, useMemo } from 'react';
-import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, Hexagon, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat } from 'lucide-react';
+import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, Hexagon, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import type { Engine } from "@tsparticles/engine";
@@ -295,15 +295,31 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
             {/* Target Audience / About Section */}
       <section id="hakkimizda" className="py-32 relative z-10 bg-transparent">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs font-bold tracking-widest uppercase mb-6 rounded-full">Hakkımızda</div>
-                <h2 className="text-4xl lg:text-6xl font-black text-white mb-8 leading-tight">İSG Operasyonlarında <br/><span className="text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]">Tam Hakimiyet</span></h2>
-                <div className="space-y-6 text-slate-300 font-light text-lg">
-                  <p>Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. İSG Zeyron bu yükü dijital ortama taşıyarak, dikkatinizi asıl noktanıza, "Güvenliğe" vermenizi sağlar.</p>
-                  <div className="flex flex-col items-center gap-4 p-8 bg-black/40 border border-white/5 rounded-2xl relative overflow-hidden group shadow-2xl backdrop-blur-sm">
-                    <ShieldAlert className="w-12 h-12 text-yellow-500 shrink-0 mb-2 relative z-10" />
-                    <p className="text-sm font-medium text-slate-200 italic relative z-10">Sadece bir belge deposu değil; iş süreçlerini optimize eden aktif, otomatize bir SaaS çalışma istasyonudur.</p>
+        <div className="max-w-4xl mx-auto px-6 text-center relative">
+             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-yellow-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative z-10">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-[10px] font-black tracking-[0.3em] uppercase mb-8 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+                  <ShieldAlert className="w-3 h-3" /> Hakkımızda
+                </div>
+                <h2 className="text-4xl lg:text-7xl font-black text-white mb-10 leading-[1.1] tracking-tight">
+                  İSG Operasyonlarında <br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">
+                    Tam Hakimiyet
+                  </span>
+                </h2>
+                <div className="space-y-8 text-slate-300 font-light text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed">
+                  <p className="opacity-90">Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. İSG Zeyron bu yükü dijital ortama taşıyarak, dikkatinizi asıl noktanıza, <strong className="text-white font-bold">"Güvenliğe"</strong> vermenizi sağlar.</p>
+                  
+                  <div className="relative mt-12 p-1 rounded-2xl bg-gradient-to-b from-white/10 to-transparent">
+                    <div className="flex flex-col items-center gap-6 p-10 bg-black/60 backdrop-blur-xl rounded-xl relative overflow-hidden group">
+                      <div className="absolute -inset-24 bg-gradient-to-r from-yellow-500/0 via-yellow-500/10 to-yellow-500/0 group-hover:translate-x-full transition-transform duration-1000 origin-left skew-x-12 opacity-50"></div>
+                      <div className="w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 relative z-10 shadow-[0_0_30px_rgba(234,179,8,0.15)] group-hover:scale-110 transition-transform duration-500">
+                        <Hexagon className="w-8 h-8 text-yellow-500" />
+                      </div>
+                      <p className="text-base lg:text-lg font-medium text-slate-200 relative z-10 leading-relaxed font-sans">
+                        Sadece bir belge deposu değil;<br/> <span className="text-yellow-400">iş süreçlerini optimize eden</span> aktif, otomatize bir SaaS çalışma istasyonudur.
+                      </p>
+                    </div>
                   </div>
                 </div>
              </motion.div>
@@ -344,15 +360,29 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
       </section>
 
 {/* Footer */}
-      <footer className="border-t border-white/5 bg-transparent py-16 relative z-10 text-center">
+      <footer className="bg-transparent py-16 relative z-10 text-center">
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
           <div className="w-20 h-20 mb-8 opacity-50 hover:opacity-100 transition-opacity flex justify-center items-center rounded-full overflow-hidden mix-blend-lighten">
             <img src="/logo.jpeg" alt="İSG Zeyron Footer Logo" className="w-[120%] h-auto object-contain grayscale hover:grayscale-0 mix-blend-screen transition-all duration-500" />
           </div>
-          <div className="flex gap-8 mb-10 border-b border-white/5 pb-10 justify-center w-full max-w-lg">
+          <div className="flex gap-8 mb-6 justify-center w-full max-w-lg">
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">Gizlilik</span>
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">Şartlar</span>
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">İletişim</span>
+          </div>
+          <div className="flex gap-6 mb-10 justify-center w-full max-w-lg">
+             <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
+               <Instagram className="w-4 h-4" />
+             </a>
+             <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
+               <Linkedin className="w-4 h-4" />
+             </a>
+             <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
+               <Facebook className="w-4 h-4" />
+             </a>
+             <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-yellow-500 hover:border-yellow-500/50 hover:bg-yellow-500/10 transition-all duration-300">
+               <Twitter className="w-4 h-4" />
+             </a>
           </div>
           <p className="text-slate-600 text-sm font-medium tracking-wide">
             © {new Date().getFullYear()} <span className="text-slate-400">İSG Zeyron Teknoloji.</span> Tüm hakları gizlilik kalkanı altındadır.
