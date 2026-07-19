@@ -66,11 +66,11 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
           loop 
           muted 
           playsInline 
-          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-20 mix-blend-screen mix-blend-lighten filter brightness-150 contrast-125"
+          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30 mix-blend-screen mix-blend-lighten filter brightness-125 contrast-125"
         >
-          <source src="/site23.mp4" type="video/mp4" />
+          <source src="/13232-246463976_medium.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#050510] via-transparent to-[#050510]"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#050510] via-[#050510]/80 to-[#050510]"></div>
       </div>
 
       {/* Background Particles */}
