@@ -57,20 +57,21 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#050510] text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30">
+    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30 w-screen">
       
       {/* Background Video Engine */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
         <video 
           autoPlay 
           loop 
           muted 
           playsInline 
-          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-30 mix-blend-screen mix-blend-lighten filter brightness-125 contrast-125"
+          className="absolute top-0 left-0 w-full h-full object-cover opacity-30"
         >
-          <source src="/13232-246463976_medium.mp4" type="video/mp4" />
+          <source src="/19024-298313254_medium.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#050510] via-[#050510]/80 to-[#050510]"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/50 to-[#0a0a0a]"></div>
       </div>
 
       {/* Background Particles */}
