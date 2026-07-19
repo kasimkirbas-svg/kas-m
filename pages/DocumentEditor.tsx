@@ -93,11 +93,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       doc.render();
 
       const outBuffer = doc.getZip().generate({ type: "arraybuffer" });
+      const blob = new Blob([outBuffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
       
       if (previewRef.current) {
         // Clear previous content
         previewRef.current.innerHTML = "";
-        await renderAsync(outBuffer, previewRef.current, previewRef.current, {
+        await renderAsync(blob, previewRef.current, previewRef.current, {
            className: "docx",
            inWrapper: true,
            ignoreWidth: false,
