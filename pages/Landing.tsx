@@ -137,12 +137,12 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           loop 
           muted 
           playsInline 
-          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-25"
+          className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-[0.15] mix-blend-luminosity grayscale"
         >
-          <source src="/159052-818026310_medium.mp4" type="video/mp4" />
+          <source src="/13232-246463976_medium.mp4" type="video/mp4" />
           Tarayıcınız video etiketini desteklemiyor.
         </video>
-        <div className="absolute inset-0 bg-black/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/95 to-[#0a0a0a]"></div>
       </div>
 
       {/* Sci-Fi Background Layer */}
@@ -155,13 +155,13 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="fixed top-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-6xl z-50 transition-all duration-500 rounded-full border border-white/10 bg-[#050510]/80 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] flex items-center justify-between px-6 py-3"
+        className="fixed top-0 w-full z-50 transition-all duration-500 py-4 bg-transparent flex items-center justify-between px-6"
       >
-        <div className="flex items-center justify-between w-full">
+        <div className="max-w-7xl mx-auto w-full flex items-center justify-between relative">
           
           <motion.div 
             whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-3 cursor-pointer group" 
+            className="flex items-center gap-3 cursor-pointer group z-10" 
             onClick={() => window.scrollTo(0, 0)}
           >
             <div className="w-12 h-12 flex items-center justify-center relative rounded-full overflow-hidden mix-blend-lighten shadow-inner">
@@ -174,22 +174,24 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             </div>
           </motion.div>
 
-          <nav className="hidden lg:flex flex-1 justify-center space-x-10">
-            {navItems.map((item, idx) => (
-              <motion.a 
-                key={item.id} 
-                href={`#${item.id}`} 
-                onClick={(e) => scrollToSection(item.id, e)} 
-                className="relative text-[11px] font-black text-slate-300 hover:text-yellow-400 uppercase tracking-[0.15em] transition-colors group py-2"
-                whileHover={{ y: -2 }}
-              >
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-300"></span>
-              </motion.a>
-            ))}
-          </nav>
+          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block">
+            <nav className="flex justify-center space-x-10 rounded-full border border-white/10 bg-[#050510]/80 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] px-10 py-3">
+              {navItems.map((item, idx) => (
+                <motion.a 
+                  key={item.id} 
+                  href={`#${item.id}`} 
+                  onClick={(e) => scrollToSection(item.id, e)} 
+                  className="relative text-[11px] font-black text-slate-300 hover:text-yellow-400 uppercase tracking-[0.15em] transition-colors group py-1"
+                  whileHover={{ y: -2 }}
+                >
+                  {item.label}
+                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-center duration-300"></span>
+                </motion.a>
+              ))}
+            </nav>
+          </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 z-10">
             <button onClick={onRegisterClick} className="hidden md:block text-xs font-black text-white hover:text-yellow-500 transition-colors tracking-widest uppercase">
               KAYIT OL
             </button>
