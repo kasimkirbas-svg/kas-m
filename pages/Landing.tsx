@@ -277,42 +277,47 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         </div>
       </section>
 
-            {/* Target Audience / About Grid */}
-      <section id="hakkimizda" className="py-24 relative z-10 mx-auto px-6 max-w-7xl">
-        <div className="relative rounded-[3rem] overflow-hidden bg-[#0A0D14] border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)] min-h-[500px] flex items-center">
-             <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity">
-                <source src="/159052-818026310_medium.mp4" type="video/mp4" />
-             </video>
-             <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-transparent"></div>
+            {/* Target Audience / About Section */}
+      <section id="hakkimizda" className="py-32 relative z-10 border-y border-white/5 bg-[#05050A]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
              
-             <div className="relative z-10 p-12 lg:p-20 grid lg:grid-cols-2 gap-16 items-center w-full">
-                <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/20 border border-yellow-500/30 text-yellow-500 text-xs font-bold tracking-widest uppercase mb-8 rounded-full shadow-[0_0_20px_rgba(234,179,8,0.15)]">Hakkımızda</div>
-                  <h2 className="text-4xl lg:text-5xl font-black text-white mb-6 leading-tight">İSG Operasyonlarında <br/><span className="text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]">Tam Hakimiyet</span></h2>
-                  <div className="space-y-6 text-slate-300 font-light text-lg">
-                    <p>Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. İSG Zeyron bu yükü dijital ortama taşıyarak, dikkatinizi asıl noktanıza, "Güvenliğe" vermenizi sağlar.</p>
-                    <div className="flex items-start gap-4 p-6 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl">
-                      <ShieldAlert className="w-8 h-8 text-yellow-500 shrink-0 mt-1" />
-                      <p className="text-sm font-medium text-slate-200 italic">Sadece bir belge deposu değil; iş süreçlerini optimize eden aktif, otomatize bir SaaS çalışma istasyonudur.</p>
-                    </div>
+             <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs font-bold tracking-widest uppercase mb-6 rounded-full">Hakkımızda</div>
+                <h2 className="text-4xl lg:text-6xl font-black text-white mb-8 leading-tight">İSG Operasyonlarında <br/><span className="text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]">Tam Hakimiyet</span></h2>
+                <div className="space-y-6 text-slate-300 font-light text-lg">
+                  <p>Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. İSG Zeyron bu yükü dijital ortama taşıyarak, dikkatinizi asıl noktanıza, "Güvenliğe" vermenizi sağlar.</p>
+                  <div className="flex items-start gap-4 p-6 bg-black/40 border border-white/5 rounded-2xl relative overflow-hidden group">
+                    <ShieldAlert className="w-8 h-8 text-yellow-500 shrink-0 mt-1 relative z-10" />
+                    <p className="text-sm font-medium text-slate-200 italic relative z-10">Sadece bir belge deposu değil; iş süreçlerini optimize eden aktif, otomatize bir SaaS çalışma istasyonudur.</p>
                   </div>
-                </motion.div>
-             </div>
+                </div>
+             </motion.div>
+
+             <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(234,179,8,0.1)] group">
+                <video autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000">
+                    <source src="/19024-298313254_medium.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#05050A]/70 via-transparent to-transparent opacity-80"></div>
+             </motion.div>
+
+          </div>
         </div>
       </section>
 {/* Cyber FAQ Section */}
-      <section id="sss" className="py-32 relative z-10 bg-[#020305] border-t border-white/5">
-        <div className="fixed left-0 w-full h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(234,179,8,0.03)_0%,rgba(0,0,0,0)_100%)] pointer-events-none z-0"></div>
-        
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16">
-             <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               className="relative"
-             >
-               <h2 className="text-sm font-bold text-yellow-500 tracking-[0.4em] uppercase mb-4">Kapsamlı Soru Ağı</h2>
+      <section id="sss" className="py-32 relative z-10 bg-[#05050A] border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+             
+             <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(234,179,8,0.1)] group">
+                <video autoPlay loop muted playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000">
+                    <source src="/292294_medium.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#05050A]/40 to-[#05050A]/80"></div>
+             </motion.div>
+             
+             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+               <h2 className="text-sm font-bold text-yellow-500 tracking-[0.4em] uppercase mb-4">Sıkça Sorulan Sorular</h2>
                <p className="text-4xl md:text-5xl font-black text-white mb-10">Merak Ettiklerinizi Hemen Yanıtlayın</p>
                <div className="relative w-full group mb-10">
                   <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/20 via-yellow-500/5 to-yellow-500/20 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
@@ -326,31 +331,20 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                   <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-yellow-500 w-6 h-6" />
                </div>
 
-               <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] h-[350px]">
-                  <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity">
-                    <source src="/292294_medium.mp4" type="video/mp4" />
-                  </video>
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#020305] via-transparent to-transparent"></div>
+               <div className="space-y-4">
+                  {filteredFaqs.length > 0 ? (
+                    filteredFaqs.map((faq, idx) => (
+                      <FAQItem key={idx} idx={idx} question={faq.q} answer={faq.a} />
+                    ))
+                  ) : (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-zinc-900/20 rounded-2xl border border-white/5 border-dashed">
+                      <ShieldAlert className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
+                      <p className="text-slate-400 font-medium text-lg">Bu sorguya eşleşen veri protokolü bulunamadı.</p>
+                    </motion.div>
+                  )}
                </div>
              </motion.div>
-             
-             <motion.div 
-               initial={{ opacity: 0, x: 20 }}
-               whileInView={{ opacity: 1, x: 0 }}
-               viewport={{ once: true }}
-               className="space-y-4"
-             >
-                {filteredFaqs.length > 0 ? (
-                  filteredFaqs.map((faq, idx) => (
-                    <FAQItem key={idx} idx={idx} question={faq.q} answer={faq.a} />
-                  ))
-                ) : (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-zinc-900/20 rounded-2xl border border-white/5 border-dashed">
-                    <ShieldAlert className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
-                    <p className="text-slate-400 font-medium text-lg">Bu sorguya eşleşen veri protokolü bulunamadı.</p>
-                  </motion.div>
-                )}
-             </motion.div>
+
           </div>
         </div>
       </section>
