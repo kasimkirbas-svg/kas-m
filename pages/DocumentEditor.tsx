@@ -31,7 +31,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     setFormData(initialData);
 
     if (template.fileUrl) {
-      fetch(template.fileUrl)
+      // fetch with cache-busting to bypass browser caching renamed .doc files
+      fetch(template.fileUrl + "?v=" + new Date().getTime())
         .then(res => {
            if(!res.ok) throw new Error("Dosya bulunamadı veya erişilemiyor.");
            return res.arrayBuffer();
@@ -111,8 +112,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            useBase64URL: true,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Önizleme oluşturulurken veya değişken değiştirilirken hata:", error);
+      setLoadError("Bu şablon okunamadı. Orijinal dosyanın bozuk veya eski (.doc) formatlı olmadığından emin olup tekrar deneyin. Detay: " + (error.message || "Bilinmiyor"));
     }
   };
 
