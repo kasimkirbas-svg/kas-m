@@ -151,6 +151,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                   {field.type === "textarea" && (
                     <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={4} className="w-full px-4 py-3.5 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm resize-none shadow-inner custom-scrollbar" placeholder={field.placeholder || "Veri giriniz..."} />
                   )}
+                  {field.type === "select" && (
+                    <select name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner text-slate-200">
+                      <option value="">Seçiniz...</option>
+                      {field.options?.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  )}
                 </div>
               );
             })}
