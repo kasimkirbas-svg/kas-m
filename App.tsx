@@ -240,7 +240,7 @@ const App = () => {
               </div>
 
               {/* Right Side: Clean Protocol Log (1 Col Wide) */}
-              <div className="lg:col-span-1 bg-[#111111]/40 border border-white/5 p-6 rounded-xl shadow-inner backdrop-blur-xl flex flex-col relative group hover:border-[#FFD700]/30 transition-all duration-500">
+              <div className="lg:col-span-1 bg-[#111111]/40 border border-white/5 p-6 rounded-xl shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-xl flex flex-col relative group hover:border-[#FFD700]/30 transition-all duration-500">
                  <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
                     <div className="flex items-center gap-2">
                        <div className="relative flex items-center justify-center">
@@ -252,21 +252,23 @@ const App = () => {
                  </div>
                  
                  <div className="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar">
-                     <div className="bg-[#0A0A0A] p-3 rounded-lg border border-white/5 hover:border-[#FFD700]/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                     <div className="bg-[#050510] p-4 rounded-lg border border-white/5 hover:border-[#FFD700]/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.4)] relative overflow-hidden">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-500/50 group-hover/item:bg-yellow-500 transition-colors"></div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-bold text-slate-300 group-hover/item:text-white transition-colors truncate pr-2">İskele Kontrol Formu</span>
+                          <span className="text-[11px] font-bold text-slate-300 group-hover/item:text-white transition-colors truncate pr-2">Ağır Sanayi Risk Analizi</span>
                           <ArrowRight size={12} className="text-slate-600 group-hover/item:text-[#FFD700] group-hover/item:translate-x-1 transition-all" />
                         </div>
                         <div className="flex items-center gap-2">
-                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]"></div>
-                           <span className="text-[8px] uppercase font-black tracking-widest text-[#FFD700]/70">Taslak • 14:30</span>
+                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700] shadow-[0_0_5px_rgba(234,179,8,0.8)]"></div>
+                           <span className="text-[8px] uppercase font-black tracking-widest text-[#FFD700]/80">ZAMAN AŞIMI RİSKİ • 14:30</span>
                         </div>
                      </div>
 
-                     <div className="bg-[#0A0A0A] p-3 rounded-lg border border-white/5 hover:border-green-500/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                     <div className="bg-[#050510] p-4 rounded-lg border border-white/5 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.4)] relative overflow-hidden">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500/50 group-hover/item:bg-emerald-500 transition-colors"></div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-bold text-slate-300 group-hover/item:text-white transition-colors truncate pr-2">Aylık Puantaj Tablosu</span>
-                          <ArrowRight size={12} className="text-slate-600 group-hover/item:text-green-500 group-hover/item:translate-x-1 transition-all" />
+                          <span className="text-[11px] font-bold text-slate-300 group-hover/item:text-white transition-colors truncate pr-2">Aylık Puantaj Tablosu</span>
+                          <ArrowRight size={12} className="text-slate-600 group-hover/item:text-emerald-500 group-hover/item:translate-x-1 transition-all" />
                         </div>
                         <div className="flex items-center gap-2">
                            <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
