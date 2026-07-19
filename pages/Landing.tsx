@@ -265,16 +265,28 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[ 
-                { icon: <Factory className="w-8 h-8 text-[#FFD700]"/>, title: "İmalat Tesisleri", desc: "Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları.", category: "Endüstri 4.0", color: "#FFD700" },
-                { icon: <Zap className="w-8 h-8 text-blue-400"/>, title: "Enerji Santralleri", desc: "Yüksek gerilim işlemleri, RES/GES risk rejimleri ve trafo bakım talimatnameleri.", category: "Kritik Tesis", color: "blue-500" },
-                { icon: <HardHat className="w-8 h-8 text-orange-500"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", category: "Ağır Risk", color: "orange-500" },
-                { icon: <Activity className="w-8 h-8 text-pink-500"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", category: "Kritik Operasyon", color: "pink-500" }
+                { icon: <Factory className="w-8 h-8 text-[#FFD700]"/>, title: "İmalat Tesisleri", desc: "Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları.", category: "Endüstri 4.0", color: "#FFD700", video: "fabrika.mp4" },
+                { icon: <Zap className="w-8 h-8 text-blue-400"/>, title: "Enerji Santralleri", desc: "Yüksek gerilim işlemleri, RES/GES risk rejimleri ve trafo bakım talimatnameleri.", category: "Kritik Tesis", color: "blue-500", video: "enerji.mp4" },
+                { icon: <HardHat className="w-8 h-8 text-orange-500"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", category: "Ağır Risk", color: "orange-500", video: "209883_medium.mp4" },
+                { icon: <Activity className="w-8 h-8 text-pink-500"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", category: "Kritik Operasyon", color: "pink-500", video: "40353-425442466_medium.mp4" }
               ].map((item, i) => (
-               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative bg-[#05050A]/60 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[380px]">
-                  <div className="mb-6 w-16 h-16 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-center group-hover:bg-yellow-500/10 transition-all duration-500 group-hover:scale-110">{item.icon}</div>
-                  <span className="px-3 py-1 bg-white/5 text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6">{item.category}</span>
-                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight group-hover:text-yellow-400 transition-colors">{item.title}</h3>
-                  <p className="text-slate-400 text-sm font-light leading-relaxed group-hover:text-slate-200 transition-colors mt-auto mb-4">{item.desc}</p>
+               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative bg-[#05050A]/60 backdrop-blur-xl rounded-3xl overflow-hidden p-8 border border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[380px]">
+                  <video 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline 
+                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-30 transition-opacity duration-700"
+                  >
+                      <source src={`/${item.video}`} type="video/mp4" />
+                  </video>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="mb-6 w-16 h-16 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-center group-hover:bg-yellow-500/10 transition-all duration-500 group-hover:scale-110">{item.icon}</div>
+                    <span className="px-3 py-1 bg-white/5 text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6">{item.category}</span>
+                    <h3 className="text-2xl font-black text-white mb-4 tracking-tight group-hover:text-yellow-400 transition-colors">{item.title}</h3>
+                    <p className="text-slate-400 text-sm font-light leading-relaxed group-hover:text-slate-200 transition-colors mt-auto mb-4">{item.desc}</p>
+                  </div>
                </motion.div>
               ))}
           </div>
