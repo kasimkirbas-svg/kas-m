@@ -197,57 +197,59 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         </div>
       </motion.header>
 
-      {/* Hero Section Masterpiece */}
-      <section className="relative pt-48 pb-32 px-6 min-h-screen flex items-center justify-center overflow-hidden z-10">
-        
-        {/* Decorative Sci-Fi Rings in Background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-yellow-500/5 rounded-full animate-[spin_60s_linear_infinite] pointer-events-none"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-yellow-500/10 rounded-full border-dashed animate-[spin_40s_linear_reverse_infinite] pointer-events-none"></div>
+      {/* Hero Section floating Island */}
+      <section className="relative pt-40 pb-32 px-6 min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
+        <div className="max-w-6xl mx-auto w-full relative z-20 rounded-[3rem] overflow-hidden bg-[#0A0D14]/80 backdrop-blur-2xl border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)] mt-10">
+             <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-luminosity">
+                <source src="/159052-818026310_medium.mp4" type="video/mp4" />
+             </video>
+             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/80 to-black/60"></div>
+             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(234,179,8,0.1)_0%,rgba(0,0,0,0)_80%)]"></div>
 
-        <div className="max-w-5xl mx-auto text-center relative z-20">
-          
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[1.05]"
-          >
-            <span className="text-white">İş Sağlığı ve Güvenliği</span> <br/>
-            <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]">
-              Dijital Mimarisi
-            </span>
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-lg md:text-2xl text-slate-400 mb-14 max-w-3xl mx-auto font-light leading-relaxed"
-          >
-            Gerçek zamanlı form yönetimi, mevzuata tam uyumlu otonom belgeler ve 
-            kapsamlı OSGB altyapısı ile operasyonlarınızı ışık hızında yönetin.
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-          >
-            <button 
-              onClick={onRegisterClick}
-              className="relative w-full sm:w-auto px-10 py-5 bg-[#FFD700] text-black font-black uppercase text-sm tracking-[0.2em] hover:-translate-y-1 transition-all flex items-center justify-center gap-3 overflow-hidden group shadow-[0_0_20px_rgba(255,215,0,0.3)] border border-[#FFD700]/50"
-            >
-              <div className="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
-              SİSTEME KAYIT OL <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button 
-              onClick={onLoginClick}
-              className="w-full sm:w-auto px-10 py-5 bg-[#111111] text-[#FFD700] font-bold uppercase text-sm tracking-[0.2em] hover:bg-[#1a1a1a] border border-white/10 transition-all flex items-center justify-center gap-2"
-            >
-              <Target className="w-5 h-5 text-[#FFD700]" /> SİSTEME GİRİŞ YAP
-            </button>
-          </motion.div>
+             <div className="relative z-10 px-8 py-20 lg:py-32 lg:px-24 text-center">
+                 <motion.h1 
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[1.05]"
+                 >
+                    <span className="text-white">İş Sağlığı ve Güvenliği</span> <br/>
+                    <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]">
+                      Dijital Mimarisi
+                    </span>
+                 </motion.h1>
+                 
+                 <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                    className="text-lg md:text-2xl text-slate-300 mb-14 max-w-3xl mx-auto font-light leading-relaxed"
+                 >
+                    Gerçek zamanlı form yönetimi, mevzuata tam uyumlu otonom belgeler ve 
+                    kapsamlı OSGB altyapısı ile operasyonlarınızı ışık hızında yönetin.
+                 </motion.p>
+                 
+                 <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.8 }}
+                    className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                 >
+                    <button 
+                      onClick={onRegisterClick}
+                      className="relative w-full sm:w-auto px-10 py-5 bg-[#FFD700] text-black font-black uppercase text-sm tracking-[0.2em] hover:-translate-y-1 transition-all flex items-center justify-center gap-3 overflow-hidden group shadow-[0_0_20px_rgba(255,215,0,0.3)] border border-[#FFD700]/50 rounded-xl"
+                    >
+                      <div className="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
+                      SİSTEME KAYIT OL <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    <button 
+                      onClick={onLoginClick}
+                      className="w-full sm:w-auto px-10 py-5 bg-black/50 backdrop-blur-md text-[#FFD700] font-bold uppercase text-sm tracking-[0.2em] hover:bg-black/80 border border-[#FFD700]/30 transition-all flex items-center justify-center gap-2 rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                    >
+                      <Target className="w-5 h-5 text-[#FFD700]" /> SİSTEME GİRİŞ YAP
+                    </button>
+                 </motion.div>
+             </div>
         </div>
       </section>
 
