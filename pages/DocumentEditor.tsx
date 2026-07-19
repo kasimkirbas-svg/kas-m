@@ -56,7 +56,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
   const updatePreview = async (buffer: ArrayBuffer, data: Record<string, any>) => {
     try {
-      const zip = new PizZip(buffer);
+      // ÖNEMLİ: ArrayBuffer her karakter girildiğinde yeniden kullanılıyor. 
+      // PizZip orijinal buffer'ı modifiye ettiği için etiketler kayboluyordu. 
+      // buffer.slice(0) ile klonlayarak her seferinde tertemiz bir docx kopyası ile çalışmasını sağlıyoruz!
+      const zip = new PizZip(buffer.slice(0));
       
       const imageOptions = {
         centered: false,
