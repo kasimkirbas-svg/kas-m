@@ -17,7 +17,13 @@ export interface User {
   role: UserRole;
   plan: SubscriptionPlan;
   remainingDownloads: number | 'UNLIMITED';
+  accountType?: 'individual' | 'osgb';
+  phone?: string;
+  profession?: 'İSG Uzmanı' | 'İSG Teknikeri' | 'İşveren';
   companyName?: string;
+  taxNumber?: string;
+  taxOffice?: string;
+  address?: string;
 }
 
 export interface DocumentTemplate {

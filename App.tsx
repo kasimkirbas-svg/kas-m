@@ -48,6 +48,7 @@ const App = () => {
     }
   });
   const [showSplash, setShowSplash] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [currentView, setCurrentView] = useState(() => {
     const view = localStorage.getItem('isg_view');
     return view && view !== "undefined" ? view : 'landing';
@@ -110,8 +111,8 @@ const App = () => {
     if (currentView === 'landing') {
       return (
         <Landing 
-          onLoginClick={() => setCurrentView('auth')} 
-          onRegisterClick={() => setCurrentView('auth')} 
+          onLoginClick={() => { setAuthMode('login'); setCurrentView('auth'); }} 
+          onRegisterClick={() => { setAuthMode('register'); setCurrentView('auth'); }} 
         />
       );
     }
@@ -119,6 +120,7 @@ const App = () => {
     if (currentView === 'auth') {
       return (
         <Auth 
+          initialMode={authMode}
           onAuthSuccess={handleAuthSuccess}
           onBack={() => setCurrentView('landing')}
         />
