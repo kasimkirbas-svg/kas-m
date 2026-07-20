@@ -1,8 +1,5 @@
-﻿import React, { useEffect, useState, useMemo } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, Hexagon, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
-import type { Engine } from "@tsparticles/engine";
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface LandingProps {
@@ -49,42 +46,16 @@ const FAQItem = ({ question, answer, idx }: { question: string, answer: string, 
 };
 
 export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick }) => {
-  const [init, setInit] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchFaq, setSearchFaq] = useState('');
 
   useEffect(() => {
-    initParticlesEngine(async (engine: Engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const particlesOptions = useMemo(() => ({
-    background: { color: { value: "transparent" } },
-    fpsLimit: 60,
-    interactivity: {
-      events: { onHover: { enable: true, mode: "repulse" } },
-      modes: { repulse: { distance: 100, duration: 0.4 } },
-    },
-    particles: {
-      color: { value: "#eab308" },
-      links: { color: "#eab308", distance: 150, enable: true, opacity: 0.1, width: 1 },
-      move: { direction: "none" as const, enable: true, outModes: { default: "bounce" as const }, random: false, speed: 0.6, straight: false },
-      number: { density: { enable: true, area: 1000 }, value: 40 },
-      opacity: { value: 0.3 },
-      shape: { type: "circle" },
-      size: { value: { min: 1, max: 2 } },
-    },
-    detectRetina: false,
-  }), []);
 
   const navItems = [
     { label: "HAKKIMIZDA", id: "hakkimizda" },
@@ -147,8 +118,6 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
       {/* Sci-Fi Background Layer */}
       <div className="fixed inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] mix-blend-overlay pointer-events-none"></div>
-
-      {init && <Particles id="tsparticles" options={particlesOptions} className="fixed inset-0 z-0 pointer-events-none" />}
 
       {/* Island Navbar */}
       <motion.header 

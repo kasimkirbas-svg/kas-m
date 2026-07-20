@@ -36,9 +36,8 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
   }
 }
 
-const safeTemplates = MOCK_TEMPLATES || [];
-
-const uniqueCategories = Array.from(new Set(safeTemplates.map(t => t.category)));
+const archiveTemplates = MOCK_TEMPLATES || [];
+const uniqueCategories = Array.from(new Set(archiveTemplates.map(t => t.category)));
 const App = () => {
   const [user, setUser] = useState<User | null>(() => {
     try {
@@ -75,9 +74,6 @@ const App = () => {
 
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
 
-  const safeTemplates = React.useMemo(() => MOCK_TEMPLATES || [], []);
-
-
   const getCategoryIcon = (categoryName: string) => {
     const lower = categoryName.toLowerCase();
     if (lower.includes('fabrika')) return <Factory size={24} strokeWidth={1.5} />;
@@ -96,9 +92,6 @@ const App = () => {
     setShowSplash(true);
     setTimeout(() => setShowSplash(false), 5000);
   };
-    setUser(loggedInUser);
-    setCurrentView('dashboard');
-  };
 
   const handleLogout = () => {
     setUser(null);
@@ -106,7 +99,7 @@ const App = () => {
     setSelectedTemplate(null);
   };
 
-  const filteredTemplates = React.useMemo(() => safeTemplates.filter(t => {
+  const filteredTemplates = React.useMemo(() => archiveTemplates.filter(t => {
     const matchesCategory = selectedCategory ? t.category === selectedCategory : true;
     const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           t.category.toLowerCase().includes(searchQuery.toLowerCase());
@@ -432,6 +425,7 @@ const App = () => {
           </div>
         </Layout>
       );
+    }
 
 
     // Ortada boş ekranda kalmaması adına güvenlik dönüşü / Yönlendirme (Eğer sayfa state uyuşmuyorsa)

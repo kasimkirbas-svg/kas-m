@@ -1,9 +1,6 @@
-﻿import React, { useState, useEffect, useMemo } from "react";
+﻿import React, { useState } from "react";
 import { Mail, Lock, LogIn, UserPlus, Fingerprint, Shield, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
-import type { Engine } from "@tsparticles/engine";
 
 interface AuthProps {
   onAuthSuccess?: (user: any) => void;
@@ -17,30 +14,6 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error", text: string } | null>(null);
-  const [init, setInit] = useState(false);
-
-  useEffect(() => {
-    initParticlesEngine(async (engine: Engine) => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-  }, []);
-
-  const particlesOptions = useMemo(() => ({
-    background: { color: { value: "transparent" } },
-    fpsLimit: 60,
-    particles: {
-      color: { value: "#eab308" },
-      links: { color: "#eab308", distance: 200, enable: true, opacity: 0.1, width: 1 },
-      move: { direction: "none" as const, enable: true, outModes: { default: "bounce" as const }, random: false, speed: 0.4, straight: false },
-      number: { density: { enable: true, area: 800 }, value: 40 },
-      opacity: { value: 0.2 },
-      shape: { type: "circle" },
-      size: { value: { min: 1, max: 2 } },
-    },
-    detectRetina: false,
-  }), []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,11 +46,6 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
         <div className="absolute inset-0 bg-white/20 dark:bg-black/50"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-50 dark:via-[#0a0a0a]/50 dark:to-[#0a0a0a]"></div>
       </div>
-
-      {/* Background Particles */}
-      {init && (
-        <Particles id="tsparticles-auth" options={particlesOptions} className="fixed inset-0 z-0 pointer-events-none" />
-      )}
 
        {/* Floating Background Effects */}
        <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} className="absolute top-[20%] left-[20%] w-[500px] h-[500px] bg-yellow-500/10 rounded-full blur-[150px] pointer-events-none z-0" />
