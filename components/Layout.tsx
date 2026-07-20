@@ -15,7 +15,7 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLogout }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
   if (!user) {
     return <div className="min-h-screen bg-transparent">{children}</div>;
@@ -58,7 +58,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
               onClick={() => setShowUserMenu(!showUserMenu)}
             >
               <div className="flex flex-col items-end">
-                <span className="font-bold text-slate-200 text-sm group-hover:text-slate-900 dark:text-white transition-colors">{user.name.split(' ')[0]}</span>
+                <span className="font-bold text-slate-800 dark:text-white text-sm group-hover:text-[#FFD700] transition-colors">{user.name.split(' ')[0]}</span>
                 <span className="text-[10px] text-[#FFD700] font-bold tracking-widest uppercase">{user.role === 'GUEST' ? 'KULLANICI' : 'PREMIUM'}</span>
               </div>
               <div className="w-10 h-10 bg-lightbox dark:bg-darkbox rounded-full flex items-center justify-center text-slate-900 dark:text-white font-bold border border-slate-300 dark:border-white/10 group-hover:border-[#FFD700]/50 transition-colors">
@@ -79,8 +79,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
                   <button onClick={() => { onNavigate('profile'); setShowUserMenu(false); }} className="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-300 hover:bg-white/5 hover:text-slate-900 dark:text-white transition-colors flex items-center gap-2 border-b border-slate-200 dark:border-white/5">
                     <UserIcon size={16} /> Profilim
                   </button>
-                  <button onClick={() => { setTheme(theme === 'dark' ? 'light' : 'dark'); setShowUserMenu(false); }} className="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-300 hover:bg-white/5 hover:text-[#FFD700] transition-colors flex items-center gap-2 border-b border-slate-200 dark:border-white/5">
-                    {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />} Tema Değiştir
+                  <button onClick={() => { setTheme(resolvedTheme === 'dark' ? 'light' : 'dark'); setShowUserMenu(false); }} className="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-[#FFD700] transition-colors flex items-center gap-2 border-b border-slate-200 dark:border-white/5">
+                    {resolvedTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />} Tema Değiştir
                   </button>
                   <button onClick={() => { onNavigate('settings'); setShowUserMenu(false); }} className="w-full text-left px-4 py-3 text-sm text-slate-700 dark:text-slate-300 hover:bg-white/5 hover:text-slate-900 dark:text-white transition-colors flex items-center gap-2 border-b border-slate-200 dark:border-white/5">
                     <Menu size={16} /> Ayarlar

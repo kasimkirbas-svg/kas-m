@@ -30,7 +30,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0A] text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30 w-screen">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0A] text-slate-900 dark:text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30 w-screen">
       
       {/* Background Video Engine */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
@@ -64,7 +64,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
              <div className="w-16 h-16 flex items-center justify-center shrink-0 -ml-2 rounded-full overflow-hidden mix-blend-lighten border border-white/5 shadow-inner">
                  <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain mix-blend-screen drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] group-hover:scale-105 transition-transform duration-500" />
              </div>
-             <span className="text-xl font-black tracking-[0.2em] text-white hidden sm:block -ml-2">
+             <span className="text-xl font-black tracking-[0.2em] text-slate-900 dark:text-white hidden sm:block -ml-2">
                İSG <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_15px_rgba(234,179,8,0.3)]">ZEYRON</span>
              </span>
           </div>
@@ -72,12 +72,12 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
 
       {/* Auth Card Content */}
       <div className="relative z-10 w-full max-w-md p-6 mt-16">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }} className="relative bg-white dark:bg-[#0d1017]/80 backdrop-blur-2xl border border-white/10 p-8 sm:p-10 rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }} className="relative bg-white/95 dark:bg-[#0d1017]/90 backdrop-blur-2xl border border-slate-200 dark:border-white/10 p-8 sm:p-10 rounded-3xl shadow-[0_24px_70px_rgba(15,23,42,0.22)] dark:shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[80px] pointer-events-none mix-blend-screen"></div>
 
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-black text-white mb-2">{isLogin ? "Sisteme Giriş" : "Hesap Oluştur"}</h2>
-            <p className="text-slate-400 text-sm">Bulut tabanlı İSG yönetim paneline erişin.</p>
+            <h2 className="text-3xl font-black text-slate-950 dark:text-white mb-2">{isLogin ? "Sisteme Giriş" : "Hesap Oluştur"}</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Bulut tabanlı İSG yönetim paneline erişin.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -93,7 +93,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Mail className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-500 transition-colors" />
                 </div>
-                <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="block w-full pl-12 pr-4 py-4 border border-white/5 rounded-xl bg-black/40 text-white placeholder-slate-600 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 transition-all font-medium" placeholder="isim@sirket.com" />
+                <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="block w-full pl-12 pr-4 py-4 border border-slate-300 dark:border-white/10 rounded-xl bg-slate-100 dark:bg-black/40 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 transition-all font-medium" placeholder="isim@sirket.com" />
               </div>
             </div>
 
@@ -106,7 +106,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-slate-500 group-focus-within:text-yellow-500 transition-colors" />
                 </div>
-                <input required type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="block w-full pl-12 pr-4 py-4 border border-white/5 rounded-xl bg-black/40 text-white placeholder-slate-600 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 transition-all font-medium" placeholder="••••••••" />
+                <input required type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="block w-full pl-12 pr-4 py-4 border border-slate-300 dark:border-white/10 rounded-xl bg-slate-100 dark:bg-black/40 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 transition-all font-medium" placeholder="••••••••" />
               </div>
             </div>
 
@@ -116,7 +116,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
           </form>
 
            <div className="mt-8 text-center border-t border-white/10 pt-6">
-              <button onClick={() => setIsLogin(!isLogin)} className="text-sm text-slate-400 hover:text-white transition-colors">
+              <button onClick={() => setIsLogin(!isLogin)} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white transition-colors">
                 {isLogin ? <>Hesabınız yok mu? <span className="text-yellow-500 font-semibold hover:underline">Hemen Oluşturun</span></> : <>Zaten üye misiniz? <span className="text-yellow-500 font-semibold hover:underline">Giriş Yapın</span></>}
               </button>
             </div>

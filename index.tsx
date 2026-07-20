@@ -10,7 +10,7 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <React.StrictMode>
-    <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
       <App />
     </ThemeProvider>
   </React.StrictMode>

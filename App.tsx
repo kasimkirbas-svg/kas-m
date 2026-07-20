@@ -144,7 +144,7 @@ const App = () => {
              <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-15">
                <source src="/site23.mp4" type="video/mp4" />
              </video>
-             <div className="absolute inset-0 bg-black/85"></div>
+             <div className="absolute inset-0 bg-slate-100/90 dark:bg-black/85"></div>
           </div>
 
           <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 relative z-10 transition-all duration-700 fade-in">
@@ -411,7 +411,7 @@ const App = () => {
                 </AnimatePresence>
                 
                 {filteredTemplates.length === 0 && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="col-span-full py-20 flex flex-col items-center justify-center text-center bg-[#030406] border border-slate-200 dark:border-white/5 border-dashed rounded-xl">
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="col-span-full py-20 flex flex-col items-center justify-center text-center bg-white dark:bg-[#030406] border border-slate-200 dark:border-white/5 border-dashed rounded-xl">
                     <Target className="w-12 h-12 text-slate-600 mb-4 opacity-50" />
                     <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wide">Bu algoritmaya uygun protokol bulunamadı.</p>
                     <button onClick={() => setSearchQuery('')} className="mt-4 text-yellow-500 text-xs font-bold uppercase tracking-widest hover:underline">Aramayı Temizle</button>
@@ -439,7 +439,7 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-[#05060A] overflow-hidden selection:bg-yellow-500/30">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#05060A] overflow-hidden selection:bg-yellow-500/30">
         {renderContent()}
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes scan {
