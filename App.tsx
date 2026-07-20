@@ -252,46 +252,52 @@ const App = () => {
 
             {currentView === 'dashboard' && (
               <>
-            <div className="mb-9 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)] lg:items-end">
-              <div>
-                <p className="mb-2 text-xs font-semibold text-amber-300">Çalışma alanınız</p>
-                <h1 className="text-3xl sm:text-4xl font-bold text-[#f8fafc]">Merhaba, {user.name.split(' ')[0]}</h1>
-                <p className="mt-2 max-w-xl text-sm sm:text-base text-[#aebbc5]">Sektörünü seç, ihtiyacın olan dokümanı bul ve dakikalar içinde düzenlemeye başla.</p>
+            <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-[#17212a]/90 shadow-[0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
+              <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
+                <div className="relative p-6 sm:p-8 lg:p-10">
+                  <div className="absolute inset-y-0 right-0 hidden w-px bg-white/10 lg:block" />
+                  <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300"><span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_12px_rgba(252,211,77,0.8)]" /> Çalışma alanı aktif</div>
+                  <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Merhaba, {user.name.split(' ')[0]}</h1>
+                  <p className="mt-3 max-w-lg text-sm leading-6 text-[#aebbc5]">Sahadaki işinizi seçin, uygun dokümanı bulun ve düzenlemeye doğrudan başlayın.</p>
+                  <div className="relative z-10 mt-7 flex min-h-14 items-center overflow-hidden rounded-xl border border-white/10 bg-[#0f171d]/80 shadow-inner focus-within:border-amber-400/70">
+                    <Search className="ml-4 h-5 w-5 shrink-0 text-amber-300" />
+                    <input type="search" placeholder="Doküman adı veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent px-4 py-4 text-sm font-medium text-white placeholder-[#71818d] focus:outline-none"/>
+                    {searchQuery && <button onClick={() => setSearchQuery('')} className="p-3 text-[#71818d] hover:text-white" aria-label="Aramayı temizle"><Hexagon className="h-4 w-4" /></button>}
+                    <button type="button" className="self-stretch bg-amber-300 px-6 text-sm font-black text-[#111820] transition-colors hover:bg-amber-200">Ara</button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 divide-x divide-white/10 bg-[#111a21]/60 lg:grid-cols-1 lg:divide-x-0 lg:divide-y">
+                  <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><FolderOpen className="hidden h-5 w-5 text-cyan-300 sm:block" /><div><strong className="block text-xl font-black text-white">{MOCK_TEMPLATES.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Hazır şablon</span></div></div>
+                  <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><Briefcase className="hidden h-5 w-5 text-amber-300 sm:block" /><div><strong className="block text-xl font-black text-white">{uniqueCategories.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Uzmanlık alanı</span></div></div>
+                  <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><CheckCircle2 className="hidden h-5 w-5 text-emerald-300 sm:block" /><div><strong className="block text-xl font-black text-white">%100</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Düzenlenebilir</span></div></div>
+                </div>
               </div>
-            <div className="relative z-10 flex border border-white/10 shadow-[0_14px_36px_rgba(0,0,0,0.18)] rounded-lg focus-within:border-amber-400/70 transition-colors bg-[#1a232b]/90 items-center justify-between w-full overflow-hidden backdrop-blur-xl">
-              <div className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
-                <Search className="w-5 h-5 text-yellow-600 dark:text-yellow-300 ml-4 shrink-0" />
-                <input type="search" placeholder="Doküman veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent border-none px-2 sm:px-3 py-4 text-white placeholder-[#82909b] focus:outline-none font-medium text-sm"/>
-                {searchQuery && <button onClick={() => setSearchQuery('')} className="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" aria-label="Aramayı temizle"><Hexagon className="w-5 h-5" /></button>}
-                <button type="button" className="self-stretch px-5 sm:px-7 bg-yellow-400 text-[#17180f] font-bold text-sm hover:bg-yellow-300 transition-colors">Ara</button>
-              </div>
-            </div>
-            </div>
+            </section>
 
             {/* Sub System Engine (Categories) First */}
             <motion.div 
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.6, delay: 0.3 }}
-               className="mb-11 w-full"
+               className="mb-9 w-full"
             >
               <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
                 <div><h2 className="text-lg font-bold text-[#f8fafc]">Sektörler</h2><p className="text-sm text-[#93a2ad]">İçeriği çalışma alanına göre filtreleyin</p></div>
                 {selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 hover:underline">Filtreyi kaldır</button>}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 relative z-10">
+              <div className="scrollbar-hidden relative z-10 flex snap-x gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-5 lg:overflow-visible xl:grid-cols-6">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`col-span-1 h-24 rounded-lg transition-all duration-300 relative group overflow-hidden bg-[#22271f] text-left ${
+                  className={`h-[82px] w-[210px] shrink-0 snap-start rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#182129] text-left lg:w-auto ${
                     selectedCategory === null 
                       ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
                       : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
                   }`}
                 >
-                  <div className="absolute inset-0 bg-slate-100 dark:bg-[#0A0A0A]">
+                  <div className="absolute inset-0 bg-[#10171d]">
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity mix-blend-overlay"></div>
-                    <div className={`absolute inset-0 ${selectedCategory === null ? 'bg-gradient-to-r from-[#26301f]/95 to-[#7b6917]/70' : 'bg-[#20251e]/70'}`}></div>
+                    <div className={`absolute inset-0 ${selectedCategory === null ? 'bg-gradient-to-r from-[#5c5015]/95 to-[#8d7618]/65' : 'bg-[#111a21]/76'}`}></div>
                   </div>
                   <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-black/40 border border-white/10"><ShieldAlert size={20} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} /></span>
@@ -303,15 +309,15 @@ const App = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`col-span-1 h-24 rounded-lg transition-all duration-300 relative group overflow-hidden bg-[#22271f] text-left ${
+                    className={`h-[82px] w-[210px] shrink-0 snap-start rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#182129] text-left lg:w-auto ${
                       selectedCategory === category 
                         ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
                         : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
                     }`}
                   >
-                    <div className="absolute inset-0 bg-[#232821]">
+                    <div className="absolute inset-0 bg-[#182129]">
                        <img src={getCategoryImage(category)} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-55 group-hover:opacity-70 transition-all duration-500 group-hover:scale-105" />
-                      <div className={`absolute inset-0 bg-gradient-to-r ${selectedCategory === category ? 'from-[#394027]/95 to-[#806e1d]/55' : 'from-[#171b16]/90 to-[#171b16]/35'}`}></div>
+                      <div className={`absolute inset-0 bg-gradient-to-r ${selectedCategory === category ? 'from-[#625616]/95 to-[#8a721b]/50' : 'from-[#10171d]/95 to-[#10171d]/32'}`}></div>
                     </div>
                     <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
                       <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-black/40 ${selectedCategory === category ? "text-[#FFD700]" : "text-white"}`}>
@@ -335,7 +341,7 @@ const App = () => {
                 <div><h2 className="text-lg font-bold text-[#f8fafc]">Doküman arşivi</h2><p className="text-sm text-[#93a2ad]">{filteredTemplates.length} düzenlenebilir şablon</p></div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 relative z-10">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 relative z-10">
                 <AnimatePresence>
                   {filteredTemplates.map((template, idx) => (
                     <motion.div 
@@ -345,7 +351,7 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-[#1a232b]/95 border border-white/10 hover:border-amber-400/50 p-4 relative group overflow-hidden transition-all duration-300 shadow-[0_12px_32px_rgba(0,0,0,0.18)] hover:bg-[#202b34] hover:shadow-[0_18px_40px_rgba(0,0,0,0.24)] flex min-h-[176px] rounded-lg backdrop-blur-md"
+                      className="bg-[#18222a]/95 border border-white/10 hover:border-amber-400/50 p-5 relative group overflow-hidden transition-all duration-300 shadow-[0_12px_32px_rgba(0,0,0,0.16)] hover:bg-[#202c35] hover:-translate-y-0.5 hover:shadow-[0_20px_44px_rgba(0,0,0,0.25)] flex min-h-[158px] rounded-xl backdrop-blur-md before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-cyan-400 before:opacity-0 hover:before:opacity-100"
                     >
                       {/* Background Detail */}
                       <div className="flex w-full flex-col relative z-10">
@@ -359,7 +365,7 @@ const App = () => {
                       </div>
 
                       <div className="relative z-10 flex-1">
-                        <h4 className="text-[#f1f5f9] font-semibold mb-2 leading-snug group-hover:text-white transition-all line-clamp-2 text-sm">
+                        <h4 className="text-[#f1f5f9] font-bold mb-2 leading-snug group-hover:text-white transition-all line-clamp-2 text-[15px]">
                           {getDocumentTitle(template.id, template.title)}
                         </h4>
                         <div className="flex items-center gap-2 mt-auto">

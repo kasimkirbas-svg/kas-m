@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer utilities {
+  .scrollbar-hidden {
+    scrollbar-width: none;
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
   .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
   }
