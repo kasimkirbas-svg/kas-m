@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, Hexagon, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin, Menu, X, Users, Cloud, MonitorSmartphone, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface LandingProps {
@@ -14,7 +14,7 @@ const FAQItem = ({ question, answer, idx }: { question: string, answer: string, 
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: idx * 0.1 }}
+      transition={{ duration: 0.5, delay: Math.min(idx * 0.05, 0.3) }}
       className={`border ${isOpen ? 'border-yellow-500/50 shadow-[0_12px_30px_rgba(202,138,4,0.12)] dark:shadow-[0_0_15px_rgba(234,179,8,0.15)] bg-yellow-50 dark:bg-yellow-500/5' : 'border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/30 hover:border-yellow-500/40 hover:bg-slate-50 dark:hover:bg-zinc-800/50'} rounded-lg mb-4 overflow-hidden transition-all duration-300`}
     >
       <button 
@@ -48,6 +48,7 @@ const FAQItem = ({ question, answer, idx }: { question: string, answer: string, 
 export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick }) => {
   const [scrolled, setScrolled] = useState(false);
   const [searchFaq, setSearchFaq] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,8 +59,9 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   }, []);
 
   const navItems = [
-    { label: "HAKKIMIZDA", id: "hakkimizda" },
-    { label: "AVANTAJLAR", id: "avantajlar" },
+    { label: "Platform", id: "hakkimizda" },
+    { label: "Avantajlar", id: "avantajlar" },
+    { label: "Kimler İçin", id: "kimler-icin" },
     { label: "S.S.S", id: "sss" }
   ];
 
@@ -68,6 +70,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
     const element = document.getElementById(id);
     if (element) {
       window.scrollTo({ top: element.offsetTop - 80, behavior: 'smooth' });
+      setMobileMenuOpen(false);
     }
   };
 
@@ -76,18 +79,44 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
     { q: "2. İSG Zeyron'u kimler kullanabilir?", a: "A, B ve C sınıfı İş Güvenliği Uzmanları, İSG Teknikerleri, OSGB'ler, az tehlikeli sınıfta kendi İSG hizmetini yürüten işverenler ve İSG süreçlerini dijital ortamda yönetmek isteyen tüm işletmeler kullanabilir." },
     { q: "3. Program kurulumu gerekiyor mu?", a: "Hayır. İSG Zeyron tamamen web tabanlıdır. Herhangi bir program indirmenize veya kurmanıza gerek yoktur." },
     { q: "4. Hangi cihazlardan kullanabilirim?", a: "Bilgisayar, dizüstü bilgisayar, tablet ve internet tarayıcısı bulunan akıllı telefonlardan güvenle kullanılabilir." },
-    { q: "8. Dokümanlar sistemde kayıt altına alınıyor mu?", a: "Hayır. Hazırlanan belgeler sistemde kalıcı saklanmaz kullanıcı kendi cihazına indirir." },
-    { q: "9. Verilerim güvende mi?", a: "Evet. Hizmetlerimiz KVKK hükümleri doğrultusunda yürütülmektedir, teknik/idari güvenlik tamdır." },
-    { q: "10. Excel veya Word bilgisi gerekiyor mu?", a: "Hayır. Arayüzümüz eğitim/bilgi gerektirmeyecek kadar basittir." },
-    { q: "28. Kendi notlarımı ekleyebilir miyim?", a: "Evet, sadece standart şablonlardan ibaret değildir, özel saptamalarınızı ekleyebilirsiniz." }
+    { q: "5. Mobil uygulaması var mı?", a: "İSG Zeyron tarayıcı üzerinden çalışan mobil uyumlu bir platformdur. Telefonunuzun 'Ana Ekrana Ekle' özelliğiyle uygulama benzeri şekilde kullanabilirsiniz." },
+    { q: "6. Mac bilgisayarlarda çalışıyor mu?", a: "Evet. Windows, macOS ve Linux işletim sistemlerinde güncel internet tarayıcıları üzerinden kullanılabilir." },
+    { q: "7. İnternet olmadan kullanılabilir mi?", a: "Hayır. İSG Zeyron bulut tabanlı bir platform olduğu için aktif internet bağlantısı gerektirir." },
+    { q: "8. Dokümanlar sistemde kayıt altına alınıyor mu?", a: "Oluşturulan Word dosyasının kendisi sunucuda kalıcı olarak saklanmaz; cihazınıza indirilir. Çalışmaya devam edebilmeniz için form taslakları ve doküman geçmişi hesabınızla güvenli şekilde eşitlenebilir." },
+    { q: "9. Verilerim güvende mi?", a: "Kullanıcı hesapları doğrulamalı kimlik sistemiyle korunur. Hesaba bağlı veriler erişim politikalarıyla yalnızca ilgili kullanıcıya açılır; teknik ve idari güvenlik tedbirleri uygulanır." },
+    { q: "10. Excel veya Word bilgisi gerekiyor mu?", a: "Hayır. Kullanıcı dostu alanları doldurmanız yeterlidir; sistem verileri dokümana otomatik olarak işler." },
+    { q: "11. Dokümanlar güncel mevzuata uygun mu?", a: "Şablonlar yürürlükteki mevzuat ve sektörel ihtiyaçlar esas alınarak hazırlanır; değişiklikler doğrultusunda içeriklerin güncellenmesi hedeflenir. Nihai mesleki kontrol kullanıcı sorumluluğundadır." },
+    { q: "12. Oluşturduğum dokümanları düzenleyebilir miyim?", a: "Evet. Geçmişteki form verilerinizi yeniden açabilir, güncelleyebilir ve indirilen Word dokümanını iş yerinizin ihtiyaçlarına göre düzenleyebilirsiniz." },
+    { q: "13. Abonelik sistemi nasıl çalışır?", a: "Paketler kullanım kotası ve sürelerine göre planlanmıştır. Ödeme altyapısı şu anda hazırlık aşamasındadır; doğrulanmış ödeme olmadan ücretli plan etkinleştirilmez." },
+    { q: "14. Aboneliğimi istediğim zaman iptal edebilir miyim?", a: "Ödeme ve abonelik sistemi açıldığında iptal işlemleri yürürlükteki abonelik ve kullanım koşulları çerçevesinde sunulacaktır." },
+    { q: "15. Güncellemeler için ek ücret ödeyecek miyim?", a: "Aktif abonelik kapsamında sunulan sistem ve şablon güncellemeleri için ayrıca ücret alınması planlanmamaktadır." },
+    { q: "16. Teknik destek hizmeti sunuyor musunuz?", a: "Evet. Kullanıcılar destek taleplerini platformdaki destek kanalı üzerinden iletebilir." },
+    { q: "17. Hesabımı farklı cihazlardan kullanabilir miyim?", a: "Evet. Doğrulanmış hesabınıza internet bağlantısı bulunan farklı cihazlardan güvenli şekilde giriş yapabilirsiniz." },
+    { q: "18. Ödemeler güvenli mi?", a: "Ödeme özelliği henüz aktif değildir. Devreye alındığında tahsilatlar güvenli bir ödeme sağlayıcısı ve sunucu tarafı doğrulama üzerinden gerçekleştirilecektir." },
+    { q: "19. İSG Zeyron'u kullanmak için teknik bilgi gerekir mi?", a: "Hayır. Platform, farklı teknik bilgi seviyelerindeki kullanıcıların rahatça kullanabileceği şekilde tasarlanmıştır." },
+    { q: "20. Yeni özellikler eklenecek mi?", a: "Evet. Kullanıcı geri bildirimleri, mevzuat ve sektörel ihtiyaçlar doğrultusunda yeni modül ve özelliklerin düzenli olarak eklenmesi hedeflenmektedir." },
+    { q: "21. Demo sürümü veya deneme erişimi sunuluyor mu?", a: "Ücretsiz deneme sürümü sunulmamaktadır. Tek doküman oluşturma seçeneği ödeme altyapısıyla birlikte duyurulacaktır." },
+    { q: "22. Destek taleplerime ne kadar sürede dönüş yapılır?", a: "Talepler yoğunluk durumuna göre mümkün olan en kısa sürede değerlendirilir ve kullanıcıya geri dönüş sağlanır." },
+    { q: "23. Hangi internet tarayıcıları desteklenir?", a: "Google Chrome, Microsoft Edge, Safari, Mozilla Firefox ve güncel Chromium tabanlı tarayıcılarla uyumludur." },
+    { q: "24. Dokümanları PDF olarak indirebilir miyim?", a: "Platform şu anda düzenlenebilir Word (DOCX) çıktısı üretir. PDF gerekiyorsa indirdiğiniz dosyayı Word veya uyumlu bir uygulama üzerinden PDF olarak kaydedebilirsiniz." },
+    { q: "25. İSG Zeyron sürekli geliştirilecek mi?", a: "Evet. Platformun sektördeki gelişmelere ve kullanıcı taleplerine göre sürekli güncellenmesi hedeflenmektedir." },
+    { q: "26. Aylık kullanım haklarım sonraki aya devreder mi?", a: "Ücretli paketler açıldığında kullanılmayan aylık hakların sonraki döneme devretmemesi ve her abonelik döneminde yenilenmesi planlanmaktadır." },
+    { q: "27. Deneme sürümü sunuyor musunuz?", a: "Hayır. Kötüye kullanımı önlemek amacıyla ücretsiz deneme planlanmamaktadır; düşük maliyetli tek doküman hizmeti ödeme sistemiyle birlikte sunulacaktır." },
+    { q: "28. Kendi notlarımı ve değerlendirmelerimi ekleyebilir miyim?", a: "Evet. Özellikle risk değerlendirmesi ve teknik dokümanlarda kendi tespit, öneri ve özel notlarınızı ilgili alanlara ekleyerek iş yerine ve mesleki yaklaşımınıza göre özelleştirebilirsiniz." }
   ];
 
   const filteredFaqs = faqs.filter(f => f.q.toLowerCase().includes(searchFaq.toLowerCase()) || f.a.toLowerCase().includes(searchFaq.toLowerCase()));
 
   const advantages = [
-    { icon: <Shield className="w-6 h-6 text-[#FFD700]" />, title: "Mevzuata Uygunluk", desc: "Tüm form ve planlar güncel A Sınıfı İSG mevzuatına göre oluşturulur." },
-    { icon: <Cpu className="w-6 h-6 text-[#FFD700]" />, title: "Dijital Altyapı", desc: "Kağıt yığınlarını unutun. Sistem veriyi saniyeler içinde dokümana çevirir." },
-    { icon: <Zap className="w-6 h-6 text-[#FFD700]" />, title: "Pratik Kullanım", desc: "Excel veya Word bilgisi gerekmeden tek panelden otomasyon." }
+    { icon: <Shield className="w-6 h-6" />, title: "Mevzuata Uygun Yönetim", desc: "İSG şablonlarını yürürlükteki mevzuat ve sektörel ihtiyaçlar doğrultusunda yönetin." },
+    { icon: <FileText className="w-6 h-6" />, title: "Düzenlenebilir Belgeler", desc: "Hazır alanları doldurun, önizleyin ve düzenlenebilir Word çıktısı oluşturun." },
+    { icon: <Activity className="w-6 h-6" />, title: "Risk ve Süreç Dokümanları", desc: "Risk değerlendirmesi, plan, tutanak, form ve raporları tek çalışma alanında hazırlayın." },
+    { icon: <Cpu className="w-6 h-6" />, title: "Tek Panel", desc: "Doküman hazırlama, taslak ve geçmiş işlemlerini dağınık araçlar olmadan yönetin." },
+    { icon: <Zap className="w-6 h-6" />, title: "Pratik Kullanım", desc: "Excel veya ileri Word bilgisi gerektirmeyen yönlendirilmiş alanlarla çalışın." },
+    { icon: <Cloud className="w-6 h-6" />, title: "Bulut Tabanlı Erişim", desc: "İnternet bağlantısı olan farklı cihazlardan doğrulanmış hesabınıza erişin." },
+    { icon: <Search className="w-6 h-6" />, title: "Hızlı Arşiv", desc: "Doküman geçmişinizi arayın, form verilerini yeniden açın ve çalışmaya devam edin." },
+    { icon: <MonitorSmartphone className="w-6 h-6" />, title: "Tüm Ekranlara Uyum", desc: "Bilgisayar, tablet ve telefon tarayıcılarında responsive çalışma deneyimi kullanın." },
+    { icon: <Eye className="w-6 h-6" />, title: "Sürekli Gelişim", desc: "Yeni şablonlar, mevzuat ihtiyaçları ve kullanıcı geri bildirimleriyle gelişen altyapıdan yararlanın." }
   ];
 
   const targetUsers = [
@@ -118,7 +147,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="fixed top-0 w-full z-50 transition-all duration-500 py-3 sm:py-4 bg-transparent flex items-center justify-between px-3 sm:px-6"
+        className={`fixed top-0 w-full z-50 transition-all duration-500 py-3 sm:py-4 flex items-center justify-between px-3 sm:px-6 ${scrolled ? 'bg-[#0c141a]/88 backdrop-blur-xl border-b border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.22)]' : 'bg-transparent'}`}
       >
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between relative">
           
@@ -155,7 +184,22 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             <button onClick={onLoginClick} className="hidden md:block text-xs font-black text-yellow-600 dark:text-yellow-500 hover:text-slate-900 dark:hover:text-white transition-colors tracking-widest uppercase">
               GİRİŞ YAP
             </button>
+            <button type="button" onClick={() => setMobileMenuOpen(open => !open)} className="lg:hidden w-11 h-11 rounded-lg border border-white/15 bg-[#111b22]/90 text-amber-300 flex items-center justify-center" aria-label={mobileMenuOpen ? 'Menüyü kapat' : 'Menüyü aç'} aria-expanded={mobileMenuOpen}>
+              {mobileMenuOpen ? <X size={21} /> : <Menu size={22} />}
+            </button>
           </div>
+
+          <AnimatePresence>
+            {mobileMenuOpen && <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="absolute top-[76px] inset-x-0 mx-1 rounded-xl border border-white/10 bg-[#111b22]/98 p-3 shadow-[0_24px_60px_rgba(0,0,0,0.4)] backdrop-blur-2xl lg:hidden">
+              <nav className="grid gap-1" aria-label="Mobil ana menü">
+                {navItems.map(item => <a key={item.id} href={`#${item.id}`} onClick={event => scrollToSection(item.id, event)} className="min-h-11 px-4 rounded-lg flex items-center justify-between text-sm font-bold text-slate-200 hover:bg-white/5 hover:text-amber-300">{item.label}<ChevronRight size={16} /></a>)}
+              </nav>
+              <div className="grid grid-cols-2 gap-2 pt-3 mt-2 border-t border-white/10">
+                <button onClick={() => { setMobileMenuOpen(false); onRegisterClick(); }} className="min-h-11 rounded-lg bg-amber-400 text-[#101820] text-xs font-black uppercase">Kayıt Ol</button>
+                <button onClick={() => { setMobileMenuOpen(false); onLoginClick(); }} className="min-h-11 rounded-lg border border-white/10 bg-white/5 text-white text-xs font-black uppercase">Giriş Yap</button>
+              </div>
+            </motion.div>}
+          </AnimatePresence>
         </div>
       </motion.header>
 
@@ -171,9 +215,9 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 sm:mb-8 leading-[1.05]"
                  >
-                    <span className="text-slate-900 dark:text-white">İş Sağlığı ve Güvenliği</span> <br/>
+                    <span className="text-slate-900 dark:text-white">İSG Zeyron Teknoloji</span> <br/>
                     <span className="text-[#c58a00] dark:text-[#FFD700] drop-shadow-[0_8px_18px_rgba(197,138,0,0.16)] dark:drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]">
-                      Dijital Mimarisi
+                      Akıllı Yönetim Platformu
                     </span>
                  </motion.h1>
                  
@@ -183,8 +227,8 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     transition={{ duration: 0.8, delay: 0.6 }}
                     className="text-base sm:text-lg md:text-2xl text-slate-700 dark:text-slate-300 mb-10 sm:mb-14 max-w-3xl mx-auto font-light leading-relaxed"
                  >
-                    Gerçek zamanlı form yönetimi, mevzuata tam uyumlu otonom belgeler ve 
-                    kapsamlı OSGB altyapısı ile operasyonlarınızı ışık hızında yönetin.
+                    İş Sağlığı ve Güvenliği süreçlerini dijitalleştiren; doküman hazırlama,
+                    düzenleme ve yönetimini tek panelde birleştiren bulut tabanlı çalışma alanı.
                  </motion.p>
                  
                  <motion.div 
@@ -251,13 +295,13 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
              
              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative z-10 mb-16">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-[10px] font-black tracking-[0.3em] uppercase mb-8 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.2)]">
-                  <ShieldAlert className="w-3 h-3" /> Neden İSG Zeyron?
+                  <ShieldAlert className="w-3 h-3" /> Platform Hakkında
                 </div>
                 <h2 className="text-4xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
-                  Sıfır Hata, <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">Tam Hakimiyet</span>
+                  İSG Süreçlerinde <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">Dijital Çalışma Alanı</span>
                 </h2>
                 <p className="text-slate-600 dark:text-slate-400 font-light text-xl max-w-2xl mx-auto leading-relaxed">
-                  Basit bir belge deposu değil; iş süreçlerini baştan sona optimize eden otonom bir <strong className="text-slate-900 dark:text-white font-medium">SaaS İş İstasyonudur.</strong>
+                  İSG profesyonelleri, OSGB'ler ve işletmeler için geliştirilen yeni nesil bulut tabanlı bir <strong className="text-slate-900 dark:text-white font-medium">SaaS yönetim platformudur.</strong>
                 </p>
              </motion.div>
 
@@ -268,8 +312,8 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     <div className="w-14 h-14 rounded-2xl bg-white/5 border border-slate-300 dark:border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30 transition-all duration-500 shadow-lg">
                       <FileText className="w-6 h-6 text-slate-700 dark:text-slate-300 group-hover:text-yellow-400 transition-colors" />
                     </div>
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Otonom Belgelendirme</h3>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">Uygulamalarda zamanın büyük bir bölümü belge hazırlamakla geçer. Dijital altyapımız ile bu yükü sıfıra indirerek asıl odak noktanız olan <span className="text-yellow-500 font-medium">"Güvenliğe"</span> odaklanmanızı sağlıyoruz.</p>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Doküman Süreçlerini Birleştirin</h3>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">Hazırlama, düzenleme, taslak ve geçmiş işlemlerini tek sistem altında birleştirerek daha hızlı ve düzenli çalışın. Zamanınızı belge operasyonu yerine <span className="text-yellow-500 font-medium">iş sağlığı ve güvenliği faaliyetlerine</span> ayırın.</p>
                   </div>
                 </motion.div>
 
@@ -279,11 +323,30 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     <div className="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/20 transition-all duration-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
                       <Cpu className="w-6 h-6 text-yellow-400" />
                     </div>
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Akıllı SaaS İstasyonu</h3>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">Ekiplerinizi, sahadaki riskleri ve mevzuat süreçlerini tek bir platformda birleştirin. Süreçlerinizi hızlandırırken maliyet ve zamandan tasarruf edin.</p>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Her Yerden Güvenli Erişim</h3>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">Kurulum gerektirmeyen web altyapısıyla bilgisayar, tablet ve telefon tarayıcısından hesabınıza erişin. Mobil cihazlarda ana ekrana ekleyerek uygulama benzeri kullanım deneyimi elde edin.</p>
                   </div>
                 </motion.div>
              </div>
+        </div>
+      </section>
+      <section id="avantajlar" className="relative z-10 py-20 sm:py-28 px-4 sm:px-6 border-y border-white/5 bg-[#101a20]/45">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-3xl mb-12"><p className="text-amber-400 text-xs font-black tracking-[0.28em] uppercase">Platformun Sağladığı Avantajlar</p><h2 className="mt-4 text-3xl sm:text-5xl font-black text-white">Daha az operasyon, daha fazla saha odağı</h2><p className="mt-4 text-slate-400 text-lg leading-relaxed">Günlük İSG doküman işlerini sadeleştiren, düzenli ve erişilebilir bir çalışma düzeni.</p></div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px rounded-xl overflow-hidden border border-white/10 bg-white/10">
+            {advantages.map(item => <article key={item.title} className="min-h-52 p-6 sm:p-8 bg-[#16242c] hover:bg-[#1b2c35] transition-colors"><div className="w-11 h-11 rounded-lg bg-cyan-300/10 border border-cyan-300/10 text-cyan-300 flex items-center justify-center">{item.icon}</div><h3 className="mt-6 text-lg font-black text-white">{item.title}</h3><p className="mt-3 text-sm leading-relaxed text-slate-400">{item.desc}</p></article>)}
+          </div>
+        </div>
+      </section>
+
+      <section id="kimler-icin" className="relative z-10 py-20 sm:py-28 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-start">
+          <div><div className="w-12 h-12 rounded-lg bg-amber-400/10 text-amber-300 border border-amber-300/15 flex items-center justify-center"><Users size={24} /></div><h2 className="mt-6 text-3xl sm:text-5xl font-black text-white">Kimler için uygundur?</h2><p className="mt-5 text-lg leading-relaxed text-slate-400">Platform; uzmanların, teknikerlerin, OSGB ekiplerinin ve kendi İSG hizmetini yürüten işverenlerin gerçek doküman ihtiyaçları dikkate alınarak tasarlanmıştır.</p></div>
+          <div className="grid gap-3">{targetUsers.map(userType => <div key={userType} className="min-h-16 px-5 py-4 rounded-lg border border-white/10 bg-[#18252d]/90 flex items-center gap-4 text-slate-200"><CheckCircle2 className="text-amber-300 shrink-0" size={20} /><span className="font-semibold">{userType}</span></div>)}</div>
+        </div>
+        <div className="max-w-7xl mx-auto mt-16 grid md:grid-cols-2 gap-5">
+          <article className="p-7 sm:p-9 rounded-xl border border-white/10 bg-[#18252d]/90"><MonitorSmartphone className="text-cyan-300" size={26} /><h3 className="mt-5 text-xl font-black text-white">Teknoloji ve Erişim</h3><p className="mt-3 text-slate-400 leading-relaxed">Tamamen web tabanlıdır; program kurulumu gerektirmez. Güncel tarayıcı bulunan bilgisayar, tablet ve telefonlarda çalışır. Aktif internet bağlantısı gerektirir.</p></article>
+          <article className="p-7 sm:p-9 rounded-xl border border-amber-300/15 bg-amber-300/5"><Target className="text-amber-300" size={26} /><h3 className="mt-5 text-xl font-black text-white">Vizyonumuz</h3><p className="mt-3 text-slate-400 leading-relaxed">İSG alanında dijital dönüşüme katkı sağlayan, kullanıcı deneyimini ön planda tutan, güvenilir ve sürekli gelişen kapsamlı bir çalışma platformu oluşturmak.</p></article>
         </div>
       </section>
 {/* Cyber FAQ Section */}
@@ -307,7 +370,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                <div className="space-y-4 text-left">
                   {filteredFaqs.length > 0 ? (
                     filteredFaqs.map((faq, idx) => (
-                      <FAQItem key={idx} idx={idx} question={faq.q} answer={faq.a} />
+                      <FAQItem key={faq.q} idx={idx} question={faq.q} answer={faq.a} />
                     ))
                   ) : (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-zinc-900/20 rounded-2xl border border-slate-200 dark:border-white/5 border-dashed">
