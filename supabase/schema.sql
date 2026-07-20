@@ -46,6 +46,12 @@ alter table public.document_drafts enable row level security;
 alter table public.document_history enable row level security;
 alter table public.subscriptions enable row level security;
 
+drop policy if exists "profiles_select_own" on public.profiles;
+drop policy if exists "profiles_update_own" on public.profiles;
+drop policy if exists "drafts_manage_own" on public.document_drafts;
+drop policy if exists "history_manage_own" on public.document_history;
+drop policy if exists "subscriptions_select_own" on public.subscriptions;
+
 create policy "profiles_select_own" on public.profiles for select using (auth.uid() = id);
 create policy "profiles_update_own" on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id);
 create policy "drafts_manage_own" on public.document_drafts for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
