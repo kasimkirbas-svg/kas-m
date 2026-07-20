@@ -16,17 +16,38 @@ const accounts = [
 ];
 
 const credentials = [];
+const { data: existingData, error: listError } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1000 });
+if (listError) throw new Error(`Mevcut kullanıcılar okunamadı: ${listError.message}`);
+
 for (const account of accounts) {
   const password = `${randomBytes(12).toString('base64url')}Aa1!`;
-  const { data, error } = await supabase.auth.admin.createUser({
-    email: account.email,
-    password,
-    email_confirm: true,
-    user_metadata: { name: account.name, accountType: 'individual' },
-  });
-  if (error) throw new Error(`${account.email}: ${error.message}`);
-  const { error: profileError } = await supabase.from('profiles').update({ name: account.name, email: account.email, role: account.role, status: 'active' }).eq('id', data.user.id);
-  if (profileError) throw new Error(`${account.email}: ${profileError.message}`);
+  const existingUser = existingData.users.find(user => user.email?.toLowerCase() === account.email.toLowerCase());
+  let userId;
+  if (existingUser) {
+    const { data, error } = await supabase.auth.admin.updateUserById(existingUser.id, {
+      password,
+      email_confirm: true,
+      user_metadata: { ...existingUser.user_metadata, name: account.name, accountType: 'individual' },
+    });
+    if (error) throw new Error(`${account.email}: ${error.message}`);
+    userId = data.user.id;
+  } else {
+    const { data, error } = await supabase.auth.admin.createUser({
+      email: account.email,
+      password,
+      email_confirm: true,
+      user_metadata: { name: account.name, accountType: 'individual' },
+    });
+    if (error) throw new Error(`${account.email}: ${error.message}`);
+    userId = data.user.id;
+  }
+  const { error: profileError } = await supabase.from('profiles').update({ name: account.name, email: account.email, role: account.role, status: 'active' }).eq('id', userId);
+  if (profileError) {
+    if (profileError.message.includes('schema cache') || profileError.message.includes("'email' column")) {
+      throw new Error('Supabase şeması güncel değil. Önce supabase/schema.sql dosyasının tamamını SQL Editor içinde çalıştırın, ardından bu komutu yeniden çalıştırın.');
+    }
+    throw new Error(`${account.email}: ${profileError.message}`);
+  }
   credentials.push({ role: account.role, email: account.email, password });
 }
 
