@@ -72,7 +72,7 @@
   }
   body {
     @apply min-h-screen text-slate-200;
-    background: #16222a;
+    background: #16222a !important;
   }
 }
 
@@ -94,27 +94,48 @@ select {
   accent-color: #e2bb24;
 }
 
-.dark .theme-settings input:not([type='checkbox']) {
+.theme-settings > div:last-child > div:last-child,
+.theme-settings .bg-white\/90 {
+  background: rgba(24, 37, 45, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.2);
+}
+
+.theme-settings input:not([type='checkbox']) {
   @apply bg-black/30 border-white/10 text-white placeholder-slate-600;
 }
 
-.dark .theme-settings input:disabled {
+.theme-settings input:disabled {
   @apply bg-white/5 text-slate-400;
 }
 
-.dark .theme-settings label,
-.dark .theme-settings .text-slate-700 {
+.theme-settings label,
+.theme-settings .text-slate-700 {
   @apply text-slate-300;
 }
 
-.dark .theme-settings .text-slate-800 {
+.theme-settings .text-slate-800 {
   @apply text-white;
 }
 
-.dark .theme-settings .border-slate-100 {
+.theme-settings .border-slate-100 {
   @apply border-white/5;
 }
 
-.dark .theme-settings .peer.bg-slate-200 {
+.theme-settings .peer.bg-slate-200 {
   @apply bg-white/10;
+}
+
+.workspace-page .text-slate-950,
+.workspace-page .text-slate-800 {
+  @apply text-white;
+}
+
+.workspace-page .text-slate-700,
+.workspace-page .text-slate-600 {
+  @apply text-slate-300;
+}
+
+.workspace-page .text-slate-500 {
+  @apply text-slate-400;
 }
