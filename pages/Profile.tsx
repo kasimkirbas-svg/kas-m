@@ -1,7 +1,7 @@
 import React from 'react';
 import { User, SubscriptionPlan, UserRole } from '../types';
 import { Button } from '../components/Button';
-import { User as UserIcon, Mail, Building, CreditCard, Download, Clock, ShieldCheck } from 'lucide-react';
+import { User as UserIcon, Mail, Building, CreditCard, Download, ShieldCheck, Phone, BriefcaseBusiness, MapPin } from 'lucide-react';
 
 interface ProfileProps {
   user: User;
@@ -42,6 +42,10 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
                 <Mail size={16} className="mr-3 text-slate-400" />
                 {user.email}
               </div>
+              {user.phone && <div className="flex items-center text-sm text-slate-600 dark:text-slate-300"><Phone size={16} className="mr-3 text-slate-400" />{user.phone}</div>}
+              {user.profession && <div className="flex items-center text-sm text-slate-600 dark:text-slate-300"><BriefcaseBusiness size={16} className="mr-3 text-slate-400" />{user.profession}</div>}
+              {user.taxNumber && <div className="flex items-center text-sm text-slate-600 dark:text-slate-300"><ShieldCheck size={16} className="mr-3 text-slate-400" />Vergi No: {user.taxNumber}</div>}
+              {user.address && <div className="flex items-start text-sm text-slate-600 dark:text-slate-300"><MapPin size={16} className="mr-3 mt-0.5 text-slate-400 shrink-0" /><span>{user.address}</span></div>}
             </div>
           </div>
         </div>

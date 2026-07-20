@@ -1,4 +1,5 @@
-﻿import React, { useState, useEffect, useRef } from "react";
+﻿/// <reference path="../vendor.d.ts" />
+import React, { useState, useEffect, useRef } from "react";
 import { DocumentTemplate } from "../types";
 import { ArrowLeft, Download, Settings2, FileText, Eye, SlidersHorizontal } from "lucide-react";
 import { renderAsync } from "docx-preview";
@@ -207,6 +208,20 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       });
       
       saveAs(out, `${template.title}_Doldurulmus.docx`);
+      const historyEntry = {
+        id: crypto.randomUUID(),
+        templateId: template.id,
+        title: template.title,
+        category: template.category,
+        createdAt: new Date().toISOString(),
+        fileName: `${template.title}_Doldurulmus.docx`
+      };
+      try {
+        const history = JSON.parse(localStorage.getItem('isg_document_history') || '[]');
+        localStorage.setItem('isg_document_history', JSON.stringify([historyEntry, ...history].slice(0, 100)));
+      } catch {
+        localStorage.setItem('isg_document_history', JSON.stringify([historyEntry]));
+      }
       onSave(); // return to dashboard
     } catch (error) {
       console.error("İndirme Hatası", error);

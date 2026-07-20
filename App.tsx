@@ -3,6 +3,10 @@ import Landing from './pages/Landing';
 import Auth from './pages/Auth';
 import { DocumentEditor } from './pages/DocumentEditor';
 import { Layout } from './components/Layout';
+import { Profile } from './pages/Profile';
+import { Settings as SettingsPage } from './pages/Settings';
+import { Billing } from './pages/Billing';
+import { DocumentHistory } from './pages/DocumentHistory';
 import type { User, DocumentTemplate } from './types';
 import { 
   Search, Shield, FileText, Download, Briefcase, Factory, HardHat, 
@@ -87,6 +91,16 @@ const App = () => {
     return <FileBox size={24} strokeWidth={1.5} />;
   };
 
+  const getCategoryVideo = (categoryName: string) => {
+    const lower = categoryName.toLocaleLowerCase('tr');
+    if (lower.includes('enerji')) return '/enerji.mp4';
+    if (lower.includes('fabrika') || lower.includes('imalat') || lower.includes('gıda')) return '/fabrika.mp4';
+    if (lower.includes('hava')) return '/40353-425442466_medium.mp4';
+    if (lower.includes('liman') || lower.includes('lojistik')) return '/67467-522170635_medium.mp4';
+    if (lower.includes('maden') || lower.includes('metal')) return '/277105_medium.mp4';
+    return '/209883_medium.mp4';
+  };
+
   const handleAuthSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
     setCurrentView('dashboard');
@@ -137,53 +151,26 @@ const App = () => {
       );
     }
 
-    if (user && ['dashboard', 'profile', 'settings', 'billing'].includes(currentView)) {
+    if (user && ['dashboard', 'profile', 'settings', 'billing', 'history'].includes(currentView)) {
       return (
         <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
           
           {/* Global Dashboard Video Architecture */}
           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-             <video autoPlay loop muted playsInline className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 opacity-15">
-               <source src="/site23.mp4" type="video/mp4" />
+             <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.08] dark:opacity-[0.14]">
+               <source src="/159052-818026310_medium.mp4" type="video/mp4" />
              </video>
-             <div className="absolute inset-0 bg-slate-100/90 dark:bg-black/85"></div>
+             <div className="absolute inset-0 bg-[#eef1f5]/90 dark:bg-black/90"></div>
+             <div className="absolute -top-48 right-[8%] w-[38rem] h-[38rem] rounded-full bg-yellow-400/[0.06] blur-[110px] animate-pulse"></div>
+             <div className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04] bg-[linear-gradient(rgba(234,179,8,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(234,179,8,0.5)_1px,transparent_1px)] bg-[size:48px_48px]"></div>
           </div>
 
           <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 relative z-10 transition-all duration-700 fade-in">
             
-            {/* INJECT PROFILE OR SETTINGS CONTENT IF THEY ARE SELECTED */}
-            {currentView === 'profile' && (
-               <div className="w-full min-h-[55vh] px-5 py-10 flex flex-col items-center justify-center text-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
-                 <UserCheck className="w-16 h-16 text-[#FFD700] mb-4" />
-                 <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-wide sm:tracking-widest">Kullanıcı Arşivi</h2>
-                 <p className="text-slate-600 dark:text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
-                 <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
-                    Sisteme Dön
-                 </button>
-               </div>
-            )}
-            
-            {currentView === 'settings' && (
-               <div className="w-full min-h-[55vh] px-5 py-10 flex flex-col items-center justify-center text-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
-                 <Settings className="w-16 h-16 text-[#FFD700] mb-4 animate-spin-slow" />
-                 <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-wide sm:tracking-widest">Sistem Ayarları</h2>
-                 <p className="text-slate-600 dark:text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
-                 <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
-                    Sisteme Dön
-                 </button>
-               </div>
-            )}
-
-            {currentView === 'billing' && (
-               <div className="w-full min-h-[55vh] px-5 py-10 flex flex-col items-center justify-center text-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
-                 <Crown className="w-16 h-16 text-[#FFD700] mb-4" />
-                 <h2 className="text-xl sm:text-3xl font-black text-[#FFD700] uppercase tracking-wide sm:tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">Sistem Premium</h2>
-                 <p className="text-slate-600 dark:text-slate-400 mt-2">Lisans Yenileme ve Yükseltme modülü aktif ediliyor.</p>
-                 <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
-                    Sisteme Dön
-                 </button>
-               </div>
-            )}
+            {currentView === 'profile' && <Profile user={user} />}
+            {currentView === 'settings' && <SettingsPage user={user} onSave={(changes) => setUser(current => current ? { ...current, ...changes } : current)} />}
+            {currentView === 'history' && <DocumentHistory />}
+            {currentView === 'billing' && <Billing user={user} onSelectPlan={(plan) => setUser(current => current ? { ...current, plan, remainingDownloads: plan === 'YEARLY' ? 'UNLIMITED' : 30 } : current)} />}
 
             <AnimatePresence>
               {currentView === 'dashboard' && showSplash && (
@@ -264,11 +251,12 @@ const App = () => {
             {currentView === 'dashboard' && (
               <>
             {/* Header Layout Engine - Search Only */}
-            <div className="mb-8 relative z-10 flex border border-slate-300 dark:border-white/10 shadow-inner rounded-xl focus-within:border-[#FFD700]/50 transition-colors bg-white dark:bg-[#0A0A0A]/40 items-center justify-between w-full max-w-full">
-              <div className="flex items-center gap-4 w-full">
+            <div className="mb-10 ml-auto relative z-10 flex border border-slate-300 dark:border-white/15 shadow-[0_12px_40px_rgba(15,23,42,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.35)] rounded-xl focus-within:border-[#FFD700]/70 transition-colors bg-white/90 dark:bg-[#0D0D0D]/90 items-center justify-between w-full max-w-4xl overflow-hidden backdrop-blur-xl">
+              <div className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
                 <Search className="w-5 h-5 text-[#FFD700] ml-4 shrink-0" />
-                <input type="text" placeholder="ARŞİVDE ARAYIN..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-transparent border-none px-4 py-4 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none font-bold tracking-wide text-sm"/>
-                {searchQuery && (<button onClick={() => setSearchQuery('')} className="pr-4 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"><Hexagon className="w-5 h-5" /></button>)}
+                <input type="search" placeholder="Doküman, sektör veya şablon ara..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent border-none px-2 sm:px-4 py-4 text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none font-semibold text-sm"/>
+                {searchQuery && <button onClick={() => setSearchQuery('')} className="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" aria-label="Aramayı temizle"><Hexagon className="w-5 h-5" /></button>}
+                <button type="button" className="self-stretch px-5 sm:px-8 bg-yellow-500 text-black font-black text-xs sm:text-sm uppercase tracking-wider hover:bg-yellow-400 transition-colors">Ara</button>
               </div>
             </div>
 
@@ -287,7 +275,7 @@ const App = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`col-span-1 h-[140px] rounded-xl transition-all duration-300 relative group overflow-hidden ${
+                  className={`col-span-1 h-[150px] rounded-xl transition-all duration-300 relative group overflow-hidden bg-black ${
                     selectedCategory === null 
                       ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] ring-2 ring-[#FFD700]/20' 
                       : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 hover:shadow-lg'
@@ -307,7 +295,7 @@ const App = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`col-span-1 h-[140px] rounded-xl transition-all duration-300 relative group overflow-hidden ${
+                    className={`col-span-1 h-[150px] rounded-xl transition-all duration-300 relative group overflow-hidden bg-black ${
                       selectedCategory === category 
                         ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] ring-2 ring-[#FFD700]/20' 
                         : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 hover:shadow-lg'
@@ -320,9 +308,9 @@ const App = () => {
                          loop 
                          muted 
                          playsInline 
-                         className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-60 transition-opacity mix-blend-overlay"
+                         className="absolute inset-0 w-full h-full object-cover opacity-45 dark:opacity-35 group-hover:opacity-65 transition-all duration-700 group-hover:scale-105"
                        >
-                         <source src="https://cdn.pixabay.com/vimeo/32823075/factory-23136.mp4?width=1280&hash=8ad9fa07e5c54c30cddf4b0ab4d1de7a31b418a0" type="video/mp4" />
+                         <source src={getCategoryVideo(category)} type="video/mp4" />
                        </video>
                       <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === category ? 'from-[#FFD700]/30 to-black/80' : 'from-black/80 to-black/40'}`}></div>
                     </div>
@@ -361,7 +349,7 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/30 p-6 relative group overflow-hidden transition-all duration-300 hover:shadow-xl flex flex-col h-[280px] rounded-2xl"
+                      className="bg-white/90 dark:bg-[#111111] border border-slate-300 dark:border-white/10 hover:border-[#FFD700]/50 p-6 relative group overflow-hidden transition-all duration-300 shadow-[0_10px_30px_rgba(15,23,42,0.06)] dark:shadow-none hover:shadow-xl flex flex-col h-[280px] rounded-xl backdrop-blur-sm"
                     >
                       {/* Background Detail */}
                       <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
@@ -372,10 +360,10 @@ const App = () => {
                       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:via-[#FFD700]/50 transition-colors duration-500"></div>
 
                       <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className="w-12 h-12 bg-black/50 border border-slate-200 dark:border-white/5 rounded flex items-center justify-center group-hover:bg-[#FFD700]/5 group-hover:border-[#FFD700]/30 transition-all duration-500">
+                        <div className="w-12 h-12 bg-slate-100 dark:bg-black/50 border border-slate-300 dark:border-white/10 rounded flex items-center justify-center group-hover:bg-[#FFD700]/10 group-hover:border-[#FFD700]/40 transition-all duration-500">
                           <FileText className="text-slate-600 dark:text-slate-400 group-hover:text-[#FFD700] w-6 h-6" strokeWidth={1.5} />
                         </div>
-                        <span className="text-[9px] font-black tracking-[0.2em] uppercase text-slate-900 dark:text-white/50 bg-black px-3 py-1.5 rounded border border-slate-200 dark:border-white/5 shadow-inner">
+                        <span className="text-[9px] font-black tracking-[0.2em] uppercase text-slate-700 dark:text-white/60 bg-slate-100 dark:bg-black px-3 py-1.5 rounded border border-slate-300 dark:border-white/10 shadow-inner">
                             {(template.format || "PDF").toUpperCase()}
                         </span>
                       </div>
