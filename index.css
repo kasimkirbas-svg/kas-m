@@ -27,20 +27,20 @@
 @layer base {
   html {
     color-scheme: dark;
-    background: #20251f;
+    background: #0c0f12;
   }
   body {
     @apply min-h-screen text-slate-200;
-    background: #20251f;
+    background: #0c0f12;
   }
 }
 
 ::-webkit-scrollbar-track {
-  background: #191d18;
+  background: #0b0e11;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #65705c;
+  background: #4b5563;
 }
 
 ::-webkit-scrollbar-thumb:hover {

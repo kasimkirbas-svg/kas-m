@@ -121,9 +121,9 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
   return (
     <div className="light-auth min-h-screen bg-[#eef1f5] dark:bg-[#0A0A0A] text-slate-900 dark:text-white font-sans relative overflow-x-hidden selection:bg-yellow-500/30">
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1800&q=76" alt="" className="absolute inset-0 h-full w-full object-cover opacity-25 saturate-75" />
-        <div className="absolute inset-0 bg-[#20251f]/70" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#20251f]/20 via-[#20251f]/68 to-[#20251f]" />
+        <video autoPlay loop muted playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover opacity-35 saturate-[0.8]"><source src="/13232-246463976_medium.mp4" type="video/mp4" /></video>
+        <div className="absolute inset-0 bg-[#0c0f12]/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0c0f12]/65 to-[#0c0f12]" />
       </div>
       <header className="relative z-20 p-5 sm:p-7 flex items-center justify-between">
         <button type="button" onClick={onBack} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 backdrop-blur-md"><ArrowLeft size={18} /><span className="hidden sm:inline text-sm font-medium">Ana Sayfaya Dön</span></button>

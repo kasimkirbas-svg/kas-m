@@ -39,7 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
   };
 
   return (
-    <div className="light-app-shell min-h-screen overflow-x-hidden bg-[#f3f5f0] dark:bg-[#151814] text-slate-900 dark:text-[#f6f4ed] font-sans selection:bg-[#d6a900]/30 relative">
+    <div className="light-app-shell min-h-screen overflow-x-hidden bg-[#f3f5f0] dark:bg-[#0c0f12] text-slate-900 dark:text-[#f7f7f5] font-sans selection:bg-[#d6a900]/30 relative">
       <header className="absolute inset-x-0 top-0 z-50 h-[72px] px-4 sm:px-8 flex items-center justify-between pointer-events-none">
         <button onClick={() => navigate('dashboard')} className="pointer-events-auto flex items-center gap-3 group" aria-label="Ana sayfa">
           <span className="w-10 h-10 rounded-full overflow-hidden border border-yellow-500/30 shadow-sm"><img src="/logo.jpeg" alt="İSG Zeyron" className="w-full h-full object-cover" /></span>
@@ -51,7 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
             <span className="text-xs font-bold text-slate-900 dark:text-white">{user.name.split(' ')[0]}</span>
             <span className="text-[9px] font-black tracking-widest text-yellow-600 dark:text-yellow-400">{user.accountType === 'osgb' ? 'OSGB' : 'BİREYSEL'}</span>
           </div>
-          <button onClick={() => setMenuOpen(open => !open)} className="w-11 h-11 rounded-lg flex items-center justify-center bg-white/75 dark:bg-[#242821]/80 border border-slate-200/80 dark:border-white/10 text-slate-900 dark:text-yellow-300 backdrop-blur-xl shadow-sm hover:border-yellow-500/60 hover:bg-white dark:hover:bg-[#2b3028] transition-colors" aria-label={menuOpen ? 'Menüyü kapat' : 'Menüyü aç'} aria-expanded={menuOpen}>
+          <button onClick={() => setMenuOpen(open => !open)} className="w-11 h-11 rounded-lg flex items-center justify-center bg-white/75 dark:bg-[#171b20]/90 border border-slate-200/80 dark:border-white/10 text-slate-900 dark:text-amber-300 backdrop-blur-xl shadow-sm hover:border-amber-400/60 hover:bg-white dark:hover:bg-[#20262d] transition-colors" aria-label={menuOpen ? 'Menüyü kapat' : 'Menüyü aç'} aria-expanded={menuOpen}>
             {menuOpen ? <X size={22} /> : <Menu size={24} />}
           </button>
 

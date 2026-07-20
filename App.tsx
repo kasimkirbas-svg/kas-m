@@ -162,7 +162,7 @@ const App = () => {
           
            {/* Global single-theme workspace background */}
           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-             <div className="absolute inset-0 bg-[#20251f]"></div>
+             <div className="absolute inset-0 bg-[#0c0f12]"></div>
              <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_8%,rgba(172,146,38,0.13),transparent_34%),radial-gradient(circle_at_10%_58%,rgba(72,104,78,0.16),transparent_38%)]"></div>
              <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#85916f]/10 to-transparent"></div>
           </div>
@@ -345,7 +345,7 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-white/85 dark:bg-[#242821]/88 border border-slate-200/90 dark:border-white/10 hover:border-yellow-500/50 p-4 relative group overflow-hidden transition-all duration-300 shadow-[0_8px_24px_rgba(58,67,51,0.06)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.12)] hover:shadow-lg flex min-h-[176px] rounded-lg backdrop-blur-md"
+                      className="bg-white/85 dark:bg-[#171b20]/92 border border-slate-200/90 dark:border-white/10 hover:border-amber-400/50 p-4 relative group overflow-hidden transition-all duration-300 shadow-[0_8px_24px_rgba(15,23,42,0.08)] dark:shadow-[0_12px_32px_rgba(0,0,0,0.22)] hover:shadow-lg flex min-h-[176px] rounded-lg backdrop-blur-md"
                     >
                       {/* Background Detail */}
                       <div className="flex w-full flex-col relative z-10">

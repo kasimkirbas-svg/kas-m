@@ -23,7 +23,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
       <div className="grid md:grid-cols-3 gap-8">
         {/* User Card */}
         <div className="md:col-span-1 space-y-6">
-          <div className="bg-white/90 dark:bg-[#242821]/90 p-6 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm text-center backdrop-blur-sm">
+          <div className="bg-white/90 dark:bg-[#171b20]/92 p-6 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm text-center backdrop-blur-sm">
             <div className="w-24 h-24 bg-slate-100 dark:bg-white/5 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 dark:text-slate-500">
               <UserIcon size={40} />
             </div>
@@ -53,7 +53,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
         {/* Subscription & Billing */}
         <div className="md:col-span-2 space-y-6">
           {/* Subscription Status */}
-          <div className="bg-white/90 dark:bg-[#242821]/90 p-6 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm">
+          <div className="bg-white/90 dark:bg-[#171b20]/92 p-6 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div className="flex items-center">
                 <div className="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3">
@@ -90,7 +90,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
           </div>
 
           {/* Billing History */}
-          <div className="bg-white/90 dark:bg-[#242821]/90 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm overflow-hidden backdrop-blur-sm">
+          <div className="bg-white/90 dark:bg-[#171b20]/92 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm overflow-hidden backdrop-blur-sm">
             <div className="px-6 py-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center">
               <h3 className="font-bold text-slate-800 dark:text-white">Fatura Geçmişi</h3>
               <Button variant="secondary" size="sm" className="bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10">Tümünü Gör</Button>
