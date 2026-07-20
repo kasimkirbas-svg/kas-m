@@ -106,12 +106,12 @@ const App = () => {
     setSelectedTemplate(null);
   };
 
-  const filteredTemplates = safeTemplates.filter(t => {
+  const filteredTemplates = React.useMemo(() => safeTemplates.filter(t => {
     const matchesCategory = selectedCategory ? t.category === selectedCategory : true;
     const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           t.category.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  }), [selectedCategory, searchQuery]);
 
   const renderContent = () => {
     if (currentView === 'landing') {
