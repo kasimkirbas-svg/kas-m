@@ -30,7 +30,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0A0A0A] text-slate-900 dark:text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30 w-screen">
+    <div className="light-auth min-h-screen bg-[#eef1f5] dark:bg-[#0A0A0A] text-slate-900 dark:text-white font-sans flex items-center justify-center relative overflow-hidden selection:bg-yellow-500/30 w-screen">
       
       {/* Background Video Engine */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
@@ -43,8 +43,8 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
         >
           <source src="/13232-246463976_medium.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-white/20 dark:bg-black/50"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-50 dark:via-[#0a0a0a]/50 dark:to-[#0a0a0a]"></div>
+        <div className="absolute inset-0 bg-[#eef1f5]/60 dark:bg-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#eef1f5]/75 to-[#eef1f5] dark:via-[#0a0a0a]/50 dark:to-[#0a0a0a]"></div>
       </div>
 
        {/* Floating Background Effects */}
@@ -72,7 +72,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
 
       {/* Auth Card Content */}
       <div className="relative z-10 w-full max-w-md p-6 mt-16">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }} className="relative bg-white/95 dark:bg-[#0d1017]/90 backdrop-blur-2xl border border-slate-200 dark:border-white/10 p-8 sm:p-10 rounded-3xl shadow-[0_24px_70px_rgba(15,23,42,0.22)] dark:shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: "easeOut" }} className="relative bg-white/80 dark:bg-[#0d1017]/90 backdrop-blur-2xl border border-white dark:border-white/10 p-8 sm:p-10 rounded-3xl shadow-[0_24px_70px_rgba(15,23,42,0.18)] dark:shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden ring-1 ring-slate-200/70 dark:ring-0">
           <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[80px] pointer-events-none mix-blend-screen"></div>
 
           <div className="text-center mb-8">

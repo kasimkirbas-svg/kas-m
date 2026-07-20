@@ -22,9 +22,9 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-100 dark:bg-[#0A0A0A] font-sans selection:bg-[#FFD700]/30 selection:text-slate-900 dark:text-white relative">
+    <div className="light-app-shell flex flex-col min-h-screen bg-[#eef1f5] dark:bg-[#0A0A0A] font-sans selection:bg-[#FFD700]/30 selection:text-slate-900 dark:text-white relative">
       {/* Top Navigation Header */}
-      <header className="flex items-center justify-between h-20 px-8 bg-slate-100 dark:bg-[#0A0A0A]/90 backdrop-blur-md border-b border-slate-200 dark:border-white/5 relative z-50">
+      <header className="flex items-center justify-between h-20 px-8 bg-white/85 dark:bg-[#0A0A0A]/90 backdrop-blur-md border-b border-slate-300/70 dark:border-white/5 relative z-50 shadow-[0_1px_0_rgba(15,23,42,0.04)] dark:shadow-none">
         
         {/* Empty left space for symmetry */}
         <div className="flex-1"></div>
@@ -102,7 +102,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
       <main className="flex-1 w-full flex relative">
         
         {/* Left Vertical Menu */}
-        <div className="w-16 flex flex-col items-center py-6 bg-lightbox dark:bg-darkbox border-r border-slate-200 dark:border-white/5 shadow-xl shrink-0 gap-6">
+        <div className="w-16 flex flex-col items-center py-6 bg-[#f8fafc] dark:bg-darkbox border-r border-slate-300/70 dark:border-white/5 shadow-[4px_0_24px_rgba(15,23,42,0.06)] dark:shadow-xl shrink-0 gap-6">
           <button 
              onClick={() => onNavigate('dashboard')} 
              className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700] hover:text-slate-900 transition-all cursor-pointer group relative"
