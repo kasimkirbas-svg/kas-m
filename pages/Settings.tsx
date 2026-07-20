@@ -59,7 +59,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 bg-white dark:bg-[#111318] rounded-xl border border-slate-200 dark:border-white/10 shadow-sm p-6 md:p-8">
+        <div className="flex-1 min-w-0 bg-white dark:bg-[#111318] rounded-xl border border-slate-200 dark:border-white/10 shadow-sm p-4 sm:p-6 md:p-8">
           {activeTab === 'general' && (
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-4">Profil Bilgileri</h3>
@@ -108,7 +108,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-4">Bildirim Tercihleri</h3>
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="font-medium text-slate-800">Aylık Fatura Bildirimi</p>
                     <p className="text-sm text-slate-500">Faturalarınız kesildiğinde e-posta alırsınız.</p>
@@ -119,7 +119,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
                   </label>
                 </div>
                 <hr className="border-slate-100" />
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="font-medium text-slate-800">Kota Uyarıları</p>
                     <p className="text-sm text-slate-500">İndirme kotanız %80'e ulaştığında haber verin.</p>
@@ -130,7 +130,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
                   </label>
                 </div>
                 <hr className="border-slate-100" />
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="font-medium text-slate-800">Yeni Şablonlar</p>
                     <p className="text-sm text-slate-500">Yeni doküman şablonları eklendiğinde bildirim al.</p>
@@ -145,7 +145,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
           )}
 
           <div className="mt-8 pt-6 border-t border-slate-100 flex justify-end">
-            <Button onClick={handleSave} isLoading={loading} size="lg">
+            <Button onClick={handleSave} isLoading={loading} size="lg" className="w-full sm:w-auto">
               <Save size={18} className="mr-2" />
               Değişiklikleri Kaydet
             </Button>

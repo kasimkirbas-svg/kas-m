@@ -50,7 +50,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
         <div className="md:col-span-2 space-y-6">
           {/* Subscription Status */}
           <div className="bg-white dark:bg-[#111318] p-6 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div className="flex items-center">
                 <div className="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3">
                   <ShieldCheck size={24} />
@@ -97,7 +97,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
                 { date: '14 Mar 2025', amount: '499 TL', status: 'Ödendi' },
                 { date: '14 Şub 2025', amount: '499 TL', status: 'Ödendi' },
               ].map((inv, i) => (
-                <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-white/[0.03]">
+                <div key={i} className="px-4 sm:px-6 py-4 flex items-center justify-between gap-3 hover:bg-slate-50 dark:hover:bg-white/[0.03]">
                   <div className="flex items-center">
                     <div className="p-2 bg-slate-100 rounded-full text-slate-500 mr-4">
                       <CreditCard size={18} />

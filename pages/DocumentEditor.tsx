@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect, useRef } from "react";
 import { DocumentTemplate } from "../types";
-import { ArrowLeft, Save, Download, Printer, Settings2, FileText, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Download, Settings2, FileText, Eye, SlidersHorizontal } from "lucide-react";
 import { renderAsync } from "docx-preview";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
@@ -14,6 +14,7 @@ interface DocumentEditorProps {
 }
 
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
+  const [mobileView, setMobileView] = useState<"form" | "preview">("form");
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
   const [docxArrayBuffer, setDocxArrayBuffer] = useState<ArrayBuffer | null>(null);
@@ -213,14 +214,18 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   };
 
   return (
-    <div className="flex h-screen bg-zinc-950 overflow-hidden text-slate-200">
+    <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen bg-zinc-950 lg:overflow-hidden text-slate-200">
+      <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-zinc-950/95 backdrop-blur-xl border-b border-white/10">
+        <button onClick={() => setMobileView("form")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "form" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><SlidersHorizontal size={17} /> Alanlar</button>
+        <button onClick={() => setMobileView("preview")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "preview" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><Eye size={17} /> Önizleme</button>
+      </div>
       
       {/* SOL PANEL (Magic Variable Editörü) */}
-      <div className="w-1/2 shrink-0 h-full overflow-y-auto px-8 py-10 bg-zinc-950 border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex flex-col">
+      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 shrink-0 min-h-[calc(100vh-61px)] lg:h-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 bg-zinc-950 border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
         {/* Glow effect on left panel */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
 
-        <button onClick={onBack} className="flex items-center w-max text-slate-400 hover:text-yellow-500 mb-8 transition-colors font-medium text-sm group">
+        <button onClick={onBack} className="flex items-center min-h-11 w-max text-slate-400 hover:text-yellow-500 mb-6 lg:mb-8 transition-colors font-medium text-sm group">
           <div className="w-8 h-8 rounded-full bg-white/5 group-hover:bg-yellow-500/10 flex items-center justify-center mr-3 transition-colors border border-white/5 group-hover:border-yellow-500/30">
             <ArrowLeft size={16} />
           </div>
@@ -279,9 +284,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                            <div key={idx} className="relative group border border-white/10 rounded-lg p-3 bg-black/40">
                               <button onClick={() => handleListRemove(field.key, idx)} className="absolute top-2 right-2 text-red-500/50 hover:text-red-500 z-10 transition-colors bg-red-500/10 rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs" title="Kaldır">X</button>
                               
-                              <div className="grid grid-cols-2 gap-3 mt-4">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                                 {field.options ? field.options.map(subFieldName => (
-                                  <div key={subFieldName} className="col-span-1">
+                                  <div key={subFieldName} className="sm:col-span-1">
                                     <label className="block text-[10px] text-slate-500 mb-1">{subFieldName}</label>
                                     <input type="text" value={item[subFieldName] || ""} onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs" placeholder="..." />
                                   </div>
@@ -305,23 +310,23 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         </div>
 
         {/* Action Buttons Pinned to Bottom */}
-        <div className="pt-6 mt-6 border-t border-white/5 flex gap-4 relative z-10 bg-zinc-950">
-          <button onClick={handleDownload} disabled={loading || !docxArrayBuffer} className="flex-1 px-4 py-4 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-extrabold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">
+        <div className="sticky bottom-0 pt-4 lg:pt-6 mt-6 pb-[max(0.5rem,env(safe-area-inset-bottom))] border-t border-white/5 flex gap-4 relative z-10 bg-zinc-950">
+          <button onClick={handleDownload} disabled={loading || !docxArrayBuffer} className="flex-1 min-h-12 px-4 py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-extrabold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">
              <Download size={18} /> Şablonu İndir
           </button>
         </div>
       </div>
 
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
-      <div className="w-1/2 h-full bg-zinc-900/50 flex flex-col relative">
-        <div className="h-16 shrink-0 bg-transparent flex items-center justify-between px-8 absolute top-0 w-full z-10 pointer-events-none">
-            <span className="px-4 py-2 border border-white/10 rounded-full bg-black/50 backdrop-blur-md text-xs font-semibold text-slate-300 uppercase tracking-widest flex items-center gap-3">
+      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100vh-61px)] lg:h-full bg-zinc-900/50 flex-col relative`}>
+        <div className="h-14 lg:h-16 shrink-0 bg-transparent flex items-center justify-between px-4 lg:px-8 absolute top-0 w-full z-10 pointer-events-none">
+            <span className="px-3 lg:px-4 py-2 border border-white/10 rounded-full bg-black/70 backdrop-blur-md text-[10px] lg:text-xs font-semibold text-slate-300 uppercase tracking-wider lg:tracking-widest flex items-center gap-2 lg:gap-3">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span> Canlı Önizleme Aktif
             </span>
         </div>
         
         {/* Render Preview Area */}
-        <div className="flex-1 w-full h-full overflow-y-auto p-12 lg:p-24 flex justify-center items-start custom-scrollbar bg-zinc-900/30">
+        <div className="flex-1 w-full h-full overflow-auto px-4 pb-6 pt-20 lg:p-24 flex justify-start lg:justify-center items-start custom-scrollbar bg-zinc-900/30 overscroll-contain touch-pan-x touch-pan-y">
            {loadError ? (
               <div className="flex flex-col items-center justify-center h-[50vh] text-red-400 gap-4 max-w-sm text-center">
                  <FileText size={48} className="opacity-20" />
@@ -334,7 +339,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                  <p className="tracking-widest uppercase text-xs font-bold">Şablon Yükleniyor...</p>
               </div>
            ) : (
-             <div className="w-[800px] shrink-0 bg-white min-h-[1100px] shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none">
+             <div className="w-[800px] shrink-0 bg-white min-h-[1100px] shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none" aria-label="Belge önizlemesi">
                 <div ref={previewRef} className="w-full h-full [&>.docx-wrapper]:bg-transparent [&>.docx-wrapper]:p-0" />
              </div>
            )}

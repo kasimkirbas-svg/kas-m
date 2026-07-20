@@ -153,9 +153,9 @@ const App = () => {
             
             {/* INJECT PROFILE OR SETTINGS CONTENT IF THEY ARE SELECTED */}
             {currentView === 'profile' && (
-               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
+               <div className="w-full min-h-[55vh] px-5 py-10 flex flex-col items-center justify-center text-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
                  <UserCheck className="w-16 h-16 text-[#FFD700] mb-4" />
-                 <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-widest">Kullanıcı Arşivi</h2>
+                 <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-wide sm:tracking-widest">Kullanıcı Arşivi</h2>
                  <p className="text-slate-600 dark:text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
                  <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
                     Sisteme Dön
@@ -164,9 +164,9 @@ const App = () => {
             )}
             
             {currentView === 'settings' && (
-               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
+               <div className="w-full min-h-[55vh] px-5 py-10 flex flex-col items-center justify-center text-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
                  <Settings className="w-16 h-16 text-[#FFD700] mb-4 animate-spin-slow" />
-                 <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-widest">Sistem Ayarları</h2>
+                 <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-wide sm:tracking-widest">Sistem Ayarları</h2>
                  <p className="text-slate-600 dark:text-slate-400 mt-2">Bu modül kısa süre içerisinde aktif edilecektir.</p>
                  <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
                     Sisteme Dön
@@ -175,9 +175,9 @@ const App = () => {
             )}
 
             {currentView === 'billing' && (
-               <div className="w-full h-[60vh] flex flex-col items-center justify-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
+               <div className="w-full min-h-[55vh] px-5 py-10 flex flex-col items-center justify-center text-center border border-slate-300 dark:border-white/10 rounded-xl bg-lightbox dark:bg-darkbox/50 backdrop-blur-md">
                  <Crown className="w-16 h-16 text-[#FFD700] mb-4" />
-                 <h2 className="text-3xl font-black text-[#FFD700] uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">Sistem Premium</h2>
+                 <h2 className="text-xl sm:text-3xl font-black text-[#FFD700] uppercase tracking-wide sm:tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">Sistem Premium</h2>
                  <p className="text-slate-600 dark:text-slate-400 mt-2">Lisans Yenileme ve Yükseltme modülü aktif ediliyor.</p>
                  <button onClick={() => setCurrentView('dashboard')} className="mt-8 px-6 py-2 border border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-black uppercase text-xs tracking-widest transition-colors">
                     Sisteme Dön
@@ -207,7 +207,7 @@ const App = () => {
                     animate={{ y: 0, opacity: 1, scale: 1 }}
                     exit={{ y: -50, opacity: 0, scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 200, damping: 20, duration: 0.6 }}
-                    className="relative flex flex-col items-center gap-8 p-16 bg-[#0A0A0A]/90 border border-white/10 rounded-3xl shadow-[0_0_50px_rgba(255,215,0,0.15)] overflow-hidden"
+                    className="relative flex flex-col items-center gap-6 sm:gap-8 w-[calc(100%-2rem)] max-w-xl p-6 sm:p-10 lg:p-16 bg-[#0A0A0A]/90 border border-white/10 rounded-2xl sm:rounded-3xl shadow-[0_0_50px_rgba(255,215,0,0.15)] overflow-hidden"
                   >
                     {/* Tarayıcı çizgisi */}
                     <motion.div 
@@ -223,7 +223,7 @@ const App = () => {
                         transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                         className="absolute -inset-4 border-2 border-dashed border-[#FFD700]/30 rounded-full"
                       ></motion.div>
-                      <div className="w-28 h-28 flex items-center justify-center rounded-full overflow-hidden bg-black shadow-[0_0_30px_rgba(255,215,0,0.4)] relative z-10 border border-[#FFD700]/50">
+                      <div className="w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center rounded-full overflow-hidden bg-black shadow-[0_0_30px_rgba(255,215,0,0.4)] relative z-10 border border-[#FFD700]/50">
                         <img src="/logo.jpeg" alt="Logo" className="w-[120%] h-auto object-contain" />
                       </div>
                     </div>
@@ -233,7 +233,7 @@ const App = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFD700] to-white uppercase tracking-[0.4em] drop-shadow-lg"
+                        className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFD700] to-white uppercase tracking-[0.12em] sm:tracking-[0.4em] drop-shadow-lg"
                       >
                         HOŞGELDiNiZ
                       </motion.h2>

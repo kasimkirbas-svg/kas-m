@@ -124,7 +124,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="fixed top-0 w-full z-50 transition-all duration-500 py-4 bg-transparent flex items-center justify-between px-6"
+        className="fixed top-0 w-full z-50 transition-all duration-500 py-3 sm:py-4 bg-transparent flex items-center justify-between px-3 sm:px-6"
       >
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between relative">
           
@@ -133,12 +133,12 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             className="flex items-center gap-3 cursor-pointer group z-10" 
             onClick={() => window.scrollTo(0, 0)}
           >
-            <div className="w-12 h-12 flex items-center justify-center relative rounded-full overflow-hidden dark:mix-blend-lighten shadow-inner">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center relative rounded-full overflow-hidden dark:mix-blend-lighten shadow-inner">
                <div className="absolute inset-0 bg-yellow-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
                <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain dark:mix-blend-screen drop-shadow-[0_4px_10px_rgba(15,23,42,0.15)] dark:drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] relative z-10" />
             </div>
             <div className="flex flex-col -ml-1">
-              <span className="text-xl font-black tracking-[0.15em] text-slate-900 dark:text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">İSG ZEYRON</span>
+              <span className="text-sm sm:text-xl font-black tracking-[0.1em] sm:tracking-[0.15em] text-slate-900 dark:text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">İSG ZEYRON</span>
               <span className="text-[9px] text-yellow-500/80 font-bold tracking-[0.3em] uppercase leading-none mt-1">Teknoloji</span>
             </div>
           </motion.div>
@@ -173,16 +173,16 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
       </motion.header>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-32 px-6 min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
+      <section className="relative pt-28 sm:pt-40 pb-20 sm:pb-32 px-4 sm:px-6 min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
         
         <div className="max-w-6xl mx-auto w-full relative z-20 mt-10">
              
-             <div className="relative z-10 px-8 py-20 lg:py-32 lg:px-24 text-center">
+             <div className="relative z-10 px-0 sm:px-8 py-14 sm:py-20 lg:py-32 lg:px-24 text-center">
                  <motion.h1 
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[1.05]"
+                    className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 sm:mb-8 leading-[1.05]"
                  >
                     <span className="text-slate-900 dark:text-white">İş Sağlığı ve Güvenliği</span> <br/>
                     <span className="text-[#c58a00] dark:text-[#FFD700] drop-shadow-[0_8px_18px_rgba(197,138,0,0.16)] dark:drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]">
@@ -194,7 +194,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-lg md:text-2xl text-slate-700 dark:text-slate-300 mb-14 max-w-3xl mx-auto font-light leading-relaxed"
+                    className="text-base sm:text-lg md:text-2xl text-slate-700 dark:text-slate-300 mb-10 sm:mb-14 max-w-3xl mx-auto font-light leading-relaxed"
                  >
                     Gerçek zamanlı form yönetimi, mevzuata tam uyumlu otonom belgeler ve 
                     kapsamlı OSGB altyapısı ile operasyonlarınızı ışık hızında yönetin.
@@ -225,7 +225,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
       </section>
 
       {/* Elegant Sectors Section */}
-      <section className="relative z-20 pb-32 px-6 pt-32">
+      <section className="relative z-20 pb-20 sm:pb-32 px-4 sm:px-6 pt-20 sm:pt-32">
         <div className="max-w-7xl mx-auto w-full relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4">Kapsamlı <span className="text-yellow-500">Sektör</span> Çözümleri</h2>
@@ -264,7 +264,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
       </section>
 
             {/* Superior About Section */}
-      <section id="hakkimizda" className="py-32 relative z-10 bg-transparent">
+      <section id="hakkimizda" className="py-20 sm:py-32 relative z-10 bg-transparent">
         <div className="max-w-6xl mx-auto px-6 text-center relative">
              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-[400px] bg-yellow-500/5 blur-[150px] rounded-full pointer-events-none"></div>
              
@@ -282,7 +282,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 max-w-5xl mx-auto">
                 <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent group">
-                  <div className="bg-white/75 dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:shadow-none">
+                  <div className="bg-white/75 dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-6 sm:p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:shadow-none">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 blur-[50px] rounded-full group-hover:bg-yellow-500/10 transition-colors"></div>
                     <div className="w-14 h-14 rounded-2xl bg-white/5 border border-slate-300 dark:border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30 transition-all duration-500 shadow-lg">
                       <FileText className="w-6 h-6 text-slate-700 dark:text-slate-300 group-hover:text-yellow-400 transition-colors" />
@@ -293,7 +293,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-yellow-500/20 to-transparent group">
-                  <div className="bg-white/75 dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
+                  <div className="bg-white/75 dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-6 sm:p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-[50px] rounded-full group-hover:bg-yellow-500/20 transition-colors"></div>
                     <div className="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/20 transition-all duration-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
                       <Cpu className="w-6 h-6 text-yellow-400" />
@@ -306,11 +306,11 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
         </div>
       </section>
 {/* Cyber FAQ Section */}
-      <section id="sss" className="py-32 relative z-10 bg-transparent">
+      <section id="sss" className="py-20 sm:py-32 relative z-10 bg-transparent">
         <div className="max-w-4xl mx-auto px-6 relative z-10">
              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
                <h2 className="text-sm font-bold text-yellow-500 tracking-[0.4em] uppercase mb-4">Sıkça Sorulan Sorular</h2>
-               <p className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-10">Merak Ettiklerinizi Hemen Yanıtlayın</p>
+               <p className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-10">Merak Ettiklerinizi Hemen Yanıtlayın</p>
                <div className="relative w-full group mb-16 max-w-2xl mx-auto">
                   <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/20 via-yellow-500/5 to-yellow-500/20 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                   <input 
@@ -345,7 +345,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           <div className="w-20 h-20 mb-8 opacity-50 hover:opacity-100 transition-opacity flex justify-center items-center rounded-full overflow-hidden mix-blend-lighten">
             <img src="/logo.jpeg" alt="İSG Zeyron Footer Logo" className="w-[120%] h-auto object-contain grayscale hover:grayscale-0 mix-blend-screen transition-all duration-500" />
           </div>
-          <div className="flex gap-8 mb-6 justify-center w-full max-w-lg">
+          <div className="flex flex-wrap gap-4 sm:gap-8 mb-6 justify-center w-full max-w-lg">
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">Gizlilik</span>
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">Şartlar</span>
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">İletişim</span>
