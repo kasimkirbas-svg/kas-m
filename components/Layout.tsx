@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { User } from '../types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useTheme } from 'next-themes';
-import { Crown, FileClock, HeadphonesIcon, LogOut, Menu, Moon, Settings, Sun, User as UserIcon, X } from 'lucide-react';
+import { Crown, FileClock, HeadphonesIcon, LogOut, Menu, Settings, User as UserIcon, X } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,7 +22,6 @@ const menuItems = [
 export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onNavigate, onLogout }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => {
     const close = (event: MouseEvent) => {
@@ -64,7 +62,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
               </div>
               <nav className="p-2" aria-label="Kullanıcı menüsü">
                 {menuItems.map(item => <button key={item.view} onClick={() => navigate(item.view)} className={`w-full min-h-11 px-3 rounded-lg flex items-center gap-3 text-sm font-semibold transition-colors ${currentView === item.view ? 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'}`}><item.icon size={18} />{item.label}</button>)}
-                <button onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')} className="w-full min-h-11 px-3 rounded-lg flex items-center gap-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5">{resolvedTheme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}Tema Değiştir</button>
               </nav>
               <button onClick={onLogout} className="w-full min-h-12 px-5 border-t border-slate-200 dark:border-white/10 flex items-center gap-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-500/10"><LogOut size={18} />Çıkış Yap</button>
             </motion.div>}

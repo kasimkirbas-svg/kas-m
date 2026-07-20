@@ -92,14 +92,18 @@ const App = () => {
     return <FileBox size={24} strokeWidth={1.5} />;
   };
 
-  const getCategoryVideo = (categoryName: string) => {
+  const getCategoryImage = (categoryName: string) => {
     const lower = categoryName.toLocaleLowerCase('tr');
-    if (lower.includes('enerji')) return '/enerji.mp4';
-    if (lower.includes('fabrika') || lower.includes('imalat') || lower.includes('gıda')) return '/fabrika.mp4';
-    if (lower.includes('hava')) return '/40353-425442466_medium.mp4';
-    if (lower.includes('liman') || lower.includes('lojistik')) return '/67467-522170635_medium.mp4';
-    if (lower.includes('maden') || lower.includes('metal')) return '/277105_medium.mp4';
-    return '/209883_medium.mp4';
+    const base = 'https://images.unsplash.com/';
+    if (lower.includes('enerji')) return `${base}photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=900&q=72`;
+    if (lower.includes('fabrika') || lower.includes('imalat')) return `${base}photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=900&q=72`;
+    if (lower.includes('gıda')) return `${base}photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=72`;
+    if (lower.includes('hava')) return `${base}photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=72`;
+    if (lower.includes('liman') || lower.includes('lojistik')) return `${base}photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=900&q=72`;
+    if (lower.includes('maden')) return `${base}photo-1578319439584-104c94d37305?auto=format&fit=crop&w=900&q=72`;
+    if (lower.includes('metal')) return `${base}photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=72`;
+    if (lower.includes('tarım') || lower.includes('orman')) return `${base}photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=72`;
+    return `${base}photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=900&q=72`;
   };
 
   const handleAuthSuccess = (loggedInUser: User) => {
@@ -156,13 +160,11 @@ const App = () => {
       return (
         <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
           
-          {/* Global Dashboard Video Architecture */}
+           {/* Global single-theme workspace background */}
           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-             <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.12] dark:opacity-[0.22] saturate-[0.75]">
-               <source src="/159052-818026310_medium.mp4" type="video/mp4" />
-             </video>
-             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(243,245,240,0.94)_0%,rgba(236,241,232,0.88)_52%,rgba(248,246,238,0.94)_100%)] dark:bg-[linear-gradient(135deg,rgba(21,24,20,0.93)_0%,rgba(27,32,25,0.88)_52%,rgba(24,25,20,0.94)_100%)]"></div>
-             <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-yellow-400/[0.07] to-transparent"></div>
+             <div className="absolute inset-0 bg-[#20251f]"></div>
+             <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_8%,rgba(172,146,38,0.13),transparent_34%),radial-gradient(circle_at_10%_58%,rgba(72,104,78,0.16),transparent_38%)]"></div>
+             <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#85916f]/10 to-transparent"></div>
           </div>
 
            <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-4 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
@@ -307,17 +309,8 @@ const App = () => {
                         : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
                     }`}
                   >
-                    {/* Background Video for Category */}
-                    <div className="absolute inset-0 bg-slate-100 dark:bg-black/90">
-                       <video 
-                         autoPlay 
-                         loop 
-                         muted 
-                         playsInline 
-                         className="absolute inset-0 w-full h-full object-cover opacity-60 dark:opacity-55 group-hover:opacity-75 transition-all duration-700 group-hover:scale-105"
-                       >
-                         <source src={getCategoryVideo(category)} type="video/mp4" />
-                       </video>
+                    <div className="absolute inset-0 bg-[#232821]">
+                       <img src={getCategoryImage(category)} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-55 group-hover:opacity-70 transition-all duration-500 group-hover:scale-105" />
                       <div className={`absolute inset-0 bg-gradient-to-r ${selectedCategory === category ? 'from-[#394027]/95 to-[#806e1d]/55' : 'from-[#171b16]/90 to-[#171b16]/35'}`}></div>
                     </div>
                     <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">

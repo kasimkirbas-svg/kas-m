@@ -26,30 +26,31 @@
 
 @layer base {
   html {
-    color-scheme: light;
-  }
-  html.dark {
     color-scheme: dark;
+    background: #20251f;
   }
   body {
-    @apply min-h-screen bg-slate-50 text-slate-900 transition-colors duration-500;
-  }
-  .dark body {
-    @apply bg-[#050510] text-slate-300;
-  }
-  html:not(.dark) body {
-    @apply bg-[#eef1f5] text-slate-900;
+    @apply min-h-screen text-slate-200;
+    background: #20251f;
   }
 }
 
-html:not(.dark) .light-landing,
-html:not(.dark) .light-auth,
-html:not(.dark) .light-app-shell {
-  background-image:
-    radial-gradient(circle at 18% 12%, rgba(250, 204, 21, 0.10), transparent 28rem),
-    linear-gradient(rgba(15, 23, 42, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.025) 1px, transparent 1px);
-  background-size: auto, 44px 44px, 44px 44px;
+::-webkit-scrollbar-track {
+  background: #191d18;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #65705c;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d0ad24;
+}
+
+input,
+textarea,
+select {
+  accent-color: #e2bb24;
 }
 
 .dark .theme-settings input:not([type='checkbox']) {

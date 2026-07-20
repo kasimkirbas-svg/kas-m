@@ -101,19 +101,11 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   return (
     <div className="light-landing min-h-screen bg-[#eef1f5] dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-white overflow-x-hidden relative">
       
-      {/* Global Background Video */}
+      {/* Static occupational safety background */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="absolute top-0 left-0 w-full h-full object-cover opacity-[0.38] dark:opacity-30 mix-blend-multiply dark:mix-blend-normal"
-        >
-          <source src="/19024-298313254_medium.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-[#e8edf3]/25 dark:bg-black/50"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#eef1f5]/10 via-[#eef1f5]/45 to-[#eef1f5]/90 dark:from-transparent dark:via-[#0a0a0a]/50 dark:to-[#0a0a0a]"></div>
+        <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=2000&q=78" alt="" className="absolute inset-0 h-full w-full object-cover opacity-25 saturate-75" />
+        <div className="absolute inset-0 bg-[#20251f]/75"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#20251f]/25 via-[#20251f]/72 to-[#20251f]"></div>
       </div>
 
       {/* Sci-Fi Background Layer */}
@@ -234,21 +226,13 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[ 
-                { icon: <Factory className="w-8 h-8 text-[#FFD700]"/>, title: "İmalat Tesisleri", desc: "Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları.", category: "Endüstri 4.0", color: "#FFD700", video: "fabrika.mp4" },
-                { icon: <Zap className="w-8 h-8 text-blue-400"/>, title: "Enerji Santralleri", desc: "Yüksek gerilim işlemleri, RES/GES risk rejimleri ve trafo bakım talimatnameleri.", category: "Kritik Tesis", color: "blue-500", video: "enerji.mp4" },
-                { icon: <HardHat className="w-8 h-8 text-orange-500"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", category: "Ağır Risk", color: "orange-500", video: "209883_medium.mp4" },
-                { icon: <Activity className="w-8 h-8 text-pink-500"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", category: "Kritik Operasyon", color: "pink-500", video: "40353-425442466_medium.mp4" }
+                { icon: <Factory className="w-8 h-8 text-[#FFD700]"/>, title: "İmalat Tesisleri", desc: "Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları.", category: "Endüstri 4.0", image: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=900&q=75" },
+                { icon: <Zap className="w-8 h-8 text-emerald-300"/>, title: "Enerji Santralleri", desc: "Yüksek gerilim işlemleri, RES/GES risk rejimleri ve trafo bakım talimatnameleri.", category: "Kritik Tesis", image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=900&q=75" },
+                { icon: <HardHat className="w-8 h-8 text-amber-300"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", category: "Ağır Risk", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=75" },
+                { icon: <Activity className="w-8 h-8 text-sky-300"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", category: "Kritik Operasyon", image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=75" }
               ].map((item, i) => (
                <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative rounded-3xl overflow-hidden p-8 border border-slate-300 dark:border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[380px]">
-                  <video 
-                      autoPlay 
-                      loop 
-                      muted 
-                      playsInline 
-                      className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-all duration-1000"
-                  >
-                      <source src={`/${item.video}`} type="video/mp4" />
-                  </video>
+                    <img src={item.image} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-all duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#050510]/95 via-[#050510]/70 to-transparent group-hover:via-[#050510]/50 transition-all duration-500"></div>
                   
                   <div className="relative z-10 flex flex-col h-full">
