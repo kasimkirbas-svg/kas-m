@@ -99,30 +99,68 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onNavigate, onLo
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full flex flex-col items-center">
-        <div className="w-full flex-1">
-          {children}
+      <main className="flex-1 w-full flex relative">
+        
+        {/* Left Vertical Menu */}
+        <div className="w-16 flex flex-col items-center py-6 bg-lightbox dark:bg-darkbox border-r border-slate-200 dark:border-white/5 shadow-xl shrink-0 gap-6">
+          <button 
+             onClick={() => onNavigate('dashboard')} 
+             className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700] hover:text-slate-900 transition-all cursor-pointer group relative"
+             title="Döküman Arşivi"
+          >
+             <Menu size={20} className="group-hover:scale-110 transition-transform" />
+             <span className="absolute left-14 bg-slate-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">Döküman Arşivi</span>
+          </button>
+
+          <button 
+             onClick={() => {
+                const search = prompt('Aranacak kelimeyi girin:');
+                if(search) alert(`"${search}" için arama sonuçları...`);
+             }} 
+             className="w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer group relative mt-4"
+             title="Ara"
+          >
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search group-hover:scale-110 transition-transform"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+             <span className="absolute left-14 bg-slate-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">Ara</span>
+          </button>
+
+          <div className="flex-1"></div>
+
+          <button 
+             onClick={() => onNavigate('billing')} 
+             className="w-10 h-10 flex items-center justify-center rounded-xl text-[#FFD700] hover:bg-[#FFD700]/20 transition-all cursor-pointer group relative"
+             title="Üyelik Satın Al"
+          >
+             <Crown size={20} className="group-hover:scale-110 transition-transform" />
+             <span className="absolute left-14 bg-slate-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">Üyelik Satın Al</span>
+          </button>
         </div>
 
-        {/* Footer inline, not fixed */}
-        <footer className="w-full bg-slate-100 dark:bg-[#0A0A0A] border-t border-slate-200 dark:border-white/5 py-8 mt-10">
-          <div className="max-w-[1400px] mx-auto px-8 flex justify-center items-center flex-col gap-4">
-            <div className="flex gap-4 mb-2">
-               <a href="#" className="w-10 h-10 rounded-full bg-lightbox dark:bg-darkbox border border-slate-200 dark:border-white/5 flex items-center justify-center cursor-pointer hover:border-[#FFD700]/50 hover:text-[#FFD700] transition-colors">
-                 <Instagram size={16} />
-               </a>
-               <a href="#" className="w-10 h-10 rounded-full bg-lightbox dark:bg-darkbox border border-slate-200 dark:border-white/5 flex items-center justify-center cursor-pointer hover:border-[#FFD700]/50 hover:text-[#FFD700] transition-colors">
-                 <Twitter size={16} />
-               </a>
-               <a href="#" className="w-10 h-10 rounded-full bg-lightbox dark:bg-darkbox border border-slate-200 dark:border-white/5 flex items-center justify-center cursor-pointer hover:border-[#FFD700]/50 hover:text-[#FFD700] transition-colors">
-                 <Linkedin size={16} />
-               </a>
+        <div className="flex-1 flex flex-col items-center">
+          <div className="w-full flex-1">
+            {children}
             </div>
-            <div className="text-xs uppercase tracking-widest font-semibold text-center text-slate-500">
-              © 2026 İSG ZEYRON PLATFORMU. TÜM HAKLARI SAKLIDIR.
+
+          {/* Footer inline, not fixed */}
+          <footer className="w-full bg-slate-100 dark:bg-[#0A0A0A] border-t border-slate-200 dark:border-white/5 py-8 mt-10">
+            <div className="max-w-[1400px] mx-auto px-8 flex justify-center items-center flex-col gap-4">
+              <div className="flex gap-4 mb-2">
+                 <a href="#" className="w-10 h-10 rounded-full bg-lightbox dark:bg-darkbox border border-slate-200 dark:border-white/5 flex items-center justify-center cursor-pointer hover:border-[#FFD700]/50 hover:text-[#FFD700] transition-colors">
+                   <Instagram size={16} />
+                 </a>
+                 <a href="#" className="w-10 h-10 rounded-full bg-lightbox dark:bg-darkbox border border-slate-200 dark:border-white/5 flex items-center justify-center cursor-pointer hover:border-[#FFD700]/50 hover:text-[#FFD700] transition-colors">
+                   <Twitter size={16} />
+                 </a>
+                 <a href="#" className="w-10 h-10 rounded-full bg-lightbox dark:bg-darkbox border border-slate-200 dark:border-white/5 flex items-center justify-center cursor-pointer hover:border-[#FFD700]/50 hover:text-[#FFD700] transition-colors">
+                   <Linkedin size={16} />
+                 </a>
+              </div>
+              <div className="text-xs uppercase tracking-widest font-semibold text-center text-slate-500">
+                © 2026 İSG ZEYRON PLATFORMU. TÜM HAKLARI SAKLIDIR.
+              </div>
             </div>
-          </div>
-        </footer>
+          </footer>
+        </div>
       </main>
 
       {/* Floating Buttons: Help */}

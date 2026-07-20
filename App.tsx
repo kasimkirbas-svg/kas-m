@@ -90,6 +90,11 @@ const App = () => {
   const handleAuthSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
     setCurrentView('dashboard');
+    setShowSplash(true);
+    setTimeout(() => setShowSplash(false), 5000);
+  };
+    setUser(loggedInUser);
+    setCurrentView('dashboard');
   };
 
   const handleLogout = () => {
@@ -185,20 +190,75 @@ const App = () => {
             <AnimatePresence>
               {currentView === 'dashboard' && showSplash && (
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }} 
-                  animate={{ opacity: 1, scale: 1 }} 
-                  exit={{ opacity: 0, scale: 1.05 }} 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  exit={{ opacity: 0 }} 
                   transition={{ duration: 0.5 }}
-                  className="fixed inset-0 z-[100] flex items-center justify-center bg-lightbox/80 dark:bg-darkbox/80 backdrop-blur-xl">
-                  <div className="flex flex-col items-center gap-6 p-12 bg-white dark:bg-[#0A0A0A] border border-slate-300 dark:border-white/10 rounded-2xl shadow-2xl">
-                    <div className="w-24 h-24 flex items-center justify-center rounded-full overflow-hidden bg-[#111111] shadow-[0_0_20px_rgba(255,215,0,0.3)] animate-pulse">
-                      <img src="/logo.jpeg" alt="Logo" className="w-[120%] h-auto object-contain" />
+                  className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-2xl">
+                  
+                  {/* Animasyonlu arka plan parçacıkları */}
+                  <motion.div 
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1.5, opacity: 0.1 }}
+                    transition={{ duration: 3, repeat: Infinity, repeatType: 'reverse' }}
+                    className="absolute w-[500px] h-[500px] bg-[#FFD700] rounded-full blur-[100px] pointer-events-none"
+                  ></motion.div>
+
+                  <motion.div 
+                    initial={{ y: 50, opacity: 0, scale: 0.9 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    exit={{ y: -50, opacity: 0, scale: 0.9 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20, duration: 0.6 }}
+                    className="relative flex flex-col items-center gap-8 p-16 bg-[#0A0A0A]/90 border border-white/10 rounded-3xl shadow-[0_0_50px_rgba(255,215,0,0.15)] overflow-hidden"
+                  >
+                    {/* Tarayıcı çizgisi */}
+                    <motion.div 
+                      initial={{ left: "-100%" }}
+                      animate={{ left: "200%" }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                      className="absolute top-0 w-1/2 h-[2px] bg-gradient-to-r from-transparent via-[#FFD700] to-transparent shadow-[0_0_10px_rgba(255,215,0,0.8)]"
+                    ></motion.div>
+
+                    <div className="relative">
+                      <motion.div 
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                        className="absolute -inset-4 border-2 border-dashed border-[#FFD700]/30 rounded-full"
+                      ></motion.div>
+                      <div className="w-28 h-28 flex items-center justify-center rounded-full overflow-hidden bg-black shadow-[0_0_30px_rgba(255,215,0,0.4)] relative z-10 border border-[#FFD700]/50">
+                        <img src="/logo.jpeg" alt="Logo" className="w-[120%] h-auto object-contain" />
+                      </div>
                     </div>
-                    <div className="text-center space-y-2">
-                      <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-widest">HOŞGELDİNİZ</h2>
-                      <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">{user?.name}</p>
+
+                    <div className="text-center space-y-3 relative z-10">
+                      <motion.h2 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFD700] to-white uppercase tracking-[0.4em] drop-shadow-lg"
+                      >
+                        HOŞGELDiNiZ
+                      </motion.h2>
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="inline-block"
+                      >
+                        <p className="text-[#FFD700] font-bold uppercase tracking-widest text-lg px-6 py-2 bg-[#FFD700]/10 border border-[#FFD700]/20 rounded-full shadow-inner">
+                          {user?.name}
+                        </p>
+                      </motion.div>
+                      <motion.p 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1 }}
+                        className="text-slate-400 text-xs tracking-widest mt-4 uppercase"
+                      >
+                        Sistem Hazırlanıyor...
+                      </motion.p>
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -206,11 +266,11 @@ const App = () => {
             {currentView === 'dashboard' && (
               <>
             {/* Header Layout Engine - Search Only */}
-            <div className="mb-8 relative z-10 flex border border-slate-300 dark:border-white/10 p-2 shadow-inner rounded focus-within:border-[#FFD700]/50 transition-colors bg-lightbox dark:bg-darkbox/40 items-center justify-between">
+            <div className="mb-8 relative z-10 flex border border-slate-300 dark:border-white/10 shadow-inner rounded-xl focus-within:border-[#FFD700]/50 transition-colors bg-white dark:bg-[#0A0A0A]/40 items-center justify-between w-full max-w-full">
               <div className="flex items-center gap-4 w-full">
-                <Search className="w-5 h-5 text-[#FFD700] ml-3 shrink-0" />
-                <input type="text" placeholder="ARŞİVDE ARAYIN..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-transparent border-none px-4 py-2.5 text-slate-900 dark:text-white placeholder-slate-600 focus:outline-none font-bold tracking-wide text-xs"/>
-                {searchQuery && (<button onClick={() => setSearchQuery('')} className="pr-3 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"><Hexagon className="w-4 h-4" /></button>)}
+                <Search className="w-5 h-5 text-[#FFD700] ml-4 shrink-0" />
+                <input type="text" placeholder="ARŞİVDE ARAYIN..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-transparent border-none px-4 py-4 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none font-bold tracking-wide text-sm"/>
+                {searchQuery && (<button onClick={() => setSearchQuery('')} className="pr-4 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"><Hexagon className="w-5 h-5" /></button>)}
               </div>
             </div>
 
@@ -219,29 +279,29 @@ const App = () => {
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.6, delay: 0.3 }}
-               className="mb-12"
+               className="mb-12 w-full"
             >
               <div className="flex items-center gap-3 mb-6 relative z-10">
                 <Hexagon className="w-4 h-4 text-[#FFD700]" />
-                <h3 className="text-xs font-black text-slate-900 dark:text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Sektörel Bağlantılar</h3>
+                <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-[0.2em] uppercase">Sektörel Bağlantılar</h3>
               </div>
 
-              <div className="flex gap-4 overflow-x-auto pb-6 custom-scrollbar snap-x relative z-10 -mx-4 px-4 md:mx-0 md:px-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`snap-start shrink-0 w-[200px] h-[120px] rounded-xl transition-all duration-500 relative group overflow-hidden ${
+                  className={`col-span-1 h-[140px] rounded-xl transition-all duration-300 relative group overflow-hidden ${
                     selectedCategory === null 
-                      ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] scale-100' 
-                      : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 scale-95 hover:scale-100'
+                      ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] ring-2 ring-[#FFD700]/20' 
+                      : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 hover:shadow-lg'
                   }`}
                 >
                   <div className="absolute inset-0 bg-slate-100 dark:bg-[#0A0A0A]">
-                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity mix-blend-luminosity"></div>
-                    <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === null ? 'from-[#FFD700]/40 to-black/80' : 'from-black to-black/50'}`}></div>
+                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity mix-blend-overlay"></div>
+                    <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === null ? 'from-[#FFD700]/30 to-black/80' : 'from-black to-black/40'}`}></div>
                   </div>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10">
-                    <ShieldAlert size={28} className={selectedCategory === null ? "text-black drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "text-[#FFD700]"} />
-                    <span className={`text-xs uppercase tracking-[0.2em] font-black ${selectedCategory === null ? "text-slate-900 dark:text-white" : "text-slate-700 dark:text-slate-300"} group-hover:text-slate-900 dark:text-white`}>TÜMÜ</span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 group-hover:scale-105 transition-transform duration-300">
+                    <ShieldAlert size={32} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} />
+                    <span className={`text-sm uppercase tracking-[0.2em] font-black ${selectedCategory === null ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>TÜMÜ</span>
                   </div>
                 </button>
                 
@@ -249,21 +309,30 @@ const App = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`snap-start shrink-0 w-[200px] h-[120px] rounded-xl transition-all duration-500 relative group overflow-hidden ${
+                    className={`col-span-1 h-[140px] rounded-xl transition-all duration-300 relative group overflow-hidden ${
                       selectedCategory === category 
-                        ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] scale-100' 
-                        : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 scale-95 hover:scale-100'
+                        ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] ring-2 ring-[#FFD700]/20' 
+                        : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 hover:shadow-lg'
                     }`}
                   >
-                    <div className="absolute inset-0 bg-slate-100 dark:bg-[#0A0A0A]">
-                      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity mix-blend-luminosity"></div>
-                      <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === category ? 'from-[#FFD700]/40 to-black/80' : 'from-black to-black/50'}`}></div>
+                    {/* Background Video for Category */}
+                    <div className="absolute inset-0 bg-slate-100 dark:bg-black/90">
+                       <video 
+                         autoPlay 
+                         loop 
+                         muted 
+                         playsInline 
+                         className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-60 transition-opacity mix-blend-overlay"
+                       >
+                         <source src="https://cdn.pixabay.com/vimeo/32823075/factory-23136.mp4?width=1280&hash=8ad9fa07e5c54c30cddf4b0ab4d1de7a31b418a0" type="video/mp4" />
+                       </video>
+                      <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === category ? 'from-[#FFD700]/30 to-black/80' : 'from-black/80 to-black/40'}`}></div>
                     </div>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 p-4 text-center">
-                      <div className={selectedCategory === category ? "text-black drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "text-[#FFD700]"}>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 p-4 text-center group-hover:scale-105 transition-transform duration-300">
+                      <div className={selectedCategory === category ? "text-[#FFD700]" : "text-white"}>
                         {getCategoryIcon(category)}
                       </div>
-                      <span className={`text-[10px] leading-tight uppercase tracking-[0.2em] font-bold ${selectedCategory === category ? "text-slate-900 dark:text-white" : "text-slate-700 dark:text-slate-300"} group-hover:text-slate-900 dark:text-white`}>{category}</span>
+                      <span className={`text-xs leading-tight uppercase tracking-[0.1em] font-bold ${selectedCategory === category ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>{category}</span>
                     </div>
                   </button>
                 ))}
@@ -275,7 +344,7 @@ const App = () => {
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                transition={{ duration: 0.8, delay: 0.5 }}
-               className="bg-slate-100 dark:bg-[#0A0A0A] rounded-2xl border border-slate-200 dark:border-white/5 p-8 relative overflow-hidden"
+               className="w-full relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/4"></div>
               
@@ -294,10 +363,10 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-gradient-to-br from-[#111111] to-[#0A0A0A] border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/30 p-6 relative group overflow-hidden transition-all duration-500 hover:-translate-y-1 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex flex-col h-[280px] rounded-lg"
+                      className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/30 p-6 relative group overflow-hidden transition-all duration-300 hover:shadow-xl flex flex-col h-[280px] rounded-2xl"
                     >
                       {/* Background Detail */}
-                      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity pointer-events-none">
+                      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
                          <Hexagon className="w-32 h-32 text-slate-900 dark:text-white" strokeWidth={0.5} />
                       </div>
                       
