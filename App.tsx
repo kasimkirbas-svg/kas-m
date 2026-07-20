@@ -229,15 +229,9 @@ const App = () => {
                       className="absolute top-0 w-1/2 h-[2px] bg-gradient-to-r from-transparent via-[#FFD700] to-transparent shadow-[0_0_10px_rgba(255,215,0,0.8)]"
                     ></motion.div>
 
-                    <div className="relative">
-                      <motion.div 
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                        className="absolute -inset-4 border-2 border-dashed border-[#FFD700]/30 rounded-full"
-                      ></motion.div>
-                      <div className="w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center rounded-full overflow-hidden bg-black shadow-[0_0_30px_rgba(255,215,0,0.4)] relative z-10 border border-[#FFD700]/50">
-                        <img src="/logo.jpeg" alt="Logo" className="w-[120%] h-auto object-contain" />
-                      </div>
+                    <div className="relative w-52 sm:w-72">
+                      <motion.div animate={{ opacity: [0.18, 0.42, 0.18], scale: [0.96, 1.04, 0.96] }} transition={{ duration: 3, repeat: Infinity }} className="absolute inset-4 rounded-full bg-amber-300/20 blur-2xl" />
+                      <img src="/logo-transparent.png" alt="İSG Zeyron" className="relative z-10 w-full h-auto object-contain drop-shadow-[0_0_24px_rgba(255,215,0,0.35)]" />
                     </div>
 
                     <div className="text-center space-y-3 relative z-10">

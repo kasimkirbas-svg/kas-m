@@ -42,8 +42,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
     <div className="light-app-shell min-h-screen overflow-x-hidden bg-[#16222a] text-[#f7f7f5] font-sans selection:bg-[#e5b82c]/30 relative">
       <header className="absolute inset-x-0 top-0 z-50 h-[72px] px-4 sm:px-8 flex items-center justify-between pointer-events-none">
         <button onClick={() => navigate('dashboard')} className="pointer-events-auto flex items-center gap-3 group" aria-label="Ana sayfa">
-          <span className="w-10 h-10 rounded-full overflow-hidden border border-yellow-500/30 shadow-sm"><img src="/logo.jpeg" alt="İSG Zeyron" className="w-full h-full object-cover" /></span>
-          <span className="hidden sm:block text-sm font-bold tracking-[0.12em]">İSG ZEYRON</span>
+          <img src="/logo-transparent.png" alt="İSG Zeyron" className="w-24 sm:w-32 h-auto object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.3)]" />
         </button>
 
         <div ref={menuRef} className="pointer-events-auto relative flex items-center gap-2 sm:gap-3">

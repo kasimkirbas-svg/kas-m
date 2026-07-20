@@ -124,17 +124,10 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           
           <motion.div 
             whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-3 cursor-pointer group z-10" 
+            className="flex items-center cursor-pointer group z-10"
             onClick={() => window.scrollTo(0, 0)}
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center relative rounded-full overflow-hidden dark:mix-blend-lighten shadow-inner">
-               <div className="absolute inset-0 bg-yellow-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
-               <img src="/logo.jpeg" alt="İSG Zeyron Logo" className="w-[140%] h-auto object-contain dark:mix-blend-screen drop-shadow-[0_4px_10px_rgba(15,23,42,0.15)] dark:drop-shadow-[0_0_15px_rgba(234,179,8,0.5)] relative z-10" />
-            </div>
-            <div className="flex flex-col -ml-1">
-              <span className="text-sm sm:text-xl font-black tracking-[0.1em] sm:tracking-[0.15em] text-slate-900 dark:text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">İSG ZEYRON</span>
-              <span className="text-[9px] text-yellow-500/80 font-bold tracking-[0.3em] uppercase leading-none mt-1">Teknoloji</span>
-            </div>
+            <img src="/logo-transparent.png" alt="İSG Zeyron Logo" className="w-28 sm:w-36 h-auto object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.28)]" />
           </motion.div>
 
           <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block border border-slate-300/80 dark:border-white/10 bg-white/80 dark:bg-[#050510]/50 backdrop-blur-md rounded-full px-6 py-2 shadow-[0_8px_30px_rgba(15,23,42,0.10)] dark:shadow-lg">
@@ -330,8 +323,8 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
 {/* Footer */}
       <footer className="bg-transparent py-16 relative z-10 text-center">
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
-          <div className="w-20 h-20 mb-8 opacity-50 hover:opacity-100 transition-opacity flex justify-center items-center rounded-full overflow-hidden mix-blend-lighten">
-            <img src="/logo.jpeg" alt="İSG Zeyron Footer Logo" className="w-[120%] h-auto object-contain grayscale hover:grayscale-0 mix-blend-screen transition-all duration-500" />
+          <div className="w-48 sm:w-56 mb-8 opacity-70 hover:opacity-100 transition-opacity flex justify-center items-center">
+            <img src="/logo-transparent.png" alt="İSG Zeyron Footer Logo" className="w-full h-auto object-contain grayscale hover:grayscale-0 transition-all duration-500" />
           </div>
           <div className="flex flex-wrap gap-4 sm:gap-8 mb-6 justify-center w-full max-w-lg">
              <span className="text-xs font-bold text-slate-500 hover:text-yellow-500 cursor-pointer uppercase tracking-widest transition-colors">Gizlilik</span>
