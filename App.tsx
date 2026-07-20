@@ -162,9 +162,9 @@ const App = () => {
           
            {/* Global single-theme workspace background */}
           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-             <div className="absolute inset-0 bg-[#0c0f12]"></div>
-             <div className="absolute inset-0 bg-[radial-gradient(circle_at_76%_8%,rgba(172,146,38,0.13),transparent_34%),radial-gradient(circle_at_10%_58%,rgba(72,104,78,0.16),transparent_38%)]"></div>
-             <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#85916f]/10 to-transparent"></div>
+             <div className="absolute inset-0 bg-[#10161c]"></div>
+             <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_4%,rgba(229,184,44,0.11),transparent_30%),radial-gradient(circle_at_8%_32%,rgba(70,150,170,0.13),transparent_34%)]"></div>
+             <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#22313b]/35 to-transparent"></div>
           </div>
 
            <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-4 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
@@ -254,14 +254,14 @@ const App = () => {
               <>
             <div className="mb-9 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)] lg:items-end">
               <div>
-                <p className="mb-2 text-xs font-semibold text-yellow-700 dark:text-yellow-300">Çalışma alanınız</p>
-                <h1 className="text-3xl sm:text-4xl font-bold text-slate-950 dark:text-[#faf8f0]">Merhaba, {user.name.split(' ')[0]}</h1>
-                <p className="mt-2 max-w-xl text-sm sm:text-base text-slate-600 dark:text-[#b9c0b4]">Sektörünü seç, ihtiyacın olan dokümanı bul ve dakikalar içinde düzenlemeye başla.</p>
+                <p className="mb-2 text-xs font-semibold text-amber-300">Çalışma alanınız</p>
+                <h1 className="text-3xl sm:text-4xl font-bold text-[#f8fafc]">Merhaba, {user.name.split(' ')[0]}</h1>
+                <p className="mt-2 max-w-xl text-sm sm:text-base text-[#aebbc5]">Sektörünü seç, ihtiyacın olan dokümanı bul ve dakikalar içinde düzenlemeye başla.</p>
               </div>
-            <div className="relative z-10 flex border border-slate-200/90 dark:border-white/10 shadow-[0_10px_30px_rgba(50,60,45,0.08)] rounded-lg focus-within:border-yellow-500/70 transition-colors bg-white/85 dark:bg-[#252a22]/85 items-center justify-between w-full overflow-hidden backdrop-blur-xl">
+            <div className="relative z-10 flex border border-white/10 shadow-[0_14px_36px_rgba(0,0,0,0.18)] rounded-lg focus-within:border-amber-400/70 transition-colors bg-[#1a232b]/90 items-center justify-between w-full overflow-hidden backdrop-blur-xl">
               <div className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
                 <Search className="w-5 h-5 text-yellow-600 dark:text-yellow-300 ml-4 shrink-0" />
-                <input type="search" placeholder="Doküman veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent border-none px-2 sm:px-3 py-4 text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-[#92998e] focus:outline-none font-medium text-sm"/>
+                <input type="search" placeholder="Doküman veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent border-none px-2 sm:px-3 py-4 text-white placeholder-[#82909b] focus:outline-none font-medium text-sm"/>
                 {searchQuery && <button onClick={() => setSearchQuery('')} className="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" aria-label="Aramayı temizle"><Hexagon className="w-5 h-5" /></button>}
                 <button type="button" className="self-stretch px-5 sm:px-7 bg-yellow-400 text-[#17180f] font-bold text-sm hover:bg-yellow-300 transition-colors">Ara</button>
               </div>
@@ -276,7 +276,7 @@ const App = () => {
                className="mb-11 w-full"
             >
               <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
-                <div><h2 className="text-lg font-bold text-slate-950 dark:text-[#f8f6ee]">Sektörler</h2><p className="text-sm text-slate-500 dark:text-[#9fa79b]">İçeriği çalışma alanına göre filtreleyin</p></div>
+                <div><h2 className="text-lg font-bold text-[#f8fafc]">Sektörler</h2><p className="text-sm text-[#93a2ad]">İçeriği çalışma alanına göre filtreleyin</p></div>
                 {selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 hover:underline">Filtreyi kaldır</button>}
               </div>
 
@@ -332,7 +332,7 @@ const App = () => {
                className="w-full relative overflow-hidden"
             >
               <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
-                <div><h2 className="text-lg font-bold text-slate-950 dark:text-[#f8f6ee]">Doküman arşivi</h2><p className="text-sm text-slate-500 dark:text-[#9fa79b]">{filteredTemplates.length} düzenlenebilir şablon</p></div>
+                <div><h2 className="text-lg font-bold text-[#f8fafc]">Doküman arşivi</h2><p className="text-sm text-[#93a2ad]">{filteredTemplates.length} düzenlenebilir şablon</p></div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 relative z-10">
@@ -345,32 +345,32 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-white/85 dark:bg-[#171b20]/92 border border-slate-200/90 dark:border-white/10 hover:border-amber-400/50 p-4 relative group overflow-hidden transition-all duration-300 shadow-[0_8px_24px_rgba(15,23,42,0.08)] dark:shadow-[0_12px_32px_rgba(0,0,0,0.22)] hover:shadow-lg flex min-h-[176px] rounded-lg backdrop-blur-md"
+                      className="bg-[#1a232b]/95 border border-white/10 hover:border-amber-400/50 p-4 relative group overflow-hidden transition-all duration-300 shadow-[0_12px_32px_rgba(0,0,0,0.18)] hover:bg-[#202b34] hover:shadow-[0_18px_40px_rgba(0,0,0,0.24)] flex min-h-[176px] rounded-lg backdrop-blur-md"
                     >
                       {/* Background Detail */}
                       <div className="flex w-full flex-col relative z-10">
                         <div className="mb-3 flex items-start justify-between gap-3">
-                        <div className="w-9 h-9 shrink-0 bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-md flex items-center justify-center group-hover:bg-[#FFD700]/10 group-hover:border-[#FFD700]/40 transition-all duration-500">
-                          <FileText className="text-slate-600 dark:text-slate-400 group-hover:text-[#FFD700] w-4 h-4" strokeWidth={1.5} />
+                        <div className="w-9 h-9 shrink-0 bg-[#10171d] border border-white/10 rounded-md flex items-center justify-center group-hover:bg-amber-400/10 group-hover:border-amber-400/40 transition-all duration-500">
+                          <FileText className="text-[#9cabb6] group-hover:text-amber-300 w-4 h-4" strokeWidth={1.5} />
                         </div>
-                        <span className="text-[9px] font-bold uppercase text-slate-500 bg-slate-100 dark:bg-black/40 px-2 py-1 rounded border border-slate-200 dark:border-white/10">
+                        <span className="text-[9px] font-bold uppercase text-[#9db6c8] bg-[#10171d] px-2 py-1 rounded border border-white/10">
                             {(template.format || "PDF").toUpperCase()}
                         </span>
                       </div>
 
                       <div className="relative z-10 flex-1">
-                        <h4 className="text-slate-800 dark:text-slate-200 font-semibold mb-2 leading-snug group-hover:text-slate-950 dark:group-hover:text-white transition-all line-clamp-2 text-sm">
+                        <h4 className="text-[#f1f5f9] font-semibold mb-2 leading-snug group-hover:text-white transition-all line-clamp-2 text-sm">
                           {getDocumentTitle(template.id, template.title)}
                         </h4>
                         <div className="flex items-center gap-2 mt-auto">
                            <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/50 group-hover:bg-[#FFD700] group-hover:shadow-[0_0_8px_#FFD700] transition-all"></div>
-                           <p className="text-slate-500 text-[10px] font-medium truncate group-hover:text-slate-700 dark:text-slate-300 transition-colors">{template.category}</p>
+                           <p className="text-[#9aa9b4] text-[10px] font-medium truncate group-hover:text-[#c9d3da] transition-colors">{template.category}</p>
                         </div>
                       </div>
 
                       <div className="relative z-10 pt-3 mt-3 border-t border-slate-200 dark:border-white/5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] text-slate-500 font-medium flex items-center gap-2">
+                          <span className="text-[10px] text-[#91a3b0] font-medium flex items-center gap-2">
                             <Target size={12} /> {template.fields.length} düzenlenebilir alan
                           </span>
                           
