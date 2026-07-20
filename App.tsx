@@ -158,15 +158,14 @@ const App = () => {
           
           {/* Global Dashboard Video Architecture */}
           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-             <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.08] dark:opacity-[0.14]">
+             <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.12] dark:opacity-[0.22] saturate-[0.75]">
                <source src="/159052-818026310_medium.mp4" type="video/mp4" />
              </video>
-             <div className="absolute inset-0 bg-[#eef1f5]/90 dark:bg-black/90"></div>
-             <div className="absolute -top-48 right-[8%] w-[38rem] h-[38rem] rounded-full bg-yellow-400/[0.06] blur-[110px] animate-pulse"></div>
-             <div className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04] bg-[linear-gradient(rgba(234,179,8,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(234,179,8,0.5)_1px,transparent_1px)] bg-[size:48px_48px]"></div>
+             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(243,245,240,0.94)_0%,rgba(236,241,232,0.88)_52%,rgba(248,246,238,0.94)_100%)] dark:bg-[linear-gradient(135deg,rgba(21,24,20,0.93)_0%,rgba(27,32,25,0.88)_52%,rgba(24,25,20,0.94)_100%)]"></div>
+             <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-yellow-400/[0.07] to-transparent"></div>
           </div>
 
-          <div className="w-full max-w-[1500px] mx-auto p-4 md:p-8 relative z-10 transition-all duration-700 fade-in">
+           <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-4 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
             
             {currentView === 'profile' && <Profile user={user} />}
             {currentView === 'settings' && <SettingsPage user={user} onSave={(changes) => setUser(current => current ? { ...current, ...changes } : current)} />}
@@ -251,14 +250,20 @@ const App = () => {
 
             {currentView === 'dashboard' && (
               <>
-            {/* Header Layout Engine - Search Only */}
-            <div className="mb-10 ml-auto relative z-10 flex border border-slate-300 dark:border-white/15 shadow-[0_12px_40px_rgba(15,23,42,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.35)] rounded-xl focus-within:border-[#FFD700]/70 transition-colors bg-white/90 dark:bg-[#0D0D0D]/90 items-center justify-between w-full max-w-4xl overflow-hidden backdrop-blur-xl">
-              <div className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
-                <Search className="w-5 h-5 text-[#FFD700] ml-4 shrink-0" />
-                <input type="search" placeholder="Doküman, sektör veya şablon ara..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent border-none px-2 sm:px-4 py-4 text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none font-semibold text-sm"/>
-                {searchQuery && <button onClick={() => setSearchQuery('')} className="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" aria-label="Aramayı temizle"><Hexagon className="w-5 h-5" /></button>}
-                <button type="button" className="self-stretch px-5 sm:px-8 bg-yellow-500 text-black font-black text-xs sm:text-sm uppercase tracking-wider hover:bg-yellow-400 transition-colors">Ara</button>
+            <div className="mb-9 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)] lg:items-end">
+              <div>
+                <p className="mb-2 text-xs font-semibold text-yellow-700 dark:text-yellow-300">Çalışma alanınız</p>
+                <h1 className="text-3xl sm:text-4xl font-bold text-slate-950 dark:text-[#faf8f0]">Merhaba, {user.name.split(' ')[0]}</h1>
+                <p className="mt-2 max-w-xl text-sm sm:text-base text-slate-600 dark:text-[#b9c0b4]">Sektörünü seç, ihtiyacın olan dokümanı bul ve dakikalar içinde düzenlemeye başla.</p>
               </div>
+            <div className="relative z-10 flex border border-slate-200/90 dark:border-white/10 shadow-[0_10px_30px_rgba(50,60,45,0.08)] rounded-lg focus-within:border-yellow-500/70 transition-colors bg-white/85 dark:bg-[#252a22]/85 items-center justify-between w-full overflow-hidden backdrop-blur-xl">
+              <div className="flex items-center gap-2 sm:gap-4 w-full min-w-0">
+                <Search className="w-5 h-5 text-yellow-600 dark:text-yellow-300 ml-4 shrink-0" />
+                <input type="search" placeholder="Doküman veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent border-none px-2 sm:px-3 py-4 text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-[#92998e] focus:outline-none font-medium text-sm"/>
+                {searchQuery && <button onClick={() => setSearchQuery('')} className="p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" aria-label="Aramayı temizle"><Hexagon className="w-5 h-5" /></button>}
+                <button type="button" className="self-stretch px-5 sm:px-7 bg-yellow-400 text-[#17180f] font-bold text-sm hover:bg-yellow-300 transition-colors">Ara</button>
+              </div>
+            </div>
             </div>
 
             {/* Sub System Engine (Categories) First */}
@@ -266,25 +271,25 @@ const App = () => {
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.6, delay: 0.3 }}
-               className="mb-12 w-full"
+               className="mb-11 w-full"
             >
-              <div className="flex items-center gap-3 mb-6 relative z-10">
-                <Hexagon className="w-4 h-4 text-[#FFD700]" />
-                <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-[0.2em] uppercase">Sektörel Bağlantılar</h3>
+              <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
+                <div><h2 className="text-lg font-bold text-slate-950 dark:text-[#f8f6ee]">Sektörler</h2><p className="text-sm text-slate-500 dark:text-[#9fa79b]">İçeriği çalışma alanına göre filtreleyin</p></div>
+                {selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 hover:underline">Filtreyi kaldır</button>}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 relative z-10">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`col-span-1 h-24 rounded-lg transition-all duration-300 relative group overflow-hidden bg-black text-left ${
+                  className={`col-span-1 h-24 rounded-lg transition-all duration-300 relative group overflow-hidden bg-[#22271f] text-left ${
                     selectedCategory === null 
-                      ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] ring-2 ring-[#FFD700]/20' 
-                      : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 hover:shadow-lg'
+                      ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
+                      : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
                   }`}
                 >
                   <div className="absolute inset-0 bg-slate-100 dark:bg-[#0A0A0A]">
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity mix-blend-overlay"></div>
-                    <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === null ? 'from-[#FFD700]/30 to-black/80' : 'from-black to-black/40'}`}></div>
+                    <div className={`absolute inset-0 ${selectedCategory === null ? 'bg-gradient-to-r from-[#26301f]/95 to-[#7b6917]/70' : 'bg-[#20251e]/70'}`}></div>
                   </div>
                   <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-black/40 border border-white/10"><ShieldAlert size={20} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} /></span>
@@ -296,10 +301,10 @@ const App = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`col-span-1 h-24 rounded-lg transition-all duration-300 relative group overflow-hidden bg-black text-left ${
+                    className={`col-span-1 h-24 rounded-lg transition-all duration-300 relative group overflow-hidden bg-[#22271f] text-left ${
                       selectedCategory === category 
-                        ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] ring-2 ring-[#FFD700]/20' 
-                        : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 hover:shadow-lg'
+                        ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
+                        : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
                     }`}
                   >
                     {/* Background Video for Category */}
@@ -309,11 +314,11 @@ const App = () => {
                          loop 
                          muted 
                          playsInline 
-                         className="absolute inset-0 w-full h-full object-cover opacity-40 dark:opacity-30 group-hover:opacity-55 transition-all duration-700 group-hover:scale-105"
+                         className="absolute inset-0 w-full h-full object-cover opacity-60 dark:opacity-55 group-hover:opacity-75 transition-all duration-700 group-hover:scale-105"
                        >
                          <source src={getCategoryVideo(category)} type="video/mp4" />
                        </video>
-                      <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === category ? 'from-[#FFD700]/30 to-black/80' : 'from-black/80 to-black/40'}`}></div>
+                      <div className={`absolute inset-0 bg-gradient-to-r ${selectedCategory === category ? 'from-[#394027]/95 to-[#806e1d]/55' : 'from-[#171b16]/90 to-[#171b16]/35'}`}></div>
                     </div>
                     <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
                       <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-black/40 ${selectedCategory === category ? "text-[#FFD700]" : "text-white"}`}>
@@ -333,11 +338,8 @@ const App = () => {
                transition={{ duration: 0.8, delay: 0.5 }}
                className="w-full relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/4"></div>
-              
-              <div className="flex items-center gap-3 mb-8 relative z-10">
-                <div className="w-2 h-2 bg-[#FFD700] rounded-full shadow-[0_0_15px_rgba(255,215,0,1)] animate-pulse"></div>
-                <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Arşiv Sonuçları ({filteredTemplates.length})</h3>
+              <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
+                <div><h2 className="text-lg font-bold text-slate-950 dark:text-[#f8f6ee]">Doküman arşivi</h2><p className="text-sm text-slate-500 dark:text-[#9fa79b]">{filteredTemplates.length} düzenlenebilir şablon</p></div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 relative z-10">
@@ -350,16 +352,9 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-white/90 dark:bg-[#111111] border border-slate-200 dark:border-white/10 hover:border-[#FFD700]/50 p-4 relative group overflow-hidden transition-all duration-300 shadow-sm dark:shadow-none hover:shadow-lg flex min-h-[176px] rounded-lg backdrop-blur-sm"
+                      className="bg-white/85 dark:bg-[#242821]/88 border border-slate-200/90 dark:border-white/10 hover:border-yellow-500/50 p-4 relative group overflow-hidden transition-all duration-300 shadow-[0_8px_24px_rgba(58,67,51,0.06)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.12)] hover:shadow-lg flex min-h-[176px] rounded-lg backdrop-blur-md"
                     >
                       {/* Background Detail */}
-                      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-                         <Hexagon className="w-32 h-32 text-slate-900 dark:text-white" strokeWidth={0.5} />
-                      </div>
-                      
-                      {/* Top Accent Line */}
-                      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:via-[#FFD700]/50 transition-colors duration-500"></div>
-
                       <div className="flex w-full flex-col relative z-10">
                         <div className="mb-3 flex items-start justify-between gap-3">
                         <div className="w-9 h-9 shrink-0 bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-md flex items-center justify-center group-hover:bg-[#FFD700]/10 group-hover:border-[#FFD700]/40 transition-all duration-500">

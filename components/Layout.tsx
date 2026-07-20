@@ -41,11 +41,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
   };
 
   return (
-    <div className="light-app-shell min-h-screen overflow-x-hidden bg-[#eef1f5] dark:bg-[#050505] text-slate-900 dark:text-white font-sans selection:bg-[#FFD700]/30 relative">
-      <header className="absolute inset-x-0 top-0 z-50 h-20 px-4 sm:px-8 flex items-center justify-between pointer-events-none">
+    <div className="light-app-shell min-h-screen overflow-x-hidden bg-[#f3f5f0] dark:bg-[#151814] text-slate-900 dark:text-[#f6f4ed] font-sans selection:bg-[#d6a900]/30 relative">
+      <header className="absolute inset-x-0 top-0 z-50 h-[72px] px-4 sm:px-8 flex items-center justify-between pointer-events-none">
         <button onClick={() => navigate('dashboard')} className="pointer-events-auto flex items-center gap-3 group" aria-label="Ana sayfa">
-          <span className="w-10 h-10 rounded-full overflow-hidden border border-yellow-500/20 shadow-[0_0_20px_rgba(234,179,8,0.15)]"><img src="/logo.jpeg" alt="İSG Zeyron" className="w-full h-full object-cover" /></span>
-          <span className="hidden sm:block text-sm font-black tracking-[0.22em]">İSG ZEYRON</span>
+          <span className="w-10 h-10 rounded-full overflow-hidden border border-yellow-500/30 shadow-sm"><img src="/logo.jpeg" alt="İSG Zeyron" className="w-full h-full object-cover" /></span>
+          <span className="hidden sm:block text-sm font-bold tracking-[0.12em]">İSG ZEYRON</span>
         </button>
 
         <div ref={menuRef} className="pointer-events-auto relative flex items-center gap-2 sm:gap-3">
@@ -53,7 +53,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
             <span className="text-xs font-bold text-slate-900 dark:text-white">{user.name.split(' ')[0]}</span>
             <span className="text-[9px] font-black tracking-widest text-yellow-600 dark:text-yellow-400">{user.accountType === 'osgb' ? 'OSGB' : 'BİREYSEL'}</span>
           </div>
-          <button onClick={() => setMenuOpen(open => !open)} className="w-12 h-12 rounded-xl flex items-center justify-center bg-white/80 dark:bg-[#111]/90 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-yellow-400 backdrop-blur-xl shadow-lg hover:border-yellow-500/60 transition-colors" aria-label={menuOpen ? 'Menüyü kapat' : 'Menüyü aç'} aria-expanded={menuOpen}>
+          <button onClick={() => setMenuOpen(open => !open)} className="w-11 h-11 rounded-lg flex items-center justify-center bg-white/75 dark:bg-[#242821]/80 border border-slate-200/80 dark:border-white/10 text-slate-900 dark:text-yellow-300 backdrop-blur-xl shadow-sm hover:border-yellow-500/60 hover:bg-white dark:hover:bg-[#2b3028] transition-colors" aria-label={menuOpen ? 'Menüyü kapat' : 'Menüyü aç'} aria-expanded={menuOpen}>
             {menuOpen ? <X size={22} /> : <Menu size={24} />}
           </button>
 
@@ -72,7 +72,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
         </div>
       </header>
 
-      <main className="relative z-10 min-h-screen pt-20">{children}</main>
+      <main className="relative z-10 min-h-screen pt-[72px]">{children}</main>
 
       <button onClick={() => alert('Canlı destek talebiniz alındı. En kısa sürede sizinle iletişime geçeceğiz.')} className="fixed z-40 bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-auto sm:px-5 rounded-full bg-white/90 dark:bg-[#111]/95 border border-yellow-500/40 text-yellow-700 dark:text-yellow-400 shadow-xl backdrop-blur-xl flex items-center justify-center gap-2 text-sm font-bold"><HeadphonesIcon size={19} /><span className="hidden sm:inline">7/24 Canlı Destek</span></button>
     </div>

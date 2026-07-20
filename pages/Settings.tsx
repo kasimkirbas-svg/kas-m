@@ -87,7 +87,7 @@ export const Settings: React.FC<SettingsProps> = ({ user, onSave }) => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 min-w-0 bg-white dark:bg-[#111318] rounded-xl border border-slate-200 dark:border-white/10 shadow-sm p-4 sm:p-6 md:p-8">
+        <div className="flex-1 min-w-0 bg-white/90 dark:bg-[#242821]/90 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm p-4 sm:p-6 md:p-8 backdrop-blur-sm">
           {activeTab === 'general' && (
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-4">Profil Bilgileri</h3>
