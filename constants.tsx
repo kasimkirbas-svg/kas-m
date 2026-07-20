@@ -243,11 +243,15 @@ export const MOCK_TEMPLATES: DocumentTemplate[] = [
         "label": "personeller Tablosu",
         "type": "list",
         "options": [
+          "siraNo",
+          "adSoyad",
+          "gorevi",
+          "belgeNo",
+          "belgeTuru",
           "kurum",
           "duzenlenmeTarihi",
           "yenilemeTarihi",
-          "durum",
-          "isgUzmani"
+          "durum"
         ]
       }
     ]

@@ -391,14 +391,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
       <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100vh-61px)] lg:h-full bg-zinc-900/50 flex-col relative`}>
-        <div className="h-14 lg:h-16 shrink-0 bg-transparent flex items-center justify-between px-4 lg:px-8 absolute top-0 w-full z-10 pointer-events-none">
-            <span className="px-3 lg:px-4 py-2 border border-white/10 rounded-full bg-black/70 backdrop-blur-md text-[10px] lg:text-xs font-semibold text-slate-300 uppercase tracking-wider lg:tracking-widest flex items-center gap-2 lg:gap-3">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span> Canlı Önizleme Aktif
-            </span>
-        </div>
-        
         {/* Render Preview Area */}
-        <div className="flex-1 w-full h-full overflow-auto px-4 pb-6 pt-20 lg:p-24 flex justify-center items-start custom-scrollbar bg-zinc-900/30 overscroll-contain touch-pan-y">
+        <div className="flex-1 w-full h-full overflow-auto p-4 lg:p-20 flex justify-center items-start custom-scrollbar bg-zinc-900/30 overscroll-contain touch-pan-y">
            {loadError ? (
               <div className="flex flex-col items-center justify-center h-[50vh] text-red-400 gap-4 max-w-sm text-center">
                  <FileText size={48} className="opacity-20" />
