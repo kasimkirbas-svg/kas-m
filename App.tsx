@@ -45,6 +45,7 @@ const App = () => {
       return null;
     }
   });
+  const [showSplash, setShowSplash] = useState(false);
   const [currentView, setCurrentView] = useState(() => {
     const view = localStorage.getItem('isg_view');
     return view && view !== "undefined" ? view : 'landing';
@@ -181,107 +182,37 @@ const App = () => {
                </div>
             )}
 
+            <AnimatePresence>
+              {currentView === 'dashboard' && showSplash && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }} 
+                  animate={{ opacity: 1, scale: 1 }} 
+                  exit={{ opacity: 0, scale: 1.05 }} 
+                  transition={{ duration: 0.5 }}
+                  className="fixed inset-0 z-[100] flex items-center justify-center bg-lightbox/80 dark:bg-darkbox/80 backdrop-blur-xl">
+                  <div className="flex flex-col items-center gap-6 p-12 bg-white dark:bg-[#0A0A0A] border border-slate-300 dark:border-white/10 rounded-2xl shadow-2xl">
+                    <div className="w-24 h-24 flex items-center justify-center rounded-full overflow-hidden bg-[#111111] shadow-[0_0_20px_rgba(255,215,0,0.3)] animate-pulse">
+                      <img src="/logo.jpeg" alt="Logo" className="w-[120%] h-auto object-contain" />
+                    </div>
+                    <div className="text-center space-y-2">
+                      <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-widest">HOŞGELDİNİZ</h2>
+                      <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">{user?.name}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {currentView === 'dashboard' && (
               <>
-            {/* Header Layout Engine - Redesigned Grid */}
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 relative z-10"
-            >
-              {/* Main Welcome & Search Panel (Left Side - 3 Cols Wide) */}
-              <div className="lg:col-span-3 bg-lightbox dark:bg-darkbox/40 border border-slate-200 dark:border-white/5 p-8 rounded-xl shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-xl relative overflow-hidden group flex flex-col justify-between">
-                 <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFD700]/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-[#FFD700]/10 transition-colors duration-1000"></div>
-                 <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#FFD700]/30 to-transparent"></div>
-                 
-                 <div className="flex flex-col md:flex-row gap-8 items-center justify-between relative z-10">
-                    <div className="text-center md:text-left flex-1">
-                      <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-2 leading-[1.05]">
-                        HOŞGELDİNİZ, <br className="lg:hidden" />
-                        <span className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.4)]">{(user?.name || "UZMAN").toUpperCase()}</span>
-                      </h2>
-                    </div>
-
-                    {/* Compact Cyber Search Bar */}
-                    <div className="w-full md:w-[350px] relative">
-                      <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-transparent rounded-sm blur opacity-50 focus-within:opacity-100 transition duration-500"></div>
-                      <div className="relative flex items-center bg-slate-100 dark:bg-[#0A0A0A] border border-slate-300 dark:border-white/10 p-2 shadow-inner rounded focus-within:border-[#FFD700]/50 transition-colors">
-                        <Search className="w-5 h-5 text-[#FFD700] ml-3 shrink-0" />
-                        <input 
-                          type="text" 
-                          placeholder="ARŞİVDE ARAYIN..." 
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full bg-transparent border-none px-4 py-2.5 text-slate-900 dark:text-white placeholder-slate-600 focus:outline-none font-bold tracking-wide text-xs"
-                        />
-                        {searchQuery && (
-                          <button onClick={() => setSearchQuery('')} className="pr-3 text-[10px] font-black text-slate-500 hover:text-[#FFD700] tracking-wider uppercase transition-colors">SİL</button>
-                        )}
-                      </div>
-                    </div>
-                 </div>
-
-                 {/* Inline Fast Action Buttons in Main Panel */}
-                 <div className="flex flex-wrap gap-4 mt-8 relative z-10 pt-6 border-t border-slate-200 dark:border-white/5">
-                     <button onClick={() => {
-                        const targetTemp = safeTemplates[0];
-                        if(targetTemp) { setSelectedTemplate(targetTemp); setCurrentView('editor'); }
-                      }} className="px-6 py-3 bg-slate-100 dark:bg-[#0A0A0A] border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 rounded-lg text-xs uppercase tracking-[0.2em] font-black text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white transition-all group flex items-center gap-3 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                       <FileText size={16} className="text-[#FFD700] group-hover:scale-110 transition-transform" /> Hızlı Form
-                     </button>
-                     <button onClick={() => setCurrentView('settings')} className="px-6 py-3 bg-slate-100 dark:bg-[#0A0A0A] border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 rounded-lg text-xs uppercase tracking-[0.2em] font-black text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white transition-all group flex items-center gap-3 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                       <Settings size={16} className="text-slate-600 dark:text-slate-400 group-hover:rotate-90 transition-transform" /> Sistem Ayarları
-                     </button>
-                     <button onClick={() => setCurrentView('billing')} className="px-6 py-3 bg-lightbox dark:bg-darkbox border border-[#FFD700]/50 hover:bg-[#FFD700] rounded-lg text-xs uppercase tracking-[0.2em] font-black text-[#FFD700] hover:text-black transition-all group flex items-center gap-3 shadow-[0_0_15px_rgba(255,215,0,0.1)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] ml-auto">
-                       <Crown size={16} className="group-hover:scale-110 transition-transform" /> PREMIUM'A GEÇ
-                     </button>
-                 </div>
+            {/* Header Layout Engine - Search Only */}
+            <div className="mb-8 relative z-10 flex border border-slate-300 dark:border-white/10 p-2 shadow-inner rounded focus-within:border-[#FFD700]/50 transition-colors bg-lightbox dark:bg-darkbox/40 items-center justify-between">
+              <div className="flex items-center gap-4 w-full">
+                <Search className="w-5 h-5 text-[#FFD700] ml-3 shrink-0" />
+                <input type="text" placeholder="ARŞİVDE ARAYIN..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-transparent border-none px-4 py-2.5 text-slate-900 dark:text-white placeholder-slate-600 focus:outline-none font-bold tracking-wide text-xs"/>
+                {searchQuery && (<button onClick={() => setSearchQuery('')} className="pr-3 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"><Hexagon className="w-4 h-4" /></button>)}
               </div>
-
-              {/* Right Side: Clean Protocol Log (1 Col Wide) */}
-              <div className="lg:col-span-1 bg-lightbox dark:bg-darkbox/40 border border-slate-200 dark:border-white/5 p-6 rounded-xl shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-xl flex flex-col relative group hover:border-[#FFD700]/30 transition-all duration-500">
-                 <div className="flex items-center justify-between mb-4 border-b border-slate-200 dark:border-white/5 pb-4">
-                    <div className="flex items-center gap-2">
-                       <div className="relative flex items-center justify-center">
-                         <div className="absolute w-6 h-6 bg-[#FFD700]/20 rounded-full animate-ping"></div>
-                         <FileClock size={16} className="text-[#FFD700] relative z-10" />
-                       </div>
-                       <span className="text-xs uppercase tracking-[0.2em] font-black text-slate-900 dark:text-white drop-shadow-md">Protokol Geçmişi</span>
-                    </div>
-                 </div>
-                 
-                 <div className="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar">
-                     <div className="bg-white dark:bg-[#050510] p-4 rounded-lg border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.4)] relative overflow-hidden">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-500/50 group-hover/item:bg-yellow-500 transition-colors"></div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 group-hover/item:text-slate-900 dark:text-white transition-colors truncate pr-2">Ağır Sanayi Risk Analizi</span>
-                          <ArrowRight size={12} className="text-slate-600 group-hover/item:text-[#FFD700] group-hover/item:translate-x-1 transition-all" />
-                        </div>
-                        <div className="flex items-center gap-2">
-                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700] shadow-[0_0_5px_rgba(234,179,8,0.8)]"></div>
-                           <span className="text-[8px] uppercase font-black tracking-widest text-[#FFD700]/80">ZAMAN AŞIMI RİSKİ • 14:30</span>
-                        </div>
-                     </div>
-
-                     <div className="bg-white dark:bg-[#050510] p-4 rounded-lg border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 hover:-translate-y-0.5 transition-all cursor-pointer group/item shadow-[0_4px_10px_rgba(0,0,0,0.4)] relative overflow-hidden">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500/50 group-hover/item:bg-emerald-500 transition-colors"></div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 group-hover/item:text-slate-900 dark:text-white transition-colors truncate pr-2">Aylık Puantaj Tablosu</span>
-                          <ArrowRight size={12} className="text-slate-600 group-hover/item:text-emerald-500 group-hover/item:translate-x-1 transition-all" />
-                        </div>
-                        <div className="flex items-center gap-2">
-                           <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                           <span className="text-[8px] uppercase font-black tracking-widest text-green-500/70">Onaylandı • Dün</span>
-                        </div>
-                     </div>
-                 </div>
-                 
-                 <button onClick={() => setCurrentView('profile')} className="mt-4 w-full py-2 bg-slate-100 dark:bg-[#0A0A0A] rounded border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/30 text-[10px] uppercase font-black tracking-[0.2em] text-slate-600 dark:text-slate-400 hover:text-[#FFD700] transition-colors">
-                    TÜMÜNÜ GÖSTER
-                 </button>
-              </div>
-            </motion.div>
+            </div>
 
             {/* Sub System Engine (Categories) First */}
             <motion.div 
