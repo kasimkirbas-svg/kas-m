@@ -18,6 +18,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { MOCK_TEMPLATES } from './constants';
+import { getDocumentTitle } from './services/documentFieldService';
 
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   constructor(props: any) {
@@ -272,10 +273,10 @@ const App = () => {
                 <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-[0.2em] uppercase">Sektörel Bağlantılar</h3>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 relative z-10">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`col-span-1 h-[150px] rounded-xl transition-all duration-300 relative group overflow-hidden bg-black ${
+                  className={`col-span-1 h-24 rounded-lg transition-all duration-300 relative group overflow-hidden bg-black text-left ${
                     selectedCategory === null 
                       ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] ring-2 ring-[#FFD700]/20' 
                       : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 hover:shadow-lg'
@@ -285,9 +286,9 @@ const App = () => {
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity mix-blend-overlay"></div>
                     <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === null ? 'from-[#FFD700]/30 to-black/80' : 'from-black to-black/40'}`}></div>
                   </div>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 group-hover:scale-105 transition-transform duration-300">
-                    <ShieldAlert size={32} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} />
-                    <span className={`text-sm uppercase tracking-[0.2em] font-black ${selectedCategory === null ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>TÜMÜ</span>
+                  <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-black/40 border border-white/10"><ShieldAlert size={20} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} /></span>
+                    <span><strong className={`block text-sm font-bold ${selectedCategory === null ? "text-[#FFD700]" : "text-white"}`}>Tüm sektörler</strong><small className="mt-1 block text-[11px] text-white/60">{MOCK_TEMPLATES.length} doküman</small></span>
                   </div>
                 </button>
                 
@@ -295,7 +296,7 @@ const App = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`col-span-1 h-[150px] rounded-xl transition-all duration-300 relative group overflow-hidden bg-black ${
+                    className={`col-span-1 h-24 rounded-lg transition-all duration-300 relative group overflow-hidden bg-black text-left ${
                       selectedCategory === category 
                         ? 'border-2 border-[#FFD700] shadow-[0_0_20px_rgba(255,215,0,0.3)] ring-2 ring-[#FFD700]/20' 
                         : 'border border-slate-200 dark:border-white/5 hover:border-[#FFD700]/50 hover:shadow-lg'
@@ -308,17 +309,17 @@ const App = () => {
                          loop 
                          muted 
                          playsInline 
-                         className="absolute inset-0 w-full h-full object-cover opacity-45 dark:opacity-35 group-hover:opacity-65 transition-all duration-700 group-hover:scale-105"
+                         className="absolute inset-0 w-full h-full object-cover opacity-40 dark:opacity-30 group-hover:opacity-55 transition-all duration-700 group-hover:scale-105"
                        >
                          <source src={getCategoryVideo(category)} type="video/mp4" />
                        </video>
                       <div className={`absolute inset-0 bg-gradient-to-t ${selectedCategory === category ? 'from-[#FFD700]/30 to-black/80' : 'from-black/80 to-black/40'}`}></div>
                     </div>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 p-4 text-center group-hover:scale-105 transition-transform duration-300">
-                      <div className={selectedCategory === category ? "text-[#FFD700]" : "text-white"}>
+                    <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
+                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-black/40 ${selectedCategory === category ? "text-[#FFD700]" : "text-white"}`}>
                         {getCategoryIcon(category)}
                       </div>
-                      <span className={`text-xs leading-tight uppercase tracking-[0.1em] font-bold ${selectedCategory === category ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>{category}</span>
+                      <span className="min-w-0"><strong className={`block truncate text-sm font-bold ${selectedCategory === category ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>{category}</strong><small className="mt-1 block text-[11px] text-white/60">{MOCK_TEMPLATES.filter(item => item.category === category).length} doküman</small></span>
                     </div>
                   </button>
                 ))}
@@ -339,7 +340,7 @@ const App = () => {
                 <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-[0.3em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Arşiv Sonuçları ({filteredTemplates.length})</h3>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 relative z-10">
                 <AnimatePresence>
                   {filteredTemplates.map((template, idx) => (
                     <motion.div 
@@ -349,7 +350,7 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-white/90 dark:bg-[#111111] border border-slate-300 dark:border-white/10 hover:border-[#FFD700]/50 p-6 relative group overflow-hidden transition-all duration-300 shadow-[0_10px_30px_rgba(15,23,42,0.06)] dark:shadow-none hover:shadow-xl flex flex-col h-[280px] rounded-xl backdrop-blur-sm"
+                      className="bg-white/90 dark:bg-[#111111] border border-slate-200 dark:border-white/10 hover:border-[#FFD700]/50 p-4 relative group overflow-hidden transition-all duration-300 shadow-sm dark:shadow-none hover:shadow-lg flex min-h-[176px] rounded-lg backdrop-blur-sm"
                     >
                       {/* Background Detail */}
                       <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
@@ -359,29 +360,30 @@ const App = () => {
                       {/* Top Accent Line */}
                       <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:via-[#FFD700]/50 transition-colors duration-500"></div>
 
-                      <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className="w-12 h-12 bg-slate-100 dark:bg-black/50 border border-slate-300 dark:border-white/10 rounded flex items-center justify-center group-hover:bg-[#FFD700]/10 group-hover:border-[#FFD700]/40 transition-all duration-500">
-                          <FileText className="text-slate-600 dark:text-slate-400 group-hover:text-[#FFD700] w-6 h-6" strokeWidth={1.5} />
+                      <div className="flex w-full flex-col relative z-10">
+                        <div className="mb-3 flex items-start justify-between gap-3">
+                        <div className="w-9 h-9 shrink-0 bg-slate-100 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-md flex items-center justify-center group-hover:bg-[#FFD700]/10 group-hover:border-[#FFD700]/40 transition-all duration-500">
+                          <FileText className="text-slate-600 dark:text-slate-400 group-hover:text-[#FFD700] w-4 h-4" strokeWidth={1.5} />
                         </div>
-                        <span className="text-[9px] font-black tracking-[0.2em] uppercase text-slate-700 dark:text-white/60 bg-slate-100 dark:bg-black px-3 py-1.5 rounded border border-slate-300 dark:border-white/10 shadow-inner">
+                        <span className="text-[9px] font-bold uppercase text-slate-500 bg-slate-100 dark:bg-black/40 px-2 py-1 rounded border border-slate-200 dark:border-white/10">
                             {(template.format || "PDF").toUpperCase()}
                         </span>
                       </div>
 
-                      <div className="mb-4 relative z-10 flex-1">
-                        <h4 className="text-slate-700 dark:text-slate-300 font-bold mb-3 leading-snug group-hover:text-slate-900 dark:group-hover:text-white transition-all line-clamp-2 text-sm tracking-wide">
-                          {template.title}
+                      <div className="relative z-10 flex-1">
+                        <h4 className="text-slate-800 dark:text-slate-200 font-semibold mb-2 leading-snug group-hover:text-slate-950 dark:group-hover:text-white transition-all line-clamp-2 text-sm">
+                          {getDocumentTitle(template.id, template.title)}
                         </h4>
                         <div className="flex items-center gap-2 mt-auto">
                            <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/50 group-hover:bg-[#FFD700] group-hover:shadow-[0_0_8px_#FFD700] transition-all"></div>
-                           <p className="text-slate-500 text-[9px] font-bold tracking-[0.2em] uppercase truncate group-hover:text-slate-700 dark:text-slate-300 transition-colors">{template.category}</p>
+                           <p className="text-slate-500 text-[10px] font-medium truncate group-hover:text-slate-700 dark:text-slate-300 transition-colors">{template.category}</p>
                         </div>
                       </div>
 
-                      <div className="relative z-10 pt-4 mt-auto border-t border-slate-200 dark:border-white/5 border-dashed">
+                      <div className="relative z-10 pt-3 mt-3 border-t border-slate-200 dark:border-white/5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] text-slate-500 font-bold tracking-[0.1em] uppercase flex items-center gap-2">
-                            <Target size={12} /> {template.fields.length} VERİ ALANI
+                          <span className="text-[10px] text-slate-500 font-medium flex items-center gap-2">
+                            <Target size={12} /> {template.fields.length} düzenlenebilir alan
                           </span>
                           
                           <button 
@@ -389,12 +391,13 @@ const App = () => {
                               setSelectedTemplate(template);
                               setCurrentView('editor');
                             }}
-                            className="bg-transparent border border-[#FFD700] text-[#FFD700] p-2 rounded-full hover:bg-[#FFD700] hover:text-black transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]"
-                            title="Protokolü Başlat"
+                            className="flex items-center gap-1.5 rounded-md bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors"
+                            title="Dokümanı düzenle"
                           >
-                            <ArrowRight className="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" />
+                            Düzenle <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                           </button>
                         </div>
+                      </div>
                       </div>
                     </motion.div>
                   ))}

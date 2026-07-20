@@ -1,12 +1,13 @@
 ﻿/// <reference path="../vendor.d.ts" />
 import React, { useState, useEffect, useRef } from "react";
 import { DocumentTemplate } from "../types";
-import { ArrowLeft, Download, Settings2, FileText, Eye, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, Download, FileText, Eye, SlidersHorizontal, Upload } from "lucide-react";
 import { renderAsync } from "docx-preview";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import ImageModule from "docxtemplater-image-module-free";
 import { saveAs } from "file-saver";
+import { buildFieldSections, getDocumentTitle, getFieldLabel, getSubFieldLabel, isFieldVisible } from "../services/documentFieldService";
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -20,10 +21,18 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [loading, setLoading] = useState(false);
   const [docxArrayBuffer, setDocxArrayBuffer] = useState<ArrayBuffer | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const previewRef = useRef<HTMLDivElement>(null);
+  const fieldSections = buildFieldSections(template.fields);
+  const visibleFields = template.fields.filter(field => isFieldVisible(field, formData));
+  const completedFields = visibleFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
+  const completionRate = visibleFields.length ? Math.round((completedFields / visibleFields.length) * 100) : 100;
 
   useEffect(() => {
     setLoadError(null);
+    setDownloadError(null);
+    setLoading(true);
     const initialData: Record<string, any> = {};
     if (template.fields) {
       template.fields.forEach(field => {
@@ -31,6 +40,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       });
     }
     setFormData(initialData);
+    const sections = buildFieldSections(template.fields);
+    setOpenSections(Object.fromEntries(sections.map((section, index) => [section.id, index === 0])));
 
     if (template.fileUrl) {
       // fetch with cache-busting to bypass browser caching renamed .doc files
@@ -41,9 +52,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         })
         .then(buffer => {
           setDocxArrayBuffer(buffer);
+          setLoading(false);
         })
         .catch(err => {
           console.error("Doküman yüklenirken hata:", err);
+          setLoading(false);
           setLoadError(template.fileUrl?.endsWith(".doc") 
             ? "Eski tip .doc dosyaları canlı önizlemeyi desteklemez. Lütfen dosyaları .docx formatına çevirerek sisteme yükleyin." 
             : "Dosya sunucudan yüklenemedi. Yolunu kontrol edin.");
@@ -95,8 +108,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
          modules: [imageModule],
          nullGetter(part) { if (!part.module) { return ""; } if (part.module === "rawxml") { return ""; } return ""; }
       });
-      doc.setData(data);
-      doc.render();
+      doc.render(data);
 
       const outBuffer = doc.getZip().generate({ type: "arraybuffer" });
       const blob = new Blob([outBuffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
@@ -163,6 +175,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
   const handleDownload = () => {
     if (!docxArrayBuffer) return;
+    const missingRequired = visibleFields.filter(field => field.required && !formData[field.key]);
+    if (missingRequired.length) {
+      setDownloadError(`Lütfen zorunlu alanları doldurun: ${missingRequired.map(getFieldLabel).join(', ')}`);
+      return;
+    }
+    setDownloadError(null);
     try {
       const zip = new PizZip(docxArrayBuffer);
       
@@ -199,22 +217,22 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         nullGetter(part) { if (!part.module) { return ""; } if (part.module === "rawxml") { return ""; } return ""; }
       });
       
-      doc.setData(formData);
-      doc.render();
+      doc.render(formData);
 
       const out = doc.getZip().generate({
         type: "blob",
         mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       });
       
-      saveAs(out, `${template.title}_Doldurulmus.docx`);
+      const documentTitle = getDocumentTitle(template.id, template.title);
+      saveAs(out, `${documentTitle}_Doldurulmus.docx`);
       const historyEntry = {
         id: crypto.randomUUID(),
         templateId: template.id,
-        title: template.title,
+        title: documentTitle,
         category: template.category,
         createdAt: new Date().toISOString(),
-        fileName: `${template.title}_Doldurulmus.docx`
+        fileName: `${documentTitle}_Doldurulmus.docx`
       };
       try {
         const history = JSON.parse(localStorage.getItem('isg_document_history') || '[]');
@@ -225,6 +243,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       onSave(); // return to dashboard
     } catch (error) {
       console.error("İndirme Hatası", error);
+      setDownloadError('Doküman oluşturulamadı. Alanları kontrol edip tekrar deneyin.');
     }
   };
 
@@ -247,32 +266,44 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           Geri Dön
         </button>
 
-        <div className="mb-8">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-yellow-500/20 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold uppercase tracking-widest mb-4">
-              <Settings2 className="w-3 h-3" /> Magic Variable Motoru
-           </div>
-           <h1 className="text-2xl font-black mb-2 text-white tracking-tight leading-snug">
-             {template.title}
+        <div className="mb-6">
+           <p className="text-yellow-400 text-[11px] font-bold uppercase tracking-[0.18em] mb-3">{template.category}</p>
+           <h1 className="text-2xl font-bold mb-2 text-white leading-snug">
+             {getDocumentTitle(template.id, template.title)}
            </h1>
            <p className="text-slate-400 text-xs leading-relaxed">
-             Aşağıdaki alanları doldurduğunuz an DOCX önizlemesine anlık olarak yansıyacaktır.
+             Bu dokümana ait alanları doldurun. Değişiklikler önizlemeye otomatik yansır.
            </p>
+           <div className="mt-5 flex items-center gap-3">
+             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-yellow-400 transition-all duration-300" style={{ width: `${completionRate}%` }} /></div>
+             <span className="text-xs font-semibold tabular-nums text-slate-300">%{completionRate}</span>
+           </div>
         </div>
         
-        <div className="space-y-6 flex-1">
-          <div className="grid grid-cols-1 gap-5 relative z-10">
-            {template.fields?.map(field => {
+        <div className="space-y-3 flex-1 relative z-10">
+          {fieldSections.map(section => {
+            const sectionFields = section.fields.filter(field => isFieldVisible(field, formData));
+            if (!sectionFields.length) return null;
+            const isOpen = openSections[section.id];
+            return <section key={section.id} className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.025]">
+              <button type="button" onClick={() => setOpenSections(current => ({ ...current, [section.id]: !isOpen }))} className="flex w-full items-center gap-3 px-4 py-4 text-left hover:bg-white/[0.035] transition-colors" aria-expanded={isOpen}>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-yellow-400/10 text-xs font-bold text-yellow-400">{sectionFields.length}</span>
+                <span className="min-w-0 flex-1"><strong className="block text-sm font-semibold text-white">{section.title}</strong><span className="block truncate text-[11px] text-slate-500">{section.description}</span></span>
+                <ChevronDown size={16} className={`text-slate-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isOpen && <div className="grid grid-cols-1 gap-5 border-t border-white/5 px-4 py-5">
+            {sectionFields.map(field => {
               return (
                 <div key={field.key} className="group">
-                  <label className="block text-[11px] font-bold text-slate-400 mb-2 uppercase tracking-wide group-focus-within:text-yellow-500 transition-colors">
-                    {field.label}
+                  <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-slate-300 group-focus-within:text-yellow-400 transition-colors">
+                    {getFieldLabel(field)} {field.required && <span className="text-yellow-400" aria-label="zorunlu">*</span>}
                   </label>
                   {field.type === "text" && field.key === "logo" && (
                     <div className="relative w-full">
                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, field.key)} className="hidden" id={`logo-upload-${field.key}`} />
                        <label htmlFor={`logo-upload-${field.key}`} className="w-full flex items-center justify-between px-4 py-3.5 bg-black/40 border border-white/10 hover:border-yellow-500/50 rounded-xl cursor-pointer transition-all shadow-inner text-sm text-slate-400 group-focus-within:ring-1 focus-within:ring-yellow-500">
-                          <span className="truncate flex-1">{formData[field.key] ? 'Logo Yüklendi ✅' : 'Logo Seçin...'}</span>
-                          <span className="text-yellow-500 text-xs font-bold bg-yellow-500/10 px-2 py-1 rounded">Gözat</span>
+                          <span className="truncate flex-1">{formData[field.key] ? 'Logo hazır' : 'PNG veya JPG seçin'}</span>
+                          <span className="flex items-center gap-1.5 text-yellow-400 text-xs font-semibold"><Upload size={14} /> Gözat</span>
                        </label>
                     </div>
                   )}
@@ -302,7 +333,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                                 {field.options ? field.options.map(subFieldName => (
                                   <div key={subFieldName} className="sm:col-span-1">
-                                    <label className="block text-[10px] text-slate-500 mb-1">{subFieldName}</label>
+                                    <label className="block text-[10px] text-slate-500 mb-1">{getSubFieldLabel(subFieldName)}</label>
                                     <input type="text" value={item[subFieldName] || ""} onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs" placeholder="..." />
                                   </div>
                                 )) : (
@@ -321,13 +352,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                 </div>
               );
             })}
-          </div>
+              </div>}
+            </section>;
+          })}
         </div>
 
         {/* Action Buttons Pinned to Bottom */}
-        <div className="sticky bottom-0 pt-4 lg:pt-6 mt-6 pb-[max(0.5rem,env(safe-area-inset-bottom))] border-t border-white/5 flex gap-4 relative z-10 bg-zinc-950">
-          <button onClick={handleDownload} disabled={loading || !docxArrayBuffer} className="flex-1 min-h-12 px-4 py-3.5 lg:py-4 rounded-xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-extrabold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">
-             <Download size={18} /> Şablonu İndir
+        <div className="sticky bottom-0 pt-4 mt-6 pb-[max(0.5rem,env(safe-area-inset-bottom))] border-t border-white/5 relative z-10 bg-zinc-950">
+          {downloadError && <p role="alert" className="mb-3 rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">{downloadError}</p>}
+          <button onClick={handleDownload} disabled={loading || !docxArrayBuffer} className="flex w-full min-h-12 items-center justify-center gap-2 rounded-lg bg-yellow-400 px-4 py-3.5 text-sm font-bold text-black hover:bg-yellow-300 active:translate-y-px transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+             {loading ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" /> Şablon hazırlanıyor</> : <><Download size={18} /> Dokümanı Oluştur</>}
           </button>
         </div>
       </div>
