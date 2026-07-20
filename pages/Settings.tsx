@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User } from '../types';
 import { Button } from '../components/Button';
 import { Save, Bell, Lock, User as UserIcon } from 'lucide-react';
+import { changeSupabasePassword, isSupabaseConfigured, updateSupabaseProfile } from '../services/supabaseService';
 
 interface SettingsProps {
   user: User;
@@ -24,7 +25,12 @@ export const Settings: React.FC<SettingsProps> = ({ user, onSave }) => {
     setLoading(true);
     setError('');
     if (activeTab === 'general') {
-      onSave?.(profile);
+      try {
+        await updateSupabaseProfile(profile);
+        onSave?.(profile);
+      } catch (saveError: any) {
+        setError(saveError.message || 'Profil bilgileri kaydedilemedi.'); setLoading(false); return;
+      }
     } else if (activeTab === 'notifications') {
       localStorage.setItem('isg_notification_preferences', JSON.stringify(notifications));
     } else {
@@ -32,6 +38,14 @@ export const Settings: React.FC<SettingsProps> = ({ user, onSave }) => {
         setError('Yeni şifre en az 8 karakter, büyük/küçük harf ve rakam içermelidir.'); setLoading(false); return;
       }
       if (passwords.next !== passwords.confirm) { setError('Yeni şifreler eşleşmiyor.'); setLoading(false); return; }
+      if (isSupabaseConfigured) {
+        try {
+          await changeSupabasePassword(user.email, passwords.current, passwords.next);
+          setPasswords({ current: '', next: '', confirm: '' });
+        } catch (passwordError: any) {
+          setError(passwordError.message || 'Şifre güncellenemedi.'); setLoading(false); return;
+        }
+      } else {
       const hash = async (value: string) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))).map(byte => byte.toString(16).padStart(2, '0')).join('');
       const accounts = JSON.parse(localStorage.getItem('isg_accounts') || '[]');
       const index = accounts.findIndex((account: any) => account.user.email.toLowerCase() === user.email.toLowerCase());
@@ -39,6 +53,7 @@ export const Settings: React.FC<SettingsProps> = ({ user, onSave }) => {
       accounts[index].passwordHash = await hash(passwords.next);
       localStorage.setItem('isg_accounts', JSON.stringify(accounts));
       setPasswords({ current: '', next: '', confirm: '' });
+      }
     }
     setLoading(false);
     setSaved(true);

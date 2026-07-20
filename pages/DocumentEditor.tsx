@@ -9,6 +9,7 @@ import ImageModule from "docxtemplater-image-module-free";
 import { saveAs } from "file-saver";
 import { buildFieldSections, getDocumentTitle, getFieldLabel, getSubFieldLabel, isFieldVisible } from "../services/documentFieldService";
 import { reconcileFieldsWithDocx } from "../services/docxFieldService";
+import { deleteSupabaseDraft, getSupabaseDraft, saveSupabaseDraft, saveSupabaseHistory } from "../services/supabaseService";
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -85,9 +86,19 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
 
   useEffect(() => {
     if (!Object.keys(formData).length) return;
-    const timer = window.setTimeout(() => localStorage.setItem(draftKey, JSON.stringify(formData)), 500);
+    const timer = window.setTimeout(() => {
+      localStorage.setItem(draftKey, JSON.stringify(formData));
+      void saveSupabaseDraft(template.id, formData).catch(error => console.error('Taslak senkronizasyonu başarısız:', error));
+    }, 500);
     return () => window.clearTimeout(timer);
-  }, [draftKey, formData]);
+  }, [draftKey, formData, template.id]);
+
+  useEffect(() => {
+    if (reopenedData) return;
+    void getSupabaseDraft(template.id).then(remoteDraft => {
+      if (remoteDraft) setFormData(current => ({ ...current, ...remoteDraft }));
+    }).catch(error => console.error('Uzak taslak yüklenemedi:', error));
+  }, [reopenedData, template.id]);
 
   useEffect(() => {
     const updateScale = () => setPreviewScale(window.innerWidth < 1024 ? Math.min(1, (window.innerWidth - 32) / 800) : 1);
@@ -274,7 +285,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
       } catch {
         localStorage.setItem('isg_document_history', JSON.stringify([historyEntry]));
       }
+      void saveSupabaseHistory(historyEntry).catch(error => console.error('Geçmiş senkronizasyonu başarısız:', error));
       localStorage.removeItem(draftKey);
+      void deleteSupabaseDraft(template.id).catch(error => console.error('Uzak taslak silinemedi:', error));
       onSave(); // return to dashboard
     } catch (error) {
       console.error("İndirme Hatası", error);

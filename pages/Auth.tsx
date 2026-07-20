@@ -3,7 +3,7 @@ import { ArrowLeft, Building2, LogIn, MapPin, Shield, User, UserPlus } from "luc
 import { motion } from "framer-motion";
 import type { User as AppUser } from "../types";
 import { SubscriptionPlan, UserRole } from "../types";
-import { isSupabaseConfigured, loginWithSupabase, registerWithSupabase, requestPasswordReset } from "../services/supabaseService";
+import { isSupabaseConfigured, loginWithSupabase, registerWithSupabase, requestPasswordReset, updateSupabasePassword } from "../services/supabaseService";
 
 type AccountType = "individual" | "osgb";
 type Profession = "İSG Uzmanı" | "İSG Teknikeri" | "İşveren";
@@ -45,6 +45,8 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
   const [loading, setLoading] = useState(false);
   const [consent, setConsent] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [isResetMode, setIsResetMode] = useState(() => new URLSearchParams(window.location.search).get('reset-password') === '1');
+  const [resetPasswords, setResetPasswords] = useState({ next: '', confirm: '' });
 
   const update = (field: keyof typeof form, value: string) => {
     const nextValue = field === "phone" ? formatPhone(value) : field === "taxNumber" ? value.replace(/\D/g, "").slice(0, 10) : value;
@@ -151,11 +153,52 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
     }
   };
 
+  const handleRecoverySubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!/^(?=.*[a-zçğıöşü])(?=.*[A-ZÇĞİÖŞÜ])(?=.*\d).{8,}$/.test(resetPasswords.next)) {
+      setMessage({ type: 'error', text: 'Yeni şifre en az 8 karakter, büyük/küçük harf ve rakam içermelidir.' });
+      return;
+    }
+    if (resetPasswords.next !== resetPasswords.confirm) {
+      setMessage({ type: 'error', text: 'Yeni şifreler eşleşmiyor.' });
+      return;
+    }
+    try {
+      setLoading(true);
+      await updateSupabasePassword(resetPasswords.next);
+      window.history.replaceState({}, '', window.location.pathname);
+      setIsResetMode(false);
+      setIsLogin(true);
+      setResetPasswords({ next: '', confirm: '' });
+      setMessage({ type: 'success', text: 'Şifreniz yenilendi. Yeni şifrenizle giriş yapabilirsiniz.' });
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Bağlantının süresi dolmuş. Yeni bir sıfırlama bağlantısı isteyin.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const field = (name: keyof typeof form, label: string, placeholder: string, type = "text") => (
     <div className="space-y-1.5">
       <label htmlFor={name} className={labelClass}>{label}</label>
       <input id={name} required value={form[name]} onChange={event => update(name, event.target.value)} type={type} placeholder={placeholder} autoComplete={name === "password" ? (isLogin ? "current-password" : "new-password") : undefined} className={`${inputClass} ${errors[name] ? "border-red-500 dark:border-red-500" : ""}`} />
       {errors[name] && <p className="text-xs text-red-600 dark:text-red-400 ml-1">{errors[name]}</p>}
+    </div>
+  );
+
+  if (isResetMode) return (
+    <div className="min-h-screen bg-[#0c0f12] text-white flex items-center justify-center p-4">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111820] p-6 sm:p-8 shadow-2xl">
+        <div className="font-black tracking-[0.18em] mb-7">İSG <span className="text-yellow-500">ZEYRON</span></div>
+        <h1 className="text-2xl font-black">Yeni Şifre Belirle</h1>
+        <p className="mt-2 text-sm text-slate-400">Hesabınız için yeni ve güçlü bir şifre oluşturun.</p>
+        {message && <div className={`mt-5 p-4 rounded-xl text-sm border ${message.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>{message.text}</div>}
+        <form onSubmit={handleRecoverySubmit} className="mt-6 space-y-4">
+          <div><label className={labelClass}>Yeni Şifre</label><input type="password" autoComplete="new-password" value={resetPasswords.next} onChange={event => setResetPasswords(current => ({ ...current, next: event.target.value }))} className={inputClass} /></div>
+          <div><label className={labelClass}>Yeni Şifre Tekrar</label><input type="password" autoComplete="new-password" value={resetPasswords.confirm} onChange={event => setResetPasswords(current => ({ ...current, confirm: event.target.value }))} className={inputClass} /></div>
+          <button type="submit" disabled={loading} className="w-full rounded-xl bg-yellow-400 py-3.5 font-extrabold text-black disabled:opacity-50">{loading ? 'Güncelleniyor...' : 'Şifreyi Güncelle'}</button>
+        </form>
+      </div>
     </div>
   );
 

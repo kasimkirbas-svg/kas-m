@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FileClock, FilePenLine, FileText, Search, Trash2 } from 'lucide-react';
+import { deleteSupabaseHistory, getSupabaseHistory } from '../services/supabaseService';
 
 export interface HistoryEntry {
   id: string;
@@ -19,8 +20,15 @@ export const DocumentHistory: React.FC<{ onEdit?: (entry: HistoryEntry) => void 
   const [history, setHistory] = useState<HistoryEntry[]>(readHistory);
   const [query, setQuery] = useState('');
   const filtered = useMemo(() => history.filter(item => `${item.title} ${item.category}`.toLocaleLowerCase('tr').includes(query.toLocaleLowerCase('tr'))), [history, query]);
-  const remove = (id: string) => { const next = history.filter(item => item.id !== id); setHistory(next); localStorage.setItem('isg_document_history', JSON.stringify(next)); };
-  const clear = () => { if (confirm('Tüm doküman geçmişi silinsin mi?')) { setHistory([]); localStorage.removeItem('isg_document_history'); } };
+  useEffect(() => {
+    void getSupabaseHistory().then(remote => {
+      if (!remote) return;
+      setHistory(remote);
+      localStorage.setItem('isg_document_history', JSON.stringify(remote));
+    }).catch(error => console.error('Geçmiş senkronizasyonu başarısız:', error));
+  }, []);
+  const remove = (id: string) => { const next = history.filter(item => item.id !== id); setHistory(next); localStorage.setItem('isg_document_history', JSON.stringify(next)); void deleteSupabaseHistory(id); };
+  const clear = () => { if (confirm('Tüm doküman geçmişi silinsin mi?')) { setHistory([]); localStorage.removeItem('isg_document_history'); void deleteSupabaseHistory(); } };
 
   return <section className="max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-7"><div><div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400 text-xs font-black tracking-widest uppercase"><FileClock size={16} /> Doküman Merkezi</div><h1 className="mt-3 text-3xl sm:text-4xl font-black text-slate-950 dark:text-white">Doküman Geçmişi</h1><p className="mt-2 text-slate-600 dark:text-slate-400">İndirdiğiniz belgeleri ve oluşturulma tarihlerini görüntüleyin.</p></div>{history.length > 0 && <button onClick={clear} className="min-h-11 px-4 rounded-lg border border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-500/10 flex items-center justify-center gap-2 text-sm font-bold"><Trash2 size={17} /> Geçmişi Temizle</button>}</div>
