@@ -72,8 +72,8 @@ const App = () => {
 
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
 
-  const safeTemplates = MOCK_TEMPLATES || [];
-  const uniqueCategories = Array.from(new Set(safeTemplates.map(t => t.category)));
+  const safeTemplates = React.useMemo(() => MOCK_TEMPLATES || [], []);
+  const uniqueCategories = React.useMemo(() => Array.from(new Set(safeTemplates.map(t => t.category))), [safeTemplates]);
 
   const getCategoryIcon = (categoryName: string) => {
     const lower = categoryName.toLowerCase();
