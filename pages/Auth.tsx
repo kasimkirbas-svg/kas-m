@@ -3,6 +3,7 @@ import { ArrowLeft, Building2, LogIn, MapPin, Shield, User, UserPlus } from "luc
 import { motion } from "framer-motion";
 import type { User as AppUser } from "../types";
 import { SubscriptionPlan, UserRole } from "../types";
+import { isSupabaseConfigured, loginWithSupabase, registerWithSupabase, requestPasswordReset } from "../services/supabaseService";
 
 type AccountType = "individual" | "osgb";
 type Profession = "İSG Uzmanı" | "İSG Teknikeri" | "İşveren";
@@ -79,8 +80,19 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
     setMessage(null);
     const email = form.email.trim().toLowerCase();
     const accounts = getAccounts();
-    const passwordHash = await hashPassword(form.password);
     if (isLogin) {
+      if (isSupabaseConfigured) {
+        try {
+          const user = await loginWithSupabase(email, form.password);
+          setMessage({ type: "success", text: "Bilgiler doğrulandı, yönlendiriliyorsunuz..." });
+          setTimeout(() => onAuthSuccess?.(user), 300);
+        } catch (error: any) {
+          setLoading(false);
+          setMessage({ type: "error", text: error.message || "E-posta veya şifre hatalı." });
+        }
+        return;
+      }
+      const passwordHash = await hashPassword(form.password);
       const account = accounts.find(item => item.user.email.toLowerCase() === email && item.passwordHash === passwordHash);
       if (!account) {
         setLoading(false);
@@ -91,7 +103,7 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
       setTimeout(() => onAuthSuccess?.(account.user), 500);
       return;
     }
-    if (accounts.some(item => item.user.email.toLowerCase() === email)) {
+    if (!isSupabaseConfigured && accounts.some(item => item.user.email.toLowerCase() === email)) {
       setLoading(false);
       setErrors({ email: "Bu e-posta adresiyle daha önce hesap oluşturulmuş." });
       return;
@@ -104,10 +116,39 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
         taxOffice: form.taxOffice.trim(), address: form.address.trim()
       })
     };
+    if (isSupabaseConfigured) {
+      try {
+        await registerWithSupabase(email, form.password, user);
+        setMessage({ type: "success", text: "Doğrulama bağlantısı e-posta adresinize gönderildi. Bağlantıyı açtıktan sonra giriş yapabilirsiniz." });
+        setLoading(false);
+        setTimeout(() => { setIsLogin(true); setForm(current => ({ ...current, password: "", confirmPassword: "" })); }, 1200);
+      } catch (error: any) {
+        setLoading(false);
+        setMessage({ type: "error", text: error.message || "Hesap oluşturulamadı." });
+      }
+      return;
+    }
+    const passwordHash = await hashPassword(form.password);
     localStorage.setItem("isg_accounts", JSON.stringify([...accounts, { user, passwordHash }]));
     setMessage({ type: "success", text: "Hesabınız oluşturuldu. Bilgilerinizle giriş yapabilirsiniz." });
     setLoading(false);
     setTimeout(() => { setIsLogin(true); setForm(current => ({ ...current, password: "", confirmPassword: "" })); }, 700);
+  };
+
+  const handlePasswordReset = async () => {
+    if (!form.email.trim()) {
+      setErrors(current => ({ ...current, email: "Şifre sıfırlama bağlantısı için e-posta adresinizi girin." }));
+      return;
+    }
+    try {
+      setLoading(true);
+      await requestPasswordReset(form.email.trim().toLowerCase());
+      setMessage({ type: "success", text: "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi." });
+    } catch (error: any) {
+      setMessage({ type: "error", text: error.message || "Şifre sıfırlama isteği gönderilemedi." });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const field = (name: keyof typeof form, label: string, placeholder: string, type = "text") => (
@@ -141,6 +182,7 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
             <div className="grid sm:grid-cols-2 gap-5">{field("email", "E-posta", "isim@sirket.com", "email")}{field("password", "Şifre", "En az 8 karakter", "password")}{!isLogin && field("confirmPassword", "Şifre Tekrar", "Şifrenizi tekrar girin", "password")}</div>
             {!isLogin && <div><label className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 cursor-pointer"><input type="checkbox" checked={consent} onChange={event => { setConsent(event.target.checked); setErrors(current => ({ ...current, consent: "" })); }} className="mt-1 accent-yellow-500" /><span className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">Üyelik ve faturalama işlemleri için verdiğim bilgilerin işlenmesini ve hesap güvenliği amacıyla saklanmasını onaylıyorum.</span></label>{errors.consent && <p className="text-xs text-red-600 dark:text-red-400 mt-1 ml-1">{errors.consent}</p>}</div>}
             <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-extrabold rounded-xl py-4 flex items-center justify-center gap-2 hover:brightness-105 transition-all shadow-[0_10px_25px_rgba(202,138,4,0.2)] disabled:opacity-50">{loading ? <span className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" /> : isLogin ? <><LogIn size={20} />Sisteme Giriş Yap</> : <><UserPlus size={20} />{accountType === "osgb" ? "OSGB Hesabı Oluştur" : "Bireysel Hesap Oluştur"}</>}</button>
+            {isLogin && isSupabaseConfigured && <button type="button" onClick={handlePasswordReset} disabled={loading} className="w-full text-sm font-semibold text-slate-400 hover:text-yellow-400 disabled:opacity-50">Şifremi unuttum</button>}
           </form>
           <div className="mt-7 pt-6 border-t border-slate-200 dark:border-white/10 text-center"><button type="button" onClick={() => { setIsLogin(!isLogin); setErrors({}); setMessage(null); }} className="text-sm text-slate-500 dark:text-slate-400 hover:text-yellow-600 dark:hover:text-yellow-400">{isLogin ? "Hesabınız yok mu? Kayıt oluşturun" : "Zaten üye misiniz? Giriş yapın"}</button></div>
         </motion.div>

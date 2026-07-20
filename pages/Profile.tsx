@@ -1,7 +1,7 @@
 import React from 'react';
 import { User, SubscriptionPlan, UserRole } from '../types';
 import { Button } from '../components/Button';
-import { User as UserIcon, Mail, Building, CreditCard, Download, ShieldCheck, Phone, BriefcaseBusiness, MapPin } from 'lucide-react';
+import { User as UserIcon, Mail, Building, ReceiptText, ShieldCheck, Phone, BriefcaseBusiness, MapPin } from 'lucide-react';
 
 interface ProfileProps {
   user: User;
@@ -12,6 +12,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
   const totalLimit = user.plan === SubscriptionPlan.MONTHLY ? 30 : 1000;
   const used = isUnlimited ? 0 : 30 - (user.remainingDownloads as number);
   const percentage = isUnlimited ? 100 : Math.round((used / totalLimit) * 100);
+  const planLabel = user.plan === SubscriptionPlan.YEARLY ? 'Yıllık Kurumsal Plan' : user.plan === SubscriptionPlan.MONTHLY ? 'Aylık Profesyonel Plan' : 'Ücretsiz Plan';
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -61,7 +62,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-800 dark:text-white">Mevcut Abonelik</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">{user.plan === SubscriptionPlan.YEARLY ? 'Yıllık Pro Plan' : 'Aylık Standart Plan'}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{planLabel}</p>
                 </div>
               </div>
               <Button variant="outline" size="sm">Planı Değiştir</Button>
@@ -83,9 +84,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
                   <div className="h-full bg-blue-600 transition-all duration-500" style={{ width: `${100 - percentage}%` }}></div>
                 </div>
               )}
-              <p className="text-xs text-slate-400 mt-2">
-                Yenilenme Tarihi: <span className="font-medium text-slate-600">14 Mayıs 2025</span>
-              </p>
+              <p className="text-xs text-slate-400 mt-2">Yenilenme tarihi, doğrulanmış bir ödeme sonrasında oluşturulur.</p>
             </div>
           </div>
 
@@ -95,31 +94,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               <h3 className="font-bold text-slate-800 dark:text-white">Fatura Geçmişi</h3>
               <Button variant="secondary" size="sm" className="bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10">Tümünü Gör</Button>
             </div>
-            <div className="divide-y divide-slate-100 dark:divide-white/5">
-              {[
-                { date: '14 Nis 2025', amount: '4.999 TL', status: 'Ödendi' },
-                { date: '14 Mar 2025', amount: '499 TL', status: 'Ödendi' },
-                { date: '14 Şub 2025', amount: '499 TL', status: 'Ödendi' },
-              ].map((inv, i) => (
-                <div key={i} className="px-4 sm:px-6 py-4 flex items-center justify-between gap-3 hover:bg-slate-50 dark:hover:bg-white/[0.03]">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-slate-100 rounded-full text-slate-500 mr-4">
-                      <CreditCard size={18} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900 dark:text-white">{inv.amount}</p>
-                      <p className="text-xs text-slate-500">{inv.date}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">{inv.status}</span>
-                    <button className="text-blue-600 hover:text-blue-700">
-                      <Download size={18} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <div className="px-6 py-10 text-center"><ReceiptText className="mx-auto text-slate-500" size={30} /><p className="mt-3 text-sm font-semibold text-slate-300">Henüz doğrulanmış fatura yok</p><p className="mt-1 text-xs text-slate-500">Ödeme altyapısı etkinleştirildiğinde faturalar burada listelenecek.</p></div>
           </div>
         </div>
       </div>

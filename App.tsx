@@ -1,12 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import Landing from './pages/Landing';
-import Auth from './pages/Auth';
-import { DocumentEditor } from './pages/DocumentEditor';
 import { Layout } from './components/Layout';
-import { Profile } from './pages/Profile';
-import { Settings as SettingsPage } from './pages/Settings';
-import { Billing } from './pages/Billing';
-import { DocumentHistory } from './pages/DocumentHistory';
 import type { User, DocumentTemplate } from './types';
 import { 
   Search, Shield, FileText, Download, Briefcase, Factory, HardHat, 
@@ -19,6 +13,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { MOCK_TEMPLATES } from './constants';
 import { getDocumentTitle } from './services/documentFieldService';
+import { reportError } from './services/monitoringService';
+
+const Auth = React.lazy(() => import('./pages/Auth'));
+const DocumentEditor = React.lazy(() => import('./pages/DocumentEditor').then(module => ({ default: module.DocumentEditor })));
+const Profile = React.lazy(() => import('./pages/Profile').then(module => ({ default: module.Profile })));
+const SettingsPage = React.lazy(() => import('./pages/Settings').then(module => ({ default: module.Settings })));
+const Billing = React.lazy(() => import('./pages/Billing').then(module => ({ default: module.Billing })));
+const DocumentHistory = React.lazy(() => import('./pages/DocumentHistory').then(module => ({ default: module.DocumentHistory })));
 
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   constructor(props: any) {
@@ -27,6 +29,9 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
   }
   static getDerivedStateFromError(error: any) {
     return { hasError: true, error };
+  }
+  componentDidCatch(error: any) {
+    void reportError(error);
   }
   render() {
     if (this.state.hasError) {
@@ -65,6 +70,14 @@ const App = () => {
   }, [user]);
 
   useEffect(() => {
+    void import('./services/supabaseService').then(async ({ isSupabaseConfigured, getCurrentSupabaseUser }) => {
+      if (!isSupabaseConfigured) return;
+      const sessionUser = await getCurrentSupabaseUser();
+      if (sessionUser) setUser(sessionUser);
+    });
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem('isg_view', currentView);
   }, [currentView]);
 
@@ -79,6 +92,7 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
+  const [editorInitialData, setEditorInitialData] = useState<Record<string, any> | undefined>();
 
   const getCategoryIcon = (categoryName: string) => {
     const lower = categoryName.toLowerCase();
@@ -114,6 +128,7 @@ const App = () => {
   };
 
   const handleLogout = () => {
+    void import('./services/supabaseService').then(({ signOutSupabase }) => signOutSupabase());
     setUser(null);
     setCurrentView('landing');
     setSelectedTemplate(null);
@@ -150,8 +165,9 @@ const App = () => {
       return (
         <DocumentEditor 
           template={selectedTemplate} 
+          initialData={editorInitialData}
           onBack={() => setCurrentView('dashboard')} 
-          onSave={() => setCurrentView('dashboard')} 
+          onSave={() => { setEditorInitialData(undefined); setCurrentView('dashboard'); }} 
         />
       );
     }
@@ -172,7 +188,13 @@ const App = () => {
             
             {currentView === 'profile' && <Profile user={user} />}
             {currentView === 'settings' && <SettingsPage user={user} onSave={(changes) => setUser(current => current ? { ...current, ...changes } : current)} />}
-            {currentView === 'history' && <DocumentHistory />}
+            {currentView === 'history' && <DocumentHistory onEdit={(entry) => {
+              const template = archiveTemplates.find(item => item.id === entry.templateId);
+              if (!template || !entry.formData) return;
+              setSelectedTemplate(template);
+              setEditorInitialData(entry.formData);
+              setCurrentView('editor');
+            }} />}
             {currentView === 'billing' && <Billing user={user} onSelectPlan={(plan) => setUser(current => current ? { ...current, plan, remainingDownloads: plan === 'YEARLY' ? 'UNLIMITED' : 30 } : current)} />}
 
             <AnimatePresence>
@@ -384,6 +406,7 @@ const App = () => {
                           <button 
                             onClick={() => {
                               setSelectedTemplate(template);
+                              setEditorInitialData(undefined);
                               setCurrentView('editor');
                             }}
                             className="flex items-center gap-1.5 rounded-md bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors"
@@ -428,7 +451,9 @@ const App = () => {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-slate-50 dark:bg-[#05060A] overflow-hidden selection:bg-yellow-500/30">
-        {renderContent()}
+        <React.Suspense fallback={<div className="min-h-screen bg-[#16222a] text-slate-300 flex items-center justify-center"><div className="flex items-center gap-3 text-sm font-semibold"><span className="h-5 w-5 animate-spin rounded-full border-2 border-amber-300/30 border-t-amber-300" /> Çalışma alanı hazırlanıyor</div></div>}>
+          {renderContent()}
+        </React.Suspense>
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes scan {
             0% { top: 0; opacity: 0; }

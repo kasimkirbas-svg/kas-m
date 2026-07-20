@@ -12,11 +12,12 @@ import { reconcileFieldsWithDocx } from "../services/docxFieldService";
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
+  initialData?: Record<string, any>;
   onBack: () => void;
   onSave: () => void;
 }
 
-export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
+export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initialData: reopenedData, onBack, onSave }) => {
   const [mobileView, setMobileView] = useState<"form" | "preview">("form");
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [documentFields, setDocumentFields] = useState<DocumentField[]>(template.fields);
@@ -32,16 +33,19 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
   const completedFields = visibleFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
   const completionRate = visibleFields.length ? Math.round((completedFields / visibleFields.length) * 100) : 100;
+  const draftKey = `isg_document_draft:${template.id}`;
 
   useEffect(() => {
     setLoadError(null);
     setDownloadError(null);
     setLoading(true);
     setDocumentFields(template.fields);
-    const initialData: Record<string, any> = {};
+        let storedDraft: Record<string, any> = {};
+        try { storedDraft = JSON.parse(localStorage.getItem(draftKey) || '{}'); } catch { storedDraft = {}; }
+        const initialData: Record<string, any> = { ...storedDraft, ...reopenedData };
     if (template.fields) {
       template.fields.forEach(field => {
-         initialData[field.key] = field.type === "date" ? new Date().toISOString().split("T")[0] : "";
+          if (!(field.key in initialData)) initialData[field.key] = field.type === "date" ? new Date().toISOString().split("T")[0] : "";
       });
     }
     setFormData(initialData);
@@ -59,7 +63,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           const reconciledFields = reconcileFieldsWithDocx(template.fields, buffer);
           const reconciledData = { ...initialData };
           reconciledFields.forEach(field => {
-            if (field.type === 'list') reconciledData[field.key] = [];
+            if (field.type === 'list' && !Array.isArray(reconciledData[field.key])) reconciledData[field.key] = [];
             else if (!(field.key in reconciledData)) reconciledData[field.key] = field.type === 'date' ? new Date().toISOString().split('T')[0] : '';
           });
           setDocumentFields(reconciledFields);
@@ -77,7 +81,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
             : "Dosya sunucudan yüklenemedi. Yolunu kontrol edin.");
         });
     }
-  }, [template]);
+  }, [template, reopenedData, draftKey]);
+
+  useEffect(() => {
+    if (!Object.keys(formData).length) return;
+    const timer = window.setTimeout(() => localStorage.setItem(draftKey, JSON.stringify(formData)), 500);
+    return () => window.clearTimeout(timer);
+  }, [draftKey, formData]);
 
   useEffect(() => {
     const updateScale = () => setPreviewScale(window.innerWidth < 1024 ? Math.min(1, (window.innerWidth - 32) / 800) : 1);
@@ -255,7 +265,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         title: documentTitle,
         category: template.category,
         createdAt: new Date().toISOString(),
-        fileName: `${documentTitle}_Doldurulmus.docx`
+        fileName: `${documentTitle}_Doldurulmus.docx`,
+        formData
       };
       try {
         const history = JSON.parse(localStorage.getItem('isg_document_history') || '[]');
@@ -263,6 +274,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       } catch {
         localStorage.setItem('isg_document_history', JSON.stringify([historyEntry]));
       }
+      localStorage.removeItem(draftKey);
       onSave(); // return to dashboard
     } catch (error) {
       console.error("İndirme Hatası", error);

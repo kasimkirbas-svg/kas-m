@@ -12,10 +12,10 @@ interface LayoutProps {
 }
 
 const menuItems = [
-  { view: 'dashboard', label: 'Doküman Arşivi', icon: Menu },
+  { view: 'dashboard', label: 'Ana Panel', icon: Menu },
   { view: 'history', label: 'Doküman Geçmişi', icon: FileClock },
-  { view: 'billing', label: 'Plan Satın Al', icon: Crown },
-  { view: 'profile', label: 'Profilim', icon: UserIcon },
+  { view: 'billing', label: 'Üyelik Merkezi', icon: Crown },
+  { view: 'profile', label: 'Profil ve Üyelik', icon: UserIcon },
   { view: 'settings', label: 'Ayarlar', icon: Settings },
 ];
 

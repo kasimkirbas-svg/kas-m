@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { initializeMonitoring } from './services/monitoringService';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -9,5 +10,6 @@ if (!rootElement) {
 
 document.documentElement.classList.add('dark');
 localStorage.removeItem('theme');
+void initializeMonitoring();
 
 createRoot(rootElement).render(<React.StrictMode><App /></React.StrictMode>);
