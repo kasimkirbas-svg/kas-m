@@ -36,6 +36,9 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
   }
 }
 
+const safeTemplates = MOCK_TEMPLATES || [];
+
+const uniqueCategories = Array.from(new Set(safeTemplates.map(t => t.category)));
 const App = () => {
   const [user, setUser] = useState<User | null>(() => {
     try {
@@ -73,7 +76,7 @@ const App = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
 
   const safeTemplates = React.useMemo(() => MOCK_TEMPLATES || [], []);
-  const uniqueCategories = React.useMemo(() => Array.from(new Set(safeTemplates.map(t => t.category))), [safeTemplates]);
+
 
   const getCategoryIcon = (categoryName: string) => {
     const lower = categoryName.toLowerCase();
