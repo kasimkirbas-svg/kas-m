@@ -150,7 +150,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                   key={item.id} 
                   href={`#${item.id}`} 
                   onClick={(e) => scrollToSection(item.id, e)} 
-                  className="relative text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:text-white uppercase tracking-[0.25em] transition-all group py-2 px-4 rounded-full hover:bg-white/5"
+                  className="relative text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white uppercase tracking-[0.25em] transition-all group py-2 px-4 rounded-full hover:bg-slate-100/70 dark:hover:bg-white/5"
                   whileHover={{ y: -1 }}
                 >
                   {item.label}
@@ -165,7 +165,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
               KAYIT OL
             </button>
             <div className="hidden md:block w-px h-6 bg-white/20"></div>
-            <button onClick={onLoginClick} className="hidden md:block text-xs font-black text-yellow-500 hover:text-slate-900 dark:text-white transition-colors tracking-widest uppercase">
+            <button onClick={onLoginClick} className="hidden md:block text-xs font-black text-yellow-600 dark:text-yellow-500 hover:text-slate-900 dark:hover:text-white transition-colors tracking-widest uppercase">
               GİRİŞ YAP
             </button>
           </div>
@@ -255,7 +255,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     <div className="mb-6 w-16 h-16 rounded-2xl bg-white/80 dark:bg-black/60 border border-slate-300 dark:border-white/10 flex items-center justify-center group-hover:bg-yellow-500/20 group-hover:border-yellow-500/50 backdrop-blur-md transition-all duration-500 group-hover:scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]">{item.icon}</div>
                     <span className="px-3 py-1 bg-black/50 border border-slate-300 dark:border-white/10 backdrop-blur-md text-slate-900 dark:text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6 group-hover:border-yellow-500/30 transition-colors">{item.category}</span>
                     <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight drop-shadow-lg group-hover:text-yellow-400 transition-colors">{item.title}</h3>
-                    <p className="text-slate-700 dark:text-slate-300 text-sm font-light leading-relaxed group-hover:text-slate-900 dark:text-white transition-colors mt-auto mb-4 drop-shadow-md">{item.desc}</p>
+                    <p className="text-slate-700 dark:text-slate-300 text-sm font-light leading-relaxed group-hover:text-slate-900 dark:group-hover:text-white transition-colors mt-auto mb-4 drop-shadow-md">{item.desc}</p>
                   </div>
                </motion.div>
               ))}

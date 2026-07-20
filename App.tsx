@@ -379,7 +379,7 @@ const App = () => {
                       </div>
 
                       <div className="mb-4 relative z-10 flex-1">
-                        <h4 className="text-slate-700 dark:text-slate-300 font-bold mb-3 leading-snug group-hover:text-slate-900 dark:text-white transition-all line-clamp-2 text-sm tracking-wide">
+                        <h4 className="text-slate-700 dark:text-slate-300 font-bold mb-3 leading-snug group-hover:text-slate-900 dark:group-hover:text-white transition-all line-clamp-2 text-sm tracking-wide">
                           {template.title}
                         </h4>
                         <div className="flex items-center gap-2 mt-auto">

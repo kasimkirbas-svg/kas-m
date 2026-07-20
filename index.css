@@ -51,3 +51,28 @@ html:not(.dark) .light-app-shell {
     linear-gradient(90deg, rgba(15, 23, 42, 0.025) 1px, transparent 1px);
   background-size: auto, 44px 44px, 44px 44px;
 }
+
+.dark .theme-settings input:not([type='checkbox']) {
+  @apply bg-black/30 border-white/10 text-white placeholder-slate-600;
+}
+
+.dark .theme-settings input:disabled {
+  @apply bg-white/5 text-slate-400;
+}
+
+.dark .theme-settings label,
+.dark .theme-settings .text-slate-700 {
+  @apply text-slate-300;
+}
+
+.dark .theme-settings .text-slate-800 {
+  @apply text-white;
+}
+
+.dark .theme-settings .border-slate-100 {
+  @apply border-white/5;
+}
+
+.dark .theme-settings .peer.bg-slate-200 {
+  @apply bg-white/10;
+}

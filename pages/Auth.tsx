@@ -115,7 +115,7 @@ export default function Auth({ onLogin, onAuthSuccess, onBack }: AuthProps) {
             </button>
           </form>
 
-           <div className="mt-8 text-center border-t border-white/10 pt-6">
+           <div className="mt-8 text-center border-t border-slate-200 dark:border-white/10 pt-6">
               <button onClick={() => setIsLogin(!isLogin)} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white transition-colors">
                 {isLogin ? <>Hesabınız yok mu? <span className="text-yellow-500 font-semibold hover:underline">Hemen Oluşturun</span></> : <>Zaten üye misiniz? <span className="text-yellow-500 font-semibold hover:underline">Giriş Yapın</span></>}
               </button>

@@ -16,29 +16,29 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Profil ve Üyelik</h2>
-        <p className="text-slate-500">Hesap durumunuzu ve abonelik detaylarınızı inceleyin.</p>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Profil ve Üyelik</h2>
+        <p className="text-slate-500 dark:text-slate-400">Hesap durumunuzu ve abonelik detaylarınızı inceleyin.</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
         {/* User Card */}
         <div className="md:col-span-1 space-y-6">
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center">
-            <div className="w-24 h-24 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400">
+          <div className="bg-white dark:bg-[#111318] p-6 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm text-center">
+            <div className="w-24 h-24 bg-slate-100 dark:bg-white/5 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 dark:text-slate-500">
               <UserIcon size={40} />
             </div>
-            <h3 className="text-lg font-bold text-slate-800">{user.name}</h3>
-            <p className="text-sm text-slate-500 mb-4">{user.email}</p>
-            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <h3 className="text-lg font-bold text-slate-800 dark:text-white">{user.name}</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{user.email}</p>
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-500/10 text-yellow-800 dark:text-yellow-400">
               {user.role === UserRole.ADMIN ? 'Yönetici' : 'Aktif Abone'}
             </div>
             
             <div className="mt-6 text-left space-y-3">
-              <div className="flex items-center text-sm text-slate-600">
+              <div className="flex items-center text-sm text-slate-600 dark:text-slate-300">
                 <Building size={16} className="mr-3 text-slate-400" />
                 {user.companyName || 'Firma bilgisi girilmedi'}
               </div>
-              <div className="flex items-center text-sm text-slate-600">
+              <div className="flex items-center text-sm text-slate-600 dark:text-slate-300">
                 <Mail size={16} className="mr-3 text-slate-400" />
                 {user.email}
               </div>
@@ -49,15 +49,15 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
         {/* Subscription & Billing */}
         <div className="md:col-span-2 space-y-6">
           {/* Subscription Status */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+          <div className="bg-white dark:bg-[#111318] p-6 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
                 <div className="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3">
                   <ShieldCheck size={24} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-800">Mevcut Abonelik</h3>
-                  <p className="text-sm text-slate-500">{user.plan === SubscriptionPlan.YEARLY ? 'Yıllık Pro Plan' : 'Aylık Standart Plan'}</p>
+                  <h3 className="font-bold text-slate-800 dark:text-white">Mevcut Abonelik</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{user.plan === SubscriptionPlan.YEARLY ? 'Yıllık Pro Plan' : 'Aylık Standart Plan'}</p>
                 </div>
               </div>
               <Button variant="outline" size="sm">Planı Değiştir</Button>
@@ -65,8 +65,8 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
 
             <div className="mb-4">
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-slate-600 font-medium">Doküman Kotası</span>
-                <span className="text-slate-800 font-bold">
+                <span className="text-slate-600 dark:text-slate-300 font-medium">Doküman Kotası</span>
+                <span className="text-slate-800 dark:text-white font-bold">
                   {isUnlimited ? 'Sınırsız' : `${user.remainingDownloads} Adet Kaldı`}
                 </span>
               </div>
@@ -86,24 +86,24 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
           </div>
 
           {/* Billing History */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-              <h3 className="font-bold text-slate-800">Fatura Geçmişi</h3>
-              <Button variant="secondary" size="sm" className="bg-slate-100 text-slate-600 hover:bg-slate-200">Tümünü Gör</Button>
+          <div className="bg-white dark:bg-[#111318] rounded-xl border border-slate-200 dark:border-white/10 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center">
+              <h3 className="font-bold text-slate-800 dark:text-white">Fatura Geçmişi</h3>
+              <Button variant="secondary" size="sm" className="bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10">Tümünü Gör</Button>
             </div>
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-slate-100 dark:divide-white/5">
               {[
                 { date: '14 Nis 2025', amount: '4.999 TL', status: 'Ödendi' },
                 { date: '14 Mar 2025', amount: '499 TL', status: 'Ödendi' },
                 { date: '14 Şub 2025', amount: '499 TL', status: 'Ödendi' },
               ].map((inv, i) => (
-                <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50">
+                <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-white/[0.03]">
                   <div className="flex items-center">
                     <div className="p-2 bg-slate-100 rounded-full text-slate-500 mr-4">
                       <CreditCard size={18} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-900">{inv.amount}</p>
+                      <p className="text-sm font-medium text-slate-900 dark:text-white">{inv.amount}</p>
                       <p className="text-xs text-slate-500">{inv.date}</p>
                     </div>
                   </div>

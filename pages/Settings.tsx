@@ -20,10 +20,10 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="theme-settings max-w-4xl mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-800">Hesap Ayarları</h2>
-        <p className="text-slate-500">Kişisel bilgilerinizi ve tercihlerinizi yönetin.</p>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Hesap Ayarları</h2>
+        <p className="text-slate-500 dark:text-slate-400">Kişisel bilgilerinizi ve tercihlerinizi yönetin.</p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
@@ -32,7 +32,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
           <button
             onClick={() => setActiveTab('general')}
             className={`w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'general' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100'
+              activeTab === 'general' ? 'bg-yellow-50 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
             }`}
           >
             <UserIcon size={18} className="mr-3" />
@@ -41,7 +41,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
           <button
             onClick={() => setActiveTab('security')}
             className={`w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'security' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100'
+              activeTab === 'security' ? 'bg-yellow-50 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
             }`}
           >
             <Lock size={18} className="mr-3" />
@@ -50,7 +50,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
           <button
             onClick={() => setActiveTab('notifications')}
             className={`w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'notifications' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100'
+              activeTab === 'notifications' ? 'bg-yellow-50 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
             }`}
           >
             <Bell size={18} className="mr-3" />
@@ -59,7 +59,7 @@ export const Settings: React.FC<SettingsProps> = ({ user }) => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-8">
+        <div className="flex-1 bg-white dark:bg-[#111318] rounded-xl border border-slate-200 dark:border-white/10 shadow-sm p-6 md:p-8">
           {activeTab === 'general' && (
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-4">Profil Bilgileri</h3>
