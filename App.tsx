@@ -429,7 +429,7 @@ const App = () => {
           </div>
         </Layout>
       );
-    }
+
 
     // Ortada boş ekranda kalmaması adına güvenlik dönüşü / Yönlendirme (Eğer sayfa state uyuşmuyorsa)
     return (
