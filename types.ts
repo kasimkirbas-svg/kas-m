@@ -1,8 +1,13 @@
 export enum UserRole {
   GUEST = 'GUEST',
   SUBSCRIBER = 'SUBSCRIBER',
-  ADMIN = 'ADMIN'
+  SUPPORT_ADMIN = 'SUPPORT_ADMIN',
+  CONTENT_ADMIN = 'CONTENT_ADMIN',
+  OWNER = 'OWNER'
 }
+
+export const ADMIN_ROLES = [UserRole.SUPPORT_ADMIN, UserRole.CONTENT_ADMIN, UserRole.OWNER] as const;
+export const isAdminRole = (role: UserRole) => ADMIN_ROLES.includes(role as typeof ADMIN_ROLES[number]);
 
 export enum SubscriptionPlan {
   FREE = 'FREE',

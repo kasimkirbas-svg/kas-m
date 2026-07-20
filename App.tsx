@@ -2,6 +2,7 @@
 import Landing from './pages/Landing';
 import { Layout } from './components/Layout';
 import type { User, DocumentTemplate } from './types';
+import { isAdminRole } from './types';
 import { 
   Search, Shield, FileText, Download, Briefcase, Factory, HardHat, 
   Car, Building2, Trees, Activity, Building, Zap, MapPin, SearchCode,
@@ -21,6 +22,7 @@ const Profile = React.lazy(() => import('./pages/Profile').then(module => ({ def
 const SettingsPage = React.lazy(() => import('./pages/Settings').then(module => ({ default: module.Settings })));
 const Billing = React.lazy(() => import('./pages/Billing').then(module => ({ default: module.Billing })));
 const DocumentHistory = React.lazy(() => import('./pages/DocumentHistory').then(module => ({ default: module.DocumentHistory })));
+const Admin = React.lazy(() => import('./pages/Admin'));
 
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
   constructor(props: any) {
@@ -46,8 +48,7 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
   }
 }
 
-const archiveTemplates = MOCK_TEMPLATES || [];
-const uniqueCategories = Array.from(new Set(archiveTemplates.map(t => t.category)));
+const staticTemplates = MOCK_TEMPLATES || [];
 const App = () => {
   const [user, setUser] = useState<User | null>(() => {
     try {
@@ -81,15 +82,30 @@ const App = () => {
     localStorage.setItem('isg_view', currentView);
   }, [currentView]);
 
-  // Route Protection - Prevent dashboard rendering without user
+  // Route Protection - Prevent protected views rendering without authorization
   useEffect(() => {
-    if (currentView === 'dashboard' && !user) {
+    if (['dashboard', 'profile', 'settings', 'billing', 'history', 'admin'].includes(currentView) && !user) {
       setCurrentView('landing');
+    } else if (currentView === 'admin' && user && !isAdminRole(user.role)) {
+      setCurrentView('dashboard');
     }
   }, [currentView, user]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [remoteTemplates, setRemoteTemplates] = useState<DocumentTemplate[]>([]);
+  const archiveTemplates = React.useMemo(() => {
+    const remoteIds = new Set(remoteTemplates.map(template => template.id));
+    return [...remoteTemplates, ...staticTemplates.filter(template => !remoteIds.has(template.id))];
+  }, [remoteTemplates]);
+  const uniqueCategories = React.useMemo(() => Array.from(new Set(archiveTemplates.map(template => template.category))), [archiveTemplates]);
+
+  useEffect(() => {
+    if (!user) return;
+    void import('./services/supabaseService').then(({ getPublishedTemplates }) => getPublishedTemplates())
+      .then(setRemoteTemplates)
+      .catch(error => void reportError(error));
+  }, [user, currentView]);
 
   const [selectedTemplate, setSelectedTemplate] = useState<DocumentTemplate | null>(null);
   const [editorInitialData, setEditorInitialData] = useState<Record<string, any> | undefined>();
@@ -172,7 +188,7 @@ const App = () => {
       );
     }
 
-    if (user && ['dashboard', 'profile', 'settings', 'billing', 'history'].includes(currentView)) {
+    if (user && ['dashboard', 'profile', 'settings', 'billing', 'history', 'admin'].includes(currentView)) {
       return (
         <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
           
@@ -196,6 +212,7 @@ const App = () => {
               setCurrentView('editor');
             }} />}
             {currentView === 'billing' && <Billing user={user} onSelectPlan={(plan) => setUser(current => current ? { ...current, plan, remainingDownloads: plan === 'YEARLY' ? 'UNLIMITED' : 30 } : current)} />}
+            {currentView === 'admin' && isAdminRole(user.role) && <Admin />}
 
             <AnimatePresence>
               {currentView === 'dashboard' && showSplash && (
@@ -284,7 +301,7 @@ const App = () => {
                   </div>
                 </div>
                 <div className="grid grid-cols-3 divide-x divide-white/10 bg-[#19272f]/65 lg:grid-cols-1 lg:divide-x-0 lg:divide-y">
-                  <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><FolderOpen className="hidden h-5 w-5 text-cyan-300 sm:block" /><div><strong className="block text-xl font-black text-white">{MOCK_TEMPLATES.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Hazır şablon</span></div></div>
+                  <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><FolderOpen className="hidden h-5 w-5 text-cyan-300 sm:block" /><div><strong className="block text-xl font-black text-white">{archiveTemplates.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Hazır şablon</span></div></div>
                   <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><Briefcase className="hidden h-5 w-5 text-amber-300 sm:block" /><div><strong className="block text-xl font-black text-white">{uniqueCategories.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Uzmanlık alanı</span></div></div>
                   <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><CheckCircle2 className="hidden h-5 w-5 text-emerald-300 sm:block" /><div><strong className="block text-xl font-black text-white">%100</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Düzenlenebilir</span></div></div>
                 </div>
@@ -318,7 +335,7 @@ const App = () => {
                   </div>
                   <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-black/40 border border-white/10"><ShieldAlert size={20} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} /></span>
-                    <span><strong className={`block text-xs font-bold leading-tight sm:text-sm ${selectedCategory === null ? "text-[#FFD700]" : "text-white"}`}>Tüm sektörler</strong><small className="mt-1 block text-[11px] text-white/60">{MOCK_TEMPLATES.length} doküman</small></span>
+                    <span><strong className={`block text-xs font-bold leading-tight sm:text-sm ${selectedCategory === null ? "text-[#FFD700]" : "text-white"}`}>Tüm sektörler</strong><small className="mt-1 block text-[11px] text-white/60">{archiveTemplates.length} doküman</small></span>
                   </div>
                 </button>
                 
@@ -340,7 +357,7 @@ const App = () => {
                       <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-black/40 ${selectedCategory === category ? "text-[#FFD700]" : "text-white"}`}>
                         {getCategoryIcon(category)}
                       </div>
-                      <span className="min-w-0"><strong className={`line-clamp-3 text-[11px] font-bold leading-tight sm:line-clamp-2 sm:text-sm ${selectedCategory === category ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>{category}</strong><small className="mt-1 block text-[11px] text-white/60">{MOCK_TEMPLATES.filter(item => item.category === category).length} doküman</small></span>
+                      <span className="min-w-0"><strong className={`line-clamp-3 text-[11px] font-bold leading-tight sm:line-clamp-2 sm:text-sm ${selectedCategory === category ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>{category}</strong><small className="mt-1 block text-[11px] text-white/60">{archiveTemplates.filter(item => item.category === category).length} doküman</small></span>
                     </div>
                   </button>
                 ))}

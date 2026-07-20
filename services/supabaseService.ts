@@ -31,11 +31,39 @@ const toAppUser = (authUser: { id: string; email?: string; user_metadata?: Recor
   };
 };
 
+const hydrateAppUser = async (authUser: { id: string; email?: string; user_metadata?: Record<string, unknown> }): Promise<User> => {
+  const fallback = toAppUser(authUser);
+  if (!supabase) return fallback;
+  const [{ data: profile, error: profileError }, { data: subscription, error: subscriptionError }] = await Promise.all([
+    supabase.from('profiles').select('*').eq('id', authUser.id).maybeSingle(),
+    supabase.from('subscriptions').select('plan,status').eq('user_id', authUser.id).maybeSingle(),
+  ]);
+  if (profileError) throw profileError;
+  if (subscriptionError) throw subscriptionError;
+  const plan = Object.values(SubscriptionPlan).includes(subscription?.plan as SubscriptionPlan)
+    ? subscription.plan as SubscriptionPlan
+    : SubscriptionPlan.FREE;
+  return {
+    ...fallback,
+    name: profile?.name || fallback.name,
+    phone: profile?.phone || fallback.phone,
+    role: Object.values(UserRole).includes(profile?.role as UserRole) ? profile.role as UserRole : UserRole.SUBSCRIBER,
+    plan,
+    remainingDownloads: plan === SubscriptionPlan.YEARLY ? 'UNLIMITED' : plan === SubscriptionPlan.MONTHLY ? 30 : 0,
+    accountType: profile?.account_type === 'osgb' ? 'osgb' : 'individual',
+    profession: profile?.profession || fallback.profession,
+    companyName: profile?.company_name || fallback.companyName,
+    taxNumber: profile?.tax_number || fallback.taxNumber,
+    taxOffice: profile?.tax_office || fallback.taxOffice,
+    address: profile?.address || fallback.address,
+  };
+};
+
 export const getCurrentSupabaseUser = async () => {
   if (!supabase) return null;
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) return null;
-  return toAppUser(data.user);
+  return hydrateAppUser(data.user);
 };
 
 export const registerWithSupabase = async (email: string, password: string, user: User) => {
@@ -65,7 +93,7 @@ export const loginWithSupabase = async (email: string, password: string) => {
   if (!supabase) throw new Error('Supabase yapılandırılmadı.');
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
-  return toAppUser(data.user);
+  return hydrateAppUser(data.user);
 };
 
 export const requestPasswordReset = async (email: string) => {
@@ -182,4 +210,137 @@ export const deleteSupabaseHistory = async (id?: string) => {
   if (id) query = query.eq('id', id);
   const { error } = await query;
   if (error) throw error;
+};
+
+export interface AdminUserRecord {
+  id: string; name: string; email: string; role: UserRole; status: 'active' | 'suspended';
+  accountType: 'individual' | 'osgb'; createdAt: string; plan: SubscriptionPlan; subscriptionStatus: string;
+}
+
+export interface AdminTemplateRecord {
+  id: string; title: string; category: string; description: string; filePath: string;
+  fileUrl: string; fields: unknown[]; isPremium: boolean; isActive: boolean; createdAt: string;
+}
+
+export interface AdminAuditRecord {
+  id: number; action: string; entityType: string; entityId?: string; details: Record<string, unknown>; createdAt: string;
+}
+
+export interface SupportTicketRecord {
+  id: string; userId: string; subject: string; message: string; status: 'open' | 'in_progress' | 'resolved';
+  priority: 'normal' | 'high' | 'urgent'; assignedTo?: string; adminResponse?: string; createdAt: string; updatedAt: string;
+}
+
+export const getPublishedTemplates = async (): Promise<import('../types').DocumentTemplate[]> => {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from('document_templates').select('*').eq('is_active', true).order('created_at', { ascending: false });
+  if (error) throw error;
+  return data.map(item => ({
+    id: item.id,
+    title: item.title,
+    category: item.category,
+    description: item.description,
+    isPremium: item.is_premium,
+    fileUrl: supabase.storage.from('document-templates').getPublicUrl(item.file_path).data.publicUrl,
+    fields: item.fields || [],
+  }));
+};
+
+const requireAdmin = async (allowedRoles: UserRole[] = [UserRole.SUPPORT_ADMIN, UserRole.CONTENT_ADMIN, UserRole.OWNER]) => {
+  if (!supabase) throw new Error('Admin işlemleri için Supabase yapılandırması gereklidir.');
+  const userId = await requireUserId();
+  if (!userId) throw new Error('Oturum bulunamadı.');
+  const { data, error } = await supabase.from('profiles').select('role,status').eq('id', userId).single();
+  if (error || !allowedRoles.includes(data?.role as UserRole) || data?.status !== 'active') throw new Error('Bu işlem için yetkiniz bulunmuyor.');
+  return { userId, role: data.role as UserRole };
+};
+
+const writeAuditLog = async (adminId: string, action: string, entityType: string, entityId?: string, details: Record<string, unknown> = {}) => {
+  if (!supabase) return;
+  const { error } = await supabase.from('admin_audit_logs').insert({ admin_id: adminId, action, entity_type: entityType, entity_id: entityId, details });
+  if (error) throw error;
+};
+
+export const getAdminDashboardData = async () => {
+  const { role } = await requireAdmin();
+  if (!supabase) throw new Error('Supabase yapılandırılmadı.');
+  const [profiles, subscriptions, templates, logs, drafts, history] = await Promise.all([
+    role === UserRole.OWNER ? supabase.from('profiles').select('id,name,email,role,status,account_type,created_at').order('created_at', { ascending: false }).limit(500) : Promise.resolve({ data: [], error: null }),
+    role === UserRole.OWNER ? supabase.from('subscriptions').select('user_id,plan,status') : Promise.resolve({ data: [], error: null }),
+    role !== UserRole.SUPPORT_ADMIN ? supabase.from('document_templates').select('*').order('created_at', { ascending: false }).limit(500) : Promise.resolve({ data: [], error: null }),
+    role === UserRole.OWNER ? supabase.from('admin_audit_logs').select('*').order('created_at', { ascending: false }).limit(50) : Promise.resolve({ data: [], error: null }),
+    role === UserRole.OWNER ? supabase.from('document_drafts').select('*', { count: 'exact', head: true }) : Promise.resolve({ count: 0, error: null }),
+    role === UserRole.OWNER ? supabase.from('document_history').select('*', { count: 'exact', head: true }) : Promise.resolve({ count: 0, error: null }),
+  ]);
+  const failed = [profiles, subscriptions, templates, logs, drafts, history].find(result => result.error);
+  if (failed?.error) throw failed.error;
+  const subscriptionsByUser = new Map((subscriptions.data || []).map(item => [item.user_id, item]));
+  const users: AdminUserRecord[] = (profiles.data || []).map(item => {
+    const subscription = subscriptionsByUser.get(item.id);
+    return { id: item.id, name: item.name, email: item.email || '', role: item.role, status: item.status, accountType: item.account_type, createdAt: item.created_at, plan: subscription?.plan || SubscriptionPlan.FREE, subscriptionStatus: subscription?.status || 'inactive' };
+  });
+  const templateRecords: AdminTemplateRecord[] = (templates.data || []).map(item => ({ id: item.id, title: item.title, category: item.category, description: item.description, filePath: item.file_path, fileUrl: supabase.storage.from('document-templates').getPublicUrl(item.file_path).data.publicUrl, fields: item.fields || [], isPremium: item.is_premium, isActive: item.is_active, createdAt: item.created_at }));
+  const auditLogs: AdminAuditRecord[] = (logs.data || []).map(item => ({ id: item.id, action: item.action, entityType: item.entity_type, entityId: item.entity_id, details: item.details || {}, createdAt: item.created_at }));
+  return { users, templates: templateRecords, auditLogs, draftCount: drafts.count || 0, documentCount: history.count || 0, role };
+};
+
+export const updateAdminUser = async (userId: string, changes: { role?: UserRole; status?: 'active' | 'suspended'; plan?: SubscriptionPlan }) => {
+  const { userId: adminId } = await requireAdmin([UserRole.OWNER]);
+  if (!supabase) return;
+  if (userId === adminId && (changes.role !== UserRole.OWNER || changes.status === 'suspended')) throw new Error('Kendi patron erişiminizi kaldıramazsınız.');
+  if (changes.role || changes.status) {
+    const { error } = await supabase.from('profiles').update({ ...(changes.role && { role: changes.role }), ...(changes.status && { status: changes.status }), updated_at: new Date().toISOString() }).eq('id', userId);
+    if (error) throw error;
+  }
+  if (changes.plan) {
+    const { error } = await supabase.from('subscriptions').upsert({ user_id: userId, plan: changes.plan, status: changes.plan === SubscriptionPlan.FREE ? 'inactive' : 'active', updated_at: new Date().toISOString() });
+    if (error) throw error;
+  }
+  await writeAuditLog(adminId, 'user.updated', 'user', userId, changes);
+};
+
+export const uploadAdminTemplate = async (input: { title: string; category: string; description: string; isPremium: boolean; fields: unknown[]; file: File }) => {
+  const { userId: adminId } = await requireAdmin([UserRole.CONTENT_ADMIN, UserRole.OWNER]);
+  if (!supabase) throw new Error('Supabase yapılandırılmadı.');
+  if (!input.file.name.toLowerCase().endsWith('.docx')) throw new Error('Yalnızca .docx dosyaları yüklenebilir.');
+  if (input.file.size > 25 * 1024 * 1024) throw new Error('Dosya boyutu 25 MB sınırını aşamaz.');
+  const safeName = input.file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const filePath = `${crypto.randomUUID()}/${safeName}`;
+  const { error: uploadError } = await supabase.storage.from('document-templates').upload(filePath, input.file, { contentType: input.file.type, upsert: false });
+  if (uploadError) throw uploadError;
+  const { data, error } = await supabase.from('document_templates').insert({ title: input.title, category: input.category, description: input.description, file_path: filePath, fields: input.fields, is_premium: input.isPremium, created_by: adminId }).select('id').single();
+  if (error) { await supabase.storage.from('document-templates').remove([filePath]); throw error; }
+  await writeAuditLog(adminId, 'template.created', 'template', data.id, { title: input.title, category: input.category });
+};
+
+export const setAdminTemplateActive = async (templateId: string, isActive: boolean) => {
+  const { userId: adminId } = await requireAdmin([UserRole.CONTENT_ADMIN, UserRole.OWNER]);
+  if (!supabase) return;
+  const { error } = await supabase.from('document_templates').update({ is_active: isActive, updated_at: new Date().toISOString() }).eq('id', templateId);
+  if (error) throw error;
+  await writeAuditLog(adminId, isActive ? 'template.activated' : 'template.deactivated', 'template', templateId);
+};
+
+export const createSupportTicket = async (subject: string, message: string) => {
+  if (!supabase) throw new Error('Canlı destek için Supabase yapılandırması gereklidir.');
+  const userId = await requireUserId();
+  if (!userId) throw new Error('Destek talebi için giriş yapmalısınız.');
+  const { error } = await supabase.from('support_tickets').insert({ user_id: userId, subject: subject.trim(), message: message.trim() });
+  if (error) throw error;
+};
+
+export const getSupportTickets = async (): Promise<SupportTicketRecord[]> => {
+  await requireAdmin([UserRole.SUPPORT_ADMIN, UserRole.OWNER]);
+  if (!supabase) return [];
+  const { data, error } = await supabase.from('support_tickets').select('*').order('created_at', { ascending: false }).limit(200);
+  if (error) throw error;
+  return data.map(item => ({ id: item.id, userId: item.user_id, subject: item.subject, message: item.message, status: item.status, priority: item.priority, assignedTo: item.assigned_to, adminResponse: item.admin_response, createdAt: item.created_at, updatedAt: item.updated_at }));
+};
+
+export const updateSupportTicket = async (ticketId: string, changes: { status?: SupportTicketRecord['status']; priority?: SupportTicketRecord['priority']; adminResponse?: string }) => {
+  const { userId: adminId } = await requireAdmin([UserRole.SUPPORT_ADMIN, UserRole.OWNER]);
+  if (!supabase) return;
+  const { error } = await supabase.from('support_tickets').update({ status: changes.status, priority: changes.priority, admin_response: changes.adminResponse, assigned_to: adminId, updated_at: new Date().toISOString() }).eq('id', ticketId);
+  if (error) throw error;
+  await writeAuditLog(adminId, 'support.updated', 'support_ticket', ticketId, changes);
 };

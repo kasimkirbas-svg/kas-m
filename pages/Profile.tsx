@@ -31,7 +31,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
             <h3 className="text-lg font-bold text-white">{user.name}</h3>
             <p className="text-sm text-slate-400 mb-4">{user.email}</p>
             <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-400/10 text-amber-300 border border-amber-300/15">
-              {user.role === UserRole.ADMIN ? 'Yönetici' : 'Aktif Abone'}
+              {user.role === UserRole.OWNER ? 'Patron' : user.role === UserRole.CONTENT_ADMIN ? 'Doküman Yöneticisi' : user.role === UserRole.SUPPORT_ADMIN ? 'Canlı Destek Personeli' : 'Aktif Abone'}
             </div>
             
             <div className="mt-6 text-left space-y-3">
