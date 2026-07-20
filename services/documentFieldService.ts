@@ -64,6 +64,8 @@ const EXACT_LABELS: Record<string, string> = {
   gucTrafosu: 'Güç Trafosu',
   ogHucre: 'OG Hücre Bilgisi',
   katilimcilar: 'Katılımcılar',
+  gundem: 'Gündem Maddeleri',
+  kararlar: 'Alınan Kararlar',
   kararNo: 'Karar No',
   raportorAd: 'Raportör Ad Soyad',
   adSoyad: 'Ad Soyad',

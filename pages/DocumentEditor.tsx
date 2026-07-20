@@ -1,6 +1,6 @@
 ﻿/// <reference path="../vendor.d.ts" />
 import React, { useState, useEffect, useRef } from "react";
-import { DocumentTemplate } from "../types";
+import { DocumentField, DocumentTemplate } from "../types";
 import { ArrowLeft, Check, ChevronDown, Download, FileText, Eye, SlidersHorizontal, Upload } from "lucide-react";
 import { renderAsync } from "docx-preview";
 import PizZip from "pizzip";
@@ -8,6 +8,7 @@ import Docxtemplater from "docxtemplater";
 import ImageModule from "docxtemplater-image-module-free";
 import { saveAs } from "file-saver";
 import { buildFieldSections, getDocumentTitle, getFieldLabel, getSubFieldLabel, isFieldVisible } from "../services/documentFieldService";
+import { reconcileFieldsWithDocx } from "../services/docxFieldService";
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
@@ -18,14 +19,17 @@ interface DocumentEditorProps {
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
   const [mobileView, setMobileView] = useState<"form" | "preview">("form");
   const [formData, setFormData] = useState<Record<string, any>>({});
+  const [documentFields, setDocumentFields] = useState<DocumentField[]>(template.fields);
   const [loading, setLoading] = useState(false);
   const [docxArrayBuffer, setDocxArrayBuffer] = useState<ArrayBuffer | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const [previewScale, setPreviewScale] = useState(1);
+  const [previewHeight, setPreviewHeight] = useState(1100);
   const previewRef = useRef<HTMLDivElement>(null);
-  const fieldSections = buildFieldSections(template.fields);
-  const visibleFields = template.fields.filter(field => isFieldVisible(field, formData));
+  const fieldSections = buildFieldSections(documentFields);
+  const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
   const completedFields = visibleFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
   const completionRate = visibleFields.length ? Math.round((completedFields / visibleFields.length) * 100) : 100;
 
@@ -33,6 +37,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     setLoadError(null);
     setDownloadError(null);
     setLoading(true);
+    setDocumentFields(template.fields);
     const initialData: Record<string, any> = {};
     if (template.fields) {
       template.fields.forEach(field => {
@@ -51,6 +56,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            return res.arrayBuffer();
         })
         .then(buffer => {
+          const reconciledFields = reconcileFieldsWithDocx(template.fields, buffer);
+          const reconciledData = { ...initialData };
+          reconciledFields.forEach(field => {
+            if (field.type === 'list') reconciledData[field.key] = [];
+            else if (!(field.key in reconciledData)) reconciledData[field.key] = field.type === 'date' ? new Date().toISOString().split('T')[0] : '';
+          });
+          setDocumentFields(reconciledFields);
+          setFormData(reconciledData);
+          const reconciledSections = buildFieldSections(reconciledFields);
+          setOpenSections(Object.fromEntries(reconciledSections.map((section, index) => [section.id, index === 0])));
           setDocxArrayBuffer(buffer);
           setLoading(false);
         })
@@ -63,6 +78,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         });
     }
   }, [template]);
+
+  useEffect(() => {
+    const updateScale = () => setPreviewScale(window.innerWidth < 1024 ? Math.min(1, (window.innerWidth - 32) / 800) : 1);
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
 
   useEffect(() => {
     if (!docxArrayBuffer || !previewRef.current) return;
@@ -128,6 +150,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            trimXmlDeclaration: true,
            useBase64URL: true,
         });
+          setPreviewHeight(Math.max(1100, previewRef.current.scrollHeight));
       }
     } catch (error: any) {
       console.log("Önizleme oluşturulurken veya değişken değiştirilirken hata:", error);
@@ -375,7 +398,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         </div>
         
         {/* Render Preview Area */}
-        <div className="flex-1 w-full h-full overflow-auto px-4 pb-6 pt-20 lg:p-24 flex justify-start lg:justify-center items-start custom-scrollbar bg-zinc-900/30 overscroll-contain touch-pan-x touch-pan-y">
+        <div className="flex-1 w-full h-full overflow-auto px-4 pb-6 pt-20 lg:p-24 flex justify-center items-start custom-scrollbar bg-zinc-900/30 overscroll-contain touch-pan-y">
            {loadError ? (
               <div className="flex flex-col items-center justify-center h-[50vh] text-red-400 gap-4 max-w-sm text-center">
                  <FileText size={48} className="opacity-20" />
@@ -388,8 +411,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                  <p className="tracking-widest uppercase text-xs font-bold">Şablon Yükleniyor...</p>
               </div>
            ) : (
-             <div className="w-[800px] shrink-0 bg-white min-h-[1100px] shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none" aria-label="Belge önizlemesi">
+             <div className="relative shrink-0" style={{ width: 800 * previewScale, height: previewHeight * previewScale }} aria-label="Belge önizlemesi">
+               <div className="absolute left-0 top-0 w-[800px] min-h-[1100px] origin-top-left bg-white shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none" style={{ transform: `scale(${previewScale})` }}>
                 <div ref={previewRef} className="w-full h-full [&>.docx-wrapper]:bg-transparent [&>.docx-wrapper]:p-0" />
+               </div>
              </div>
            )}
         </div>
