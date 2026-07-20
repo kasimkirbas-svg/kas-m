@@ -162,9 +162,10 @@ const App = () => {
           
            {/* Global single-theme workspace background */}
           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-             <div className="absolute inset-0 bg-[#10161c]"></div>
-             <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_4%,rgba(229,184,44,0.11),transparent_30%),radial-gradient(circle_at_8%_32%,rgba(70,150,170,0.13),transparent_34%)]"></div>
-             <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#22313b]/35 to-transparent"></div>
+             <div className="absolute inset-0 bg-[#16222a]"></div>
+             <div className="workspace-ambient absolute inset-0 overflow-hidden"></div>
+             <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.035)_0.7px,transparent_0.7px)] bg-[size:18px_18px] opacity-40"></div>
+             <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#36505d]/30 to-transparent"></div>
           </div>
 
            <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-4 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
@@ -252,21 +253,21 @@ const App = () => {
 
             {currentView === 'dashboard' && (
               <>
-            <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-[#17212a]/90 shadow-[0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
+            <section className="mb-8 overflow-hidden rounded-2xl border border-white/15 bg-[#22313b]/82 shadow-[0_24px_70px_rgba(4,10,14,0.18)] backdrop-blur-xl">
               <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
                 <div className="relative p-6 sm:p-8 lg:p-10">
                   <div className="absolute inset-y-0 right-0 hidden w-px bg-white/10 lg:block" />
                   <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300"><span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_12px_rgba(252,211,77,0.8)]" /> Çalışma alanı aktif</div>
                   <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Merhaba, {user.name.split(' ')[0]}</h1>
                   <p className="mt-3 max-w-lg text-sm leading-6 text-[#aebbc5]">Sahadaki işinizi seçin, uygun dokümanı bulun ve düzenlemeye doğrudan başlayın.</p>
-                  <div className="relative z-10 mt-7 flex min-h-14 items-center overflow-hidden rounded-xl border border-white/10 bg-[#0f171d]/80 shadow-inner focus-within:border-amber-400/70">
+                  <div className="relative z-10 mt-7 flex min-h-14 items-center overflow-hidden rounded-xl border border-white/15 bg-[#17242c]/80 shadow-inner focus-within:border-amber-400/70">
                     <Search className="ml-4 h-5 w-5 shrink-0 text-amber-300" />
                     <input type="search" placeholder="Doküman adı veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent px-4 py-4 text-sm font-medium text-white placeholder-[#71818d] focus:outline-none"/>
                     {searchQuery && <button onClick={() => setSearchQuery('')} className="p-3 text-[#71818d] hover:text-white" aria-label="Aramayı temizle"><Hexagon className="h-4 w-4" /></button>}
                     <button type="button" className="self-stretch bg-amber-300 px-6 text-sm font-black text-[#111820] transition-colors hover:bg-amber-200">Ara</button>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 divide-x divide-white/10 bg-[#111a21]/60 lg:grid-cols-1 lg:divide-x-0 lg:divide-y">
+                <div className="grid grid-cols-3 divide-x divide-white/10 bg-[#19272f]/65 lg:grid-cols-1 lg:divide-x-0 lg:divide-y">
                   <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><FolderOpen className="hidden h-5 w-5 text-cyan-300 sm:block" /><div><strong className="block text-xl font-black text-white">{MOCK_TEMPLATES.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Hazır şablon</span></div></div>
                   <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><Briefcase className="hidden h-5 w-5 text-amber-300 sm:block" /><div><strong className="block text-xl font-black text-white">{uniqueCategories.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Uzmanlık alanı</span></div></div>
                   <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><CheckCircle2 className="hidden h-5 w-5 text-emerald-300 sm:block" /><div><strong className="block text-xl font-black text-white">%100</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Düzenlenebilir</span></div></div>
@@ -286,10 +287,10 @@ const App = () => {
                 {selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 hover:underline">Filtreyi kaldır</button>}
               </div>
 
-              <div className="scrollbar-hidden relative z-10 flex snap-x gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-5 lg:overflow-visible xl:grid-cols-6">
+              <div className="relative z-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`h-[82px] w-[210px] shrink-0 snap-start rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#182129] text-left lg:w-auto ${
+                  className={`h-[106px] min-w-0 rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#263640] text-left sm:h-[94px] ${
                     selectedCategory === null 
                       ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
                       : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
@@ -301,7 +302,7 @@ const App = () => {
                   </div>
                   <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-black/40 border border-white/10"><ShieldAlert size={20} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} /></span>
-                    <span><strong className={`block text-sm font-bold ${selectedCategory === null ? "text-[#FFD700]" : "text-white"}`}>Tüm sektörler</strong><small className="mt-1 block text-[11px] text-white/60">{MOCK_TEMPLATES.length} doküman</small></span>
+                    <span><strong className={`block text-xs font-bold leading-tight sm:text-sm ${selectedCategory === null ? "text-[#FFD700]" : "text-white"}`}>Tüm sektörler</strong><small className="mt-1 block text-[11px] text-white/60">{MOCK_TEMPLATES.length} doküman</small></span>
                   </div>
                 </button>
                 
@@ -309,13 +310,13 @@ const App = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`h-[82px] w-[210px] shrink-0 snap-start rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#182129] text-left lg:w-auto ${
+                    className={`h-[106px] min-w-0 rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#263640] text-left sm:h-[94px] ${
                       selectedCategory === category 
                         ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
                         : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
                     }`}
                   >
-                    <div className="absolute inset-0 bg-[#182129]">
+                    <div className="absolute inset-0 bg-[#263640]">
                        <img src={getCategoryImage(category)} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-55 group-hover:opacity-70 transition-all duration-500 group-hover:scale-105" />
                       <div className={`absolute inset-0 bg-gradient-to-r ${selectedCategory === category ? 'from-[#625616]/95 to-[#8a721b]/50' : 'from-[#10171d]/95 to-[#10171d]/32'}`}></div>
                     </div>
@@ -323,7 +324,7 @@ const App = () => {
                       <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-black/40 ${selectedCategory === category ? "text-[#FFD700]" : "text-white"}`}>
                         {getCategoryIcon(category)}
                       </div>
-                      <span className="min-w-0"><strong className={`block truncate text-sm font-bold ${selectedCategory === category ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>{category}</strong><small className="mt-1 block text-[11px] text-white/60">{MOCK_TEMPLATES.filter(item => item.category === category).length} doküman</small></span>
+                      <span className="min-w-0"><strong className={`line-clamp-3 text-[11px] font-bold leading-tight sm:line-clamp-2 sm:text-sm ${selectedCategory === category ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>{category}</strong><small className="mt-1 block text-[11px] text-white/60">{MOCK_TEMPLATES.filter(item => item.category === category).length} doküman</small></span>
                     </div>
                   </button>
                 ))}
@@ -351,7 +352,7 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-[#18222a]/95 border border-white/10 hover:border-amber-400/50 p-5 relative group overflow-hidden transition-all duration-300 shadow-[0_12px_32px_rgba(0,0,0,0.16)] hover:bg-[#202c35] hover:-translate-y-0.5 hover:shadow-[0_20px_44px_rgba(0,0,0,0.25)] flex min-h-[158px] rounded-xl backdrop-blur-md before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-cyan-400 before:opacity-0 hover:before:opacity-100"
+                      className="bg-[#22313a]/88 border border-white/12 hover:border-amber-400/50 p-5 relative group overflow-hidden transition-all duration-300 shadow-[0_12px_32px_rgba(0,0,0,0.12)] hover:bg-[#2a3b45] hover:-translate-y-0.5 hover:shadow-[0_20px_44px_rgba(0,0,0,0.2)] flex min-h-[158px] rounded-xl backdrop-blur-md before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-cyan-400 before:opacity-0 hover:before:opacity-100"
                     >
                       {/* Background Detail */}
                       <div className="flex w-full flex-col relative z-10">
