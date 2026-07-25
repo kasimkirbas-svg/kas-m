@@ -147,7 +147,7 @@ const App = () => {
 
   const handleAuthSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
-    setCurrentView('dashboard');
+    setCurrentView(isAdminRole(loggedInUser.role) ? 'admin' : 'dashboard');
     setShowSplash(true);
     setTimeout(() => setShowSplash(false), 5000);
   };

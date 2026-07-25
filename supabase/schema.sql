@@ -84,9 +84,16 @@ create table if not exists public.support_tickets (
   priority text not null default 'normal' check (priority in ('normal', 'high', 'urgent')),
   assigned_to uuid references auth.users(id) on delete set null,
   admin_response text,
+  response_email_status text not null default 'not_sent' check (response_email_status in ('not_sent', 'pending', 'sent', 'failed')),
+  response_email_sent_at timestamptz,
+  response_email_error text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.support_tickets add column if not exists response_email_status text not null default 'not_sent';
+alter table public.support_tickets add column if not exists response_email_sent_at timestamptz;
+alter table public.support_tickets add column if not exists response_email_error text;
 
 create index if not exists document_drafts_user_updated_idx on public.document_drafts (user_id, updated_at desc);
 create index if not exists document_history_user_created_idx on public.document_history (user_id, created_at desc);

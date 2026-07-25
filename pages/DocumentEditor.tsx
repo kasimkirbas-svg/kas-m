@@ -16,6 +16,31 @@ interface DocumentEditorProps {
   onSave: () => void;
 }
 
+type ImageDimensions = { width: number; height: number };
+
+const fitWithin = ({ width, height }: ImageDimensions, maxWidth: number, maxHeight: number): [number, number] => {
+  const scale = Math.min(maxWidth / width, maxHeight / height, 1);
+  return [Math.max(1, Math.round(width * scale)), Math.max(1, Math.round(height * scale))];
+};
+
+const constrainImage = (file: File, maxPixels = 1600): Promise<{ dataUrl: string; dimensions: ImageDimensions }> => new Promise((resolve, reject) => {
+  const image = new Image();
+  const objectUrl = URL.createObjectURL(file);
+  image.onload = () => {
+    const scale = Math.min(maxPixels / image.naturalWidth, maxPixels / image.naturalHeight, 1);
+    const width = Math.max(1, Math.round(image.naturalWidth * scale));
+    const height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    canvas.getContext('2d')?.drawImage(image, 0, 0, width, height);
+    URL.revokeObjectURL(objectUrl);
+    resolve({ dataUrl: canvas.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.88), dimensions: { width, height } });
+  };
+  image.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('Görsel okunamadı.')); };
+  image.src = objectUrl;
+});
+
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
   const [mobileView, setMobileView] = useState<"form" | "preview">("form");
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -30,9 +55,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [previewHeight, setPreviewHeight] = useState(1100);
   const [filterConfirmed, setFilterConfirmed] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
+  const [bulkRowCounts, setBulkRowCounts] = useState<Record<string, number>>({});
   const previewRef = useRef<HTMLDivElement>(null);
   const previewViewportRef = useRef<HTMLDivElement>(null);
   const previewRenderId = useRef(0);
+  const imageDimensions = useRef(new Map<string, ImageDimensions>());
   const filterFields = documentFields.filter(field => field.type === 'select' && /^is/i.test(field.key) && !/liste$/i.test(field.key));
   const fieldSections = buildFieldSections(documentFields.filter(field => !filterFields.some(filter => filter.key === field.key)));
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
@@ -128,8 +155,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           }
           return new ArrayBuffer(0); // If no image, return empty buffer
         },
-        getSize(_img: unknown, _tagValue: string, tagName: string) {
-          return tagName.toLocaleLowerCase('tr-TR').includes('logo') ? [150, 150] : [320, 220];
+        getSize(_img: unknown, tagValue: string, tagName: string) {
+          const dimensions = imageDimensions.current.get(tagValue) || { width: 4, height: 3 };
+          return tagName.toLocaleLowerCase('tr-TR').includes('logo') ? fitWithin(dimensions, 150, 150) : fitWithin(dimensions, 220, 165);
         }
       };
       
@@ -166,9 +194,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         });
           if (renderId !== previewRenderId.current || !previewRef.current) return;
           previewRef.current.replaceChildren(...Array.from(nextPreview.childNodes));
-          const renderedWidth = Math.max(800, previewRef.current.scrollWidth);
+          const renderedWidth = Math.max(1, previewRef.current.scrollWidth);
           setPreviewWidth(renderedWidth);
-          setPreviewHeight(Math.max(1100, previewRef.current.scrollHeight));
+          setPreviewHeight(Math.max(1, previewRef.current.scrollHeight));
       }
     } catch (error: any) {
       console.log("Önizleme oluşturulurken veya değişken değiştirilirken hata:", error);
@@ -180,21 +208,26 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, fieldKey: string) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldKey: string) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, [fieldKey]: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    try {
+      const image = await constrainImage(file);
+      imageDimensions.current.set(image.dataUrl, image.dimensions);
+      setFormData(prev => ({ ...prev, [fieldKey]: image.dataUrl }));
+    } catch { setDownloadError('Görsel okunamadı. PNG veya JPG dosyası seçin.'); }
   };
 
-  const handleListAdd = (fieldKey: string) => {
+  const getSequenceKey = (fieldKey: string) => documentFields.find(field => field.key === fieldKey)?.options?.find(option => /^s[ıi]ra\s*_?no$/i.test(option.replace(/[-.]/g, '')));
+  const renumberRows = (fieldKey: string, rows: Record<string, any>[]) => {
+    const sequenceKey = getSequenceKey(fieldKey);
+    return sequenceKey ? rows.map((row, index) => ({ ...row, [sequenceKey]: String(index + 1) })) : rows;
+  };
+
+  const handleListAdd = (fieldKey: string, count = 1) => {
     setFormData(prev => ({
       ...prev,
-      [fieldKey]: [...(prev[fieldKey] || []), {}]
+      [fieldKey]: renumberRows(fieldKey, [...(prev[fieldKey] || []), ...Array.from({ length: count }, () => ({}))])
     }));
   };
 
@@ -202,7 +235,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     setFormData(prev => {
       const newList = [...(prev[fieldKey] || [])];
       newList.splice(index, 1);
-      return { ...prev, [fieldKey]: newList };
+      return { ...prev, [fieldKey]: renumberRows(fieldKey, newList) };
     });
   };
 
@@ -243,8 +276,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           }
            return new ArrayBuffer(0);
         },
-        getSize(_img: unknown, _tagValue: string, tagName: string) {
-          return tagName.toLocaleLowerCase('tr-TR').includes('logo') ? [150, 150] : [320, 220];
+        getSize(_img: unknown, tagValue: string, tagName: string) {
+          const dimensions = imageDimensions.current.get(tagValue) || { width: 4, height: 3 };
+          return tagName.toLocaleLowerCase('tr-TR').includes('logo') ? fitWithin(dimensions, 150, 150) : fitWithin(dimensions, 220, 165);
         }
       };
       
@@ -385,12 +419,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                                       <input type="file" accept="image/*" onChange={event => {
                                         const file = event.target.files?.[0];
                                         if (!file) return;
-                                        const reader = new FileReader();
-                                        reader.onloadend = () => handleListChange(field.key, idx, subFieldName, reader.result as string);
-                                        reader.readAsDataURL(file);
+                                        void constrainImage(file).then(image => {
+                                          imageDimensions.current.set(image.dataUrl, image.dimensions);
+                                          handleListChange(field.key, idx, subFieldName, image.dataUrl);
+                                        }).catch(() => setDownloadError('Görsel okunamadı. PNG veya JPG dosyası seçin.'));
                                       }} className="hidden" id={`${field.key}-${idx}-${subFieldName}`} />
                                       <label htmlFor={`${field.key}-${idx}-${subFieldName}`} className="flex min-h-9 cursor-pointer items-center justify-center gap-1.5 rounded border border-white/10 bg-black/60 px-3 text-xs text-yellow-400 hover:border-yellow-500/50"><Upload size={13} />{item[subFieldName] ? 'Görsel hazır' : 'Görsel seç'}</label>
-                                    </> : <input type="text" value={item[subFieldName] || ""} onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs" placeholder="..." />}
+                                    </> : <input type="text" value={item[subFieldName] || ""} readOnly={subFieldName === getSequenceKey(field.key)} onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs read-only:text-amber-300" placeholder="..." />}
                                   </div>
                                 )) : (
                                   <div className="col-span-2">
@@ -400,9 +435,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                               </div>
                            </div>
                         ))}
-                        <button onClick={() => handleListAdd(field.key)} className="w-full py-2 border border-dashed border-yellow-500/30 text-yellow-500/70 hover:text-yellow-500 hover:border-yellow-500/60 rounded-lg text-xs font-bold uppercase transition-colors">
-                           + Yeni Ekle
-                        </button>
+                        <div className="grid grid-cols-[minmax(0,1fr)_5.5rem] gap-2">
+                          <button onClick={() => handleListAdd(field.key, bulkRowCounts[field.key] || 1)} className="py-2 border border-dashed border-yellow-500/30 text-yellow-500/70 hover:text-yellow-500 hover:border-yellow-500/60 rounded-lg text-xs font-bold uppercase transition-colors">+ Satır Ekle</button>
+                          <label className="flex items-center gap-1 rounded-lg border border-white/10 bg-black/40 px-2 text-[10px] text-slate-400">Adet<input aria-label="Eklenecek satır adedi" type="number" min="1" max="100" value={bulkRowCounts[field.key] || 1} onChange={event => setBulkRowCounts(current => ({ ...current, [field.key]: Math.min(100, Math.max(1, Number(event.target.value) || 1)) }))} className="w-full bg-transparent text-right text-sm font-bold text-white outline-none" /></label>
+                        </div>
                      </div>
                   )}
                 </div>
@@ -439,7 +475,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
               </div>
            ) : (
              <div className="relative shrink-0" style={{ width: previewWidth * previewScale, height: previewHeight * previewScale }} aria-label="Belge önizlemesi">
-               <div className="absolute left-0 top-0 min-h-[1100px] origin-top-left bg-white shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none" style={{ width: previewWidth, transform: `scale(${previewScale})` }}>
+               <div className="absolute left-0 top-0 origin-top-left bg-white shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none" style={{ width: previewWidth, transform: `scale(${previewScale})` }}>
                 <div ref={previewRef} className="w-full h-full [&>.docx-wrapper]:bg-transparent [&>.docx-wrapper]:p-0" />
                </div>
              </div>

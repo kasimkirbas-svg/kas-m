@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { User } from '../types';
 import { SubscriptionPlan, UserRole } from '../types';
+import type { DocumentField } from '../types';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim();
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
@@ -228,7 +229,7 @@ export interface AdminAuditRecord {
 
 export interface SupportTicketRecord {
   id: string; userId: string; subject: string; message: string; status: 'open' | 'in_progress' | 'resolved';
-  priority: 'normal' | 'high' | 'urgent'; assignedTo?: string; adminResponse?: string; createdAt: string; updatedAt: string;
+  priority: 'normal' | 'high' | 'urgent'; assignedTo?: string; adminResponse?: string; responseEmailStatus?: 'not_sent' | 'pending' | 'sent' | 'failed'; responseEmailSentAt?: string; createdAt: string; updatedAt: string;
 }
 
 export const getPublishedTemplates = async (): Promise<import('../types').DocumentTemplate[]> => {
@@ -304,13 +305,18 @@ export const uploadAdminTemplate = async (input: { title: string; category: stri
   if (!supabase) throw new Error('Supabase yapılandırılmadı.');
   if (!input.file.name.toLowerCase().endsWith('.docx')) throw new Error('Yalnızca .docx dosyaları yüklenebilir.');
   if (input.file.size > 25 * 1024 * 1024) throw new Error('Dosya boyutu 25 MB sınırını aşamaz.');
+  const { inferDocumentFieldsFromDocx, reconcileFieldsWithDocx } = await import('./docxFieldService');
+  const fileBuffer = await input.file.arrayBuffer();
+  const configuredFields = input.fields as DocumentField[];
+  const fields = configuredFields.length ? reconcileFieldsWithDocx(configuredFields, fileBuffer) : inferDocumentFieldsFromDocx(fileBuffer);
+  if (!fields.length) throw new Error('DOCX içinde {alanAdi} biçiminde doldurulabilir alan bulunamadı.');
   const safeName = input.file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
   const filePath = `${crypto.randomUUID()}/${safeName}`;
   const { error: uploadError } = await supabase.storage.from('document-templates').upload(filePath, input.file, { contentType: input.file.type, upsert: false });
   if (uploadError) throw uploadError;
-  const { data, error } = await supabase.from('document_templates').insert({ title: input.title, category: input.category, description: input.description, file_path: filePath, fields: input.fields, is_premium: input.isPremium, created_by: adminId }).select('id').single();
+  const { data, error } = await supabase.from('document_templates').insert({ title: input.title, category: input.category, description: input.description, file_path: filePath, fields, is_premium: input.isPremium, created_by: adminId }).select('id').single();
   if (error) { await supabase.storage.from('document-templates').remove([filePath]); throw error; }
-  await writeAuditLog(adminId, 'template.created', 'template', data.id, { title: input.title, category: input.category });
+  await writeAuditLog(adminId, 'template.created', 'template', data.id, { title: input.title, category: input.category, fieldCount: fields.length });
 };
 
 export const setAdminTemplateActive = async (templateId: string, isActive: boolean) => {
@@ -329,18 +335,32 @@ export const createSupportTicket = async (subject: string, message: string) => {
   if (error) throw error;
 };
 
+export const getMySupportTickets = async (): Promise<SupportTicketRecord[]> => {
+  if (!supabase) return [];
+  const userId = await requireUserId();
+  if (!userId) return [];
+  const { data, error } = await supabase.from('support_tickets').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(10);
+  if (error) throw error;
+  return data.map(item => ({ id: item.id, userId: item.user_id, subject: item.subject, message: item.message, status: item.status, priority: item.priority, assignedTo: item.assigned_to, adminResponse: item.admin_response, responseEmailStatus: item.response_email_status, responseEmailSentAt: item.response_email_sent_at, createdAt: item.created_at, updatedAt: item.updated_at }));
+};
+
 export const getSupportTickets = async (): Promise<SupportTicketRecord[]> => {
   await requireAdmin([UserRole.SUPPORT_ADMIN, UserRole.OWNER]);
   if (!supabase) return [];
   const { data, error } = await supabase.from('support_tickets').select('*').order('created_at', { ascending: false }).limit(200);
   if (error) throw error;
-  return data.map(item => ({ id: item.id, userId: item.user_id, subject: item.subject, message: item.message, status: item.status, priority: item.priority, assignedTo: item.assigned_to, adminResponse: item.admin_response, createdAt: item.created_at, updatedAt: item.updated_at }));
+  return data.map(item => ({ id: item.id, userId: item.user_id, subject: item.subject, message: item.message, status: item.status, priority: item.priority, assignedTo: item.assigned_to, adminResponse: item.admin_response, responseEmailStatus: item.response_email_status, responseEmailSentAt: item.response_email_sent_at, createdAt: item.created_at, updatedAt: item.updated_at }));
 };
 
 export const updateSupportTicket = async (ticketId: string, changes: { status?: SupportTicketRecord['status']; priority?: SupportTicketRecord['priority']; adminResponse?: string }) => {
   const { userId: adminId } = await requireAdmin([UserRole.SUPPORT_ADMIN, UserRole.OWNER]);
   if (!supabase) return;
-  const { error } = await supabase.from('support_tickets').update({ status: changes.status, priority: changes.priority, admin_response: changes.adminResponse, assigned_to: adminId, updated_at: new Date().toISOString() }).eq('id', ticketId);
+  const shouldEmail = Boolean(changes.adminResponse?.trim());
+  const { error } = await supabase.from('support_tickets').update({ status: changes.status, priority: changes.priority, admin_response: changes.adminResponse, assigned_to: adminId, ...(shouldEmail && { response_email_status: 'pending', response_email_error: null }), updated_at: new Date().toISOString() }).eq('id', ticketId);
   if (error) throw error;
+  if (shouldEmail) {
+    const { error: notifyError } = await supabase.functions.invoke('notify-support-update', { body: { ticketId } });
+    if (notifyError) throw new Error(`Yanıt kaydedildi ancak e-posta gönderilemedi: ${notifyError.message}`);
+  }
   await writeAuditLog(adminId, 'support.updated', 'support_ticket', ticketId, changes);
 };
