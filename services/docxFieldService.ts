@@ -6,7 +6,7 @@ interface DocxLoop {
   fields: string[];
 }
 
-const TAG_PATTERN = /\{([#/])?([^{}<>]+)\}/g;
+const TAG_PATTERN = /\{([#/%])?([^{}<>]+)\}/g;
 
 export const extractDocxLoops = (buffer: ArrayBuffer): DocxLoop[] => {
   const zip = new PizZip(buffer.slice(0));
@@ -26,7 +26,7 @@ export const extractDocxLoops = (buffer: ArrayBuffer): DocxLoop[] => {
     if (closingIndex < 0) return [];
     const fields = tags
       .slice(tagIndex + 1, closingIndex)
-      .filter(candidate => !candidate.marker)
+      .filter(candidate => !candidate.marker || candidate.marker === '%')
       .map(candidate => candidate.key)
       .filter((key, index, all) => all.indexOf(key) === index);
     return fields.length ? [{ key: tag.key, fields }] : [];
@@ -40,11 +40,22 @@ export const reconcileFieldsWithDocx = (configuredFields: DocumentField[], buffe
 
   const loopKeys = new Set(loops.flatMap(loop => loop.fields));
   const scalarFields = configuredFields.filter(field => field.type !== 'list' && !loopKeys.has(field.key));
-  const listFields: DocumentField[] = loops.map(loop => ({
-    key: loop.key,
-    label: loop.key,
-    type: 'list',
-    options: loop.fields,
+  const listFields: DocumentField[] = loops.map(loop => {
+    const configured = configuredFields.find(field => field.key === loop.key && field.type === 'list');
+    return {
+      ...configured,
+      key: loop.key,
+      label: configured?.label || loop.key,
+      type: 'list',
+      options: loop.fields,
+      optionTypes: {
+        ...configured?.optionTypes,
+        ...Object.fromEntries(loop.fields.filter(field => field.startsWith('%')).map(field => [field.slice(1), 'image' as const])),
+      },
+    };
+  }).map(field => ({
+    ...field,
+    options: field.options?.map(option => option.replace(/^%/, '')),
   }));
   return [...scalarFields, ...listFields];
 };

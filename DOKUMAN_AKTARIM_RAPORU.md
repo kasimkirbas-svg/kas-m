@@ -6,7 +6,7 @@ Tarih: 25 Temmuz 2026
 
 - `DOKUMANLARIM` klasorundeki 87 DOCX dosyasinin tamami siteye aktarildi.
 - 14 kategori korundu.
-- Belgelerdeki komutlardan 1.796 adet dokumana ozel sol panel alani uretildi.
+- Belgelerdeki komutlardan 1.790 adet dokumana ozel sol panel alani uretildi.
 - Uygulama eski 26 sabit sablon yerine uretilen 87 sablonluk katalogla calisacak sekilde guncellendi.
 
 ## Komut Donusumleri

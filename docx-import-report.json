@@ -1,7 +1,7 @@
 {
   "sourceRoot": "C:\\Users\\kasim\\OneDrive\\Masaüstü\\DÖKÜMANLARIM",
   "total": 87,
-  "fieldCount": 1796,
+  "fieldCount": 1790,
   "imageTemplates": [
     {
       "file": "Enerji Santralleri\\(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısıı.docx",
@@ -79,8 +79,7 @@
       "fields": [
         "isKULE",
         "isKEPÇE",
-        "isİŞMAKİNESİ",
-        "isMakinesiListe"
+        "isİŞMAKİNESİ"
       ]
     },
     {
@@ -705,6 +704,17 @@
           "columns": [
             "no",
             "soru",
+            "uygun",
+            "uygunDegil",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "isMakinesiListe",
+          "columns": [
+            "no",
+            "soru",
+            "periyot",
             "uygun",
             "uygunDegil",
             "aciklama"

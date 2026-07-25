@@ -3105,41 +3105,15 @@ export const GENERATED_TEMPLATES: DocumentTemplate[] = [
       {
         "key": "isMakinesiListe",
         "label": "isMakinesiListe",
-        "type": "select",
+        "type": "list",
         "options": [
-          "true",
-          "false"
+          "no",
+          "soru",
+          "periyot",
+          "uygun",
+          "uygunDegil",
+          "aciklama"
         ]
-      },
-      {
-        "key": "no",
-        "label": "no",
-        "type": "text"
-      },
-      {
-        "key": "soru",
-        "label": "soru",
-        "type": "text"
-      },
-      {
-        "key": "periyot",
-        "label": "periyot",
-        "type": "text"
-      },
-      {
-        "key": "uygun",
-        "label": "uygun",
-        "type": "text"
-      },
-      {
-        "key": "uygunDegil",
-        "label": "uygunDegil",
-        "type": "text"
-      },
-      {
-        "key": "aciklama",
-        "label": "aciklama",
-        "type": "textarea"
       }
     ]
   },

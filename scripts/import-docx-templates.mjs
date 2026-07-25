@@ -44,7 +44,7 @@ const parseTags = text => [...text.matchAll(/\{([#/%])?([^{}<>]+)\}/g)].map(matc
 })).filter(tag => /^[\p{L}_][\p{L}\p{N}_.-]*$/u.test(tag.key));
 
 const unique = values => values.filter((value, index) => values.indexOf(value) === index);
-const isCondition = key => /^is[A-ZİĞÜŞÖÇ0-9_]/u.test(key) || /^(var|goster|dahil|secili)[A-ZİĞÜŞÖÇ0-9_]/u.test(key);
+const isCondition = key => !/Liste$/iu.test(key) && (/^is[A-ZİĞÜŞÖÇ0-9_]/u.test(key) || /^(var|goster|dahil|secili)[A-ZİĞÜŞÖÇ0-9_]/u.test(key));
 const inferType = key => {
   const normalized = key.toLocaleLowerCase('tr-TR');
   if (/(tarih|date|tarihi)$/.test(normalized)) return 'date';

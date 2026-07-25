@@ -86,6 +86,9 @@ const EXACT_LABELS: Record<string, string> = {
   isGES: 'Santral Türü: GES',
   isHES: 'Santral Türü: HES',
   isTermik: 'Santral Türü: Termik',
+  isKULE: 'Kule Vinç Kontrol Formu',
+  isKEPÇE: 'Kepçe Kontrol Formu',
+  isİŞMAKİNESİ: 'İş Makinesi Kontrol Formu',
 };
 
 const WORDS: Record<string, string> = {

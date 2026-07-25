@@ -27,14 +27,19 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [previewScale, setPreviewScale] = useState(1);
   const [previewHeight, setPreviewHeight] = useState(1100);
+  const [filterConfirmed, setFilterConfirmed] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("");
   const previewRef = useRef<HTMLDivElement>(null);
-  const fieldSections = buildFieldSections(documentFields);
+  const filterFields = documentFields.filter(field => field.type === 'select' && /^is/i.test(field.key) && !/liste$/i.test(field.key));
+  const fieldSections = buildFieldSections(documentFields.filter(field => !filterFields.some(filter => filter.key === field.key)));
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
   const completedFields = visibleFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
   const completionRate = visibleFields.length ? Math.round((completedFields / visibleFields.length) * 100) : 100;
   useEffect(() => {
     setLoadError(null);
     setDownloadError(null);
+    setFilterConfirmed(false);
+    setSelectedFilter("");
     setLoading(true);
     setDocumentFields(template.fields);
         const initialData: Record<string, any> = {};
@@ -211,8 +216,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       
       const imageOptions = {
         centered: false,
-        getImage(tagValue: string, tagName: string) {
-          if (tagName === "logo" && tagValue) {
+        getImage(tagValue: string) {
+          if (tagValue) {
              const base64Regex = /^data:image\/(png|jpg|jpeg|svg|svg\+xml);base64,/;
              if(base64Regex.test(tagValue)) {
                 const base64Data = tagValue.replace(base64Regex, "");
@@ -227,9 +232,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           }
            return new ArrayBuffer(0);
         },
-        getSize(img: any, tagValue: string, tagName: string) {
-          if (tagName === "logo") return [150, 150];
-          return [150, 150];
+        getSize(_img: unknown, _tagValue: string, tagName: string) {
+          return tagName.toLocaleLowerCase('tr-TR').includes('logo') ? [150, 150] : [320, 220];
         }
       };
       
@@ -242,7 +246,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         nullGetter(part) { if (!part.module) { return ""; } if (part.module === "rawxml") { return ""; } return ""; }
       });
       
-      doc.render(formData);
+      doc.render(Object.fromEntries(Object.entries(formData).map(([key, value]) => [key, value === 'true' ? true : value === 'false' ? false : value])));
 
       const out = doc.getZip().generate({
         type: "blob",
@@ -260,6 +264,27 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen bg-[#16222a] lg:overflow-hidden text-slate-200">
+      {!loading && filterFields.length > 0 && !filterConfirmed && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0d171d]/90 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="document-filter-title">
+          <div className="w-full max-w-lg rounded-lg border border-white/10 bg-[#162a33] p-6 shadow-2xl sm:p-8">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-yellow-400">Belge filtresi</p>
+            <h2 id="document-filter-title" className="text-xl font-bold text-white">Hangi belge türüyle devam edilsin?</h2>
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">Seçiminize ait alanlar ve tablolar gösterilecek, diğer bölümler belgeye eklenmeyecek.</p>
+            <div className="mt-6 grid gap-2">
+              {filterFields.map(field => (
+                <button key={field.key} type="button" onClick={() => setSelectedFilter(field.key)} className={`flex min-h-12 items-center justify-between rounded-md border px-4 py-3 text-left text-sm font-semibold transition-colors ${selectedFilter === field.key ? 'border-yellow-400 bg-yellow-400/10 text-yellow-300' : 'border-white/10 bg-white/[0.03] text-slate-200 hover:border-white/20'}`}>
+                  {getFieldLabel(field)}
+                  {selectedFilter === field.key && <Check size={17} />}
+                </button>
+              ))}
+            </div>
+            <button type="button" disabled={!selectedFilter} onClick={() => {
+              setFormData(current => ({ ...current, ...Object.fromEntries(filterFields.map(field => [field.key, field.key === selectedFilter ? 'true' : 'false'])) }));
+              setFilterConfirmed(true);
+            }} className="mt-6 flex min-h-12 w-full items-center justify-center rounded-md bg-yellow-400 px-4 text-sm font-bold text-black transition-colors hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-40">Seçimle Devam Et</button>
+          </div>
+        </div>
+      )}
       <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-[#16222a]/95 backdrop-blur-xl border-b border-white/10">
         <button onClick={() => setMobileView("form")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "form" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><SlidersHorizontal size={17} /> Alanlar</button>
         <button onClick={() => setMobileView("preview")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "preview" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><Eye size={17} /> Önizleme</button>
