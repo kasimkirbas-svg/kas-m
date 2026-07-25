@@ -41,6 +41,41 @@ const constrainImage = (file: File, maxPixels = 1600): Promise<{ dataUrl: string
   image.src = objectUrl;
 });
 
+const paginateOverflowingPreview = async (preview: HTMLDivElement) => {
+  const measurementHost = document.createElement('div');
+  measurementHost.style.cssText = 'position:fixed;left:-10000px;top:0;width:1200px;visibility:hidden;pointer-events:none;';
+  measurementHost.appendChild(preview);
+  document.body.appendChild(measurementHost);
+  try {
+    const sections = Array.from(preview.querySelectorAll<HTMLElement>('.docx-wrapper > section.docx'));
+    const overflowing = sections.find(section => {
+      const pageHeight = Number.parseFloat(getComputedStyle(section).minHeight);
+      return pageHeight > 0 && section.scrollHeight > pageHeight + 2;
+    });
+    if (!overflowing) return;
+
+    const isLandscape = overflowing.clientWidth > Number.parseFloat(getComputedStyle(overflowing).minHeight);
+    const source = overflowing.cloneNode(true) as HTMLElement;
+    source.style.padding = '0';
+    source.style.width = 'auto';
+    source.style.minHeight = '0';
+    source.style.overflow = 'visible';
+    const styles = Array.from(preview.querySelectorAll('style')).map(style => style.textContent || '').join('\n');
+    const stylesheet = new Blob([`${styles}\n@page { size: A4 ${isLandscape ? 'landscape' : 'portrait'}; margin: 72pt; }\n.docx { padding: 0 !important; width: auto !important; min-height: 0 !important; overflow: visible !important; }\ntr, img { break-inside: avoid; }`], { type: 'text/css' });
+    const stylesheetUrl = URL.createObjectURL(stylesheet);
+    const pagedTarget = document.createElement('div');
+    pagedTarget.className = 'docx-paged-preview';
+    measurementHost.appendChild(pagedTarget);
+    const { Previewer } = await import('pagedjs');
+    try {
+      await new Previewer().preview(source, [stylesheetUrl], pagedTarget);
+      if (pagedTarget.querySelector('.pagedjs_page')) preview.replaceChildren(pagedTarget);
+    } finally { URL.revokeObjectURL(stylesheetUrl); }
+  } finally {
+    measurementHost.remove();
+  }
+};
+
 export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
   const [mobileView, setMobileView] = useState<"form" | "preview">("form");
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -192,6 +227,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            trimXmlDeclaration: true,
            useBase64URL: true,
         });
+          try { await paginateOverflowingPreview(nextPreview); }
+          catch (paginationError) { console.warn('A4 önizleme sayfalaması uygulanamadı:', paginationError); }
           if (renderId !== previewRenderId.current || !previewRef.current) return;
           previewRef.current.replaceChildren(...Array.from(nextPreview.childNodes));
           const renderedWidth = Math.max(1, previewRef.current.scrollWidth);
@@ -218,7 +255,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     } catch { setDownloadError('Görsel okunamadı. PNG veya JPG dosyası seçin.'); }
   };
 
-  const getSequenceKey = (fieldKey: string) => documentFields.find(field => field.key === fieldKey)?.options?.find(option => /^s[ıi]ra\s*_?no$/i.test(option.replace(/[-.]/g, '')));
+  const getSequenceKey = (fieldKey: string) => documentFields.find(field => field.key === fieldKey)?.options?.find(option => /^(?:s[ıi]ra|s)?[\s_.-]*(?:no|numara|numarası)$/i.test(option));
   const renumberRows = (fieldKey: string, rows: Record<string, any>[]) => {
     const sequenceKey = getSequenceKey(fieldKey);
     return sequenceKey ? rows.map((row, index) => ({ ...row, [sequenceKey]: String(index + 1) })) : rows;
@@ -367,7 +404,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
             if (!sectionFields.length) return null;
             const isOpen = openSections[section.id];
             return <section key={section.id} className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.025]">
-              <button type="button" onClick={() => setOpenSections(current => ({ ...current, [section.id]: !isOpen }))} className="flex w-full items-center gap-3 px-4 py-4 text-left hover:bg-white/[0.035] transition-colors" aria-expanded={isOpen}>
+              <button type="button" onClick={() => setOpenSections({ [section.id]: !isOpen })} className="flex w-full items-center gap-3 px-4 py-4 text-left hover:bg-white/[0.035] transition-colors" aria-expanded={isOpen}>
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-yellow-400/10 text-xs font-bold text-yellow-400">{sectionFields.length}</span>
                 <span className="min-w-0 flex-1"><strong className="block text-sm font-semibold text-white">{section.title}</strong><span className="block truncate text-[11px] text-slate-500">{section.description}</span></span>
                 <ChevronDown size={16} className={`text-slate-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -389,13 +426,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                     </div>
                   )}
                   {field.type === "text" && (
-                    <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || "Veri giriniz..."} />
+                    <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || "Veri giriniz..."} />
                   )}
                   {field.type === "date" && (
                     <input type="date" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm color-scheme-dark shadow-inner" />
                   )}
                   {field.type === "textarea" && (
-                    <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={4} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm resize-none shadow-inner custom-scrollbar" placeholder={field.placeholder || "Veri giriniz..."} />
+                    <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={5} dir="ltr" className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm leading-6 resize-y shadow-inner custom-scrollbar" placeholder={field.placeholder || "Veri giriniz..."} />
                   )}
                   {field.type === "select" && (
                     <select name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner text-slate-200">
@@ -437,7 +474,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                         ))}
                         <div className="grid grid-cols-[minmax(0,1fr)_5.5rem] gap-2">
                           <button onClick={() => handleListAdd(field.key, bulkRowCounts[field.key] || 1)} className="py-2 border border-dashed border-yellow-500/30 text-yellow-500/70 hover:text-yellow-500 hover:border-yellow-500/60 rounded-lg text-xs font-bold uppercase transition-colors">+ Satır Ekle</button>
-                          <label className="flex items-center gap-1 rounded-lg border border-white/10 bg-black/40 px-2 text-[10px] text-slate-400">Adet<input aria-label="Eklenecek satır adedi" type="number" min="1" max="100" value={bulkRowCounts[field.key] || 1} onChange={event => setBulkRowCounts(current => ({ ...current, [field.key]: Math.min(100, Math.max(1, Number(event.target.value) || 1)) }))} className="w-full bg-transparent text-right text-sm font-bold text-white outline-none" /></label>
+                          <label className="flex items-center gap-1 rounded-lg border border-white/10 bg-black/40 px-2 text-[10px] text-slate-400">Adet<input aria-label="Eklenecek satır adedi" type="number" min="1" max="200" value={bulkRowCounts[field.key] || 1} onChange={event => setBulkRowCounts(current => ({ ...current, [field.key]: Math.min(200, Math.max(1, Number(event.target.value) || 1)) }))} className="w-full bg-transparent text-right text-sm font-bold text-white outline-none" /></label>
                         </div>
                      </div>
                   )}
@@ -476,7 +513,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            ) : (
              <div className="relative shrink-0" style={{ width: previewWidth * previewScale, height: previewHeight * previewScale }} aria-label="Belge önizlemesi">
                <div className="absolute left-0 top-0 origin-top-left bg-white shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none" style={{ width: previewWidth, transform: `scale(${previewScale})` }}>
-                <div ref={previewRef} className="w-full h-full [&>.docx-wrapper]:bg-transparent [&>.docx-wrapper]:p-0" />
+                <div ref={previewRef} className="w-full h-full [&>.docx-wrapper]:flex [&>.docx-wrapper]:flex-col [&>.docx-wrapper]:items-center [&>.docx-wrapper]:bg-transparent [&>.docx-wrapper]:p-0 [&_.docx]:mb-6 [&_.docx]:shrink-0 [&_.docx]:bg-white [&_.docx]:shadow-[0_8px_28px_rgba(0,0,0,0.28)] [&_.docx:last-child]:mb-0" />
                </div>
              </div>
            )}

@@ -139,7 +139,7 @@ export const buildFieldSections = (fields: DocumentField[] = []): FieldSection[]
   return Object.entries(SECTION_META).flatMap(([id, meta]) => {
     const sectionFields = grouped.get(id) || [];
     return sectionFields.length ? [{ id, ...meta, fields: sectionFields }] : [];
-  });
+  }).sort((left, right) => fields.indexOf(left.fields[0]) - fields.indexOf(right.fields[0]));
 };
 
 export const isFieldVisible = (field: DocumentField, data: Record<string, unknown>) =>

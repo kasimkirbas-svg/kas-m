@@ -9,3 +9,9 @@ declare module 'docxtemplater-image-module-free' {
     constructor(options: ImageModuleOptions);
   }
 }
+
+declare module 'pagedjs' {
+  export class Previewer {
+    preview(content: string | HTMLElement, stylesheets?: string[], renderTo?: HTMLElement): Promise<{ total: number }>;
+  }
+}
