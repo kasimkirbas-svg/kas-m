@@ -12,10 +12,10 @@ Tarih: 25 Temmuz 2026
 ## Komut Donusumleri
 
 - `{alan}`: metin, tarih veya uzun aciklama kontrolu
-- `{%logo}` ve diger `{%resim}` komutlari: PNG/JPG dosya secici
+- `&#123;%logo}` ve diger `&#123;%resim}` komutlari: PNG/JPG dosya secici
 - `{#isRES}`, `{#isGES}`, `{#isHES}`, `{#isTermik}` ve benzeri bloklar: Goster/Gizle secimi
 - `{#tablo}...{/tablo}` bloklari: satir eklenebilir ve silinebilir dinamik tablo
-- Tablo icindeki `{%fotograf}` komutlari: satira ozel fotograf secici
+- Tablo icindeki `&#123;%fotograf}` komutlari: satira ozel fotograf secici
 
 10 belgede bagimsiz logo veya sema alani, 15 dinamik tabloda satir ici fotograf alani bulunmaktadir. 8 belgede kosullu bolum, 76 belgede en az bir dinamik tablo vardir.
 
