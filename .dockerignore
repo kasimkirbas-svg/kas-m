@@ -1,0 +1,13 @@
+.git
+.github
+.vercel
+.vscode
+dist
+node_modules
+*.log
+*.local
+.env*
+App_Debug.txt
+before_repair.txt
+debug_*.txt
+temp*.txt

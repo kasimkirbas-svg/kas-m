@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { User } from '../types';
 import { isAdminRole } from '../types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Crown, FileClock, HeadphonesIcon, LogOut, Menu, Settings, ShieldCheck, User as UserIcon, X } from 'lucide-react';
+import { Crown, HeadphonesIcon, LogOut, Menu, Settings, ShieldCheck, User as UserIcon, X } from 'lucide-react';
 import { createSupportTicket } from '../services/supabaseService';
 
 interface LayoutProps {
@@ -15,7 +15,6 @@ interface LayoutProps {
 
 const menuItems = [
   { view: 'dashboard', label: 'Ana Panel', icon: Menu },
-  { view: 'history', label: 'Doküman Geçmişi', icon: FileClock },
   { view: 'billing', label: 'Üyelik Merkezi', icon: Crown },
   { view: 'profile', label: 'Profil ve Üyelik', icon: UserIcon },
   { view: 'settings', label: 'Ayarlar', icon: Settings },

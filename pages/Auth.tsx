@@ -19,7 +19,7 @@ interface RegisteredAccount {
   passwordHash: string;
 }
 
-const inputClass = "block w-full px-4 py-3 border border-slate-300 dark:border-white/10 rounded-xl bg-slate-100 dark:bg-black/40 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all font-medium";
+const inputClass = "block w-full px-4 py-3 border border-slate-300 dark:border-white/10 rounded-xl bg-slate-100 dark:bg-[#19313b]/90 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all font-medium";
 const labelClass = "text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1";
 const normalizePhone = (value: string) => value.replace(/\D/g, "").replace(/^90/, "").replace(/^0/, "").slice(0, 10);
 const formatPhone = (value: string) => {
@@ -187,7 +187,7 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
   );
 
   if (isResetMode) return (
-    <div className="min-h-screen bg-[#0c0f12] text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#16222a] text-white flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111820] p-6 sm:p-8 shadow-2xl">
         <div className="font-black tracking-[0.18em] mb-7">İSG <span className="text-yellow-500">ZEYRON</span></div>
         <h1 className="text-2xl font-black">Yeni Şifre Belirle</h1>
@@ -203,18 +203,18 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
   );
 
   return (
-    <div className="light-auth min-h-screen bg-[#eef1f5] dark:bg-[#0A0A0A] text-slate-900 dark:text-white font-sans relative overflow-x-hidden selection:bg-yellow-500/30">
+    <div className="light-auth min-h-screen bg-[#eef1f5] dark:bg-[#16222a] text-slate-900 dark:text-white font-sans relative overflow-x-hidden selection:bg-yellow-500/30">
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <video autoPlay loop muted playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover opacity-35 saturate-[0.8]"><source src="/13232-246463976_medium.mp4" type="video/mp4" /></video>
-        <div className="absolute inset-0 bg-[#0c0f12]/55" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0c0f12]/65 to-[#0c0f12]" />
+        <div className="absolute inset-0 bg-[#10232b]/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#132730]/70 to-[#16222a]" />
       </div>
       <header className="relative z-20 p-5 sm:p-7 flex items-center justify-between">
         <button type="button" onClick={onBack} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 dark:bg-white/5 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 backdrop-blur-md"><ArrowLeft size={18} /><span className="hidden sm:inline text-sm font-medium">Ana Sayfaya Dön</span></button>
         <div className="font-black tracking-[0.18em]">İSG <span className="text-yellow-500">ZEYRON</span></div>
       </header>
       <main className="relative z-10 w-full max-w-3xl mx-auto px-3 sm:px-5 pb-12 pt-3">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="bg-white/85 dark:bg-[#0d1017]/95 backdrop-blur-2xl border border-white dark:border-white/10 p-4 sm:p-9 rounded-2xl shadow-[0_24px_70px_rgba(15,23,42,0.18)] dark:shadow-[0_0_60px_rgba(0,0,0,0.8)]">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="bg-white/85 dark:bg-[#172a33]/95 backdrop-blur-2xl border border-white dark:border-white/10 p-4 sm:p-9 rounded-2xl shadow-[0_24px_70px_rgba(15,23,42,0.18)] dark:shadow-[0_0_60px_rgba(0,0,0,0.5)]">
           <div className="text-center mb-7"><h1 className="text-3xl font-black text-slate-950 dark:text-white">{isLogin ? "Sisteme Giriş" : "Hesap Oluştur"}</h1><p className="text-slate-500 dark:text-slate-400 text-sm mt-2">{isLogin ? "Kayıtlı hesabınızla güvenli şekilde devam edin." : "Faturalama ve kullanıcı yönetimi için bilgilerinizi eksiksiz girin."}</p></div>
           {!isLogin && <div className="grid grid-cols-2 gap-2 p-1.5 mb-7 bg-slate-100 dark:bg-black/30 rounded-xl" role="tablist" aria-label="Kayıt türü">{(["individual", "osgb"] as AccountType[]).map(type => <button key={type} type="button" onClick={() => { setAccountType(type); setErrors({}); }} className={`py-3 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all ${accountType === type ? "bg-white dark:bg-yellow-500 text-slate-900 dark:text-black shadow-sm" : "text-slate-500 dark:text-slate-400"}`}>{type === "individual" ? <User size={18} /> : <Building2 size={18} />}{type === "individual" ? "Bireysel" : "OSGB"}</button>)}</div>}
           {message && <div className={`mb-5 p-4 rounded-xl text-sm flex gap-3 border ${message.type === "success" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20" : "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20"}`}><Shield className="w-5 h-5 shrink-0" />{message.text}</div>}

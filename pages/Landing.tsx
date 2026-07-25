@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin, Menu, X, Users, Cloud, MonitorSmartphone, Eye } from 'lucide-react';
+import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin, Menu, X, Users, Download, MonitorSmartphone, Eye, HardDriveDownload } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface LandingProps {
@@ -15,7 +15,7 @@ const FAQItem = ({ question, answer, idx }: { question: string, answer: string, 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: Math.min(idx * 0.05, 0.3) }}
-      className={`border ${isOpen ? 'border-yellow-500/50 shadow-[0_12px_30px_rgba(202,138,4,0.12)] dark:shadow-[0_0_15px_rgba(234,179,8,0.15)] bg-yellow-50 dark:bg-yellow-500/5' : 'border-slate-200 dark:border-white/10 bg-white/80 dark:bg-zinc-900/30 hover:border-yellow-500/40 hover:bg-slate-50 dark:hover:bg-zinc-800/50'} rounded-lg mb-4 overflow-hidden transition-all duration-300`}
+      className={`border ${isOpen ? 'border-yellow-500/50 shadow-[0_12px_30px_rgba(202,138,4,0.12)] dark:shadow-[0_0_15px_rgba(234,179,8,0.15)] bg-yellow-50 dark:bg-[#1c3038]' : 'border-slate-200 dark:border-white/10 bg-white/80 dark:bg-[#16272f]/90 hover:border-yellow-500/40 hover:bg-slate-50 dark:hover:bg-[#1b3039]'} rounded-lg mb-4 overflow-hidden transition-all duration-300`}
     >
       <button 
         onClick={() => setIsOpen(!isOpen)}
@@ -81,12 +81,12 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
     { q: "4. Hangi cihazlardan kullanabilirim?", a: "Bilgisayar, dizüstü bilgisayar, tablet ve internet tarayıcısı bulunan akıllı telefonlardan güvenle kullanılabilir." },
     { q: "5. Mobil uygulaması var mı?", a: "İSG Zeyron tarayıcı üzerinden çalışan mobil uyumlu bir platformdur. Telefonunuzun 'Ana Ekrana Ekle' özelliğiyle uygulama benzeri şekilde kullanabilirsiniz." },
     { q: "6. Mac bilgisayarlarda çalışıyor mu?", a: "Evet. Windows, macOS ve Linux işletim sistemlerinde güncel internet tarayıcıları üzerinden kullanılabilir." },
-    { q: "7. İnternet olmadan kullanılabilir mi?", a: "Hayır. İSG Zeyron bulut tabanlı bir platform olduğu için aktif internet bağlantısı gerektirir." },
-    { q: "8. Dokümanlar sistemde kayıt altına alınıyor mu?", a: "Oluşturulan Word dosyasının kendisi sunucuda kalıcı olarak saklanmaz; cihazınıza indirilir. Çalışmaya devam edebilmeniz için form taslakları ve doküman geçmişi hesabınızla güvenli şekilde eşitlenebilir." },
-    { q: "9. Verilerim güvende mi?", a: "Kullanıcı hesapları doğrulamalı kimlik sistemiyle korunur. Hesaba bağlı veriler erişim politikalarıyla yalnızca ilgili kullanıcıya açılır; teknik ve idari güvenlik tedbirleri uygulanır." },
+    { q: "7. İnternet olmadan kullanılabilir mi?", a: "Dokümanı hazırlayıp oluşturmak için aktif internet bağlantısı gerekir. İndirdiğiniz Word dosyasını daha sonra cihazınızda çevrimdışı açabilirsiniz." },
+    { q: "8. Dokümanlar sistemde kayıt altına alınıyor mu?", a: "Hayır. Doldurduğunuz bilgilerle oluşturulan Word dosyası doğrudan cihazınıza indirilir; dokümanınız ve form verileriniz kişisel bir arşiv olarak sistemde saklanmaz." },
+    { q: "9. Verilerim güvende mi?", a: "Kullanıcı hesabınız doğrulamalı kimlik sistemiyle korunur. Doküman oluşturma bilgileri kişisel bir bulut arşivinde tutulmaz; oluşturduğunuz dosyanın saklanması sizin cihazınızda ve kontrolünüzdedir." },
     { q: "10. Excel veya Word bilgisi gerekiyor mu?", a: "Hayır. Kullanıcı dostu alanları doldurmanız yeterlidir; sistem verileri dokümana otomatik olarak işler." },
     { q: "11. Dokümanlar güncel mevzuata uygun mu?", a: "Şablonlar yürürlükteki mevzuat ve sektörel ihtiyaçlar esas alınarak hazırlanır; değişiklikler doğrultusunda içeriklerin güncellenmesi hedeflenir. Nihai mesleki kontrol kullanıcı sorumluluğundadır." },
-    { q: "12. Oluşturduğum dokümanları düzenleyebilir miyim?", a: "Evet. Geçmişteki form verilerinizi yeniden açabilir, güncelleyebilir ve indirilen Word dokümanını iş yerinizin ihtiyaçlarına göre düzenleyebilirsiniz." },
+    { q: "12. Oluşturduğum dokümanları düzenleyebilir miyim?", a: "Evet. Cihazınıza indirdiğiniz Word dokümanını iş yerinizin ihtiyaçlarına göre açabilir ve düzenleyebilirsiniz." },
     { q: "13. Abonelik sistemi nasıl çalışır?", a: "Paketler kullanım kotası ve sürelerine göre planlanmıştır. Ödeme altyapısı şu anda hazırlık aşamasındadır; doğrulanmış ödeme olmadan ücretli plan etkinleştirilmez." },
     { q: "14. Aboneliğimi istediğim zaman iptal edebilir miyim?", a: "Ödeme ve abonelik sistemi açıldığında iptal işlemleri yürürlükteki abonelik ve kullanım koşulları çerçevesinde sunulacaktır." },
     { q: "15. Güncellemeler için ek ücret ödeyecek miyim?", a: "Aktif abonelik kapsamında sunulan sistem ve şablon güncellemeleri için ayrıca ücret alınması planlanmamaktadır." },
@@ -111,10 +111,10 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
     { icon: <Shield className="w-6 h-6" />, title: "Mevzuata Uygun Yönetim", desc: "İSG şablonlarını yürürlükteki mevzuat ve sektörel ihtiyaçlar doğrultusunda yönetin." },
     { icon: <FileText className="w-6 h-6" />, title: "Düzenlenebilir Belgeler", desc: "Hazır alanları doldurun, önizleyin ve düzenlenebilir Word çıktısı oluşturun." },
     { icon: <Activity className="w-6 h-6" />, title: "Risk ve Süreç Dokümanları", desc: "Risk değerlendirmesi, plan, tutanak, form ve raporları tek çalışma alanında hazırlayın." },
-    { icon: <Cpu className="w-6 h-6" />, title: "Tek Panel", desc: "Doküman hazırlama, taslak ve geçmiş işlemlerini dağınık araçlar olmadan yönetin." },
+    { icon: <Cpu className="w-6 h-6" />, title: "Tek Panel", desc: "Şablonunuzu seçin, yönlendirilmiş alanları doldurun ve dokümanınızı oluşturun." },
     { icon: <Zap className="w-6 h-6" />, title: "Pratik Kullanım", desc: "Excel veya ileri Word bilgisi gerektirmeyen yönlendirilmiş alanlarla çalışın." },
-    { icon: <Cloud className="w-6 h-6" />, title: "Bulut Tabanlı Erişim", desc: "İnternet bağlantısı olan farklı cihazlardan doğrulanmış hesabınıza erişin." },
-    { icon: <Search className="w-6 h-6" />, title: "Hızlı Arşiv", desc: "Doküman geçmişinizi arayın, form verilerini yeniden açın ve çalışmaya devam edin." },
+    { icon: <Download className="w-6 h-6" />, title: "Doğrudan İndirme", desc: "Hazırladığınız dokümanı düzenlenebilir Word dosyası olarak anında cihazınıza indirin." },
+    { icon: <HardDriveDownload className="w-6 h-6" />, title: "Cihazınızda Saklama", desc: "Oluşturduğunuz evrakları kendi klasör yapınızda, tamamen sizin kontrolünüzde saklayın." },
     { icon: <MonitorSmartphone className="w-6 h-6" />, title: "Tüm Ekranlara Uyum", desc: "Bilgisayar, tablet ve telefon tarayıcılarında responsive çalışma deneyimi kullanın." },
     { icon: <Eye className="w-6 h-6" />, title: "Sürekli Gelişim", desc: "Yeni şablonlar, mevzuat ihtiyaçları ve kullanıcı geri bildirimleriyle gelişen altyapıdan yararlanın." }
   ];
@@ -128,15 +128,15 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
   ];
 
   return (
-    <div className="light-landing min-h-screen bg-[#eef1f5] dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-white overflow-x-hidden relative">
+    <div className="light-landing min-h-screen bg-[#eef1f5] dark:bg-[#16222a] text-slate-700 dark:text-slate-300 font-sans selection:bg-[#FFD700]/30 selection:text-white overflow-x-hidden relative">
       
       {/* Global background video */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
         <video autoPlay loop muted playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover opacity-45 saturate-[0.8]">
           <source src="/19024-298313254_medium.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-[#0c0f12]/55"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0c0f12]/15 via-[#0c0f12]/65 to-[#0c0f12]"></div>
+        <div className="absolute inset-0 bg-[#10232b]/55"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#142b34]/20 via-[#132730]/70 to-[#16222a]"></div>
       </div>
 
       {/* Sci-Fi Background Layer */}
@@ -159,7 +159,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             <img src="/logo-transparent.png" alt="İSG Zeyron Logo" className="w-28 sm:w-36 h-auto object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.28)]" />
           </motion.div>
 
-          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block border border-slate-300/80 dark:border-white/10 bg-white/80 dark:bg-[#050510]/50 backdrop-blur-md rounded-full px-6 py-2 shadow-[0_8px_30px_rgba(15,23,42,0.10)] dark:shadow-lg">
+          <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden lg:block border border-slate-300/80 dark:border-white/10 bg-white/80 dark:bg-[#17303a]/80 backdrop-blur-md rounded-full px-6 py-2 shadow-[0_8px_30px_rgba(15,23,42,0.10)] dark:shadow-lg">
             <nav className="flex justify-center space-x-6 items-center">
               {navItems.map((item, idx) => (
                 <motion.a 
@@ -228,7 +228,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     className="text-base sm:text-lg md:text-2xl text-slate-700 dark:text-slate-300 mb-10 sm:mb-14 max-w-3xl mx-auto font-light leading-relaxed"
                  >
                     İş Sağlığı ve Güvenliği süreçlerini dijitalleştiren; doküman hazırlama,
-                    düzenleme ve yönetimini tek panelde birleştiren bulut tabanlı çalışma alanı.
+                    hazırlamayı kolaylaştıran, düzenlenebilir Word çıktısı sunan web tabanlı çalışma alanı.
                  </motion.p>
                  
                  <motion.div 
@@ -246,7 +246,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     </button>
                     <button 
                       onClick={onLoginClick}
-                      className="w-full sm:w-auto px-10 py-5 bg-slate-900 dark:bg-black/50 backdrop-blur-md text-amber-300 dark:text-[#FFD700] font-bold uppercase text-sm tracking-[0.2em] hover:bg-slate-800 dark:hover:bg-black/80 border border-slate-900 dark:border-[#FFD700]/30 transition-all flex items-center justify-center gap-2 rounded-xl shadow-[0_12px_28px_rgba(15,23,42,0.18)] dark:shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                      className="w-full sm:w-auto px-10 py-5 bg-slate-900 dark:bg-[#19323c] backdrop-blur-md text-amber-300 dark:text-[#FFD700] font-bold uppercase text-sm tracking-[0.2em] hover:bg-slate-800 dark:hover:bg-[#21414d] border border-slate-900 dark:border-[#FFD700]/30 transition-all flex items-center justify-center gap-2 rounded-xl shadow-[0_12px_28px_rgba(15,23,42,0.18)] dark:shadow-[0_0_15px_rgba(0,0,0,0.5)]"
                     >
                       <Target className="w-5 h-5 text-[#FFD700]" /> SİSTEME GİRİŞ YAP
                     </button>
@@ -274,11 +274,11 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     <video autoPlay loop muted playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-all duration-700">
                       <source src={`/${item.video}`} type="video/mp4" />
                     </video>
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#050510]/95 via-[#050510]/70 to-transparent group-hover:via-[#050510]/50 transition-all duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#132730]/95 via-[#132730]/70 to-transparent group-hover:via-[#17313b]/55 transition-all duration-500"></div>
                   
                   <div className="relative z-10 flex flex-col h-full">
-                    <div className="mb-6 w-16 h-16 rounded-2xl bg-white/80 dark:bg-black/60 border border-slate-300 dark:border-white/10 flex items-center justify-center group-hover:bg-yellow-500/20 group-hover:border-yellow-500/50 backdrop-blur-md transition-all duration-500 group-hover:scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]">{item.icon}</div>
-                    <span className="px-3 py-1 bg-black/50 border border-slate-300 dark:border-white/10 backdrop-blur-md text-slate-900 dark:text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6 group-hover:border-yellow-500/30 transition-colors">{item.category}</span>
+                    <div className="mb-6 w-16 h-16 rounded-2xl bg-white/80 dark:bg-[#1a3540]/90 border border-slate-300 dark:border-white/10 flex items-center justify-center group-hover:bg-yellow-500/20 group-hover:border-yellow-500/50 backdrop-blur-md transition-all duration-500 group-hover:scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]">{item.icon}</div>
+                    <span className="px-3 py-1 bg-[#18313b]/85 border border-slate-300 dark:border-white/10 backdrop-blur-md text-slate-900 dark:text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6 group-hover:border-yellow-500/30 transition-colors">{item.category}</span>
                     <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight drop-shadow-lg group-hover:text-yellow-400 transition-colors">{item.title}</h3>
                     <p className="text-slate-700 dark:text-slate-300 text-sm font-light leading-relaxed group-hover:text-slate-900 dark:group-hover:text-white transition-colors mt-auto mb-4 drop-shadow-md">{item.desc}</p>
                   </div>
@@ -301,24 +301,24 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                   İSG Süreçlerinde <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 drop-shadow-[0_0_25px_rgba(234,179,8,0.4)]">Dijital Çalışma Alanı</span>
                 </h2>
                 <p className="text-slate-600 dark:text-slate-400 font-light text-xl max-w-2xl mx-auto leading-relaxed">
-                  İSG profesyonelleri, OSGB'ler ve işletmeler için geliştirilen yeni nesil bulut tabanlı bir <strong className="text-slate-900 dark:text-white font-medium">SaaS yönetim platformudur.</strong>
+                  İSG profesyonelleri, OSGB'ler ve işletmeler için geliştirilen web tabanlı bir <strong className="text-slate-900 dark:text-white font-medium">doküman oluşturma platformudur.</strong>
                 </p>
              </motion.div>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 max-w-5xl mx-auto">
                 <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-white/10 to-transparent group">
-                  <div className="bg-white/75 dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-6 sm:p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:shadow-none">
+                  <div className="bg-white/75 dark:bg-[#182b34]/90 backdrop-blur-xl rounded-3xl p-6 sm:p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:shadow-none">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 blur-[50px] rounded-full group-hover:bg-yellow-500/10 transition-colors"></div>
                     <div className="w-14 h-14 rounded-2xl bg-white/5 border border-slate-300 dark:border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30 transition-all duration-500 shadow-lg">
                       <FileText className="w-6 h-6 text-slate-700 dark:text-slate-300 group-hover:text-yellow-400 transition-colors" />
                     </div>
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Doküman Süreçlerini Birleştirin</h3>
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">Hazırlama, düzenleme, taslak ve geçmiş işlemlerini tek sistem altında birleştirerek daha hızlı ve düzenli çalışın. Zamanınızı belge operasyonu yerine <span className="text-yellow-500 font-medium">iş sağlığı ve güvenliği faaliyetlerine</span> ayırın.</p>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Dokümanınızı Hızla Oluşturun</h3>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">Uygun şablonu seçin, gerekli alanları doldurun ve düzenlenebilir Word belgesini cihazınıza indirin. Zamanınızı belge operasyonu yerine <span className="text-yellow-500 font-medium">iş sağlığı ve güvenliği faaliyetlerine</span> ayırın.</p>
                   </div>
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-[1px] rounded-3xl bg-gradient-to-b from-yellow-500/20 to-transparent group">
-                  <div className="bg-white/75 dark:bg-[#050510]/80 backdrop-blur-xl rounded-3xl p-6 sm:p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
+                  <div className="bg-white/75 dark:bg-[#182b34]/90 backdrop-blur-xl rounded-3xl p-6 sm:p-10 h-full flex flex-col items-start text-left border border-slate-200 dark:border-white/5 group-hover:border-yellow-500/30 transition-all duration-500 overflow-hidden relative shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:shadow-[0_0_30px_rgba(234,179,8,0.05)] text-left">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 blur-[50px] rounded-full group-hover:bg-yellow-500/20 transition-colors"></div>
                     <div className="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-yellow-500/20 transition-all duration-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
                       <Cpu className="w-6 h-6 text-yellow-400" />
@@ -362,7 +362,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     placeholder="Soru arayın... (Örn: Güvenlik, Excel)" 
                     value={searchFaq}
                     onChange={(e) => setSearchFaq(e.target.value)}
-                    className="relative w-full bg-white/85 dark:bg-[#0A0D14]/80 backdrop-blur-md border border-slate-300 dark:border-white/20 rounded-full px-8 py-5 pl-14 text-slate-900 dark:text-white placeholder-slate-500 outline-none focus:border-yellow-500 transition-all shadow-[inset_0_1px_2px_rgba(15,23,42,0.05),0_12px_35px_rgba(15,23,42,0.06)] dark:shadow-inner font-medium text-lg"
+                    className="relative w-full bg-white/85 dark:bg-[#18303a]/90 backdrop-blur-md border border-slate-300 dark:border-white/20 rounded-full px-8 py-5 pl-14 text-slate-900 dark:text-white placeholder-slate-500 outline-none focus:border-yellow-500 transition-all shadow-[inset_0_1px_2px_rgba(15,23,42,0.05),0_12px_35px_rgba(15,23,42,0.06)] dark:shadow-inner font-medium text-lg"
                   />
                   <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-yellow-500 w-6 h-6" />
                </div>
@@ -373,7 +373,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                       <FAQItem key={faq.q} idx={idx} question={faq.q} answer={faq.a} />
                     ))
                   ) : (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-zinc-900/20 rounded-2xl border border-slate-200 dark:border-white/5 border-dashed">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-[#182b34]/70 rounded-2xl border border-slate-200 dark:border-white/5 border-dashed">
                       <ShieldAlert className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
                       <p className="text-slate-600 dark:text-slate-400 font-medium text-lg">Bu sorguya eşleşen veri protokolü bulunamadı.</p>
                     </motion.div>

@@ -8,7 +8,7 @@ interface BillingProps {
 }
 
 const plans = [
-  { id: 'MONTHLY' as SubscriptionPlan, name: 'Aylık Profesyonel', price: '499', period: '/ ay', description: 'Bireysel uzmanlar ve küçük ekipler için.', features: ['30 doküman indirme', 'Tüm standart şablonlar', 'Doküman geçmişi', 'E-posta desteği'] },
+  { id: 'MONTHLY' as SubscriptionPlan, name: 'Aylık Profesyonel', price: '499', period: '/ ay', description: 'Bireysel uzmanlar ve küçük ekipler için.', features: ['30 doküman indirme', 'Tüm standart şablonlar', 'Düzenlenebilir Word çıktısı', 'E-posta desteği'] },
   { id: 'YEARLY' as SubscriptionPlan, name: 'Yıllık Kurumsal', price: '4.999', period: '/ yıl', description: 'OSGB ve yoğun doküman kullanan ekipler için.', features: ['Sınırsız doküman', 'Tüm sektör şablonları', 'Öncelikli destek', 'Firma ve kullanıcı yönetimi'], featured: true },
 ];
 

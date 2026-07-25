@@ -9,16 +9,14 @@ import ImageModule from "docxtemplater-image-module-free";
 import { saveAs } from "file-saver";
 import { buildFieldSections, getDocumentTitle, getFieldLabel, getSubFieldLabel, isFieldVisible } from "../services/documentFieldService";
 import { reconcileFieldsWithDocx } from "../services/docxFieldService";
-import { deleteSupabaseDraft, getSupabaseDraft, saveSupabaseDraft, saveSupabaseHistory } from "../services/supabaseService";
 
 interface DocumentEditorProps {
   template: DocumentTemplate;
-  initialData?: Record<string, any>;
   onBack: () => void;
   onSave: () => void;
 }
 
-export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initialData: reopenedData, onBack, onSave }) => {
+export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack, onSave }) => {
   const [mobileView, setMobileView] = useState<"form" | "preview">("form");
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [documentFields, setDocumentFields] = useState<DocumentField[]>(template.fields);
@@ -34,16 +32,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
   const completedFields = visibleFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
   const completionRate = visibleFields.length ? Math.round((completedFields / visibleFields.length) * 100) : 100;
-  const draftKey = `isg_document_draft:${template.id}`;
-
   useEffect(() => {
     setLoadError(null);
     setDownloadError(null);
     setLoading(true);
     setDocumentFields(template.fields);
-        let storedDraft: Record<string, any> = {};
-        try { storedDraft = JSON.parse(localStorage.getItem(draftKey) || '{}'); } catch { storedDraft = {}; }
-        const initialData: Record<string, any> = { ...storedDraft, ...reopenedData };
+        const initialData: Record<string, any> = {};
     if (template.fields) {
       template.fields.forEach(field => {
           if (!(field.key in initialData)) initialData[field.key] = field.type === "date" ? new Date().toISOString().split("T")[0] : "";
@@ -82,23 +76,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
             : "Dosya sunucudan yüklenemedi. Yolunu kontrol edin.");
         });
     }
-  }, [template, reopenedData, draftKey]);
-
-  useEffect(() => {
-    if (!Object.keys(formData).length) return;
-    const timer = window.setTimeout(() => {
-      localStorage.setItem(draftKey, JSON.stringify(formData));
-      void saveSupabaseDraft(template.id, formData).catch(error => console.error('Taslak senkronizasyonu başarısız:', error));
-    }, 500);
-    return () => window.clearTimeout(timer);
-  }, [draftKey, formData, template.id]);
-
-  useEffect(() => {
-    if (reopenedData) return;
-    void getSupabaseDraft(template.id).then(remoteDraft => {
-      if (remoteDraft) setFormData(current => ({ ...current, ...remoteDraft }));
-    }).catch(error => console.error('Uzak taslak yüklenemedi:', error));
-  }, [reopenedData, template.id]);
+  }, [template]);
 
   useEffect(() => {
     const updateScale = () => setPreviewScale(window.innerWidth < 1024 ? Math.min(1, (window.innerWidth - 32) / 800) : 1);
@@ -270,25 +248,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
       
       const documentTitle = getDocumentTitle(template.id, template.title);
       saveAs(out, `${documentTitle}_Doldurulmus.docx`);
-      const historyEntry = {
-        id: crypto.randomUUID(),
-        templateId: template.id,
-        title: documentTitle,
-        category: template.category,
-        createdAt: new Date().toISOString(),
-        fileName: `${documentTitle}_Doldurulmus.docx`,
-        formData
-      };
-      try {
-        const history = JSON.parse(localStorage.getItem('isg_document_history') || '[]');
-        localStorage.setItem('isg_document_history', JSON.stringify([historyEntry, ...history].slice(0, 100)));
-      } catch {
-        localStorage.setItem('isg_document_history', JSON.stringify([historyEntry]));
-      }
-      void saveSupabaseHistory(historyEntry).catch(error => console.error('Geçmiş senkronizasyonu başarısız:', error));
-      localStorage.removeItem(draftKey);
-      void deleteSupabaseDraft(template.id).catch(error => console.error('Uzak taslak silinemedi:', error));
-      onSave(); // return to dashboard
+      onSave();
     } catch (error) {
       console.error("İndirme Hatası", error);
       setDownloadError('Doküman oluşturulamadı. Alanları kontrol edip tekrar deneyin.');
@@ -296,14 +256,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen bg-zinc-950 lg:overflow-hidden text-slate-200">
-      <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-zinc-950/95 backdrop-blur-xl border-b border-white/10">
+    <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen bg-[#16222a] lg:overflow-hidden text-slate-200">
+      <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-[#16222a]/95 backdrop-blur-xl border-b border-white/10">
         <button onClick={() => setMobileView("form")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "form" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><SlidersHorizontal size={17} /> Alanlar</button>
         <button onClick={() => setMobileView("preview")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "preview" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><Eye size={17} /> Önizleme</button>
       </div>
       
       {/* SOL PANEL (Magic Variable Editörü) */}
-      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 shrink-0 min-h-[calc(100vh-61px)] lg:h-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 bg-zinc-950 border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
+      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 shrink-0 min-h-[calc(100vh-61px)] lg:h-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 bg-[#16222a] border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
         {/* Glow effect on left panel */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
 
@@ -349,23 +309,23 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
                   {field.type === "text" && field.key === "logo" && (
                     <div className="relative w-full">
                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, field.key)} className="hidden" id={`logo-upload-${field.key}`} />
-                       <label htmlFor={`logo-upload-${field.key}`} className="w-full flex items-center justify-between px-4 py-3.5 bg-black/40 border border-white/10 hover:border-yellow-500/50 rounded-xl cursor-pointer transition-all shadow-inner text-sm text-slate-400 group-focus-within:ring-1 focus-within:ring-yellow-500">
+                       <label htmlFor={`logo-upload-${field.key}`} className="w-full flex items-center justify-between px-4 py-3.5 bg-[#1b3039] border border-white/10 hover:border-yellow-500/50 rounded-xl cursor-pointer transition-all shadow-inner text-sm text-slate-400 group-focus-within:ring-1 focus-within:ring-yellow-500">
                           <span className="truncate flex-1">{formData[field.key] ? 'Logo hazır' : 'PNG veya JPG seçin'}</span>
                           <span className="flex items-center gap-1.5 text-yellow-400 text-xs font-semibold"><Upload size={14} /> Gözat</span>
                        </label>
                     </div>
                   )}
                   {field.type === "text" && field.key !== "logo" && (
-                    <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || "Veri giriniz..."} />
+                    <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || "Veri giriniz..."} />
                   )}
                   {field.type === "date" && (
-                    <input type="date" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm color-scheme-dark shadow-inner" />
+                    <input type="date" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm color-scheme-dark shadow-inner" />
                   )}
                   {field.type === "textarea" && (
-                    <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={4} className="w-full px-4 py-3.5 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm resize-none shadow-inner custom-scrollbar" placeholder={field.placeholder || "Veri giriniz..."} />
+                    <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={4} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm resize-none shadow-inner custom-scrollbar" placeholder={field.placeholder || "Veri giriniz..."} />
                   )}
                   {field.type === "select" && (
-                    <select name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner text-slate-200">
+                    <select name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner text-slate-200">
                       <option value="">Seçiniz...</option>
                       {field.options?.map(opt => (
                         <option key={opt} value={opt}>{opt}</option>
@@ -406,7 +366,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
         </div>
 
         {/* Action Buttons Pinned to Bottom */}
-        <div className="sticky bottom-0 pt-4 mt-6 pb-[max(0.5rem,env(safe-area-inset-bottom))] border-t border-white/5 relative z-10 bg-zinc-950">
+        <div className="sticky bottom-0 pt-4 mt-6 pb-[max(0.5rem,env(safe-area-inset-bottom))] border-t border-white/5 relative z-10 bg-[#16222a]">
           {downloadError && <p role="alert" className="mb-3 rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">{downloadError}</p>}
           <button onClick={handleDownload} disabled={loading || !docxArrayBuffer} className="flex w-full min-h-12 items-center justify-center gap-2 rounded-lg bg-yellow-400 px-4 py-3.5 text-sm font-bold text-black hover:bg-yellow-300 active:translate-y-px transition-all disabled:opacity-50 disabled:cursor-not-allowed">
              {loading ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" /> Şablon hazırlanıyor</> : <><Download size={18} /> Dokümanı Oluştur</>}
@@ -415,9 +375,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, initia
       </div>
 
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
-      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100vh-61px)] lg:h-full bg-zinc-900/50 flex-col relative`}>
+      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100vh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
         {/* Render Preview Area */}
-        <div className="flex-1 w-full h-full overflow-auto p-4 lg:p-20 flex justify-center items-start custom-scrollbar bg-zinc-900/30 overscroll-contain touch-pan-y">
+        <div className="flex-1 w-full h-full overflow-auto p-4 lg:p-20 flex justify-center items-start custom-scrollbar bg-[#1b2d36] overscroll-contain touch-pan-y">
            {loadError ? (
               <div className="flex flex-col items-center justify-center h-[50vh] text-red-400 gap-4 max-w-sm text-center">
                  <FileText size={48} className="opacity-20" />
