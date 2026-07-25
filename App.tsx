@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { MOCK_TEMPLATES } from './constants';
+import { GENERATED_TEMPLATES } from './generatedTemplates';
 import { getDocumentTitle } from './services/documentFieldService';
 import { reportError } from './services/monitoringService';
 
@@ -47,7 +47,7 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
   }
 }
 
-const staticTemplates = MOCK_TEMPLATES || [];
+const staticTemplates = GENERATED_TEMPLATES;
 const App = () => {
   const [user, setUser] = useState<User | null>(() => {
     try {
@@ -406,7 +406,6 @@ const App = () => {
                           <button 
                             onClick={() => {
                               setSelectedTemplate(template);
-                              setEditorInitialData(undefined);
                               setCurrentView('editor');
                             }}
                             className="flex items-center gap-1.5 rounded-md bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors"

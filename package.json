@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test:docx": "node scripts/audit-docx.mjs",
+    "import:docx": "node scripts/import-docx-templates.mjs",
     "admin:provision": "node scripts/provision-admins.mjs"
   },
   "dependencies": {

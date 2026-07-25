@@ -1,6 +1,8 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
+import ImageModule from 'docxtemplater-image-module-free';
 
 const root = path.resolve('public/templates');
 
@@ -43,6 +45,30 @@ const inspectLoops = (text, file) => {
   return errors.map(error => `${path.relative(root, file)}: ${error}`);
 };
 
+const renderTemplate = (zip, text) => {
+  const data = {};
+  const fallbackImageBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+  const fallbackImage = `data:image/png;base64,${fallbackImageBase64}`;
+  for (const match of text.matchAll(/\{([#/%])?([^{}]+)\}/g)) {
+    const marker = match[1] || '';
+    const key = match[2].trim();
+    if (marker === '#') data[key] = [];
+    else if (marker === '%') data[key] = fallbackImage;
+    else if (marker !== '/') data[key] = 'TEST';
+  }
+  const imageModule = new ImageModule({
+    getImage: value => Buffer.from((value || fallbackImage).replace(/^data:image\/[^;]+;base64,/, ''), 'base64'),
+    getSize: () => [100, 100],
+  });
+  const document = new Docxtemplater(zip, {
+    paragraphLoop: true,
+    linebreaks: true,
+    modules: [imageModule],
+    nullGetter: () => '',
+  });
+  document.render(data);
+};
+
 const files = await collectDocx(root);
 const failures = [];
 for (const file of files) {
@@ -50,9 +76,11 @@ for (const file of files) {
     const zip = new PizZip(await readFile(file));
     const documentXml = zip.file('word/document.xml')?.asText();
     if (!documentXml) throw new Error('word/document.xml bulunamadı');
-    failures.push(...inspectLoops(decodeXmlText(documentXml), file));
+    const documentText = decodeXmlText(documentXml);
+    failures.push(...inspectLoops(documentText, file));
+    renderTemplate(zip, documentText);
   } catch (error) {
-    failures.push(`${path.relative(root, file)}: ${error.message}`);
+    failures.push(`${path.relative(root, file)}: ${error.stack || error.message}`);
   }
 }
 

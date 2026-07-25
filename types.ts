@@ -44,9 +44,10 @@ export interface DocumentTemplate {
 export interface DocumentField {
   key: string;
   label: string;
-  type: 'text' | 'date' | 'textarea' | 'list' | 'select';
+  type: 'text' | 'date' | 'textarea' | 'list' | 'select' | 'image';
   placeholder?: string;
   options?: string[];
+  optionTypes?: Record<string, 'text' | 'image'>;
   dependsOn?: { field: string; value: string };
   required?: boolean;
 }

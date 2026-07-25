@@ -99,8 +99,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       
       const imageOptions = {
         centered: false,
-        getImage(tagValue: string, tagName: string) {
-          if (tagName === "logo" && tagValue) {
+        getImage(tagValue: string) {
+          if (tagValue) {
              const base64Regex = /^data:image\/(png|jpg|jpeg|svg|svg\+xml);base64,/;
              if(base64Regex.test(tagValue)) {
                 const base64Data = tagValue.replace(base64Regex, "");
@@ -115,9 +115,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           }
           return new ArrayBuffer(0); // If no image, return empty buffer
         },
-        getSize(img: any, tagValue: string, tagName: string) {
-          if (tagName === "logo") return [150, 150]; // Default logo size
-          return [150, 150];
+        getSize(_img: unknown, _tagValue: string, tagName: string) {
+          return tagName.toLocaleLowerCase('tr-TR').includes('logo') ? [150, 150] : [320, 220];
         }
       };
       
@@ -129,7 +128,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
          modules: [imageModule],
          nullGetter(part) { if (!part.module) { return ""; } if (part.module === "rawxml") { return ""; } return ""; }
       });
-      doc.render(data);
+      const renderData = Object.fromEntries(Object.entries(data).map(([key, value]) => [
+        key,
+        value === 'true' ? true : value === 'false' ? false : value,
+      ]));
+      doc.render(renderData);
 
       const outBuffer = doc.getZip().generate({ type: "arraybuffer" });
       const blob = new Blob([outBuffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
@@ -306,16 +309,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                   <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-slate-300 group-focus-within:text-yellow-400 transition-colors">
                     {getFieldLabel(field)} {field.required && <span className="text-yellow-400" aria-label="zorunlu">*</span>}
                   </label>
-                  {field.type === "text" && field.key === "logo" && (
+                  {field.type === "image" && (
                     <div className="relative w-full">
                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, field.key)} className="hidden" id={`logo-upload-${field.key}`} />
                        <label htmlFor={`logo-upload-${field.key}`} className="w-full flex items-center justify-between px-4 py-3.5 bg-[#1b3039] border border-white/10 hover:border-yellow-500/50 rounded-xl cursor-pointer transition-all shadow-inner text-sm text-slate-400 group-focus-within:ring-1 focus-within:ring-yellow-500">
-                          <span className="truncate flex-1">{formData[field.key] ? 'Logo hazır' : 'PNG veya JPG seçin'}</span>
+                          <span className="truncate flex-1">{formData[field.key] ? 'Görsel hazır' : 'PNG veya JPG seçin'}</span>
                           <span className="flex items-center gap-1.5 text-yellow-400 text-xs font-semibold"><Upload size={14} /> Gözat</span>
                        </label>
                     </div>
                   )}
-                  {field.type === "text" && field.key !== "logo" && (
+                  {field.type === "text" && (
                     <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || "Veri giriniz..."} />
                   )}
                   {field.type === "date" && (
@@ -328,7 +331,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                     <select name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner text-slate-200">
                       <option value="">Seçiniz...</option>
                       {field.options?.map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
+                        <option key={opt} value={opt}>{opt === 'true' ? 'Göster' : opt === 'false' ? 'Gizle' : opt}</option>
                       ))}
                     </select>
                   )}
@@ -342,7 +345,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                                 {field.options ? field.options.map(subFieldName => (
                                   <div key={subFieldName} className="sm:col-span-1">
                                     <label className="block text-[10px] text-slate-500 mb-1">{getSubFieldLabel(subFieldName)}</label>
-                                    <input type="text" value={item[subFieldName] || ""} onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs" placeholder="..." />
+                                    {field.optionTypes?.[subFieldName] === 'image' ? <>
+                                      <input type="file" accept="image/*" onChange={event => {
+                                        const file = event.target.files?.[0];
+                                        if (!file) return;
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => handleListChange(field.key, idx, subFieldName, reader.result as string);
+                                        reader.readAsDataURL(file);
+                                      }} className="hidden" id={`${field.key}-${idx}-${subFieldName}`} />
+                                      <label htmlFor={`${field.key}-${idx}-${subFieldName}`} className="flex min-h-9 cursor-pointer items-center justify-center gap-1.5 rounded border border-white/10 bg-black/60 px-3 text-xs text-yellow-400 hover:border-yellow-500/50"><Upload size={13} />{item[subFieldName] ? 'Görsel hazır' : 'Görsel seç'}</label>
+                                    </> : <input type="text" value={item[subFieldName] || ""} onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs" placeholder="..." />}
                                   </div>
                                 )) : (
                                   <div className="col-span-2">

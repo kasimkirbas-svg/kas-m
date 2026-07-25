@@ -1,0 +1,2554 @@
+{
+  "sourceRoot": "C:\\Users\\kasim\\OneDrive\\Masaüstü\\DÖKÜMANLARIM",
+  "total": 87,
+  "fieldCount": 1796,
+  "imageTemplates": [
+    {
+      "file": "Enerji Santralleri\\(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısıı.docx",
+      "fields": [
+        "logo"
+      ]
+    },
+    {
+      "file": "Enerji Santralleri\\EKAT_Yetki_Belgesi_Takip_Cizelgesi_Sablonu.docx",
+      "fields": [
+        "logo"
+      ]
+    },
+    {
+      "file": "Gıda Fabrikaları\\pest kontrol ve takip formu.docx",
+      "fields": [
+        "logo"
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Kule Vinç, Kepçe ve İş Makinesi Kontrol Formları.docx",
+      "fields": [
+        "logo"
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Yapı İş Defteri Şablonu.docx",
+      "fields": [
+        "logo"
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Yüksekte Çalışma İzin ve Güvenlik Formu.docx",
+      "fields": [
+        "logo"
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Vinç (STS, RTG vb.) Saha Ekipmanları Kontrol Formu.docx",
+      "fields": [
+        "logo"
+      ]
+    },
+    {
+      "file": "Lojistik ve Taşımacılık Yükleme Güvenliği\\Arac Teknik Kontrol ve Lastik Takip Çizelgesi.docx",
+      "fields": [
+        "logo"
+      ]
+    },
+    {
+      "file": "Maden İşletmeleri\\Arama ve Patlatma Tasarım Şablonu.docx",
+      "fields": [
+        "şema"
+      ]
+    },
+    {
+      "file": "Şirketler (Ofis ve Küçük İşletmeler)\\İlkyardım Dolabı Malzeme Takip Listesi.docx",
+      "fields": [
+        "logo"
+      ]
+    }
+  ],
+  "conditionalTemplates": [
+    {
+      "file": "Enerji Santralleri\\(RES, GES, HES, Termik)Yüksek Gerilim İşletme Sorumluluğu Atama Yazısıı.docx",
+      "fields": [
+        "isRES",
+        "isGES",
+        "isHES",
+        "isTermik"
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Kule Vinç, Kepçe ve İş Makinesi Kontrol Formları.docx",
+      "fields": [
+        "isKULE",
+        "isKEPÇE",
+        "isİŞMAKİNESİ",
+        "isMakinesiListe"
+      ]
+    },
+    {
+      "file": "Kimya Fabrikası\\KİMYA GBF FORMU (MSDS).docx",
+      "fields": [
+        "isEkTehlike"
+      ]
+    },
+    {
+      "file": "Kimya Fabrikası\\Kimyasal Depolama Matrisi.docx",
+      "fields": [
+        "isEkAciklama"
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Gemi-Kıyı Bağlantı Güvenlik Kontrol Listesi.docx",
+      "fields": [
+        "isEkAciklama"
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Tehlikeli Yük (IMDG Code) İstifleme Formu.docx",
+      "fields": [
+        "isEkAciklama"
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Vinç (STS, RTG vb.) Saha Ekipmanları Kontrol Formu.docx",
+      "fields": [
+        "isEkAciklama"
+      ]
+    },
+    {
+      "file": "Tarım, Hayvancılık ve Ormancılık\\Biyolojik Risk Maruziyet Kayıtları (Zoonoz).docx",
+      "fields": [
+        "isZoonozRiskli"
+      ]
+    }
+  ],
+  "listTemplates": [
+    {
+      "file": "Enerji Santralleri\\EKAT_Yetki_Belgesi_Takip_Cizelgesi_Sablonu.docx",
+      "lists": [
+        {
+          "key": "personeller",
+          "columns": [
+            "siraNo",
+            "adSoyad",
+            "gorevi",
+            "belgeNo",
+            "belgeTuru",
+            "kurum",
+            "duzenlenmeTarihi",
+            "yenilemeTarihi",
+            "durum"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Enerji Santralleri\\İŞ SAĞLIĞI VE GÜVENLİĞİ.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "riskOzet",
+          "columns": [
+            "riskDuzeyi",
+            "mevcutAdet",
+            "onlemSonrasiAdet"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Enerji Santralleri\\İzole Ekipman Test ve Kontrol Kayıtları.docx",
+      "lists": [
+        {
+          "key": "izoleEkipmanKontrollari",
+          "columns": [
+            "siraNo",
+            "ekipmanCinsi",
+            "markaModel",
+            "envanterNo",
+            "gerilimStandart",
+            "gorselKontrol",
+            "izolasyonDegeri",
+            "testSonucu",
+            "kontrolTarihi",
+            "sonrakiKontrolTarihi",
+            "aciklamaAksiyon"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Enerji Santralleri\\Trafo ve Paratoner Topraklama Ölçüm Takip Formu.docx",
+      "lists": [
+        {
+          "key": "olcumKayitlari",
+          "columns": [
+            "siraNo",
+            "ekipman",
+            "topraklamaTipi",
+            "korumaGerilimi",
+            "sigortaAkim",
+            "sinirDeger",
+            "olculenDeger",
+            "sonuc",
+            "acıklamaOneri"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Fabrikalar ve İmalathaneler\\Basınçlı Kap Kontrolü.docx",
+      "lists": [
+        {
+          "key": "kontrolKalemleri",
+          "columns": [
+            "no",
+            "kontrolKriteri",
+            "uygun",
+            "uygunDegil",
+            "kapsamDisi",
+            "aciklamaBulgu"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Fabrikalar ve İmalathaneler\\LOTO_Formu_Sablon.docx",
+      "lists": [
+        {
+          "key": "enerjiKaynaklari",
+          "columns": [
+            "siraNo",
+            "enerjiTuru",
+            "kaynakNoktasi",
+            "izolasyonYontemi",
+            "kilitNo",
+            "etiketNo",
+            "depolanmisEnerjiDurumu",
+            "uygulayanKisi"
+          ]
+        },
+        {
+          "key": "kontrolAdimlari",
+          "columns": [
+            "adimNo",
+            "yapilacakIslem",
+            "uygulandiMi",
+            "islemSaati",
+            "imza"
+          ]
+        },
+        {
+          "key": "grupKilitleme",
+          "columns": [
+            "siraNo",
+            "kilitSahibi",
+            "gorevi",
+            "kilitNo",
+            "takmaSaati",
+            "cikarmaSaati",
+            "imza"
+          ]
+        },
+        {
+          "key": "enerjiVermeAdimlari",
+          "columns": [
+            "adimNo",
+            "yapilacakIslem",
+            "yapildiMi",
+            "islemSaati",
+            "imza"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Fabrikalar ve İmalathaneler\\PKD_Sablon.docx",
+      "lists": [
+        {
+          "key": "kimyasalEnvanter",
+          "columns": [
+            "maddeAdi",
+            "fizikselHal",
+            "parlamaNoktasi",
+            "lelUelOrani",
+            "tutusmaSicakligi",
+            "kullanimDepolamaYeri"
+          ]
+        },
+        {
+          "key": "ateslemeKaynaklari",
+          "columns": [
+            "siraNo",
+            "ateslemeKaynagi",
+            "bulunduguYer",
+            "mevcutDurum"
+          ]
+        },
+        {
+          "key": "tehlikeliBolgeler",
+          "columns": [
+            "sahaEkipman",
+            "bolgeTipi",
+            "yayilimAlani",
+            "gerekce"
+          ]
+        },
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "tehlikeSenaryosu",
+            "bolge",
+            "olasilik",
+            "siddet",
+            "riskSkoru",
+            "onlemler",
+            "artikRisk"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Fabrikalar ve İmalathaneler\\sıcak çalışma izin formu.docx",
+      "lists": [
+        {
+          "key": "gazOlcumleri",
+          "columns": [
+            "parametre",
+            "kabulDegeri",
+            "olculenDeger",
+            "saat",
+            "sonuc"
+          ]
+        },
+        {
+          "key": "onlemler",
+          "columns": [
+            "no",
+            "kontrolMaddesi",
+            "secimEvet",
+            "secimHayir",
+            "secimUygulanamaz"
+          ]
+        },
+        {
+          "key": "onaylar",
+          "columns": [
+            "rol",
+            "adSoyad",
+            "tarihSaat",
+            "imza"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Gıda Fabrikaları\\ÖRNEK GIDA SANAYİ A.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "riskOzet",
+          "columns": [
+            "riskDuzeyi",
+            "mevcutAdet",
+            "onlemSonrasiAdet"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Gıda Fabrikaları\\pest kontrol ve takip formu.docx",
+      "lists": [
+        {
+          "key": "istasyonKayitlari",
+          "columns": [
+            "no",
+            "istasyonNo",
+            "lokasyonBolge",
+            "istasyonTipi",
+            "aktivite",
+            "yakalamaSayisi",
+            "zararliTuru",
+            "istasyonDurumu",
+            "yapilanIslem"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Hava Limanları\\FOD (Yabancı Madde Hasarı) Kontrol Formu.docx",
+      "lists": [
+        {
+          "key": "fodMaddeleri",
+          "columns": [
+            "sNo",
+            "husus",
+            "uygun",
+            "uygunDegil",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "tespitEdilenler",
+          "columns": [
+            "tSNo",
+            "maddeCinsi",
+            "bulunduguYer",
+            "adet",
+            "yapilanIslem"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Hava Limanları\\Havalimanları Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "riskOzet",
+          "columns": [
+            "riskDuzeyi",
+            "mevcutAdet",
+            "onlemSonrasiAdet"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Hava Limanları\\Radyasyon ve X-Ray Cihazı Güvenlik Kayıtları.docx",
+      "lists": [
+        {
+          "key": "periyodikKontrol",
+          "columns": [
+            "sNo",
+            "kontrolTarihi",
+            "kontrolTuru",
+            "sızıntiOlcumu",
+            "limitDegeri",
+            "perdeDurumu",
+            "uyariIsaret",
+            "goruntuTesti",
+            "acilStop",
+            "sonuc",
+            "kontrolYapan",
+            "imza"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Hava Limanları\\Uçak Yakıt İkmal (Refuelling) Güvenlik Formu.docx",
+      "lists": [
+        {
+          "key": "ikmalOncesiKontroller",
+          "columns": [
+            "no",
+            "kontrolMaddesi",
+            "evet",
+            "hayirUD",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "ikmalSirasindaKontroller",
+          "columns": [
+            "no",
+            "kontrolMaddesi",
+            "evet",
+            "hayirUD",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "ikmalSonrasiKontroller",
+          "columns": [
+            "no",
+            "kontrolMaddesi",
+            "evet",
+            "hayirUD",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Gemi İnşa ve Tamir İSG Kontrol Listesi.docx",
+      "lists": [
+        {
+          "key": "kontrolMaddeleri",
+          "columns": [
+            "no",
+            "kontrolMaddesi",
+            "u",
+            "ud",
+            "udegil",
+            "aciklamaFaaliyet",
+            "terminSorumlu"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\İnşaat risk analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "onayEkibi",
+          "columns": [
+            "gorevi",
+            "adiSoyadi",
+            "unvanBelgeNo",
+            "tarih",
+            "imza"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\İskele Kurulum Söküm ve Kontrol Formu.docx",
+      "lists": [
+        {
+          "key": "kontrolGruplari",
+          "columns": [
+            "grupAdi"
+          ]
+        },
+        {
+          "key": "sorular",
+          "columns": [
+            "no",
+            "soru",
+            "uygun",
+            "uygunDegil",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Kazi İksa Kontrol Formu Sablonu.docx",
+      "lists": [
+        {
+          "key": "bolumA",
+          "columns": [
+            "no",
+            "husus",
+            "uygun",
+            "uygunDegil",
+            "ilgisiz",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "bolumB",
+          "columns": [
+            "no",
+            "husus",
+            "uygun",
+            "uygunDegil",
+            "ilgisiz",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "bolumC",
+          "columns": [
+            "no",
+            "husus",
+            "uygun",
+            "uygunDegil",
+            "ilgisiz",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "bolumD",
+          "columns": [
+            "no",
+            "husus",
+            "uygun",
+            "uygunDegil",
+            "ilgisiz",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "bolumE",
+          "columns": [
+            "no",
+            "husus",
+            "uygun",
+            "uygunDegil",
+            "ilgisiz",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Kule Vinç, Kepçe ve İş Makinesi Kontrol Formları.docx",
+      "lists": [
+        {
+          "key": "kuleVincListe",
+          "columns": [
+            "no",
+            "soru",
+            "uygun",
+            "uygunDegil",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "kepceListe",
+          "columns": [
+            "no",
+            "soru",
+            "uygun",
+            "uygunDegil",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Operatör Yetki ve Belge Takip Çizelgesi.docx",
+      "lists": [
+        {
+          "key": "operatorler",
+          "columns": [
+            "sNo",
+            "adSoyad",
+            "tcKimlik",
+            "gorevi",
+            "ekipman",
+            "belgeNo",
+            "belgeTarihi",
+            "surucuBelgesi",
+            "src",
+            "isgEgitimTarihi",
+            "egitimGecerlilik",
+            "yetkiDurumu",
+            "guncelDurum",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Sağlık ve Güvenlik Planı.docx",
+      "lists": [
+        {
+          "key": "gorevler",
+          "columns": [
+            "taraf",
+            "sorumluluk"
+          ]
+        },
+        {
+          "key": "riskler",
+          "columns": [
+            "faaliyet",
+            "risk",
+            "onlem",
+            "sorumlu"
+          ]
+        },
+        {
+          "key": "acilDurum",
+          "columns": [
+            "durum",
+            "yapilacaklar"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Tersane Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Yapı İş Defteri Şablonu.docx",
+      "lists": [
+        {
+          "key": "bolumA",
+          "columns": [
+            "no",
+            "madde",
+            "e",
+            "h",
+            "ud",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "bolumB",
+          "columns": [
+            "no",
+            "madde",
+            "e",
+            "h",
+            "ud",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "bolumC",
+          "columns": [
+            "no",
+            "madde",
+            "e",
+            "h",
+            "ud",
+            "aciklama"
+          ]
+        },
+        {
+          "key": "bolumD",
+          "columns": [
+            "no",
+            "madde",
+            "e",
+            "h",
+            "ud",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "İnşaat ve Tersaneler\\Yüksekte Çalışma İzin ve Güvenlik Formu.docx",
+      "lists": [
+        {
+          "key": "iskeleKontrol",
+          "columns": [
+            "no",
+            "madde",
+            "e",
+            "h",
+            "gu"
+          ]
+        },
+        {
+          "key": "yuksekteKontrol",
+          "columns": [
+            "no",
+            "madde",
+            "e",
+            "h",
+            "gu"
+          ]
+        },
+        {
+          "key": "personeller",
+          "columns": [
+            "sNo",
+            "adSoyad",
+            "gorev",
+            "egitimSaglik",
+            "imza"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Kimya Fabrikası\\Acil Durum Duşu Kontrol Formu.docx",
+      "lists": [
+        {
+          "key": "kontrolListesi",
+          "columns": [
+            "no",
+            "kontrolHusus",
+            "aciklama",
+            "yapilacak"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Kimya Fabrikası\\KİMYA GBF FORMU (MSDS).docx",
+      "lists": [
+        {
+          "key": "msdsList",
+          "columns": [
+            "siraNo",
+            "kimyasalAdi",
+            "kimyasalFormul",
+            "casNo",
+            "tehlikeSinifi",
+            "ghsPiktogram",
+            "sinyalKelimesi",
+            "hIfadeleri",
+            "pIfadeleri",
+            "makDeger",
+            "gerekliKKD",
+            "depolamaKosullari",
+            "uyumsuzMaddeler",
+            "yanginSondurucu",
+            "dokulmeMudahale",
+            "ilkYardim"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Kimya Fabrikası\\Kimya Risk Analiz Raporu.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "riskOzet",
+          "columns": [
+            "riskDuzeyi",
+            "mevcutAdet",
+            "onlemSonrasiAdet"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Kimya Fabrikası\\Kimyasal Depolama Matrisi.docx",
+      "lists": [
+        {
+          "key": "matrixList",
+          "columns": [
+            "no",
+            "sinif",
+            "v1",
+            "v2",
+            "v3",
+            "v4",
+            "v5",
+            "v6",
+            "v7",
+            "v8",
+            "v9",
+            "v10",
+            "v11",
+            "v12"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Gemi-Kıyı Bağlantı Güvenlik Kontrol Listesi.docx",
+      "lists": [
+        {
+          "key": "checklist",
+          "columns": [
+            "no",
+            "kontrolMaddesi",
+            "gemiImza",
+            "limanImza",
+            "kod",
+            "aciklamalar"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Liman İşletmeciliği Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "riskOzet",
+          "columns": [
+            "riskDuzeyi",
+            "mevcutAdet",
+            "onlemSonrasiAdet"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Liman_Operasyon_Guvenlik_Plani_Sablon.docx",
+      "lists": [
+        {
+          "key": "revizyonTablosu",
+          "columns": [
+            "revNo",
+            "revTarihi",
+            "revAciklama",
+            "revHazirlayan"
+          ]
+        },
+        {
+          "key": "dagitimListesi",
+          "columns": [
+            "siraNo",
+            "birimKisi",
+            "nushaSayisi",
+            "ortamTipi"
+          ]
+        },
+        {
+          "key": "isgOrganizasyonu",
+          "columns": [
+            "gorevBirim",
+            "sayiDurum",
+            "birimAciklama"
+          ]
+        },
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "riskNo",
+            "faaliyetAlan",
+            "tehlike",
+            "olasiSonuc",
+            "olasilik",
+            "siddet",
+            "riskSkoru",
+            "kontrolTedbirleri",
+            "kalanRisk"
+          ]
+        },
+        {
+          "key": "kkdMatrisi",
+          "columns": [
+            "gorevAlani",
+            "baret",
+            "isAyk",
+            "yelek",
+            "eldiven",
+            "gozluk",
+            "kulaklik",
+            "maske",
+            "kemer",
+            "canYelegi"
+          ]
+        },
+        {
+          "key": "acilDurumEkipleri",
+          "columns": [
+            "ekipAdi",
+            "ekipGorevi",
+            "ekipSorumlusu"
+          ]
+        },
+        {
+          "key": "acilTelefonlar",
+          "columns": [
+            "birimAdi",
+            "telefonNo"
+          ]
+        },
+        {
+          "key": "periyodikKontroller",
+          "columns": [
+            "ekipmanAdi",
+            "kontrolPeriyodu",
+            "yetkiliKisi"
+          ]
+        },
+        {
+          "key": "egitimPlani",
+          "columns": [
+            "egitimKonusu",
+            "hedefGrup",
+            "surePeriyot"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Tehlikeli Yük (IMDG Code) İstifleme Formu.docx",
+      "lists": [
+        {
+          "key": "imdgList",
+          "columns": [
+            "sNo",
+            "unNo",
+            "uygunSevkiyatAdi",
+            "sinifTaliRisk",
+            "pg",
+            "ems",
+            "istifKat",
+            "istifKoduSW",
+            "ellecKoduH",
+            "ayristKoduSG",
+            "konteynerBirimNo",
+            "istifYeri",
+            "miktarPaket",
+            "ayristGrubu",
+            "sahaBlokGoz",
+            "aciklamaOzelOnlem"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Liman İşletmeciliği\\Vinç (STS, RTG vb.) Saha Ekipmanları Kontrol Formu.docx",
+      "lists": [
+        {
+          "key": "checklist",
+          "columns": [
+            "sNo",
+            "kontrolEdilecekHusus",
+            "aciklamaTespit"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Lojistik ve Taşımacılık Yükleme Güvenliği\\Arac Teknik Kontrol ve Lastik Takip Çizelgesi.docx",
+      "lists": [
+        {
+          "key": "araclar",
+          "columns": [
+            "sNo",
+            "tarih",
+            "plaka",
+            "markaModel",
+            "km",
+            "fren",
+            "far",
+            "yagSu",
+            "aynaCam",
+            "kornaKemer",
+            "yanginTupu",
+            "lastikMarka",
+            "onDis",
+            "arkaDis",
+            "basinc",
+            "mevsim",
+            "stepne",
+            "belgeTarih",
+            "genelDurum",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Lojistik ve Taşımacılık Yükleme Güvenliği\\Lashing_Talimati_Sablon.docx",
+      "lists": [
+        {
+          "key": "lashingKontrolMaddeleri",
+          "columns": [
+            "kontrolMaddesi",
+            "evet",
+            "hayir",
+            "ud",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Lojistik ve Taşımacılık Yükleme Güvenliği\\Lojistik ve Taşımacılık Yükleme Güvenliği Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "riskOzet",
+          "columns": [
+            "riskDuzeyi",
+            "mevcutAdet",
+            "onlemSonrasiAdet"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Lojistik ve Taşımacılık Yükleme Güvenliği\\SRC ve Psikoteknik Belge Takip Listesi.docx",
+      "lists": [
+        {
+          "key": "srcListesi",
+          "columns": [
+            "siraNo",
+            "personelAdiSoyadi",
+            "tcKimlikNo",
+            "gorevi",
+            "srcBelgeTuru",
+            "srcBelgeNo",
+            "srcGecerlilikTarihi",
+            "psikoteknikBelgeNo",
+            "psikoteknikGecerlilikTarihi",
+            "saglikRaporuTarihi",
+            "durum",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Lojistik ve Taşımacılık Yükleme Güvenliği\\Yol Risk Analizi Şablonu.docx",
+      "lists": [
+        {
+          "key": "riskAnalizi",
+          "columns": [
+            "sira",
+            "faaliyetBolge",
+            "tehlike",
+            "olasiRiskSonuc",
+            "etkilenen",
+            "olasilik",
+            "siddet",
+            "riskPuani",
+            "riskDuzeyi",
+            "alinacakOnlem",
+            "sorumlu",
+            "termin"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Maden İşletmeleri\\Arama ve Patlatma Tasarım Şablonu.docx",
+      "lists": [
+        {
+          "key": "tasarimParametreleri",
+          "columns": [
+            "parametre",
+            "sembol",
+            "birim",
+            "deger",
+            "hesapAciklama"
+          ]
+        },
+        {
+          "key": "sarjHesabi",
+          "columns": [
+            "kalem",
+            "birim",
+            "delikBasi",
+            "toplam",
+            "hesapAciklama"
+          ]
+        },
+        {
+          "key": "cevreselKontrol",
+          "columns": [
+            "kontrolKalemi",
+            "limitOlcut",
+            "durum"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Maden İşletmeleri\\Havalandırma ve Gaz Ölçüm.docx",
+      "lists": [
+        {
+          "key": "olcumler",
+          "columns": [
+            "saat",
+            "nokta",
+            "o2",
+            "ch4",
+            "co2",
+            "co",
+            "h2s",
+            "havaHiziSicaklik",
+            "durumOnlem",
+            "olcumYapan"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Maden İşletmeleri\\Maden İşletmeleri Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "riskOzet",
+          "columns": [
+            "riskDuzeyi",
+            "mevcutAdet",
+            "onlemSonrasiAdet"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Maden İşletmeleri\\Maden_PKD_Sablon.docx",
+      "lists": [
+        {
+          "key": "revizyonTablosu",
+          "columns": [
+            "revNo",
+            "revTarihi",
+            "revAciklama",
+            "revHazirlayan",
+            "revOnaylayan"
+          ]
+        },
+        {
+          "key": "zonSiniflandirma",
+          "columns": [
+            "zonNo",
+            "alanEkipman",
+            "yaniciMadde",
+            "salimDerecesi",
+            "zonTipi",
+            "zonAciklama"
+          ]
+        },
+        {
+          "key": "riskDegerlendirme",
+          "columns": [
+            "riskNo",
+            "tehlikeSenaryosu",
+            "mevcutDurum",
+            "olasilik",
+            "siddet",
+            "riskSkoru",
+            "alinacakOnlem",
+            "kalanRisk"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Maden İşletmeleri\\Sığınma Odası Denetim Çizelgesi.docx",
+      "lists": [
+        {
+          "key": "denetimMaddeleri",
+          "columns": [
+            "sira",
+            "kontrolEdilenHusus",
+            "uygun",
+            "uygunDegil",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Maden İşletmeleri\\Tahkimat Planı ve Kontrol Formu.docx",
+      "lists": [
+        {
+          "key": "tahkimatPlani",
+          "columns": [
+            "sira",
+            "bolge",
+            "zeminTavan",
+            "tahkimatTuru",
+            "malzemeKesit",
+            "tahkimatAraligi",
+            "bulonBoyuSikligi",
+            "kontrolPeriyodu",
+            "sorumlu",
+            "aciklamaRisk",
+            "onay"
+          ]
+        },
+        {
+          "key": "periyodikKontroller",
+          "columns": [
+            "tarih",
+            "vardiya",
+            "kontrolBolge",
+            "tahkimatDurumu",
+            "tespitEksiklik",
+            "alinanOnlem",
+            "terminTarihi",
+            "kontrolYapan",
+            "imza1",
+            "uygunlukOnayi",
+            "imza2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Metal ve Döküm\\Metal ve Döküm Sanayi Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskAnalizi",
+          "columns": [
+            "no",
+            "fotograf",
+            "tehlikeKaynagi",
+            "olayNedeni",
+            "risk",
+            "mevcutO",
+            "mevcutS",
+            "mevcutF",
+            "mevcutPuan",
+            "mevcutSonuc",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "sorumlu",
+            "bildirimTarihi",
+            "terminTarihi",
+            "yeniO",
+            "yeniS",
+            "yeniF",
+            "yeniPuan",
+            "yeniSonuc"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Metal ve Döküm\\Termal Konfor Takip Formu.docx",
+      "lists": [
+        {
+          "key": "olcumNoktalari",
+          "columns": [
+            "bolum",
+            "saat",
+            "sicaklik",
+            "nem",
+            "havaAkimi",
+            "radyant",
+            "isTuru",
+            "durum"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Metal ve Döküm\\Toz-Gaz Maruziyet Çizelgesi.docx",
+      "lists": [
+        {
+          "key": "olcumSonuclari",
+          "columns": [
+            "no",
+            "bolumIstasyon",
+            "olculenEtken",
+            "birim",
+            "olculenTWA",
+            "sinirDegerTWA",
+            "olculenSTEL",
+            "sinirDegerSTEL",
+            "degerlendirme"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Otel,Bina ve Hastaneler\\BİYOLOJİK RİSK MARUZİYET KAYIT FORMU.docx",
+      "lists": [
+        {
+          "key": "maruziyetler",
+          "columns": [
+            "siraNo",
+            "calisanAdSoyad",
+            "gorevi",
+            "maruziyetTarihi",
+            "biyolojikEtken",
+            "riskGrubu",
+            "maruziyetYolu",
+            "alinanOnlem",
+            "saglikGozetimi"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Otel,Bina ve Hastaneler\\Hastaneler Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        },
+        {
+          "key": "ozetTablosuGoster",
+          "columns": [
+            "toplamRiskSayisi",
+            "mevcutOnemsiz",
+            "hedefOnemsiz",
+            "mevcutOlasi",
+            "hedefOlasi",
+            "mevcutOnemli",
+            "hedefOnemli",
+            "mevcutYuksek",
+            "hedefYuksek",
+            "mevcutToleransDisi",
+            "hedefToleransDisi"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Otel,Bina ve Hastaneler\\Lejyonella Risk Analizi ve Su Analiz Takip Formu.docx",
+      "lists": [
+        {
+          "key": "riskAnalizi",
+          "columns": [
+            "no",
+            "riskNoktasi",
+            "tehlikeTanimi",
+            "olasilik",
+            "siddet",
+            "riskSkoru",
+            "riskDuzeyi",
+            "alinacakOnlem"
+          ]
+        },
+        {
+          "key": "suAnalizi",
+          "columns": [
+            "no",
+            "numuneNoktasi",
+            "numuneTarihi",
+            "sicaklik",
+            "ph",
+            "serbestKlor",
+            "legionella",
+            "degerlendirmeSonuc"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Otel,Bina ve Hastaneler\\Mutfak ve Havuz Hijyen Denetim Çizelgeleri Risk anlz.docx",
+      "lists": [
+        {
+          "key": "riskAnalizi",
+          "columns": [
+            "no",
+            "foto",
+            "tehlikeKaynagi",
+            "olayNedeni",
+            "risk",
+            "mO",
+            "mS",
+            "mF",
+            "mPuan",
+            "mSonuc",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "yO",
+            "yS",
+            "yF",
+            "yPuan",
+            "ySonuc"
+          ]
+        },
+        {
+          "key": "riskOzet",
+          "columns": [
+            "riskDuzeyi",
+            "mevcutAdet",
+            "onlemSonrasiAdet"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Otel,Bina ve Hastaneler\\Otel ve Binalar Risk Analizi (2).docx",
+      "lists": [
+        {
+          "key": "riskAnalizi",
+          "columns": [
+            "faaliyetNo",
+            "foto",
+            "tehlikeKaynagi",
+            "tehlikeliOlayNeden",
+            "risk",
+            "mevcutO",
+            "mevcutS",
+            "mevcutF",
+            "mevcutPuan",
+            "mevcutSonuc",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "hedefO",
+            "hedefS",
+            "hedefF",
+            "hedefPuan",
+            "hedefSonuc"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Otel,Bina ve Hastaneler\\Tıbbi Atık Yönetim ve Bertaraf Formu.docx",
+      "lists": [
+        {
+          "key": "atikListesi",
+          "columns": [
+            "tarih",
+            "birim",
+            "atikTuru",
+            "adet",
+            "miktar",
+            "teslimAlan",
+            "yontem",
+            "imza"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Acil_Durum_Ekip_Atama.docx",
+      "lists": [
+        {
+          "key": "ekipler",
+          "columns": [
+            "binaAdi",
+            "adSoyad",
+            "gorevi"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Acil_Durum_Eylem_Plani_Sablon.docx",
+      "lists": [
+        {
+          "key": "acilDurumRiskleri",
+          "columns": [
+            "acilDurumTuru",
+            "olasilik",
+            "siddet",
+            "riskSkoru",
+            "riskDuzeyi"
+          ]
+        },
+        {
+          "key": "yanginEkibi",
+          "columns": [
+            "siraNo",
+            "adSoyad",
+            "gorevUnvan",
+            "telefon",
+            "egitimTarihi"
+          ]
+        },
+        {
+          "key": "kurtarmaEkibi",
+          "columns": [
+            "siraNo",
+            "adSoyad",
+            "gorevUnvan",
+            "telefon",
+            "egitimTarihi"
+          ]
+        },
+        {
+          "key": "ilkyardimEkibi",
+          "columns": [
+            "siraNo",
+            "adSoyad",
+            "gorevUnvan",
+            "telefon",
+            "sertifikaBilgisi"
+          ]
+        },
+        {
+          "key": "haberlesmeEkibi",
+          "columns": [
+            "siraNo",
+            "adSoyad",
+            "gorevUnvan",
+            "telefon",
+            "egitimTarihi"
+          ]
+        },
+        {
+          "key": "iletisimListesi",
+          "columns": [
+            "kurulusKisi",
+            "telefonNo",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Elektrik İşlerinde Güvenli Çalışma Eğitimi Tutanağı.docx",
+      "lists": [
+        {
+          "key": "katilimcilar",
+          "columns": [
+            "sira",
+            "adSoyad",
+            "tcNo",
+            "gorevi",
+            "bolumu",
+            "katilimDurumu",
+            "imza"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\ISG_Kurul_Tutanagi_Sablon.docx",
+      "lists": [
+        {
+          "key": "katilimcilar",
+          "columns": [
+            "adSoyad",
+            "gorevi",
+            "durum"
+          ]
+        },
+        {
+          "key": "gundem",
+          "columns": [
+            "siraNo",
+            "konu"
+          ]
+        },
+        {
+          "key": "kararlar",
+          "columns": [
+            "kararNo",
+            "karar",
+            "sorumlu",
+            "termin"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\isg yıllık çalışma planı.docx",
+      "lists": [
+        {
+          "key": "faaliyetler",
+          "columns": [
+            "no",
+            "kategori",
+            "faaliyetKonusu",
+            "yasalDayanak",
+            "sorumlu",
+            "hedefKitle",
+            "oca",
+            "sub",
+            "mar",
+            "nis",
+            "may",
+            "haz",
+            "tem",
+            "agu",
+            "eyl",
+            "eki",
+            "kas",
+            "ara",
+            "periyot",
+            "durum",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Kapalı Alanda Çalışma Eğitimi ve İzin Formu.docx",
+      "lists": [
+        {
+          "key": "atmosferikOlcumler",
+          "columns": [
+            "parametre",
+            "kabulAralik",
+            "olcum1",
+            "olcum2",
+            "olcum3",
+            "sonuc",
+            "cihazModel"
+          ]
+        },
+        {
+          "key": "guvenlikTedbirleri",
+          "columns": [
+            "no",
+            "kontrolMaddesi"
+          ]
+        },
+        {
+          "key": "gorevliPersonel",
+          "columns": [
+            "adiSoyadi",
+            "gorevi",
+            "girisSaati",
+            "cikisSaati"
+          ]
+        },
+        {
+          "key": "egitimKatilimcilari",
+          "columns": [
+            "sira",
+            "katilimciAdi",
+            "tcSicilNo"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Kaza_RamakKala_Bildirim_Detayli_Sablon.docx",
+      "lists": [
+        {
+          "key": "bildirimTakibi",
+          "columns": [
+            "bildirimMercii",
+            "yasalSure",
+            "yapilanTarih",
+            "durum"
+          ]
+        },
+        {
+          "key": "kokNedenAnalizi",
+          "columns": [
+            "nedenSorusu",
+            "nedenCevabi"
+          ]
+        },
+        {
+          "key": "dofListesi",
+          "columns": [
+            "dofNo",
+            "faaliyet",
+            "tur",
+            "sorumlu",
+            "termin",
+            "durum"
+          ]
+        },
+        {
+          "key": "rkDofListesi",
+          "columns": [
+            "rkDofNo",
+            "rkFaaliyet",
+            "rkTur",
+            "rkSorumlu",
+            "rkTermin",
+            "rkDurum"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\kkd teslim tutanağı.docx",
+      "lists": [
+        {
+          "key": "kkdListesi",
+          "columns": [
+            "no",
+            "malzemeCinsi",
+            "miktari"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Ofis-Küçük İşletmeler Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Toolbox formu( şantiye ve fabrika).docx",
+      "lists": [
+        {
+          "key": "katilimciListesi",
+          "columns": [
+            "sira",
+            "adiSoyadi",
+            "gorevi",
+            "sicilNo",
+            "imza"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Yangindan_Korunma_Dokumani_Sablon.docx",
+      "lists": [
+        {
+          "key": "revizyonTablosu",
+          "columns": [
+            "revNo",
+            "revTarihi",
+            "revOzeti",
+            "revHazirlayan",
+            "revOnaylayan"
+          ]
+        },
+        {
+          "key": "yanginRiskleri",
+          "columns": [
+            "riskNo",
+            "tehlikeKaynagi",
+            "olasiTehlike",
+            "olasilik",
+            "siddet",
+            "riskSkoru",
+            "mevcutOnlem",
+            "onerilenOnlem"
+          ]
+        },
+        {
+          "key": "sondurmeSistemleri",
+          "columns": [
+            "sistemNo",
+            "lokasyon",
+            "sistemTipi",
+            "kapasiteAdet",
+            "sonKontrol",
+            "durum"
+          ]
+        },
+        {
+          "key": "acilDurumEkipleri",
+          "columns": [
+            "ekipAdi",
+            "gorevTanimi",
+            "liderAsil",
+            "liderYedek",
+            "uyeSayisi"
+          ]
+        },
+        {
+          "key": "egitimTatbikatPlani",
+          "columns": [
+            "egitimAdi",
+            "hedefKitle",
+            "sure",
+            "periyot",
+            "sorumlu"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\yıllık değerlendirme raporu.docx",
+      "lists": [
+        {
+          "key": "isgTeam",
+          "columns": [
+            "role",
+            "name",
+            "certNo",
+            "startDate",
+            "hours",
+            "workType"
+          ]
+        },
+        {
+          "key": "riskStats",
+          "columns": [
+            "level",
+            "detected",
+            "resolved",
+            "ongoing",
+            "explanation",
+            "responsible"
+          ]
+        },
+        {
+          "key": "trainings",
+          "columns": [
+            "subject",
+            "target",
+            "attended",
+            "duration",
+            "date",
+            "trainer"
+          ]
+        },
+        {
+          "key": "healthChecks",
+          "columns": [
+            "type",
+            "target",
+            "done",
+            "fit",
+            "conditionalFit",
+            "referral"
+          ]
+        },
+        {
+          "key": "incidents",
+          "columns": [
+            "type",
+            "yearMinus2",
+            "yearMinus1",
+            "currentYear",
+            "change",
+            "explanation"
+          ]
+        },
+        {
+          "key": "emergencies",
+          "columns": [
+            "activity",
+            "date",
+            "participants",
+            "duration",
+            "result",
+            "responsible"
+          ]
+        },
+        {
+          "key": "periodicChecks",
+          "columns": [
+            "subject",
+            "count",
+            "period",
+            "lastDate",
+            "result",
+            "responsible"
+          ]
+        },
+        {
+          "key": "boardMeetings",
+          "columns": [
+            "subject",
+            "count",
+            "decisions",
+            "implemented",
+            "pending",
+            "explanation"
+          ]
+        },
+        {
+          "key": "swot",
+          "columns": [
+            "category",
+            "subject",
+            "current",
+            "target",
+            "deviation",
+            "evaluation"
+          ]
+        },
+        {
+          "key": "actionPlan",
+          "columns": [
+            "no",
+            "action",
+            "reason",
+            "responsible",
+            "deadline",
+            "priority"
+          ]
+        },
+        {
+          "key": "signatures",
+          "columns": [
+            "role",
+            "name",
+            "certNo",
+            "date"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Yüksekte Çalışma Eğitimi Katılım ve Uygulama Formu.docx",
+      "lists": [
+        {
+          "key": "katilimcilar",
+          "columns": [
+            "sNo",
+            "adSoyad",
+            "tcKimlik",
+            "gorev",
+            "teorikSonuc",
+            "uygulamaSonuc",
+            "genelSonuc"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Şirketler (Ofis ve Küçük İşletmeler)\\Elektrik Tesisatı ve Topraklama Ölçüm Takip Çizelgesi.docx",
+      "lists": [
+        {
+          "key": "olcumler",
+          "columns": [
+            "sn",
+            "nokta",
+            "konum",
+            "sistem",
+            "direncOlculen",
+            "direncSinir",
+            "direncSonuc",
+            "sureklilik",
+            "izolasyon",
+            "rcdAkim",
+            "rcdSure",
+            "rcdSonuc",
+            "degerlendirme",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Şirketler (Ofis ve Küçük İşletmeler)\\Ergonomi Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Şirketler (Ofis ve Küçük İşletmeler)\\İlkyardım Dolabı Malzeme Takip Listesi.docx",
+      "lists": [
+        {
+          "key": "malzemeler",
+          "columns": [
+            "sn",
+            "malzemeAdi",
+            "birim",
+            "olmasiGereken",
+            "mevcut",
+            "eksik",
+            "skt",
+            "durum",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Şirketler (Ofis ve Küçük İşletmeler)\\Ofis İSG Denetim Check-listi.docx",
+      "lists": [
+        {
+          "key": "kategoriler",
+          "columns": [
+            "kategoriAdi"
+          ]
+        },
+        {
+          "key": "maddeler",
+          "columns": [
+            "no",
+            "soru",
+            "evet",
+            "hayir",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Tarım, Hayvancılık ve Ormancılık\\Biyolojik Risk Maruziyet Kayıtları (Zoonoz).docx",
+      "lists": [
+        {
+          "key": "calisanlar",
+          "columns": [
+            "siraNo",
+            "adiSoyadiTc",
+            "gorevi",
+            "etkenGrup",
+            "bulasmaYolu",
+            "maruziyetTarihiSuresi",
+            "kazaOlay",
+            "saglikGozetimi"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Tarım, Hayvancılık ve Ormancılık\\Hayvancılık İşletmeleri Risk Analizi .docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Tarım, Hayvancılık ve Ormancılık\\İş Makinesi ve Traktör Güvenli Kullanım Çizelgesi.docx",
+      "lists": [
+        {
+          "key": "bolumA",
+          "columns": [
+            "sn",
+            "madde",
+            "periyot",
+            "uygun",
+            "uygunDegil"
+          ]
+        },
+        {
+          "key": "bolumB",
+          "columns": [
+            "sn",
+            "madde",
+            "periyot",
+            "uygun",
+            "uygunDegil"
+          ]
+        },
+        {
+          "key": "bolumC",
+          "columns": [
+            "sn",
+            "madde",
+            "periyot",
+            "uygun",
+            "uygunDegil"
+          ]
+        },
+        {
+          "key": "bolumD",
+          "columns": [
+            "sn",
+            "madde",
+            "periyot",
+            "uygun",
+            "uygunDegil"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Tarım, Hayvancılık ve Ormancılık\\Orman_Kesim_Proseduru_Sablon.docx",
+      "lists": [
+        {
+          "key": "revizyonTablosu",
+          "columns": [
+            "revNo",
+            "revTarihi",
+            "revAciklama",
+            "revHazirlayan"
+          ]
+        },
+        {
+          "key": "kkdKontrolTablosu",
+          "columns": [
+            "siraNo",
+            "kkdAdi",
+            "ilgiliStandart",
+            "kullanimZorunlulugu",
+            "kontrolDurumu"
+          ]
+        },
+        {
+          "key": "gunlukGuvenlikKontrol",
+          "columns": [
+            "siraNo",
+            "kontrolMaddesi",
+            "evetDurumu",
+            "hayirDurumu",
+            "aciklama"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Tarım, Hayvancılık ve Ormancılık\\Ormancılık İşletmeleri Risk Analizi.docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Tarım, Hayvancılık ve Ormancılık\\Tarım Risk Analizi (1).docx",
+      "lists": [
+        {
+          "key": "riskDegerlendirmesi",
+          "columns": [
+            "faaliyetNo",
+            "fotograf",
+            "tehlikeKaynagi",
+            "tehlikeliOlay",
+            "risk",
+            "o1",
+            "s1",
+            "f1",
+            "rp1",
+            "sonuc1",
+            "mevcutOnlem",
+            "gerekliOnlem",
+            "mevzuat",
+            "aciklama",
+            "sorumlu",
+            "bildirimTarihi",
+            "termin",
+            "o2",
+            "s2",
+            "f2",
+            "rp2",
+            "sonuc2"
+          ]
+        }
+      ]
+    }
+  ],
+  "repairedTemplates": [
+    {
+      "file": "Enerji Santralleri\\EKAT_Yetki_Belgesi_Takip_Cizelgesi_Sablonu.docx",
+      "repairs": [
+        "{#personeller} -> ",
+        "{/personeller} -> ",
+        "{siraNo} -> {#personeller}{siraNo}",
+        "{durum} -> {durum}{/personeller}"
+      ]
+    },
+    {
+      "file": "Metal ve Döküm\\Termal Konfor Takip Formu.docx",
+      "repairs": [
+        "{#no} -> {no}",
+        "{{bolum} -> {bolum}"
+      ]
+    },
+    {
+      "file": "STANDART DOKÜMANLAR\\Kapalı Alanda Çalışma Eğitimi ve İzin Formu.docx",
+      "repairs": [
+        "{kontrolMaddesi} -> {kontrolMaddesi}{/guvenlikTedbirleri}",
+        "{cikisSaati} -> {cikisSaati}{/gorevliPersonel}"
+      ]
+    }
+  ],
+  "emptyTemplates": [],
+  "failures": []
+}
