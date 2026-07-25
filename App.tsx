@@ -8,7 +8,7 @@ import {
   Car, Building2, Trees, Activity, Building, Zap, MapPin, SearchCode,
   FileBox, UserCheck, CheckSquare, Award, FileClock, FolderOpen, ArrowRight,
   ShieldAlert, UserPlus, FileArchive, Settings, Crown, ChevronRight, CheckCircle2,
-  Hexagon, Flame, Target
+  Flame, Target
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -79,6 +79,17 @@ const App = () => {
 
   useEffect(() => {
     localStorage.setItem('isg_view', currentView);
+  }, [currentView]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (currentView === 'editor') {
+        setSelectedTemplate(null);
+        setCurrentView('dashboard');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [currentView]);
 
   // Route Protection - Prevent protected views rendering without authorization
@@ -176,11 +187,18 @@ const App = () => {
     }
 
     if (currentView === 'editor' && selectedTemplate) {
+      const leaveEditor = () => {
+        if (window.history.state?.isgView === 'editor') window.history.back();
+        else {
+          setSelectedTemplate(null);
+          setCurrentView('dashboard');
+        }
+      };
       return (
         <DocumentEditor 
           template={selectedTemplate} 
-          onBack={() => setCurrentView('dashboard')} 
-          onSave={() => setCurrentView('dashboard')} 
+          onBack={leaveEditor}
+          onSave={leaveEditor}
         />
       );
     }
@@ -285,7 +303,6 @@ const App = () => {
                   <div className="relative z-10 mt-7 flex min-h-14 items-center overflow-hidden rounded-xl border border-white/15 bg-[#17242c]/80 shadow-inner focus-within:border-amber-400/70">
                     <Search className="ml-4 h-5 w-5 shrink-0 text-amber-300" />
                     <input type="search" placeholder="Doküman adı veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent px-4 py-4 text-sm font-medium text-white placeholder-[#71818d] focus:outline-none"/>
-                    {searchQuery && <button onClick={() => setSearchQuery('')} className="p-3 text-[#71818d] hover:text-white" aria-label="Aramayı temizle"><Hexagon className="h-4 w-4" /></button>}
                     <button type="button" className="self-stretch bg-amber-300 px-6 text-sm font-black text-[#111820] transition-colors hover:bg-amber-200">Ara</button>
                   </div>
                 </div>
@@ -406,6 +423,7 @@ const App = () => {
                           <button 
                             onClick={() => {
                               setSelectedTemplate(template);
+                              window.history.pushState({ isgView: 'editor' }, '');
                               setCurrentView('editor');
                             }}
                             className="flex items-center gap-1.5 rounded-md bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors"

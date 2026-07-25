@@ -26,10 +26,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [previewScale, setPreviewScale] = useState(1);
+  const [previewWidth, setPreviewWidth] = useState(800);
   const [previewHeight, setPreviewHeight] = useState(1100);
   const [filterConfirmed, setFilterConfirmed] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
   const previewRef = useRef<HTMLDivElement>(null);
+  const previewViewportRef = useRef<HTMLDivElement>(null);
+  const previewRenderId = useRef(0);
   const filterFields = documentFields.filter(field => field.type === 'select' && /^is/i.test(field.key) && !/liste$/i.test(field.key));
   const fieldSections = buildFieldSections(documentFields.filter(field => !filterFields.some(filter => filter.key === field.key)));
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
@@ -84,18 +87,23 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   }, [template]);
 
   useEffect(() => {
-    const updateScale = () => setPreviewScale(window.innerWidth < 1024 ? Math.min(1, (window.innerWidth - 32) / 800) : 1);
+    const viewport = previewViewportRef.current;
+    if (!viewport) return;
+    const updateScale = () => setPreviewScale(Math.min(1, Math.max(0.25, (viewport.clientWidth - 32) / previewWidth)));
     updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, []);
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, [previewWidth, mobileView]);
 
   useEffect(() => {
     if (!docxArrayBuffer || !previewRef.current) return;
-    updatePreview(docxArrayBuffer, formData);
+    const timeout = window.setTimeout(() => void updatePreview(docxArrayBuffer, formData), 180);
+    return () => window.clearTimeout(timeout);
   }, [docxArrayBuffer, formData]);
 
   const updatePreview = async (buffer: ArrayBuffer, data: Record<string, any>) => {
+    const renderId = ++previewRenderId.current;
     try {
       // ÖNEMLİ: ArrayBuffer her karakter girildiğinde yeniden kullanılıyor. 
       // PizZip orijinal buffer'ı modifiye ettiği için etiketler kayboluyordu. 
@@ -143,9 +151,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       const blob = new Blob([outBuffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
       
       if (previewRef.current) {
-        // Clear previous content
-        previewRef.current.innerHTML = "";
-        await renderAsync(blob, previewRef.current, previewRef.current, {
+        const nextPreview = document.createElement('div');
+        await renderAsync(blob, nextPreview, nextPreview, {
            className: "docx",
            inWrapper: true,
            ignoreWidth: false,
@@ -157,6 +164,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            trimXmlDeclaration: true,
            useBase64URL: true,
         });
+          if (renderId !== previewRenderId.current || !previewRef.current) return;
+          previewRef.current.replaceChildren(...Array.from(nextPreview.childNodes));
+          const renderedWidth = Math.max(800, previewRef.current.scrollWidth);
+          setPreviewWidth(renderedWidth);
           setPreviewHeight(Math.max(1100, previewRef.current.scrollHeight));
       }
     } catch (error: any) {
@@ -414,7 +425,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
       <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100vh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
         {/* Render Preview Area */}
-        <div className="flex-1 w-full h-full overflow-auto p-4 lg:p-20 flex justify-center items-start custom-scrollbar bg-[#1b2d36] overscroll-contain touch-pan-y">
+        <div ref={previewViewportRef} className="flex-1 w-full h-full overflow-auto p-4 xl:p-8 flex justify-center items-start custom-scrollbar bg-[#1b2d36] overscroll-contain touch-pan-y">
            {loadError ? (
               <div className="flex flex-col items-center justify-center h-[50vh] text-red-400 gap-4 max-w-sm text-center">
                  <FileText size={48} className="opacity-20" />
@@ -427,8 +438,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                  <p className="tracking-widest uppercase text-xs font-bold">Şablon Yükleniyor...</p>
               </div>
            ) : (
-             <div className="relative shrink-0" style={{ width: 800 * previewScale, height: previewHeight * previewScale }} aria-label="Belge önizlemesi">
-               <div className="absolute left-0 top-0 w-[800px] min-h-[1100px] origin-top-left bg-white shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none" style={{ transform: `scale(${previewScale})` }}>
+             <div className="relative shrink-0" style={{ width: previewWidth * previewScale, height: previewHeight * previewScale }} aria-label="Belge önizlemesi">
+               <div className="absolute left-0 top-0 min-h-[1100px] origin-top-left bg-white shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-sm pointer-events-none select-none" style={{ width: previewWidth, transform: `scale(${previewScale})` }}>
                 <div ref={previewRef} className="w-full h-full [&>.docx-wrapper]:bg-transparent [&>.docx-wrapper]:p-0" />
                </div>
              </div>
