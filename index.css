@@ -65,6 +65,26 @@
   }
 }
 
+@media (max-width: 640px) {
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  html {
+    scroll-padding-top: 4rem;
+  }
+}
+
 @layer base {
   html {
     color-scheme: dark;

@@ -204,16 +204,16 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
       </motion.header>
 
       {/* Hero Section */}
-      <section className="relative pt-28 sm:pt-40 pb-20 sm:pb-32 px-4 sm:px-6 min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
+      <section className="relative pt-24 sm:pt-40 pb-12 sm:pb-32 px-4 sm:px-6 min-h-[88svh] sm:min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
         
-        <div className="max-w-6xl mx-auto w-full relative z-20 mt-10">
+        <div className="max-w-6xl mx-auto w-full relative z-20 mt-2 sm:mt-10">
              
-             <div className="relative z-10 px-0 sm:px-8 py-14 sm:py-20 lg:py-32 lg:px-24 text-center">
+             <div className="relative z-10 px-0 sm:px-8 py-8 sm:py-20 lg:py-32 lg:px-24 text-center">
                  <motion.h1 
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 sm:mb-8 leading-[1.05]"
+                    className="text-3xl min-[380px]:text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-5 sm:mb-8 leading-[1.08]"
                  >
                     <span className="text-slate-900 dark:text-white">İSG Zeyron Teknoloji</span> <br/>
                     <span className="text-[#c58a00] dark:text-[#FFD700] drop-shadow-[0_8px_18px_rgba(197,138,0,0.16)] dark:drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]">
@@ -225,7 +225,7 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-base sm:text-lg md:text-2xl text-slate-700 dark:text-slate-300 mb-10 sm:mb-14 max-w-3xl mx-auto font-light leading-relaxed"
+                    className="text-[15px] sm:text-lg md:text-2xl text-slate-700 dark:text-slate-300 mb-7 sm:mb-14 max-w-3xl mx-auto font-light leading-relaxed"
                  >
                     İş Sağlığı ve Güvenliği dokümanlarını hazırlamayı kolaylaştıran,
                     düzenlenebilir Word çıktısı sunan web tabanlı çalışma alanı.

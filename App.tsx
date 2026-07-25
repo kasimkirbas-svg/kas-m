@@ -215,7 +215,7 @@ const App = () => {
              <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#36505d]/30 to-transparent"></div>
           </div>
 
-           <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-4 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
+           <div className="w-full max-w-[1240px] mx-auto px-3 sm:px-6 lg:px-8 pb-24 sm:pb-12 pt-3 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
             
             {currentView === 'profile' && <Profile user={user} />}
             {currentView === 'settings' && <SettingsPage user={user} onSave={(changes) => setUser(current => current ? { ...current, ...changes } : current)} />}
@@ -294,22 +294,21 @@ const App = () => {
 
             {currentView === 'dashboard' && (
               <>
-            <section className="mb-8 overflow-hidden rounded-2xl border border-white/15 bg-[#22313b]/82 shadow-[0_24px_70px_rgba(4,10,14,0.18)] backdrop-blur-xl">
+            <section className="mb-6 sm:mb-8 overflow-hidden rounded-xl sm:rounded-2xl border border-white/15 bg-[#22313b]/82 shadow-[0_24px_70px_rgba(4,10,14,0.18)] backdrop-blur-xl">
               <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
-                <div className="relative p-6 sm:p-8 lg:p-10">
+                <div className="relative p-5 sm:p-8 lg:p-10">
                   <div className="absolute inset-y-0 right-0 hidden w-px bg-white/10 lg:block" />
-                  <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Merhaba, {user.name.split(' ')[0]}</h1>
+                  <h1 className="text-2xl font-black tracking-tight text-white sm:text-4xl">Merhaba, {user.name.split(' ')[0]}</h1>
                   <p className="mt-3 max-w-lg text-sm leading-6 text-[#aebbc5]">Sahadaki işinizi seçin, uygun dokümanı bulun ve düzenlemeye doğrudan başlayın.</p>
-                  <div className="relative z-10 mt-7 flex min-h-14 items-center overflow-hidden rounded-xl border border-white/15 bg-[#17242c]/80 shadow-inner focus-within:border-amber-400/70">
+                  <div className="relative z-10 mt-5 sm:mt-7 flex min-h-12 sm:min-h-14 items-center overflow-hidden rounded-lg sm:rounded-xl border border-white/15 bg-[#17242c]/80 shadow-inner focus-within:border-amber-400/70">
                     <Search className="ml-4 h-5 w-5 shrink-0 text-amber-300" />
                     <input type="search" placeholder="Doküman adı veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent px-4 py-4 text-sm font-medium text-white placeholder-[#71818d] focus:outline-none"/>
-                    <button type="button" className="self-stretch bg-amber-300 px-6 text-sm font-black text-[#111820] transition-colors hover:bg-amber-200">Ara</button>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 divide-x divide-white/10 bg-[#19272f]/65 lg:grid-cols-1 lg:divide-x-0 lg:divide-y">
-                  <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><FolderOpen className="hidden h-5 w-5 text-cyan-300 sm:block" /><div><strong className="block text-xl font-black text-white">{archiveTemplates.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Hazır şablon</span></div></div>
-                  <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><Briefcase className="hidden h-5 w-5 text-amber-300 sm:block" /><div><strong className="block text-xl font-black text-white">{uniqueCategories.length}</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Uzmanlık alanı</span></div></div>
-                  <div className="flex items-center gap-3 p-4 sm:p-5 lg:px-8"><CheckCircle2 className="hidden h-5 w-5 text-emerald-300 sm:block" /><div><strong className="block text-xl font-black text-white">%100</strong><span className="text-[10px] text-[#8fa0ac] sm:text-xs">Düzenlenebilir</span></div></div>
+                  <div className="flex min-w-0 items-center justify-center gap-3 p-3 sm:justify-start sm:p-5 lg:px-8"><FolderOpen className="hidden h-5 w-5 text-cyan-300 sm:block" /><div className="min-w-0"><strong className="block text-lg font-black text-white sm:text-xl">{archiveTemplates.length}</strong><span className="block truncate text-[9px] text-[#8fa0ac] sm:text-xs">Hazır şablon</span></div></div>
+                  <div className="flex min-w-0 items-center justify-center gap-3 p-3 sm:justify-start sm:p-5 lg:px-8"><Briefcase className="hidden h-5 w-5 text-amber-300 sm:block" /><div className="min-w-0"><strong className="block text-lg font-black text-white sm:text-xl">{uniqueCategories.length}</strong><span className="block truncate text-[9px] text-[#8fa0ac] sm:text-xs">Uzmanlık alanı</span></div></div>
+                  <div className="flex min-w-0 items-center justify-center gap-3 p-3 sm:justify-start sm:p-5 lg:px-8"><CheckCircle2 className="hidden h-5 w-5 text-emerald-300 sm:block" /><div className="min-w-0"><strong className="block text-lg font-black text-white sm:text-xl">%100</strong><span className="block truncate text-[9px] text-[#8fa0ac] sm:text-xs">Düzenlenebilir</span></div></div>
                 </div>
               </div>
             </section>
@@ -326,10 +325,10 @@ const App = () => {
                 {selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 hover:underline">Filtreyi kaldır</button>}
               </div>
 
-              <div className="relative z-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+              <div className="relative z-10 -mx-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-3 pb-2 custom-scrollbar sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-5 xl:grid-cols-6">
                 <button
                   onClick={() => setSelectedCategory(null)}
-                  className={`h-[106px] min-w-0 rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#263640] text-left sm:h-[94px] ${
+                  className={`h-[92px] w-[168px] shrink-0 snap-start rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#263640] text-left sm:h-[94px] sm:w-auto sm:min-w-0 ${
                     selectedCategory === null 
                       ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
                       : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
@@ -339,7 +338,7 @@ const App = () => {
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity mix-blend-overlay"></div>
                     <div className={`absolute inset-0 ${selectedCategory === null ? 'bg-gradient-to-r from-[#5c5015]/95 to-[#8d7618]/65' : 'bg-[#111a21]/76'}`}></div>
                   </div>
-                  <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
+                  <div className="absolute inset-0 flex items-center gap-3 z-10 px-4 sm:gap-4 sm:px-5">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#203740] border border-white/10"><ShieldAlert size={20} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} /></span>
                     <span><strong className={`block text-xs font-bold leading-tight sm:text-sm ${selectedCategory === null ? "text-[#FFD700]" : "text-white"}`}>Tüm sektörler</strong><small className="mt-1 block text-[11px] text-white/60">{archiveTemplates.length} doküman</small></span>
                   </div>
@@ -349,7 +348,7 @@ const App = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`h-[106px] min-w-0 rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#263640] text-left sm:h-[94px] ${
+                    className={`h-[92px] w-[168px] shrink-0 snap-start rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#263640] text-left sm:h-[94px] sm:w-auto sm:min-w-0 ${
                       selectedCategory === category 
                         ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
                         : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
@@ -359,7 +358,7 @@ const App = () => {
                        <img src={getCategoryImage(category)} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-55 group-hover:opacity-70 transition-all duration-500 group-hover:scale-105" />
                       <div className={`absolute inset-0 bg-gradient-to-r ${selectedCategory === category ? 'from-[#625616]/95 to-[#8a721b]/50' : 'from-[#10171d]/95 to-[#10171d]/32'}`}></div>
                     </div>
-                    <div className="absolute inset-0 flex items-center gap-4 z-10 px-5">
+                    <div className="absolute inset-0 flex items-center gap-3 z-10 px-4 sm:gap-4 sm:px-5">
                       <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-[#203740] ${selectedCategory === category ? "text-[#FFD700]" : "text-white"}`}>
                         {getCategoryIcon(category)}
                       </div>
@@ -391,7 +390,7 @@ const App = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-[#22313a]/88 border border-white/12 hover:border-amber-400/50 p-5 relative group overflow-hidden transition-all duration-300 shadow-[0_12px_32px_rgba(0,0,0,0.12)] hover:bg-[#2a3b45] hover:-translate-y-0.5 hover:shadow-[0_20px_44px_rgba(0,0,0,0.2)] flex min-h-[158px] rounded-xl backdrop-blur-md before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-cyan-400 before:opacity-0 hover:before:opacity-100"
+                      className="bg-[#22313a]/88 border border-white/12 hover:border-amber-400/50 p-4 sm:p-5 relative group overflow-hidden transition-all duration-300 shadow-[0_12px_32px_rgba(0,0,0,0.12)] hover:bg-[#2a3b45] hover:shadow-[0_20px_44px_rgba(0,0,0,0.2)] flex min-h-[148px] sm:min-h-[158px] rounded-xl backdrop-blur-md before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-cyan-400 before:opacity-0 hover:before:opacity-100"
                     >
                       {/* Background Detail */}
                       <div className="flex w-full flex-col relative z-10">

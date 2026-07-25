@@ -274,7 +274,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen lg:h-screen bg-[#16222a] lg:overflow-hidden text-slate-200">
+    <div className="flex flex-col lg:flex-row min-h-[100svh] lg:h-screen bg-[#16222a] lg:overflow-hidden text-slate-200">
       {!loading && filterFields.length > 0 && !filterConfirmed && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0d171d]/90 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="document-filter-title">
           <div className="w-full max-w-lg rounded-lg border border-white/10 bg-[#162a33] p-6 shadow-2xl sm:p-8">
@@ -296,17 +296,17 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           </div>
         </div>
       )}
-      <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-[#16222a]/95 backdrop-blur-xl border-b border-white/10">
+      <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-[#111b22]/95 backdrop-blur-xl border-b border-white/10 shadow-lg">
         <button onClick={() => setMobileView("form")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "form" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><SlidersHorizontal size={17} /> Alanlar</button>
         <button onClick={() => setMobileView("preview")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "preview" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><Eye size={17} /> Önizleme</button>
       </div>
       
       {/* SOL PANEL (Magic Variable Editörü) */}
-      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 shrink-0 min-h-[calc(100vh-61px)] lg:h-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 bg-[#16222a] border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
+      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 shrink-0 min-h-[calc(100svh-61px)] lg:h-full overflow-y-auto px-3 sm:px-6 lg:px-8 pt-4 pb-24 sm:pt-6 sm:pb-24 lg:py-10 bg-[#16222a] border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
         {/* Glow effect on left panel */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
 
-        <button onClick={onBack} className="flex items-center min-h-11 w-max text-slate-400 hover:text-yellow-500 mb-6 lg:mb-8 transition-colors font-medium text-sm group">
+        <button onClick={onBack} className="flex items-center min-h-10 w-max text-slate-400 hover:text-yellow-500 mb-4 sm:mb-6 lg:mb-8 transition-colors font-medium text-sm group">
           <div className="w-8 h-8 rounded-full bg-white/5 group-hover:bg-yellow-500/10 flex items-center justify-center mr-3 transition-colors border border-white/5 group-hover:border-yellow-500/30">
             <ArrowLeft size={16} />
           </div>
@@ -414,7 +414,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         </div>
 
         {/* Action Buttons Pinned to Bottom */}
-        <div className="sticky bottom-0 pt-4 mt-6 pb-[max(0.5rem,env(safe-area-inset-bottom))] border-t border-white/5 relative z-10 bg-[#16222a]">
+        <div className="fixed lg:sticky bottom-0 inset-x-0 lg:inset-x-auto px-3 sm:px-6 lg:px-0 pt-3 mt-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-white/10 z-20 bg-[#16222a]/96 backdrop-blur-xl">
           {downloadError && <p role="alert" className="mb-3 rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">{downloadError}</p>}
           <button onClick={handleDownload} disabled={loading || !docxArrayBuffer} className="flex w-full min-h-12 items-center justify-center gap-2 rounded-lg bg-yellow-400 px-4 py-3.5 text-sm font-bold text-black hover:bg-yellow-300 active:translate-y-px transition-all disabled:opacity-50 disabled:cursor-not-allowed">
              {loading ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" /> Şablon hazırlanıyor</> : <><Download size={18} /> Dokümanı Oluştur</>}
@@ -423,7 +423,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       </div>
 
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
-      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100vh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
+      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100svh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
         {/* Render Preview Area */}
         <div ref={previewViewportRef} className="flex-1 w-full h-full overflow-auto p-4 xl:p-8 flex justify-center items-start custom-scrollbar bg-[#1b2d36] overscroll-contain touch-pan-y">
            {loadError ? (
