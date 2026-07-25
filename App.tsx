@@ -280,7 +280,6 @@ const App = () => {
               <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
                 <div className="relative p-6 sm:p-8 lg:p-10">
                   <div className="absolute inset-y-0 right-0 hidden w-px bg-white/10 lg:block" />
-                  <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300"><span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_12px_rgba(252,211,77,0.8)]" /> Çalışma alanı aktif</div>
                   <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Merhaba, {user.name.split(' ')[0]}</h1>
                   <p className="mt-3 max-w-lg text-sm leading-6 text-[#aebbc5]">Sahadaki işinizi seçin, uygun dokümanı bulun ve düzenlemeye doğrudan başlayın.</p>
                   <div className="relative z-10 mt-7 flex min-h-14 items-center overflow-hidden rounded-xl border border-white/15 bg-[#17242c]/80 shadow-inner focus-within:border-amber-400/70">

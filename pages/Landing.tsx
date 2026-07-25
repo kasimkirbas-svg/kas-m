@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin, Menu, X, Users, Download, MonitorSmartphone, Eye, HardDriveDownload } from 'lucide-react';
+import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin, Menu, X, Users, Download, MonitorSmartphone, Eye, HardDriveDownload, LogIn, UserPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface LandingProps {
@@ -227,28 +227,28 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                     transition={{ duration: 0.8, delay: 0.6 }}
                     className="text-base sm:text-lg md:text-2xl text-slate-700 dark:text-slate-300 mb-10 sm:mb-14 max-w-3xl mx-auto font-light leading-relaxed"
                  >
-                    İş Sağlığı ve Güvenliği süreçlerini dijitalleştiren; doküman hazırlama,
-                    hazırlamayı kolaylaştıran, düzenlenebilir Word çıktısı sunan web tabanlı çalışma alanı.
+                    İş Sağlığı ve Güvenliği dokümanlarını hazırlamayı kolaylaştıran,
+                    düzenlenebilir Word çıktısı sunan web tabanlı çalışma alanı.
                  </motion.p>
                  
                  <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.8 }}
-                    className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                    className="flex flex-col sm:flex-row gap-3 justify-center items-center"
                  >
                     <button 
                       onClick={onRegisterClick}
-                      className="relative w-full sm:w-auto px-10 py-5 bg-[#e9b700] dark:bg-[#FFD700] text-black font-black uppercase text-sm tracking-[0.2em] hover:-translate-y-1 transition-all flex items-center justify-center gap-3 overflow-hidden group shadow-[0_12px_28px_rgba(197,138,0,0.18)] dark:shadow-[0_0_20px_rgba(255,215,0,0.3)] border border-[#d19b00] dark:border-[#FFD700]/50 rounded-xl"
+                      className="group flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border border-amber-300 bg-amber-300 px-7 text-sm font-extrabold text-[#13242c] shadow-[0_10px_24px_rgba(234,179,8,0.18)] transition-colors hover:bg-amber-200 sm:w-auto"
                     >
-                      <div className="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
-                      SİSTEME KAYIT OL <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <UserPlus className="h-4 w-4" /> Kayıt Ol
+                      <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </button>
                     <button 
                       onClick={onLoginClick}
-                      className="w-full sm:w-auto px-10 py-5 bg-slate-900 dark:bg-[#19323c] backdrop-blur-md text-amber-300 dark:text-[#FFD700] font-bold uppercase text-sm tracking-[0.2em] hover:bg-slate-800 dark:hover:bg-[#21414d] border border-slate-900 dark:border-[#FFD700]/30 transition-all flex items-center justify-center gap-2 rounded-xl shadow-[0_12px_28px_rgba(15,23,42,0.18)] dark:shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                      className="flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border border-white/15 bg-[#19323c]/95 px-7 text-sm font-extrabold text-white shadow-[0_10px_24px_rgba(8,20,27,0.2)] transition-colors hover:border-amber-300/50 hover:bg-[#21414d] sm:w-auto"
                     >
-                      <Target className="w-5 h-5 text-[#FFD700]" /> SİSTEME GİRİŞ YAP
+                      <LogIn className="h-4 w-4 text-amber-300" /> Giriş Yap
                     </button>
                  </motion.div>
              </div>
