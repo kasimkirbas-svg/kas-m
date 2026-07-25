@@ -48,6 +48,8 @@ const hydrateAppUser = async (authUser: { id: string; email?: string; user_metad
     ...fallback,
     name: profile?.name || fallback.name,
     phone: profile?.phone || fallback.phone,
+    phoneVerifiedAt: profile?.phone_verified_at || undefined,
+    sms2faEnabled: Boolean(profile?.sms_2fa_enabled),
     role: Object.values(UserRole).includes(profile?.role as UserRole) ? profile.role as UserRole : UserRole.SUBSCRIBER,
     plan,
     remainingDownloads: plan === SubscriptionPlan.YEARLY ? 'UNLIMITED' : plan === SubscriptionPlan.MONTHLY ? 30 : 0,
@@ -109,6 +111,27 @@ export const signOutSupabase = async () => {
   if (supabase) await supabase.auth.signOut();
 };
 
+export const isSmsAuthEnabled = import.meta.env.VITE_SMS_AUTH_ENABLED === 'true';
+
+export const requestPhoneOtp = async (purpose: 'registration' | 'login' | 'phone_change') => {
+  if (!supabase) throw new Error('SMS doğrulama için Supabase yapılandırması gereklidir.');
+  const { data, error } = await supabase.functions.invoke('phone-otp', { body: { action: 'request', purpose } });
+  if (error) throw error;
+  if (data?.error) throw new Error(data.error);
+  return data as { challengeId: string; expiresIn: number };
+};
+
+export const verifyPhoneOtp = async (challengeId: string, code: string) => {
+  if (!supabase) throw new Error('SMS doğrulama için Supabase yapılandırması gereklidir.');
+  const { data, error } = await supabase.functions.invoke('phone-otp', { body: { action: 'verify', challengeId, code } });
+  if (error) throw error;
+  if (data?.error) throw new Error(data.error);
+  if (!data?.verified || !data?.tokenHash) throw new Error('Telefon doğrulanamadı.');
+  const { data: sessionData, error: sessionError } = await supabase.auth.verifyOtp({ token_hash: data.tokenHash, type: 'magiclink' });
+  if (sessionError || !sessionData.user) throw sessionError || new Error('Güvenli oturum açılamadı.');
+  return hydrateAppUser(sessionData.user);
+};
+
 const requireUserId = async () => {
   if (!supabase) return null;
   const { data, error } = await supabase.auth.getUser();
@@ -130,6 +153,17 @@ export const updateSupabaseProfile = async (changes: Partial<User>) => {
   if (error) throw error;
   const { error: authError } = await supabase.auth.updateUser({ data: changes });
   if (authError) throw authError;
+};
+
+export const updateSms2faPreference = async (enabled: boolean) => {
+  if (!supabase) throw new Error('SMS güvenliği için Supabase yapılandırması gereklidir.');
+  const userId = await requireUserId();
+  if (!userId) throw new Error('Oturum bulunamadı.');
+  const { data: profile, error: profileError } = await supabase.from('profiles').select('phone_verified_at').eq('id', userId).single();
+  if (profileError) throw profileError;
+  if (enabled && !profile?.phone_verified_at) throw new Error('İki aşamalı doğrulama için önce telefonunuzu doğrulayın.');
+  const { error } = await supabase.from('profiles').update({ sms_2fa_enabled: enabled, updated_at: new Date().toISOString() }).eq('id', userId);
+  if (error) throw error;
 };
 
 export const updateSupabasePassword = async (password: string) => {

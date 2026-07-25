@@ -1,0 +1,7 @@
+project_id = "ljceicrcywkgmryzzehx"
+
+[functions.phone-otp]
+verify_jwt = false
+
+[functions.notify-support-update]
+verify_jwt = true

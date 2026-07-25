@@ -3,7 +3,7 @@ import { ArrowLeft, Building2, LogIn, MapPin, Shield, User, UserPlus } from "luc
 import { motion } from "framer-motion";
 import type { User as AppUser } from "../types";
 import { SubscriptionPlan, UserRole } from "../types";
-import { isSupabaseConfigured, loginWithSupabase, registerWithSupabase, requestPasswordReset, updateSupabasePassword } from "../services/supabaseService";
+import { isSmsAuthEnabled, isSupabaseConfigured, loginWithSupabase, registerWithSupabase, requestPasswordReset, requestPhoneOtp, signOutSupabase, updateSupabasePassword, verifyPhoneOtp } from "../services/supabaseService";
 
 type AccountType = "individual" | "osgb";
 type Profession = "İSG Uzmanı" | "İSG Teknikeri" | "İşveren";
@@ -47,6 +47,7 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [isResetMode, setIsResetMode] = useState(() => new URLSearchParams(window.location.search).get('reset-password') === '1');
   const [resetPasswords, setResetPasswords] = useState({ next: '', confirm: '' });
+  const [otp, setOtp] = useState({ challengeId: '', code: '', phone: '' });
 
   const update = (field: keyof typeof form, value: string) => {
     const nextValue = field === "phone" ? formatPhone(value) : field === "taxNumber" ? value.replace(/\D/g, "").slice(0, 10) : value;
@@ -86,6 +87,14 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
       if (isSupabaseConfigured) {
         try {
           const user = await loginWithSupabase(email, form.password);
+          if (isSmsAuthEnabled && (!user.phoneVerifiedAt || user.sms2faEnabled)) {
+            const challenge = await requestPhoneOtp(user.phoneVerifiedAt ? 'login' : 'registration');
+            await signOutSupabase();
+            setOtp({ challengeId: challenge.challengeId, code: '', phone: user.phone || '' });
+            setLoading(false);
+            setMessage(null);
+            return;
+          }
           setMessage({ type: "success", text: "Bilgiler doğrulandı, yönlendiriliyorsunuz..." });
           setTimeout(() => onAuthSuccess?.(user), 300);
         } catch (error: any) {
@@ -137,6 +146,19 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
     setTimeout(() => { setIsLogin(true); setForm(current => ({ ...current, password: "", confirmPassword: "" })); }, 700);
   };
 
+  const handleOtpSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      setMessage(null);
+      const user = await verifyPhoneOtp(otp.challengeId, otp.code);
+      setOtp({ challengeId: '', code: '', phone: '' });
+      onAuthSuccess?.(user);
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Telefon doğrulanamadı.' });
+    } finally { setLoading(false); }
+  };
+
   const handlePasswordReset = async () => {
     if (!form.email.trim()) {
       setErrors(current => ({ ...current, email: "Şifre sıfırlama bağlantısı için e-posta adresinizi girin." }));
@@ -183,6 +205,21 @@ export default function Auth({ initialMode = "login", onAuthSuccess, onBack }: A
       <label htmlFor={name} className={labelClass}>{label}</label>
       <input id={name} required value={form[name]} onChange={event => update(name, event.target.value)} type={type} placeholder={placeholder} autoComplete={name === "password" ? (isLogin ? "current-password" : "new-password") : undefined} className={`${inputClass} ${errors[name] ? "border-red-500 dark:border-red-500" : ""}`} />
       {errors[name] && <p className="text-xs text-red-600 dark:text-red-400 ml-1">{errors[name]}</p>}
+    </div>
+  );
+
+  if (otp.challengeId) return (
+    <div className="min-h-screen bg-[#16222a] text-white flex items-center justify-center p-4">
+      <form onSubmit={handleOtpSubmit} className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111820] p-6 sm:p-8 shadow-2xl">
+        <div className="font-black tracking-[0.18em] mb-7">İSG <span className="text-yellow-500">ZEYRON</span></div>
+        <h1 className="text-2xl font-black">Telefon Doğrulama</h1>
+        <p className="mt-2 text-sm text-slate-400">{otp.phone || 'Kayıtlı telefonunuza'} gönderilen 6 haneli kodu girin. Kod 5 dakika geçerlidir.</p>
+        {message && <div className="mt-5 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">{message.text}</div>}
+        <label className={`${labelClass} mt-6 block`} htmlFor="sms-code">SMS Kodu</label>
+        <input id="sms-code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} pattern="[0-9]{6}" required value={otp.code} onChange={event => setOtp(current => ({ ...current, code: event.target.value.replace(/\D/g, '').slice(0, 6) }))} className={`${inputClass} mt-2 text-center text-2xl tracking-[0.4em]`} />
+        <button type="submit" disabled={loading || otp.code.length !== 6} className="mt-5 w-full rounded-xl bg-yellow-400 py-3.5 font-extrabold text-black disabled:opacity-50">{loading ? 'Doğrulanıyor...' : 'Kodu Doğrula'}</button>
+        <button type="button" onClick={() => setOtp({ challengeId: '', code: '', phone: '' })} className="mt-3 w-full py-2 text-sm text-slate-400">Girişe dön</button>
+      </form>
     </div>
   );
 

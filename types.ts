@@ -24,6 +24,8 @@ export interface User {
   remainingDownloads: number | 'UNLIMITED';
   accountType?: 'individual' | 'osgb';
   phone?: string;
+  phoneVerifiedAt?: string;
+  sms2faEnabled?: boolean;
   profession?: 'İSG Uzmanı' | 'İSG Teknikeri' | 'İşveren';
   companyName?: string;
   taxNumber?: string;

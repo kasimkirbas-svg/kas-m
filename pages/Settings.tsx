@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User } from '../types';
 import { Button } from '../components/Button';
 import { Save, Bell, Lock, User as UserIcon } from 'lucide-react';
-import { changeSupabasePassword, isSupabaseConfigured, updateSupabaseProfile } from '../services/supabaseService';
+import { changeSupabasePassword, isSmsAuthEnabled, isSupabaseConfigured, updateSms2faPreference, updateSupabaseProfile } from '../services/supabaseService';
 
 interface SettingsProps {
   user: User;
@@ -16,6 +16,7 @@ export const Settings: React.FC<SettingsProps> = ({ user, onSave }) => {
   const [error, setError] = useState('');
   const [profile, setProfile] = useState({ name: user.name, companyName: user.companyName || '', phone: user.phone || '' });
   const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' });
+  const [sms2faEnabled, setSms2faEnabled] = useState(Boolean(user.sms2faEnabled));
   const [notifications, setNotifications] = useState(() => {
     try { return JSON.parse(localStorage.getItem('isg_notification_preferences') || '{"invoice":true,"quota":true,"templates":false}'); }
     catch { return { invoice: true, quota: true, templates: false }; }
@@ -34,18 +35,23 @@ export const Settings: React.FC<SettingsProps> = ({ user, onSave }) => {
     } else if (activeTab === 'notifications') {
       localStorage.setItem('isg_notification_preferences', JSON.stringify(notifications));
     } else {
-      if (!/^(?=.*[a-zçğıöşü])(?=.*[A-ZÇĞİÖŞÜ])(?=.*\d).{8,}$/.test(passwords.next)) {
+      const changingPassword = Boolean(passwords.current || passwords.next || passwords.confirm);
+      if (isSupabaseConfigured && sms2faEnabled !== Boolean(user.sms2faEnabled)) {
+        try { await updateSms2faPreference(sms2faEnabled); onSave?.({ sms2faEnabled }); }
+        catch (smsError: any) { setError(smsError.message || 'SMS güvenlik ayarı kaydedilemedi.'); setLoading(false); return; }
+      }
+      if (changingPassword && !/^(?=.*[a-zçğıöşü])(?=.*[A-ZÇĞİÖŞÜ])(?=.*\d).{8,}$/.test(passwords.next)) {
         setError('Yeni şifre en az 8 karakter, büyük/küçük harf ve rakam içermelidir.'); setLoading(false); return;
       }
-      if (passwords.next !== passwords.confirm) { setError('Yeni şifreler eşleşmiyor.'); setLoading(false); return; }
-      if (isSupabaseConfigured) {
+      if (changingPassword && passwords.next !== passwords.confirm) { setError('Yeni şifreler eşleşmiyor.'); setLoading(false); return; }
+      if (changingPassword && isSupabaseConfigured) {
         try {
           await changeSupabasePassword(user.email, passwords.current, passwords.next);
           setPasswords({ current: '', next: '', confirm: '' });
         } catch (passwordError: any) {
           setError(passwordError.message || 'Şifre güncellenemedi.'); setLoading(false); return;
         }
-      } else {
+      } else if (changingPassword) {
       const hash = async (value: string) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))).map(byte => byte.toString(16).padStart(2, '0')).join('');
       const accounts = JSON.parse(localStorage.getItem('isg_accounts') || '[]');
       const index = accounts.findIndex((account: any) => account.user.email.toLowerCase() === user.email.toLowerCase());
@@ -144,6 +150,7 @@ export const Settings: React.FC<SettingsProps> = ({ user, onSave }) => {
                   <input type="password" id='confirm-password' value={passwords.confirm} onChange={event => setPasswords(current => ({ ...current, confirm: event.target.value }))} className="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-500 outline-none" />
                 </div>
               </div>
+              {isSmsAuthEnabled && <div className="max-w-md border-t border-slate-200 pt-5 dark:border-white/10"><label className="flex items-start justify-between gap-4"><span><strong className="block text-sm text-slate-800 dark:text-white">SMS ile iki aşamalı doğrulama</strong><small className="mt-1 block text-slate-500">Her girişte doğrulanmış telefonunuza kod gönderilir.</small>{!user.phoneVerifiedAt && <small className="mt-1 block text-amber-600 dark:text-amber-300">İlk girişinizde telefon doğrulaması tamamlanmalıdır.</small>}</span><input type="checkbox" checked={sms2faEnabled} disabled={!user.phoneVerifiedAt} onChange={event => setSms2faEnabled(event.target.checked)} className="mt-1 h-5 w-5 accent-yellow-500" /></label></div>}
             </div>
           )}
 
