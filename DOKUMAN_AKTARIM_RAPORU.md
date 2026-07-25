@@ -26,7 +26,7 @@ Kaynak dosyalara dokunulmadi; siteye alinan kopyalarda su komut hatalari otomati
 1. `Enerji Santralleri/EKAT_Yetki_Belgesi_Takip_Cizelgesi_Sablonu.docx`
    Bos `personeller` dongusu gercek tablo satirinin etrafina tasindi.
 2. `Metal ve Dokum/Termal Konfor Takip Formu.docx`
-   Yanlis `{#no}` komutu `{no}` yapildi ve `{{bolum}` etiketi `{bolum}` olarak duzeltildi.
+   Yanlis `{#no}` komutu `{no}` yapildi ve `&#123;{bolum}` etiketi `{bolum}` olarak duzeltildi.
 3. `STANDART DOKUMANLAR/Kapali Alanda Calisma Egitimi ve Izin Formu.docx`
    `guvenlikTedbirleri` ve `gorevliPersonel` dongu kapanislari kendi tablo satirlarina tasindi.
 
