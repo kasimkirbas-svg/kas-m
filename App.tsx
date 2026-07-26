@@ -8,7 +8,7 @@ import {
   Car, Building2, Trees, Activity, Building, Zap, MapPin, SearchCode,
   FileBox, UserCheck, CheckSquare, Award, FileClock, FolderOpen, ArrowRight,
   ShieldAlert, UserPlus, FileArchive, Settings, Crown, ChevronRight, CheckCircle2,
-  Flame, Target
+  Flame, Target, Compass, Eye, PenLine
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -313,6 +313,28 @@ const App = () => {
               </div>
             </section>
 
+            <section className="mb-7 rounded-xl border border-amber-300/20 bg-[#19272f]/90 p-4 shadow-[0_18px_45px_rgba(4,10,14,0.16)] sm:p-5" aria-labelledby="quick-start-title">
+              <div className="flex items-start gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-300 text-[#16222a]"><Compass size={20} /></span>
+                <div>
+                  <h2 id="quick-start-title" className="text-base font-bold text-white sm:text-lg">İlk dokümanınızı 3 adımda hazırlayın</h2>
+                  <p className="mt-1 text-xs leading-5 text-[#9eacb6] sm:text-sm">Teknik bilginiz olmasa da ilerleyebilirsiniz. Sistem, özgün belgeyi gösterir ve yalnızca değiştirmeniz gereken alanları açar.</p>
+                </div>
+              </div>
+              <ol className="mt-4 grid gap-2 sm:grid-cols-3">
+                {[
+                  { icon: Briefcase, title: 'Sektörünüzü seçin', text: 'Çalıştığınız iş koluna dokunun.' },
+                  { icon: Eye, title: 'Özgün belgeyi görün', text: 'Şablonu açıp sağdaki örneği inceleyin.' },
+                  { icon: PenLine, title: 'Sarı alanları doldurun', text: 'Önizlemeyi kontrol edip indirin.' }
+                ].map((step, index) => (
+                  <li key={step.title} className="flex min-w-0 items-start gap-3 rounded-lg border border-white/8 bg-white/[0.025] p-3">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-[#10171d] text-xs font-black text-amber-300">{index + 1}</span>
+                    <span className="min-w-0"><strong className="flex items-center gap-1.5 text-xs font-semibold text-white sm:text-sm"><step.icon size={14} className="text-cyan-300" />{step.title}</strong><span className="mt-1 block text-[11px] leading-4 text-[#8999a5]">{step.text}</span></span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
             {/* Sub System Engine (Categories) First */}
             <motion.div 
                initial={{ opacity: 0, y: 20 }}
@@ -407,6 +429,7 @@ const App = () => {
                         <h4 className="text-[#f1f5f9] font-bold mb-2 leading-snug group-hover:text-white transition-all line-clamp-2 text-[15px]">
                           {getDocumentTitle(template.id, template.title)}
                         </h4>
+                        <p className="mb-3 line-clamp-2 text-[11px] leading-4 text-[#8999a5]">{template.description || 'Hazır belgeyi örnek olarak açın, size gösterilen alanları doldurarak kurumunuza uyarlayın.'}</p>
                         <div className="flex items-center gap-2 mt-auto">
                            <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/50 group-hover:bg-[#FFD700] group-hover:shadow-[0_0_8px_#FFD700] transition-all"></div>
                            <p className="text-[#9aa9b4] text-[10px] font-medium truncate group-hover:text-[#c9d3da] transition-colors">{template.category}</p>
@@ -428,7 +451,7 @@ const App = () => {
                             className="flex items-center gap-1.5 rounded-md bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors"
                             title="Dokümanı düzenle"
                           >
-                            Düzenle <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
+                            Örneği Aç <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                           </button>
                         </div>
                       </div>

@@ -390,8 +390,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
              {getDocumentTitle(template.id, template.title)}
            </h1>
            <p className="text-slate-400 text-xs leading-relaxed">
-             Bu dokümana ait alanları doldurun. Değişiklikler önizlemeye otomatik yansır.
+             Soldaki alanları doldurun. Özgün belgenin düzeni korunur ve değişiklikler önizlemeye otomatik yansır.
            </p>
+           <div className="mt-4 flex items-start gap-3 rounded-lg border border-cyan-300/15 bg-cyan-300/[0.045] p-3 text-xs leading-5 text-slate-300">
+             <Eye size={17} className="mt-0.5 shrink-0 text-cyan-300" />
+             <p><strong className="block text-white">Örneğe bakarak ilerleyin</strong><span className="lg:hidden">Üstteki “Önizleme” sekmesi özgün belgeyi ve yaptığınız değişiklikleri gösterir.</span><span className="hidden lg:inline">Sağdaki sayfa özgün belgenin canlı örneğidir. Bir alanı doldurduğunuzda sonucu burada görebilirsiniz.</span></p>
+           </div>
            <div className="mt-5 flex items-center gap-3">
              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-yellow-400 transition-all duration-300" style={{ width: `${completionRate}%` }} /></div>
              <span className="text-xs font-semibold tabular-nums text-slate-300">%{completionRate}</span>
