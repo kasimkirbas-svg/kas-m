@@ -90,8 +90,8 @@ export const Layout: React.FC<LayoutProps> = ({
   };
 
   return (
-    <div className="light-app-shell min-h-screen overflow-x-hidden bg-[#16222a] text-[#f7f7f5] font-sans selection:bg-[#e5b82c]/30 relative">
-      <header className="fixed inset-x-0 top-0 z-50 h-16 px-3 sm:h-[72px] sm:px-8 flex items-center justify-between border-b border-white/10 bg-[#111b22]/88 backdrop-blur-xl pointer-events-none sm:bg-[#111b22]/55">
+    <div className="beginner-workspace min-h-screen overflow-x-hidden bg-[#f4f7f5] text-[#17231d] font-sans selection:bg-[#b9dbca] relative">
+      <header className="fixed inset-x-0 top-0 z-50 h-16 px-3 sm:h-[72px] sm:px-8 flex items-center justify-between border-b border-[#d9e2dd] bg-white/95 backdrop-blur-xl pointer-events-none">
         <button
           onClick={() => navigate("dashboard")}
           className="pointer-events-auto flex items-center gap-3 group"
@@ -109,7 +109,7 @@ export const Layout: React.FC<LayoutProps> = ({
           className="pointer-events-auto relative flex items-center gap-2 sm:gap-3"
         >
           <div className="hidden md:flex flex-col items-end mr-1">
-            <span className="text-xs font-bold text-white">
+            <span className="text-xs font-bold text-[#17231d]">
               {user.name.split(" ")[0]}
             </span>
             <span className="text-[9px] font-black tracking-widest text-amber-300">
@@ -118,7 +118,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
           <button
             onClick={() => setMenuOpen((open) => !open)}
-            className="w-11 h-11 rounded-lg flex items-center justify-center bg-[#18252d]/95 border border-white/10 text-amber-300 backdrop-blur-xl shadow-sm hover:border-amber-400/60 hover:bg-[#22343e] transition-colors"
+            className="w-11 h-11 rounded-lg flex items-center justify-center bg-[#eef4f0] border border-[#d4dfd9] text-[#176647] shadow-sm hover:border-[#78a993] hover:bg-white transition-colors"
             aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
             aria-expanded={menuOpen}
           >
@@ -131,7 +131,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 initial={{ opacity: 0, y: -8, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                className="absolute right-0 top-14 w-[min(19rem,calc(100vw-2rem))] overflow-hidden rounded-xl bg-[#111b22]/98 border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
+                className="absolute right-0 top-14 w-[min(19rem,calc(100vw-2rem))] overflow-hidden rounded-xl bg-white border border-[#d9e2dd] shadow-[0_24px_60px_rgba(36,61,49,0.16)]"
               >
                 <div className="p-4 border-b border-white/10">
                   <p className="font-bold text-white truncate">{user.name}</p>
