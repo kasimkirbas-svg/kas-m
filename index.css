@@ -241,9 +241,49 @@ select {
   box-shadow: 0 10px 26px rgba(250, 204, 21, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
+.premium-sector-rail {
+  background:
+    linear-gradient(90deg, rgba(250, 204, 21, 0.025), transparent 32%),
+    rgba(7, 16, 21, 0.18);
+}
+
+.premium-sector-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(250, 204, 21, 0.32) transparent;
+}
+
+.premium-sector-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.premium-sector-scroll::-webkit-scrollbar-thumb {
+  background: rgba(250, 204, 21, 0.32);
+  border-radius: 999px;
+}
+
+.premium-sector-card {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 22px rgba(0, 0, 0, 0.17);
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.premium-sector-card:hover,
+.premium-sector-card[aria-pressed='true'] {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 14px 28px rgba(0, 0, 0, 0.24);
+}
+
+.premium-sector-card[aria-pressed='true']::after {
+  content: '';
+  position: absolute;
+  inset: auto 12px 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #facc15, transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .premium-file-icon,
-  .premium-document-row::before {
+  .premium-document-row::before,
+  .premium-sector-card {
     transition: none;
   }
 }

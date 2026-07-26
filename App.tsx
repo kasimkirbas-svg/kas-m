@@ -328,16 +328,30 @@ const App = () => {
                   </div>
 
                   <div className="border-t border-white/10 p-4">
-                    <label htmlFor="sector-filter" className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Sektör</label>
-                    <select id="sector-filter" value={selectedCategory || ''} onChange={event => setSelectedCategory(event.target.value || null)} className="min-h-11 w-full rounded-lg border border-white/10 bg-[#101a20] px-3 text-sm text-slate-200 outline-none focus:border-amber-400/60">
-                      <option value="">Tüm sektörler</option>
-                      {uniqueCategories.map(category => <option key={category} value={category}>{category}</option>)}
-                    </select>
+                    <div className="flex items-center justify-between gap-2"><span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Seçili sektör</span><Briefcase size={14} className="text-cyan-300" /></div>
+                    <strong className="mt-2 block truncate text-sm text-white">{selectedCategory || 'Tüm sektörler'}</strong>
                     {(selectedTask || selectedCategory || searchQuery) && <button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setSearchQuery(''); }} className="mt-3 w-full text-center text-xs font-semibold text-amber-300 hover:underline">Filtreleri temizle</button>}
                   </div>
                 </aside>
 
                 <main className="premium-document-list min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#1b2a33]/78 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
+                  <section className="premium-sector-rail border-b border-white/10 p-4 sm:p-5" aria-labelledby="sector-title">
+                    <div className="mb-3 flex items-center justify-between gap-3"><div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">Çalışma alanı</p><h2 id="sector-title" className="mt-1 text-sm font-bold text-white">Sektörünüzü seçin</h2></div>{selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-[11px] font-semibold text-cyan-300 hover:text-white">Tümünü göster</button>}</div>
+                    <div className="premium-sector-scroll -mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-1 sm:-mx-5 sm:px-5">
+                      <button onClick={() => setSelectedCategory(null)} aria-pressed={!selectedCategory} className={`premium-sector-card relative h-[88px] w-[154px] shrink-0 snap-start overflow-hidden rounded-lg border text-left ${!selectedCategory ? 'border-amber-300' : 'border-white/10'}`}>
+                        <img src={getCategoryImage('tüm sektörler')} alt="" className="absolute inset-0 h-full w-full object-cover opacity-30" />
+                        <span className="absolute inset-0 bg-gradient-to-r from-[#101a20] via-[#101a20]/90 to-[#101a20]/45" />
+                        <span className="absolute inset-0 flex items-center gap-3 p-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/10 bg-black/30 text-amber-300"><FolderOpen size={18} /></span><span><strong className="block text-xs text-white">Tüm sektörler</strong><small className="mt-1 block text-[10px] text-slate-400">{archiveTemplates.length} belge</small></span></span>
+                      </button>
+                      {uniqueCategories.map(category => (
+                        <button key={category} onClick={() => setSelectedCategory(category)} aria-pressed={selectedCategory === category} className={`premium-sector-card relative h-[88px] w-[174px] shrink-0 snap-start overflow-hidden rounded-lg border text-left ${selectedCategory === category ? 'border-amber-300' : 'border-white/10'}`}>
+                          <img src={getCategoryImage(category)} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-55" />
+                          <span className="absolute inset-0 bg-gradient-to-r from-[#101a20] via-[#101a20]/82 to-transparent" />
+                          <span className="absolute inset-0 flex items-center gap-3 p-3"><span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-black/35 ${selectedCategory === category ? 'border-amber-300/50 text-amber-300' : 'border-white/10 text-cyan-200'}`}>{getCategoryIcon(category)}</span><span className="min-w-0"><strong className="line-clamp-2 block text-xs leading-4 text-white">{category}</strong><small className="mt-1 block text-[10px] text-slate-300">{archiveTemplates.filter(item => item.category === category).length} belge</small></span></span>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
                   <header className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6">
                     <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-300">{selectedCategory || 'Tüm sektörler'}</p><h2 className="mt-1 text-xl font-black text-white">Belgeler</h2></div>
                     <span className="rounded-md bg-white/5 px-3 py-2 text-xs font-bold text-slate-300">{filteredTemplates.length} sonuç</span>
