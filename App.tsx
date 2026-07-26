@@ -8,13 +8,14 @@ import {
   Car, Building2, Trees, Activity, Building, Zap, MapPin, SearchCode,
   FileBox, UserCheck, CheckSquare, Award, FileClock, FolderOpen, ArrowRight,
   ShieldAlert, UserPlus, FileArchive, Settings, Crown, ChevronRight, CheckCircle2,
-  Flame, Target, Compass, Eye, PenLine
+  Flame, Target, Compass, Eye, PenLine, ClipboardCheck, AlertTriangle, GraduationCap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { GENERATED_TEMPLATES } from './generatedTemplates';
 import { getDocumentTitle } from './services/documentFieldService';
 import { reportError } from './services/monitoringService';
+import { getOriginalDocumentUrl } from './services/originalDocumentService';
 
 const Auth = React.lazy(() => import('./pages/Auth'));
 const DocumentEditor = React.lazy(() => import('./pages/DocumentEditor').then(module => ({ default: module.DocumentEditor })));
@@ -102,11 +103,13 @@ const App = () => {
   }, [currentView, user]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [remoteTemplates, setRemoteTemplates] = useState<DocumentTemplate[]>([]);
   const archiveTemplates = React.useMemo(() => {
     const remoteIds = new Set(remoteTemplates.map(template => template.id));
-    return [...remoteTemplates, ...staticTemplates.filter(template => !remoteIds.has(template.id))];
+    return [...remoteTemplates, ...staticTemplates.filter(template => !remoteIds.has(template.id))]
+      .map(template => ({ ...template, originalUrl: getOriginalDocumentUrl(template.id) }));
   }, [remoteTemplates]);
   const uniqueCategories = React.useMemo(() => Array.from(new Set(archiveTemplates.map(template => template.category))), [archiveTemplates]);
 
@@ -161,10 +164,18 @@ const App = () => {
 
   const filteredTemplates = React.useMemo(() => archiveTemplates.filter(t => {
     const matchesCategory = selectedCategory ? t.category === selectedCategory : true;
+    const taskKeywords: Record<string, string[]> = {
+      risk: ['risk', 'pkd', 'patlama'],
+      emergency: ['acil', 'yangın', 'kaza', 'ramak'],
+      training: ['eğitim', 'tutanak', 'atama', 'talimat'],
+      control: ['kontrol', 'takip', 'çizelge', 'form']
+    };
+    const searchableTitle = `${t.title} ${t.description}`.toLocaleLowerCase('tr');
+    const matchesTask = selectedTask ? taskKeywords[selectedTask].some(keyword => searchableTitle.includes(keyword)) : true;
     const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           t.category.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  }), [selectedCategory, searchQuery]);
+    return matchesCategory && matchesTask && matchesSearch;
+  }), [archiveTemplates, selectedCategory, selectedTask, searchQuery]);
 
   const renderContent = () => {
     if (currentView === 'landing') {
@@ -335,6 +346,26 @@ const App = () => {
               </ol>
             </section>
 
+            <section className="mb-7" aria-labelledby="task-picker-title">
+              <div className="mb-3 flex items-end justify-between gap-3">
+                <div><h2 id="task-picker-title" className="text-lg font-bold text-white">Bugün ne hazırlamanız gerekiyor?</h2><p className="text-sm text-[#93a2ad]">Bilmiyorsanız amacınızı seçin, uygun belgeleri biz daraltalım.</p></div>
+                {selectedTask && <button onClick={() => setSelectedTask(null)} className="shrink-0 text-xs font-semibold text-amber-300 hover:underline">Tümünü göster</button>}
+              </div>
+              <div className="-mx-3 flex snap-x gap-2 overflow-x-auto px-3 pb-2 scrollbar-hidden sm:mx-0 sm:grid sm:grid-cols-4 sm:px-0">
+                {[
+                  { id: 'risk', icon: AlertTriangle, title: 'Riskleri değerlendireceğim', text: 'Risk analizi ve PKD' },
+                  { id: 'emergency', icon: ShieldAlert, title: 'Acil duruma hazırlanacağım', text: 'Plan, yangın ve kaza' },
+                  { id: 'training', icon: GraduationCap, title: 'Eğitim veya görevlendirme', text: 'Tutanak, atama ve talimat' },
+                  { id: 'control', icon: ClipboardCheck, title: 'Saha kontrolü yapacağım', text: 'Form, takip ve çizelge' }
+                ].map(task => (
+                  <button key={task.id} onClick={() => setSelectedTask(current => current === task.id ? null : task.id)} className={`w-[220px] shrink-0 snap-start rounded-lg border p-3 text-left transition-colors sm:w-auto ${selectedTask === task.id ? 'border-amber-300 bg-amber-300/12' : 'border-white/10 bg-[#1b2a33]/80 hover:border-white/20'}`} aria-pressed={selectedTask === task.id}>
+                    <task.icon size={19} className={selectedTask === task.id ? 'text-amber-300' : 'text-cyan-300'} />
+                    <strong className="mt-3 block text-xs text-white sm:text-sm">{task.title}</strong><span className="mt-1 block text-[10px] text-slate-400 sm:text-xs">{task.text}</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+
             {/* Sub System Engine (Categories) First */}
             <motion.div 
                initial={{ opacity: 0, y: 20 }}
@@ -451,7 +482,7 @@ const App = () => {
                             className="flex items-center gap-1.5 rounded-md bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors"
                             title="Dokümanı düzenle"
                           >
-                            Örneği Aç <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
+                            {template.originalUrl ? 'Orijinalle Başla' : 'Belgeyi Aç'} <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                           </button>
                         </div>
                       </div>

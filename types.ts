@@ -40,6 +40,7 @@ export interface DocumentTemplate {
   description: string;
   isPremium: boolean;
   fileUrl?: string;
+  originalUrl?: string;
   fields: DocumentField[];
 }
 

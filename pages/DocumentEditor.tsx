@@ -82,6 +82,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [documentFields, setDocumentFields] = useState<DocumentField[]>(template.fields);
   const [loading, setLoading] = useState(false);
   const [docxArrayBuffer, setDocxArrayBuffer] = useState<ArrayBuffer | null>(null);
+  const [originalPreviewBuffer, setOriginalPreviewBuffer] = useState<ArrayBuffer | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
@@ -106,6 +107,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     setFilterConfirmed(false);
     setSelectedFilter("");
     setLoading(true);
+    setOriginalPreviewBuffer(null);
     setDocumentFields(template.fields);
         const initialData: Record<string, any> = {};
     if (template.fields) {
@@ -137,6 +139,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           setOpenSections(Object.fromEntries(reconciledSections.map((section, index) => [section.id, index === 0])));
           setDocxArrayBuffer(buffer);
           setLoading(false);
+          if (template.originalUrl) {
+            void fetch(template.originalUrl).then(response => {
+              if (!response.ok) throw new Error('Özgün belge bulunamadı.');
+              return response.arrayBuffer();
+            }).then(setOriginalPreviewBuffer).catch(error => console.warn('Özgün belge önizlemesi yüklenemedi:', error));
+          }
         })
         .catch(err => {
           console.error("Doküman yüklenirken hata:", err);
@@ -159,18 +167,21 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   }, [previewWidth, mobileView]);
 
   useEffect(() => {
-    if (!docxArrayBuffer || !previewRef.current) return;
-    const timeout = window.setTimeout(() => void updatePreview(docxArrayBuffer, formData), 180);
+    const previewBuffer = originalPreviewBuffer || docxArrayBuffer;
+    if (!previewBuffer || !previewRef.current) return;
+    const timeout = window.setTimeout(() => void updatePreview(previewBuffer, originalPreviewBuffer ? null : formData), 180);
     return () => window.clearTimeout(timeout);
-  }, [docxArrayBuffer, formData]);
+  }, [docxArrayBuffer, originalPreviewBuffer, formData]);
 
-  const updatePreview = async (buffer: ArrayBuffer, data: Record<string, any>) => {
+  const updatePreview = async (buffer: ArrayBuffer, data: Record<string, any> | null) => {
     const renderId = ++previewRenderId.current;
     try {
       // ÖNEMLİ: ArrayBuffer her karakter girildiğinde yeniden kullanılıyor. 
       // PizZip orijinal buffer'ı modifiye ettiği için etiketler kayboluyordu. 
       // buffer.slice(0) ile klonlayarak her seferinde tertemiz bir docx kopyası ile çalışmasını sağlıyoruz!
-      const zip = new PizZip(buffer.slice(0));
+      let previewBuffer = buffer.slice(0);
+      if (data) {
+      const zip = new PizZip(previewBuffer);
       
       const imageOptions = {
         centered: false,
@@ -210,8 +221,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       ]));
       doc.render(renderData);
 
-      const outBuffer = doc.getZip().generate({ type: "arraybuffer" });
-      const blob = new Blob([outBuffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+      previewBuffer = doc.getZip().generate({ type: "arraybuffer" });
+      }
+      const blob = new Blob([previewBuffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
       
       if (previewRef.current) {
         const nextPreview = document.createElement('div');
@@ -390,11 +402,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
              {getDocumentTitle(template.id, template.title)}
            </h1>
            <p className="text-slate-400 text-xs leading-relaxed">
-             Soldaki alanları doldurun. Özgün belgenin düzeni korunur ve değişiklikler önizlemeye otomatik yansır.
+             {template.originalUrl ? 'Soldaki alanları kendi işyerinize göre doldurun. Sağdaki özgün belge yalnızca ne yazmanız gerektiğini anlamanız için sabit kalır.' : 'Soldaki alanları doldurun. Belgenin düzeni korunur ve değişiklikler önizlemeye otomatik yansır.'}
            </p>
            <div className="mt-4 flex items-start gap-3 rounded-lg border border-cyan-300/15 bg-cyan-300/[0.045] p-3 text-xs leading-5 text-slate-300">
              <Eye size={17} className="mt-0.5 shrink-0 text-cyan-300" />
-             <p><strong className="block text-white">Örneğe bakarak ilerleyin</strong><span className="lg:hidden">Üstteki “Önizleme” sekmesi özgün belgeyi ve yaptığınız değişiklikleri gösterir.</span><span className="hidden lg:inline">Sağdaki sayfa özgün belgenin canlı örneğidir. Bir alanı doldurduğunuzda sonucu burada görebilirsiniz.</span></p>
+             <p><strong className="block text-white">Örneğe bakarak ilerleyin</strong><span className="lg:hidden">Üstteki “Belgeyi Kontrol Et” sekmesinden özgün örneğe bakın; bilgilerinizi bu alanlara yazın.</span><span className="hidden lg:inline">Sağdaki özgün belgede ilgili bilginin nasıl kullanıldığını görün; kendi bilginizi soldaki aynı adlı alana yazın.</span></p>
            </div>
            <div className="mt-5 flex items-center gap-3">
              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-yellow-400 transition-all duration-300" style={{ width: `${completionRate}%` }} /></div>
@@ -495,7 +507,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         <div className="fixed lg:sticky bottom-0 inset-x-0 lg:inset-x-auto px-3 sm:px-6 lg:px-0 pt-3 mt-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-white/10 z-20 bg-[#16222a]/96 backdrop-blur-xl">
           {downloadError && <p role="alert" className="mb-3 rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">{downloadError}</p>}
           <button onClick={handleDownload} disabled={loading || !docxArrayBuffer} className="flex w-full min-h-12 items-center justify-center gap-2 rounded-lg bg-yellow-400 px-4 py-3.5 text-sm font-bold text-black hover:bg-yellow-300 active:translate-y-px transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-             {loading ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" /> Şablon hazırlanıyor</> : <><Download size={18} /> Dokümanı Oluştur</>}
+             {loading ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" /> Şablon hazırlanıyor</> : <><Download size={18} /> Doldurulmuş Belgeyi Oluştur</>}
           </button>
         </div>
       </div>
@@ -503,8 +515,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
       <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100svh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
         <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#111b22]/90 px-4 py-3 sm:px-6">
-          <div className="min-w-0"><strong className="block text-sm text-white">Belge örneği ve canlı sonuç</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">Özgün sayfa düzeni korunur; yazdığınız bilgiler yerine yerleşir.</span></div>
-          <span className="shrink-0 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-2 py-1 text-[9px] font-bold uppercase text-emerald-300">Canlı</span>
+          <div className="min-w-0"><strong className="block text-sm text-white">{template.originalUrl ? 'Orijinal kaynak doküman' : 'Belge önizlemesi'}</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">{template.originalUrl ? 'Bu örnek değişmez. Bilgileri solda kendi belgeniz için doldurun.' : 'Doldurduğunuz bilgiler belge düzeninde gösterilir.'}</span></div>
+          <span className={`shrink-0 rounded-md border px-2 py-1 text-[9px] font-bold uppercase ${template.originalUrl ? 'border-cyan-300/20 bg-cyan-300/10 text-cyan-300' : 'border-emerald-300/20 bg-emerald-300/10 text-emerald-300'}`}>{template.originalUrl ? 'Orijinal' : 'Canlı'}</span>
         </div>
         {/* Render Preview Area */}
         <div ref={previewViewportRef} className="flex-1 w-full h-full overflow-auto p-4 xl:p-8 flex justify-center items-start custom-scrollbar bg-[#1b2d36] overscroll-contain touch-pan-y">
