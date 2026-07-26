@@ -357,7 +357,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   };
 
   return (
-    <div className="beginner-editor flex flex-col lg:flex-row min-h-[100svh] lg:h-screen bg-[#f4f7f5] lg:overflow-hidden text-[#17231d]">
+    <div className="flex flex-col lg:flex-row min-h-[100svh] lg:h-screen bg-[#16222a] lg:overflow-hidden text-slate-200">
       {!loading && filterFields.length > 0 && !filterConfirmed && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0d171d]/90 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="document-filter-title">
           <div className="w-full max-w-lg rounded-lg border border-white/10 bg-[#162a33] p-6 shadow-2xl sm:p-8">
@@ -379,13 +379,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           </div>
         </div>
       )}
-      <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-white/95 backdrop-blur-xl border-b border-[#d9e2dd] shadow-sm">
+      <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-[#111b22]/95 backdrop-blur-xl border-b border-white/10 shadow-lg">
         <button onClick={() => setMobileView("form")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-xs font-bold transition-colors sm:text-sm ${mobileView === "form" ? "bg-yellow-400 text-black" : "bg-white/5 text-slate-300"}`}><span className="flex h-5 w-5 items-center justify-center rounded bg-black/15 text-[10px]">1</span><SlidersHorizontal size={16} /> Bilgileri Gir</button>
         <button onClick={() => setMobileView("preview")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-xs font-bold transition-colors sm:text-sm ${mobileView === "preview" ? "bg-yellow-400 text-black" : "bg-white/5 text-slate-300"}`}><span className="flex h-5 w-5 items-center justify-center rounded bg-black/15 text-[10px]">2</span><Eye size={16} /> Belgeyi Kontrol Et</button>
       </div>
       
       {/* SOL PANEL (Magic Variable Editörü) */}
-      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-[46%] shrink-0 min-h-[calc(100svh-61px)] lg:h-full overflow-y-auto px-3 sm:px-6 lg:px-10 pt-4 pb-24 sm:pt-6 sm:pb-24 lg:py-10 bg-white border-r border-[#d9e2dd] relative z-10 custom-scrollbar flex-col`}>
+      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 shrink-0 min-h-[calc(100svh-61px)] lg:h-full overflow-y-auto px-3 sm:px-6 lg:px-8 pt-4 pb-24 sm:pt-6 sm:pb-24 lg:py-10 bg-[#16222a] border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
         {/* Glow effect on left panel */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
 
@@ -513,16 +513,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       </div>
 
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
-      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-[54%] min-h-[calc(100svh-61px)] lg:h-full bg-[#eef3f0] flex-col relative`}>
-        <div className="flex min-h-16 shrink-0 items-center justify-between gap-3 border-b border-[#d9e2dd] bg-white px-4 py-3 sm:px-6">
-          <div className="min-w-0"><strong className="block text-sm text-[#17231d]">Belge rehberi hazırlanıyor</strong><span className="block truncate text-[10px] text-[#66766d] sm:text-xs">Göndereceğiniz son dosya burada örnek olarak gösterilecek.</span></div>
-          <span className="shrink-0 rounded-md border border-[#cbd7d0] bg-[#f4f7f5] px-2 py-1 text-[9px] font-bold uppercase text-[#66766d]">Beklemede</span>
+      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100svh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
+        <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#111b22]/90 px-4 py-3 sm:px-6">
+          <div className="min-w-0"><strong className="block text-sm text-white">Belge rehberi hazırlanıyor</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">Göndereceğiniz son dosya burada örnek olarak gösterilecek.</span></div>
+          <span className="shrink-0 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[9px] font-bold uppercase text-slate-400">Beklemede</span>
         </div>
-        <div className="flex flex-1 items-center justify-center p-6 sm:p-10">
-          <div className="w-full max-w-md border border-dashed border-[#b9c9c0] bg-white/70 p-8 text-center shadow-sm">
-            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#e4efe9] text-[#176647]"><FileText size={25} /></span>
-            <h2 className="mt-5 text-lg font-bold text-[#17231d]">Önizleme alanı boş bırakıldı</h2>
-            <p className="mt-2 text-sm leading-6 text-[#66766d]">Son düzenlenebilir dosyanız eklendiğinde, acemi uzmanın bakarak ilerleyeceği belge rehberi bu alanda yer alacak.</p>
+        <div className="flex flex-1 items-center justify-center bg-[#1b2d36] p-6 sm:p-10">
+          <div className="w-full max-w-md border border-dashed border-white/15 bg-[#16222a]/65 p-8 text-center shadow-xl">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400/10 text-yellow-400"><FileText size={25} /></span>
+            <h2 className="mt-5 text-lg font-bold text-white">Önizleme alanı boş bırakıldı</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Son düzenlenebilir dosyanız eklendiğinde, acemi uzmanın bakarak ilerleyeceği belge rehberi bu alanda yer alacak.</p>
           </div>
         </div>
       </div>

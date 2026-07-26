@@ -219,12 +219,14 @@ const App = () => {
         <Layout user={user} currentView={currentView} onNavigate={setCurrentView} onLogout={handleLogout}>
           
            {/* Global single-theme workspace background */}
-           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-[#f4f7f5]">
-             <div className="absolute inset-0 bg-[linear-gradient(rgba(23,102,71,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(23,102,71,0.035)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
-             <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#dcebe3] to-transparent"></div>
+           <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+             <div className="absolute inset-0 bg-[#16222a]"></div>
+             <div className="workspace-ambient absolute inset-0 overflow-hidden"></div>
+             <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.035)_0.7px,transparent_0.7px)] bg-[size:18px_18px] opacity-40"></div>
+             <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#36505d]/30 to-transparent"></div>
           </div>
 
-           <div className="dashboard-workspace w-full max-w-[1240px] mx-auto px-3 sm:px-6 lg:px-8 pb-24 sm:pb-12 pt-3 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
+            <div className="w-full max-w-[1240px] mx-auto px-3 sm:px-6 lg:px-8 pb-24 sm:pb-12 pt-3 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
             
             {currentView === 'profile' && <Profile user={user} />}
             {currentView === 'settings' && <SettingsPage user={user} onSave={(changes) => setUser(current => current ? { ...current, ...changes } : current)} />}
