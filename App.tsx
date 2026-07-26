@@ -303,180 +303,63 @@ const App = () => {
             </AnimatePresence>
 
             {currentView === 'dashboard' && (
-              <>
-            <section className="mb-5 overflow-hidden rounded-xl border border-white/15 bg-[#22313b]/82 shadow-[0_24px_70px_rgba(4,10,14,0.18)] backdrop-blur-xl sm:mb-6">
-              <div className="grid lg:grid-cols-[1fr_auto] lg:items-stretch">
-                <div className="relative p-5 sm:p-7 lg:p-8">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">Doküman çalışma alanı</p>
-                  <div className="mt-2 flex flex-wrap items-end justify-between gap-2"><h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">Ne hazırlıyorsunuz, {user.name.split(' ')[0]}?</h1><span className="text-xs text-[#91a3af]">{filteredTemplates.length} belge hazır</span></div>
-                  <div className="relative z-10 mt-5 flex min-h-12 items-center overflow-hidden rounded-lg border border-white/15 bg-[#17242c]/80 shadow-inner focus-within:border-amber-400/70 sm:min-h-14">
-                    <Search className="ml-4 h-5 w-5 shrink-0 text-amber-300" />
-                    <input type="search" placeholder="Örn. risk analizi, acil durum planı, eğitim tutanağı" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent px-4 py-4 text-sm font-medium text-white placeholder-[#71818d] focus:outline-none"/>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 divide-x divide-white/10 border-t border-white/10 bg-[#19272f]/65 lg:w-72 lg:border-l lg:border-t-0">
-                  <div className="flex min-w-0 flex-col items-center justify-center p-3 text-center"><strong className="text-lg font-black text-white">{archiveTemplates.length}</strong><span className="text-[9px] text-[#8fa0ac] sm:text-[10px]">Belge</span></div>
-                  <div className="flex min-w-0 flex-col items-center justify-center p-3 text-center"><strong className="text-lg font-black text-white">{uniqueCategories.length}</strong><span className="text-[9px] text-[#8fa0ac] sm:text-[10px]">Sektör</span></div>
-                  <div className="flex min-w-0 flex-col items-center justify-center p-3 text-center"><CheckCircle2 className="mb-1 h-5 w-5 text-emerald-300"/><span className="text-[9px] text-[#8fa0ac] sm:text-[10px]">Hazır</span></div>
-                </div>
-              </div>
-            </section>
-
-            <section className="mb-7" aria-labelledby="task-picker-title">
-              <div className="mb-3 flex items-end justify-between gap-3">
-                <div><h2 id="task-picker-title" className="text-base font-bold text-white sm:text-lg">Doküman türü</h2></div>
-                {selectedTask && <button onClick={() => setSelectedTask(null)} className="shrink-0 text-xs font-semibold text-amber-300 hover:underline">Tümünü göster</button>}
-              </div>
-              <div className="-mx-3 flex snap-x gap-2 overflow-x-auto px-3 pb-2 scrollbar-hidden sm:mx-0 sm:grid sm:grid-cols-4 sm:px-0">
-                {[
-                  { id: 'risk', icon: AlertTriangle, title: 'Risk değerlendirme', text: 'Risk analizi ve PKD' },
-                  { id: 'emergency', icon: ShieldAlert, title: 'Acil durum', text: 'Plan, yangın ve kaza' },
-                  { id: 'training', icon: GraduationCap, title: 'Eğitim ve görevlendirme', text: 'Tutanak, atama ve talimat' },
-                  { id: 'control', icon: ClipboardCheck, title: 'Saha kontrolü', text: 'Form, takip ve çizelge' }
-                ].map(task => (
-                  <button key={task.id} onClick={() => setSelectedTask(current => current === task.id ? null : task.id)} className={`w-[220px] shrink-0 snap-start rounded-lg border p-3 text-left transition-colors sm:w-auto ${selectedTask === task.id ? 'border-amber-300 bg-amber-300/12' : 'border-white/10 bg-[#1b2a33]/80 hover:border-white/20'}`} aria-pressed={selectedTask === task.id}>
-                    <task.icon size={19} className={selectedTask === task.id ? 'text-amber-300' : 'text-cyan-300'} />
-                    <strong className="mt-3 block text-xs text-white sm:text-sm">{task.title}</strong><span className="mt-1 block text-[10px] text-slate-400 sm:text-xs">{task.text}</span>
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            {/* Sub System Engine (Categories) First */}
-            <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 0.6, delay: 0.3 }}
-               className="mb-9 w-full"
-            >
-              <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
-                <div><h2 className="text-base font-bold text-[#f8fafc] sm:text-lg">Sektör</h2></div>
-                {selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 hover:underline">Filtreyi kaldır</button>}
-              </div>
-
-              <div className="relative z-10 -mx-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-3 pb-2 custom-scrollbar sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-5 xl:grid-cols-6">
-                <button
-                  onClick={() => setSelectedCategory(null)}
-                  className={`h-[92px] w-[168px] shrink-0 snap-start rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#263640] text-left sm:h-[94px] sm:w-auto sm:min-w-0 ${
-                    selectedCategory === null 
-                      ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
-                      : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
-                  }`}
-                >
-                  <div className="absolute inset-0 bg-[#10171d]">
-                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity mix-blend-overlay"></div>
-                    <div className={`absolute inset-0 ${selectedCategory === null ? 'bg-gradient-to-r from-[#5c5015]/95 to-[#8d7618]/65' : 'bg-[#111a21]/76'}`}></div>
-                  </div>
-                  <div className="absolute inset-0 flex items-center gap-3 z-10 px-4 sm:gap-4 sm:px-5">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#203740] border border-white/10"><ShieldAlert size={20} className={selectedCategory === null ? "text-[#FFD700]" : "text-white"} /></span>
-                    <span><strong className={`block text-xs font-bold leading-tight sm:text-sm ${selectedCategory === null ? "text-[#FFD700]" : "text-white"}`}>Tüm sektörler</strong><small className="mt-1 block text-[11px] text-white/60">{archiveTemplates.length} doküman</small></span>
-                  </div>
-                </button>
-                
-                {uniqueCategories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`h-[92px] w-[168px] shrink-0 snap-start rounded-xl transition-all duration-300 relative group overflow-hidden bg-[#263640] text-left sm:h-[94px] sm:w-auto sm:min-w-0 ${
-                      selectedCategory === category 
-                        ? 'border border-yellow-400 ring-2 ring-yellow-400/15 shadow-md' 
-                        : 'border border-slate-200/80 dark:border-white/10 hover:border-yellow-400/60 hover:shadow-md'
-                    }`}
-                  >
-                    <div className="absolute inset-0 bg-[#263640]">
-                       <img src={getCategoryImage(category)} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-55 group-hover:opacity-70 transition-all duration-500 group-hover:scale-105" />
-                      <div className={`absolute inset-0 bg-gradient-to-r ${selectedCategory === category ? 'from-[#625616]/95 to-[#8a721b]/50' : 'from-[#10171d]/95 to-[#10171d]/32'}`}></div>
+              <div className="grid items-start gap-4 lg:grid-cols-[286px_minmax(0,1fr)] lg:gap-6">
+                <aside className="overflow-hidden rounded-xl border border-white/10 bg-[#18272f]/95 shadow-[0_22px_55px_rgba(0,0,0,0.2)] lg:sticky lg:top-24">
+                  <div className="border-b border-white/10 p-5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300">Yeni belge</p>
+                    <h1 className="mt-2 text-xl font-black text-white">Ne hazırlıyorsunuz?</h1>
+                    <div className="mt-4 flex min-h-12 items-center rounded-lg border border-white/10 bg-[#101a20] focus-within:border-amber-400/60">
+                      <Search className="ml-3 h-4 w-4 shrink-0 text-amber-300" />
+                      <input type="search" placeholder="Belge ara" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="w-full min-w-0 bg-transparent px-3 py-3 text-sm text-white placeholder-slate-600 outline-none" />
                     </div>
-                    <div className="absolute inset-0 flex items-center gap-3 z-10 px-4 sm:gap-4 sm:px-5">
-                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-[#203740] ${selectedCategory === category ? "text-[#FFD700]" : "text-white"}`}>
-                        {getCategoryIcon(category)}
-                      </div>
-                      <span className="min-w-0"><strong className={`line-clamp-3 text-[11px] font-bold leading-tight sm:line-clamp-2 sm:text-sm ${selectedCategory === category ? "text-[#FFD700]" : "text-white"} group-hover:text-[#FFD700]`}>{category}</strong><small className="mt-1 block text-[11px] text-white/60">{archiveTemplates.filter(item => item.category === category).length} doküman</small></span>
-                    </div>
-                  </button>
-                ))}
+                  </div>
+
+                  <div className="p-3">
+                    {[
+                      { id: 'risk', icon: AlertTriangle, title: 'Risk değerlendirme' },
+                      { id: 'emergency', icon: ShieldAlert, title: 'Acil durum' },
+                      { id: 'training', icon: GraduationCap, title: 'Eğitim ve görevlendirme' },
+                      { id: 'control', icon: ClipboardCheck, title: 'Saha kontrolü' }
+                    ].map(task => (
+                      <button key={task.id} onClick={() => setSelectedTask(current => current === task.id ? null : task.id)} aria-pressed={selectedTask === task.id} className={`mb-1 flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-semibold transition-colors ${selectedTask === task.id ? 'bg-amber-300 text-[#111b22]' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}>
+                        <task.icon size={17} /><span className="flex-1">{task.title}</span>{selectedTask === task.id && <CheckCircle2 size={16} />}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="border-t border-white/10 p-4">
+                    <label htmlFor="sector-filter" className="mb-2 block text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Sektör</label>
+                    <select id="sector-filter" value={selectedCategory || ''} onChange={event => setSelectedCategory(event.target.value || null)} className="min-h-11 w-full rounded-lg border border-white/10 bg-[#101a20] px-3 text-sm text-slate-200 outline-none focus:border-amber-400/60">
+                      <option value="">Tüm sektörler</option>
+                      {uniqueCategories.map(category => <option key={category} value={category}>{category}</option>)}
+                    </select>
+                    {(selectedTask || selectedCategory || searchQuery) && <button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setSearchQuery(''); }} className="mt-3 w-full text-center text-xs font-semibold text-amber-300 hover:underline">Filtreleri temizle</button>}
+                  </div>
+                </aside>
+
+                <main className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#1b2a33]/78 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
+                  <header className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6">
+                    <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-300">{selectedCategory || 'Tüm sektörler'}</p><h2 className="mt-1 text-xl font-black text-white">Belgeler</h2></div>
+                    <span className="rounded-md bg-white/5 px-3 py-2 text-xs font-bold text-slate-300">{filteredTemplates.length} sonuç</span>
+                  </header>
+
+                  <div className="divide-y divide-white/[0.07]">
+                    <AnimatePresence initial={false}>
+                      {filteredTemplates.map(template => (
+                        <motion.article key={template.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="group grid gap-3 px-4 py-4 transition-colors hover:bg-white/[0.035] sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:px-6">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#101a20] text-cyan-300"><FileText size={18} /></span>
+                          <div className="min-w-0">
+                            <h3 className="text-sm font-bold leading-5 text-white sm:text-[15px]">{getDocumentTitle(template.id, template.title)}</h3>
+                            <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-400"><span>{template.category}</span><span>{template.fields.length} alan</span><span>{(template.format || 'DOCX').toUpperCase()}</span></div>
+                          </div>
+                          <button onClick={() => { setSelectedTemplate(template); window.history.pushState({ isgView: 'editor' }, ''); setCurrentView('editor'); }} className="flex min-h-10 items-center justify-center gap-2 rounded-lg bg-amber-300 px-4 text-xs font-bold text-[#111b22] transition-colors hover:bg-amber-200 sm:justify-self-end">Doldur <ArrowRight size={15} /></button>
+                        </motion.article>
+                      ))}
+                    </AnimatePresence>
+                    {filteredTemplates.length === 0 && <div className="px-6 py-20 text-center"><SearchCode className="mx-auto h-10 w-10 text-slate-600"/><h3 className="mt-4 font-bold text-white">Belge bulunamadı</h3><button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setSearchQuery(''); }} className="mt-3 text-xs font-semibold text-amber-300 hover:underline">Tüm belgeleri göster</button></div>}
+                  </div>
+                </main>
               </div>
-            </motion.div>
-
-            {/* Document Database Render */}
-            <motion.div 
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               transition={{ duration: 0.8, delay: 0.5 }}
-               className="w-full relative overflow-hidden"
-            >
-              <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
-                <div><h2 className="text-base font-bold text-[#f8fafc] sm:text-lg">Belgeler</h2><p className="text-xs text-[#93a2ad]">{filteredTemplates.length} sonuç</p></div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 relative z-10">
-                <AnimatePresence>
-                  {filteredTemplates.map((template, idx) => (
-                    <motion.div 
-                      key={template.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.3) }}
-                      className="bg-[#22313a]/88 border border-white/12 hover:border-amber-400/50 p-4 sm:p-5 relative group overflow-hidden transition-all duration-300 shadow-[0_12px_32px_rgba(0,0,0,0.12)] hover:bg-[#2a3b45] hover:shadow-[0_20px_44px_rgba(0,0,0,0.2)] flex min-h-[148px] sm:min-h-[158px] rounded-xl backdrop-blur-md before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-cyan-400 before:opacity-0 hover:before:opacity-100"
-                    >
-                      {/* Background Detail */}
-                      <div className="flex w-full flex-col relative z-10">
-                        <div className="mb-3 flex items-start justify-between gap-3">
-                        <div className="w-9 h-9 shrink-0 bg-[#10171d] border border-white/10 rounded-md flex items-center justify-center group-hover:bg-amber-400/10 group-hover:border-amber-400/40 transition-all duration-500">
-                          <FileText className="text-[#9cabb6] group-hover:text-amber-300 w-4 h-4" strokeWidth={1.5} />
-                        </div>
-                        <span className="text-[9px] font-bold uppercase text-[#9db6c8] bg-[#10171d] px-2 py-1 rounded border border-white/10">
-                            {(template.format || "PDF").toUpperCase()}
-                        </span>
-                      </div>
-
-                      <div className="relative z-10 flex-1">
-                        <h4 className="text-[#f1f5f9] font-bold mb-2 leading-snug group-hover:text-white transition-all line-clamp-2 text-[15px]">
-                          {getDocumentTitle(template.id, template.title)}
-                        </h4>
-                        <p className="mb-3 line-clamp-2 text-[11px] leading-4 text-[#8999a5]">{template.description || 'Hazır belgeyi örnek olarak açın, size gösterilen alanları doldurarak kurumunuza uyarlayın.'}</p>
-                        <div className="flex items-center gap-2 mt-auto">
-                           <div className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/50 group-hover:bg-[#FFD700] group-hover:shadow-[0_0_8px_#FFD700] transition-all"></div>
-                           <p className="text-[#9aa9b4] text-[10px] font-medium truncate group-hover:text-[#c9d3da] transition-colors">{template.category}</p>
-                        </div>
-                      </div>
-
-                      <div className="relative z-10 pt-3 mt-3 border-t border-slate-200 dark:border-white/5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] text-[#91a3b0] font-medium flex items-center gap-2">
-                            <Target size={12} /> {template.fields.length} düzenlenebilir alan
-                          </span>
-                          
-                          <button 
-                            onClick={() => {
-                              setSelectedTemplate(template);
-                              window.history.pushState({ isgView: 'editor' }, '');
-                              setCurrentView('editor');
-                            }}
-                            className="flex items-center gap-1.5 rounded-md bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors"
-                            title="Dokümanı düzenle"
-                          >
-                            Doldurmaya Başla <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
-                          </button>
-                        </div>
-                      </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-                
-                {filteredTemplates.length === 0 && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="col-span-full py-20 flex flex-col items-center justify-center text-center bg-white dark:bg-[#182b34] border border-slate-200 dark:border-white/5 border-dashed rounded-xl">
-                    <Target className="w-12 h-12 text-slate-600 mb-4 opacity-50" />
-                    <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wide">Bu algoritmaya uygun protokol bulunamadı.</p>
-                    <button onClick={() => setSearchQuery('')} className="mt-4 text-yellow-500 text-xs font-bold uppercase tracking-widest hover:underline">Aramayı Temizle</button>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
-            </>
             )}
 
           </div>
