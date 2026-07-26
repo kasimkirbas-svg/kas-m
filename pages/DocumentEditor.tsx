@@ -368,8 +368,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         </div>
       )}
       <div className="lg:hidden sticky top-0 z-50 grid grid-cols-2 gap-1 p-2 bg-[#111b22]/95 backdrop-blur-xl border-b border-white/10 shadow-lg">
-        <button onClick={() => setMobileView("form")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "form" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><SlidersHorizontal size={17} /> Alanlar</button>
-        <button onClick={() => setMobileView("preview")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-sm font-bold transition-colors ${mobileView === "preview" ? "bg-yellow-500 text-black" : "bg-white/5 text-slate-300"}`}><Eye size={17} /> Önizleme</button>
+        <button onClick={() => setMobileView("form")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-xs font-bold transition-colors sm:text-sm ${mobileView === "form" ? "bg-yellow-400 text-black" : "bg-white/5 text-slate-300"}`}><span className="flex h-5 w-5 items-center justify-center rounded bg-black/15 text-[10px]">1</span><SlidersHorizontal size={16} /> Bilgileri Gir</button>
+        <button onClick={() => setMobileView("preview")} className={`min-h-11 rounded-lg flex items-center justify-center gap-2 text-xs font-bold transition-colors sm:text-sm ${mobileView === "preview" ? "bg-yellow-400 text-black" : "bg-white/5 text-slate-300"}`}><span className="flex h-5 w-5 items-center justify-center rounded bg-black/15 text-[10px]">2</span><Eye size={16} /> Belgeyi Kontrol Et</button>
       </div>
       
       {/* SOL PANEL (Magic Variable Editörü) */}
@@ -398,7 +398,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            </div>
            <div className="mt-5 flex items-center gap-3">
              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-yellow-400 transition-all duration-300" style={{ width: `${completionRate}%` }} /></div>
-             <span className="text-xs font-semibold tabular-nums text-slate-300">%{completionRate}</span>
+             <span className="whitespace-nowrap text-xs font-semibold tabular-nums text-slate-300">{completedFields}/{visibleFields.length} alan</span>
            </div>
         </div>
         
@@ -418,7 +418,8 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
               return (
                 <div key={field.key} className="group">
                   <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-slate-300 group-focus-within:text-yellow-400 transition-colors">
-                    {getFieldLabel(field)} {field.required && <span className="text-yellow-400" aria-label="zorunlu">*</span>}
+                    <span className="min-w-0 flex-1">{getFieldLabel(field)}</span>
+                    <span className={`shrink-0 text-[9px] font-semibold uppercase ${field.required ? 'text-yellow-400' : 'text-slate-600'}`}>{field.required ? 'Zorunlu' : 'İsteğe bağlı'}</span>
                   </label>
                   {field.type === "image" && (
                     <div className="relative w-full">
@@ -430,13 +431,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                     </div>
                   )}
                   {field.type === "text" && (
-                    <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || "Veri giriniz..."} />
+                    <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || (field.required ? "Bu bilgiyi yazın" : "Bilmiyorsanız boş bırakabilirsiniz")} />
                   )}
                   {field.type === "date" && (
                     <input type="date" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm color-scheme-dark shadow-inner" />
                   )}
                   {field.type === "textarea" && (
-                    <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={5} dir="ltr" className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm leading-6 resize-y shadow-inner custom-scrollbar" placeholder={field.placeholder || "Veri giriniz..."} />
+                    <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={5} dir="ltr" className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm leading-6 resize-y shadow-inner custom-scrollbar" placeholder={field.placeholder || (field.required ? "Bu bilgiyi yazın" : "Bilmiyorsanız boş bırakabilirsiniz")} />
                   )}
                   {field.type === "select" && (
                     <select name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner text-slate-200">
@@ -501,6 +502,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
       <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100svh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
+        <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#111b22]/90 px-4 py-3 sm:px-6">
+          <div className="min-w-0"><strong className="block text-sm text-white">Belge örneği ve canlı sonuç</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">Özgün sayfa düzeni korunur; yazdığınız bilgiler yerine yerleşir.</span></div>
+          <span className="shrink-0 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-2 py-1 text-[9px] font-bold uppercase text-emerald-300">Canlı</span>
+        </div>
         {/* Render Preview Area */}
         <div ref={previewViewportRef} className="flex-1 w-full h-full overflow-auto p-4 xl:p-8 flex justify-center items-start custom-scrollbar bg-[#1b2d36] overscroll-contain touch-pan-y">
            {loadError ? (
