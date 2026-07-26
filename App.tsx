@@ -303,12 +303,12 @@ const App = () => {
             </AnimatePresence>
 
             {currentView === 'dashboard' && (
-              <div className="grid items-start gap-4 lg:grid-cols-[286px_minmax(0,1fr)] lg:gap-6">
-                <aside className="overflow-hidden rounded-xl border border-white/10 bg-[#18272f]/95 shadow-[0_22px_55px_rgba(0,0,0,0.2)] lg:sticky lg:top-24">
+              <div className="premium-dashboard grid items-start gap-4 lg:grid-cols-[296px_minmax(0,1fr)] lg:gap-6">
+                <aside className="premium-sidebar overflow-hidden rounded-xl border border-white/10 bg-[#18272f]/95 shadow-[0_22px_55px_rgba(0,0,0,0.2)] lg:sticky lg:top-24">
                   <div className="border-b border-white/10 p-5">
                     <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300">Yeni belge</p>
                     <h1 className="mt-2 text-xl font-black text-white">Ne hazırlıyorsunuz?</h1>
-                    <div className="mt-4 flex min-h-12 items-center rounded-lg border border-white/10 bg-[#101a20] focus-within:border-amber-400/60">
+                    <div className="premium-search mt-4 flex min-h-12 items-center rounded-lg border border-white/10 bg-[#101a20] focus-within:border-amber-400/60">
                       <Search className="ml-3 h-4 w-4 shrink-0 text-amber-300" />
                       <input type="search" placeholder="Belge ara" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="w-full min-w-0 bg-transparent px-3 py-3 text-sm text-white placeholder-slate-600 outline-none" />
                     </div>
@@ -321,7 +321,7 @@ const App = () => {
                       { id: 'training', icon: GraduationCap, title: 'Eğitim ve görevlendirme' },
                       { id: 'control', icon: ClipboardCheck, title: 'Saha kontrolü' }
                     ].map(task => (
-                      <button key={task.id} onClick={() => setSelectedTask(current => current === task.id ? null : task.id)} aria-pressed={selectedTask === task.id} className={`mb-1 flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-semibold transition-colors ${selectedTask === task.id ? 'bg-amber-300 text-[#111b22]' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}>
+                      <button key={task.id} onClick={() => setSelectedTask(current => current === task.id ? null : task.id)} aria-pressed={selectedTask === task.id} className={`premium-task mb-1 flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-semibold transition-colors ${selectedTask === task.id ? 'bg-amber-300 text-[#111b22]' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}>
                         <task.icon size={17} /><span className="flex-1">{task.title}</span>{selectedTask === task.id && <CheckCircle2 size={16} />}
                       </button>
                     ))}
@@ -337,7 +337,7 @@ const App = () => {
                   </div>
                 </aside>
 
-                <main className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#1b2a33]/78 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
+                <main className="premium-document-list min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#1b2a33]/78 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
                   <header className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6">
                     <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-300">{selectedCategory || 'Tüm sektörler'}</p><h2 className="mt-1 text-xl font-black text-white">Belgeler</h2></div>
                     <span className="rounded-md bg-white/5 px-3 py-2 text-xs font-bold text-slate-300">{filteredTemplates.length} sonuç</span>
@@ -346,13 +346,13 @@ const App = () => {
                   <div className="divide-y divide-white/[0.07]">
                     <AnimatePresence initial={false}>
                       {filteredTemplates.map(template => (
-                        <motion.article key={template.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="group grid gap-3 px-4 py-4 transition-colors hover:bg-white/[0.035] sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:px-6">
-                          <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#101a20] text-cyan-300"><FileText size={18} /></span>
+                        <motion.article key={template.id} layout initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="premium-document-row group grid gap-3 px-4 py-4 transition-colors hover:bg-white/[0.035] sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:px-6">
+                          <span className="premium-file-icon flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#101a20] text-cyan-300"><FileText size={18} /></span>
                           <div className="min-w-0">
                             <h3 className="text-sm font-bold leading-5 text-white sm:text-[15px]">{getDocumentTitle(template.id, template.title)}</h3>
                             <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-400"><span>{template.category}</span><span>{template.fields.length} alan</span><span>{(template.format || 'DOCX').toUpperCase()}</span></div>
                           </div>
-                          <button onClick={() => { setSelectedTemplate(template); window.history.pushState({ isgView: 'editor' }, ''); setCurrentView('editor'); }} className="flex min-h-10 items-center justify-center gap-2 rounded-lg bg-amber-300 px-4 text-xs font-bold text-[#111b22] transition-colors hover:bg-amber-200 sm:justify-self-end">Doldur <ArrowRight size={15} /></button>
+                          <button onClick={() => { setSelectedTemplate(template); window.history.pushState({ isgView: 'editor' }, ''); setCurrentView('editor'); }} className="premium-fill-button flex min-h-10 items-center justify-center gap-2 rounded-lg bg-amber-300 px-4 text-xs font-bold text-[#111b22] transition-colors hover:bg-amber-200 sm:justify-self-end">Doldur <ArrowRight size={15} /></button>
                         </motion.article>
                       ))}
                     </AnimatePresence>

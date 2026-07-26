@@ -159,3 +159,91 @@ select {
 .workspace-page .text-slate-500 {
   @apply text-slate-400;
 }
+
+.premium-dashboard {
+  position: relative;
+}
+
+.premium-sidebar,
+.premium-document-list {
+  position: relative;
+  isolation: isolate;
+  background-image:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.045), transparent 38%),
+    linear-gradient(180deg, rgba(27, 46, 56, 0.98), rgba(17, 30, 37, 0.98));
+  box-shadow:
+    0 28px 70px rgba(3, 10, 13, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.premium-sidebar::before,
+.premium-document-list::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: 0 12% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.72), transparent);
+  pointer-events: none;
+}
+
+.premium-search {
+  box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.015);
+}
+
+.premium-search:focus-within {
+  box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.18), 0 0 0 3px rgba(250, 204, 21, 0.08);
+}
+
+.premium-task {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-task[aria-pressed='true'] {
+  box-shadow: 0 8px 22px rgba(250, 204, 21, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.premium-document-row {
+  position: relative;
+}
+
+.premium-document-row::before {
+  content: '';
+  position: absolute;
+  inset: 18% auto 18% 0;
+  width: 2px;
+  background: #facc15;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.premium-document-row:hover::before {
+  opacity: 1;
+}
+
+.premium-file-icon {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 18px rgba(0, 0, 0, 0.16);
+  transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.premium-document-row:hover .premium-file-icon {
+  color: #facc15;
+  border-color: rgba(250, 204, 21, 0.35);
+  transform: translateY(-1px);
+}
+
+.premium-fill-button {
+  box-shadow: 0 8px 20px rgba(250, 204, 21, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.premium-fill-button:hover {
+  box-shadow: 0 10px 26px rgba(250, 204, 21, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-file-icon,
+  .premium-document-row::before {
+    transition: none;
+  }
+}
