@@ -151,8 +151,7 @@ const App = () => {
   const handleAuthSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
     setCurrentView(isAdminRole(loggedInUser.role) ? 'admin' : 'dashboard');
-    setShowSplash(true);
-    setTimeout(() => setShowSplash(false), 5000);
+    setShowSplash(false);
   };
 
   const handleLogout = () => {
@@ -305,58 +304,35 @@ const App = () => {
 
             {currentView === 'dashboard' && (
               <>
-            <section className="mb-6 sm:mb-8 overflow-hidden rounded-xl sm:rounded-2xl border border-white/15 bg-[#22313b]/82 shadow-[0_24px_70px_rgba(4,10,14,0.18)] backdrop-blur-xl">
-              <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
-                <div className="relative p-5 sm:p-8 lg:p-10">
-                  <div className="absolute inset-y-0 right-0 hidden w-px bg-white/10 lg:block" />
-                  <h1 className="text-2xl font-black tracking-tight text-white sm:text-4xl">Merhaba, {user.name.split(' ')[0]}</h1>
-                  <p className="mt-3 max-w-lg text-sm leading-6 text-[#aebbc5]">Sahadaki işinizi seçin, uygun dokümanı bulun ve düzenlemeye doğrudan başlayın.</p>
-                  <div className="relative z-10 mt-5 sm:mt-7 flex min-h-12 sm:min-h-14 items-center overflow-hidden rounded-lg sm:rounded-xl border border-white/15 bg-[#17242c]/80 shadow-inner focus-within:border-amber-400/70">
+            <section className="mb-5 overflow-hidden rounded-xl border border-white/15 bg-[#22313b]/82 shadow-[0_24px_70px_rgba(4,10,14,0.18)] backdrop-blur-xl sm:mb-6">
+              <div className="grid lg:grid-cols-[1fr_auto] lg:items-stretch">
+                <div className="relative p-5 sm:p-7 lg:p-8">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-amber-300">Doküman çalışma alanı</p>
+                  <div className="mt-2 flex flex-wrap items-end justify-between gap-2"><h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">Ne hazırlıyorsunuz, {user.name.split(' ')[0]}?</h1><span className="text-xs text-[#91a3af]">{filteredTemplates.length} belge hazır</span></div>
+                  <div className="relative z-10 mt-5 flex min-h-12 items-center overflow-hidden rounded-lg border border-white/15 bg-[#17242c]/80 shadow-inner focus-within:border-amber-400/70 sm:min-h-14">
                     <Search className="ml-4 h-5 w-5 shrink-0 text-amber-300" />
-                    <input type="search" placeholder="Doküman adı veya sektör ara" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent px-4 py-4 text-sm font-medium text-white placeholder-[#71818d] focus:outline-none"/>
+                    <input type="search" placeholder="Örn. risk analizi, acil durum planı, eğitim tutanağı" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full min-w-0 bg-transparent px-4 py-4 text-sm font-medium text-white placeholder-[#71818d] focus:outline-none"/>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 divide-x divide-white/10 bg-[#19272f]/65 lg:grid-cols-1 lg:divide-x-0 lg:divide-y">
-                  <div className="flex min-w-0 items-center justify-center gap-3 p-3 sm:justify-start sm:p-5 lg:px-8"><FolderOpen className="hidden h-5 w-5 text-cyan-300 sm:block" /><div className="min-w-0"><strong className="block text-lg font-black text-white sm:text-xl">{archiveTemplates.length}</strong><span className="block truncate text-[9px] text-[#8fa0ac] sm:text-xs">Hazır şablon</span></div></div>
-                  <div className="flex min-w-0 items-center justify-center gap-3 p-3 sm:justify-start sm:p-5 lg:px-8"><Briefcase className="hidden h-5 w-5 text-amber-300 sm:block" /><div className="min-w-0"><strong className="block text-lg font-black text-white sm:text-xl">{uniqueCategories.length}</strong><span className="block truncate text-[9px] text-[#8fa0ac] sm:text-xs">Uzmanlık alanı</span></div></div>
-                  <div className="flex min-w-0 items-center justify-center gap-3 p-3 sm:justify-start sm:p-5 lg:px-8"><CheckCircle2 className="hidden h-5 w-5 text-emerald-300 sm:block" /><div className="min-w-0"><strong className="block text-lg font-black text-white sm:text-xl">%100</strong><span className="block truncate text-[9px] text-[#8fa0ac] sm:text-xs">Düzenlenebilir</span></div></div>
+                <div className="grid grid-cols-3 divide-x divide-white/10 border-t border-white/10 bg-[#19272f]/65 lg:w-72 lg:border-l lg:border-t-0">
+                  <div className="flex min-w-0 flex-col items-center justify-center p-3 text-center"><strong className="text-lg font-black text-white">{archiveTemplates.length}</strong><span className="text-[9px] text-[#8fa0ac] sm:text-[10px]">Belge</span></div>
+                  <div className="flex min-w-0 flex-col items-center justify-center p-3 text-center"><strong className="text-lg font-black text-white">{uniqueCategories.length}</strong><span className="text-[9px] text-[#8fa0ac] sm:text-[10px]">Sektör</span></div>
+                  <div className="flex min-w-0 flex-col items-center justify-center p-3 text-center"><CheckCircle2 className="mb-1 h-5 w-5 text-emerald-300"/><span className="text-[9px] text-[#8fa0ac] sm:text-[10px]">Hazır</span></div>
                 </div>
               </div>
-            </section>
-
-            <section className="mb-7 rounded-xl border border-amber-300/20 bg-[#19272f]/90 p-4 shadow-[0_18px_45px_rgba(4,10,14,0.16)] sm:p-5" aria-labelledby="quick-start-title">
-              <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-300 text-[#16222a]"><Compass size={20} /></span>
-                <div>
-                  <h2 id="quick-start-title" className="text-base font-bold text-white sm:text-lg">İlk dokümanınızı 3 adımda hazırlayın</h2>
-                  <p className="mt-1 text-xs leading-5 text-[#9eacb6] sm:text-sm">Teknik bilginiz olmasa da ilerleyebilirsiniz. Sistem amacınıza uygun belgeyi bulur ve yalnızca doldurmanız gereken alanları açar.</p>
-                </div>
-              </div>
-              <ol className="mt-4 grid gap-2 sm:grid-cols-3">
-                {[
-                  { icon: Briefcase, title: 'Sektörünüzü seçin', text: 'Çalıştığınız iş koluna dokunun.' },
-                  { icon: PenLine, title: 'Bilgilerinizi girin', text: 'Zorunlu alanlardan başlayın.' },
-                  { icon: Download, title: 'Belgenizi oluşturun', text: 'Sistem düzenlenebilir dosyayı hazırlar.' }
-                ].map((step, index) => (
-                  <li key={step.title} className="flex min-w-0 items-start gap-3 rounded-lg border border-white/8 bg-white/[0.025] p-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-[#10171d] text-xs font-black text-amber-300">{index + 1}</span>
-                    <span className="min-w-0"><strong className="flex items-center gap-1.5 text-xs font-semibold text-white sm:text-sm"><step.icon size={14} className="text-cyan-300" />{step.title}</strong><span className="mt-1 block text-[11px] leading-4 text-[#8999a5]">{step.text}</span></span>
-                  </li>
-                ))}
-              </ol>
             </section>
 
             <section className="mb-7" aria-labelledby="task-picker-title">
               <div className="mb-3 flex items-end justify-between gap-3">
-                <div><h2 id="task-picker-title" className="text-lg font-bold text-white">Bugün ne hazırlamanız gerekiyor?</h2><p className="text-sm text-[#93a2ad]">Bilmiyorsanız amacınızı seçin, uygun belgeleri biz daraltalım.</p></div>
+                <div><h2 id="task-picker-title" className="text-base font-bold text-white sm:text-lg">Doküman türü</h2></div>
                 {selectedTask && <button onClick={() => setSelectedTask(null)} className="shrink-0 text-xs font-semibold text-amber-300 hover:underline">Tümünü göster</button>}
               </div>
               <div className="-mx-3 flex snap-x gap-2 overflow-x-auto px-3 pb-2 scrollbar-hidden sm:mx-0 sm:grid sm:grid-cols-4 sm:px-0">
                 {[
-                  { id: 'risk', icon: AlertTriangle, title: 'Riskleri değerlendireceğim', text: 'Risk analizi ve PKD' },
-                  { id: 'emergency', icon: ShieldAlert, title: 'Acil duruma hazırlanacağım', text: 'Plan, yangın ve kaza' },
-                  { id: 'training', icon: GraduationCap, title: 'Eğitim veya görevlendirme', text: 'Tutanak, atama ve talimat' },
-                  { id: 'control', icon: ClipboardCheck, title: 'Saha kontrolü yapacağım', text: 'Form, takip ve çizelge' }
+                  { id: 'risk', icon: AlertTriangle, title: 'Risk değerlendirme', text: 'Risk analizi ve PKD' },
+                  { id: 'emergency', icon: ShieldAlert, title: 'Acil durum', text: 'Plan, yangın ve kaza' },
+                  { id: 'training', icon: GraduationCap, title: 'Eğitim ve görevlendirme', text: 'Tutanak, atama ve talimat' },
+                  { id: 'control', icon: ClipboardCheck, title: 'Saha kontrolü', text: 'Form, takip ve çizelge' }
                 ].map(task => (
                   <button key={task.id} onClick={() => setSelectedTask(current => current === task.id ? null : task.id)} className={`w-[220px] shrink-0 snap-start rounded-lg border p-3 text-left transition-colors sm:w-auto ${selectedTask === task.id ? 'border-amber-300 bg-amber-300/12' : 'border-white/10 bg-[#1b2a33]/80 hover:border-white/20'}`} aria-pressed={selectedTask === task.id}>
                     <task.icon size={19} className={selectedTask === task.id ? 'text-amber-300' : 'text-cyan-300'} />
@@ -374,7 +350,7 @@ const App = () => {
                className="mb-9 w-full"
             >
               <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
-                <div><h2 className="text-lg font-bold text-[#f8fafc]">Sektörler</h2><p className="text-sm text-[#93a2ad]">İçeriği çalışma alanına göre filtreleyin</p></div>
+                <div><h2 className="text-base font-bold text-[#f8fafc] sm:text-lg">Sektör</h2></div>
                 {selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 hover:underline">Filtreyi kaldır</button>}
               </div>
 
@@ -430,7 +406,7 @@ const App = () => {
                className="w-full relative overflow-hidden"
             >
               <div className="flex items-end justify-between gap-3 mb-4 relative z-10">
-                <div><h2 className="text-lg font-bold text-[#f8fafc]">Doküman arşivi</h2><p className="text-sm text-[#93a2ad]">{filteredTemplates.length} düzenlenebilir şablon</p></div>
+                <div><h2 className="text-base font-bold text-[#f8fafc] sm:text-lg">Belgeler</h2><p className="text-xs text-[#93a2ad]">{filteredTemplates.length} sonuç</p></div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 relative z-10">
@@ -482,7 +458,7 @@ const App = () => {
                             className="flex items-center gap-1.5 rounded-md bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-600 dark:text-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors"
                             title="Dokümanı düzenle"
                           >
-                            Belgeyi Aç <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
+                            Doldurmaya Başla <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                           </button>
                         </div>
                       </div>
