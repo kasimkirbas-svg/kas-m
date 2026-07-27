@@ -268,23 +268,23 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
                 { icon: <Zap />, title: "Enerji Santralleri", desc: "Yüksek gerilim, RES/GES/HES ve enerji işletme güvenliği dokümanları.", video: "enerji.mp4" },
                 { icon: <Factory />, title: "Fabrikalar ve İmalathaneler", desc: "Makine güvenliği, LOTO, üretim sahası ve bakım süreçleri.", video: "fabrika.mp4" },
                 { icon: <UtensilsCrossed />, title: "Gıda Fabrikaları", desc: "Hijyen, sanitasyon, soğuk zincir ve gıda üretim güvenliği.", video: "gida.mp4", poster: "gida-poster.jpg" },
-                { icon: <Plane />, title: "Hava Limanları", desc: "Apron, hangar, yer hizmetleri ve havacılık operasyon güvenliği.", video: "40353-425442466_medium.mp4" },
-                { icon: <HardHat />, title: "İnşaat ve Tersaneler", desc: "Yüksekte çalışma, iskele, iş makineleri ve tersane operasyonları.", video: "209883_medium.mp4" },
-                { icon: <FlaskConical />, title: "Kimya Fabrikası", desc: "Kimyasal maruziyet, proses, depolama ve patlama güvenliği." },
-                { icon: <Ship />, title: "Liman İşletmeciliği", desc: "Rıhtım, yükleme, tahliye ve liman saha operasyonları." },
-                { icon: <Truck />, title: "Lojistik ve Taşımacılık", desc: "Yük bağlama, taşıma, güzergâh ve sevkiyat güvenliği." },
-                { icon: <Pickaxe />, title: "Maden İşletmeleri", desc: "Yer altı ve açık ocak çalışmalarına yönelik İSG dokümanları." },
-                { icon: <Activity />, title: "Metal ve Döküm", desc: "Sıcak metal, döküm, pres ve ağır üretim süreçleri." },
-                { icon: <Building2 />, title: "Otel, Bina ve Hastaneler", desc: "Bina işletimi, sağlık tesisleri ve hizmet alanı güvenliği." },
-                { icon: <Briefcase />, title: "Şirketler ve Ofisler", desc: "Ofis, küçük işletme ve idari çalışma alanı dokümanları." },
-                { icon: <Trees />, title: "Tarım, Hayvancılık ve Ormancılık", desc: "Tarım makineleri, pestisit, hayvancılık ve orman işleri." },
+                { icon: <Plane />, title: "Hava Limanları", desc: "Apron, hangar, yer hizmetleri ve havacılık operasyon güvenliği." },
+                { icon: <HardHat />, title: "İnşaat ve Tersaneler", desc: "Yüksekte çalışma, iskele, iş makineleri ve tersane operasyonları." },
+                { icon: <FlaskConical />, title: "Kimya Fabrikası", desc: "Kimyasal maruziyet, proses, depolama ve patlama güvenliği.", video: "kimya.mp4" },
+                { icon: <Ship />, title: "Liman İşletmeciliği", desc: "Rıhtım, yükleme, tahliye ve liman saha operasyonları.", video: "liman.mp4" },
+                { icon: <Truck />, title: "Lojistik ve Taşımacılık", desc: "Yük bağlama, taşıma, güzergâh ve sevkiyat güvenliği.", video: "lojistik.mp4" },
+                { icon: <Pickaxe />, title: "Maden İşletmeleri", desc: "Yer altı ve açık ocak çalışmalarına yönelik İSG dokümanları.", video: "maden.mp4" },
+                { icon: <Activity />, title: "Metal ve Döküm", desc: "Sıcak metal, döküm, pres ve ağır üretim süreçleri.", video: "277105_medium.mp4" },
+                { icon: <Building2 />, title: "Otel, Bina ve Hastaneler", desc: "Bina işletimi, sağlık tesisleri ve hizmet alanı güvenliği.", video: "otel.mp4" },
+                { icon: <Briefcase />, title: "Şirketler ve Ofisler", desc: "Ofis, küçük işletme ve idari çalışma alanı dokümanları.", video: "sirketler.mp4" },
+                { icon: <Trees />, title: "Tarım, Hayvancılık ve Ormancılık", desc: "Tarım makineleri, pestisit, hayvancılık ve orman işleri.", video: "tarim.mp4" },
                 { icon: <FileText />, title: "Standart Dokümanlar", desc: "Tüm işyerlerinde kullanılan ortak İSG form ve kayıtları.", video: "standart.mp4", poster: "standart-poster.jpg" }
               ].map((item, i) => (
                <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: Math.min(i*0.04, 0.28), duration: 0.5 }} className="group relative flex h-[300px] flex-col overflow-hidden rounded-lg border border-slate-300 bg-[#132730] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.35)] transition-colors hover:border-yellow-500/40 dark:border-white/10">
-                  {item.video ? <video autoPlay loop muted playsInline preload="metadata" poster={item.poster ? `/${item.poster}` : undefined} className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-105">
+                  {item.video ? <video autoPlay loop muted playsInline preload="metadata" poster={item.poster ? `/${item.poster}` : undefined} className="absolute inset-0 h-full w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105 sm:opacity-80">
                       <source src={`/${item.video}`} type="video/mp4" />
                     </video> : <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(34,211,238,0.18),transparent_34%),linear-gradient(145deg,#18343f,#0d1b22)]" />}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#132730]/95 via-[#132730]/70 to-transparent group-hover:via-[#17313b]/55 transition-all duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#132730]/85 via-[#132730]/35 to-transparent transition-all duration-500 group-hover:via-[#17313b]/40 sm:from-[#132730]/90 sm:via-[#132730]/55"></div>
                   
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md border border-white/15 bg-[#1a3540]/90 text-amber-300 backdrop-blur-md [&>svg]:h-6 [&>svg]:w-6">{item.icon}</div>

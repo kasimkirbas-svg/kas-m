@@ -91,7 +91,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
   return (
     <div className="light-app-shell min-h-screen overflow-x-hidden bg-[#16222a] text-[#f7f7f5] font-sans selection:bg-[#e5b82c]/30 relative">
-      <header className="fixed inset-x-0 top-0 z-50 h-16 px-3 sm:h-[72px] sm:px-8 flex items-center justify-between border-b border-white/10 bg-[#111b22]/88 backdrop-blur-xl pointer-events-none sm:bg-[#111b22]/55">
+      <header className={`fixed inset-x-0 top-0 z-50 h-16 px-3 sm:h-[72px] sm:px-8 flex items-center justify-between pointer-events-none ${currentView === 'dashboard' ? 'border-b border-transparent bg-transparent' : 'border-b border-white/10 bg-[#111b22]/88 backdrop-blur-xl sm:bg-[#111b22]/55'}`}>
         <button
           onClick={() => navigate("dashboard")}
           className="pointer-events-auto flex items-center gap-3 group"

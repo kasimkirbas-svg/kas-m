@@ -151,12 +151,19 @@ const App = () => {
 
   const getCategoryVideo = (categoryName: string) => {
     const lower = categoryName.toLocaleLowerCase('tr');
+    if (lower.includes('tüm sektörler')) return '/standart.mp4';
     if (lower.includes('enerji')) return '/enerji.mp4';
     if (lower.includes('gıda')) return '/gida.mp4';
     if (lower.includes('fabrika') || lower.includes('imalat')) return '/fabrika.mp4';
     if (lower.includes('standart')) return '/standart.mp4';
-    if (lower.includes('inşaat') || lower.includes('tersane')) return '/209883_medium.mp4';
-    if (lower.includes('hava')) return '/40353-425442466_medium.mp4';
+    if (lower.includes('kimya')) return '/kimya.mp4';
+    if (lower.includes('liman')) return '/liman.mp4';
+    if (lower.includes('lojistik')) return '/lojistik.mp4';
+    if (lower.includes('maden')) return '/maden.mp4';
+    if (lower.includes('metal') || lower.includes('döküm')) return '/277105_medium.mp4';
+    if (lower.includes('otel') || lower.includes('bina') || lower.includes('hastane')) return '/otel.mp4';
+    if (lower.includes('şirket') || lower.includes('ofis')) return '/sirketler.mp4';
+    if (lower.includes('tarım') || lower.includes('hayvancılık') || lower.includes('orman')) return '/tarim.mp4';
     return null;
   };
 
@@ -235,17 +242,15 @@ const App = () => {
              {currentView === 'dashboard' && <>
                <AnimatePresence mode="wait">
                  {getCategoryVideo(selectedCategory || 'tüm sektörler') &&
-                 <motion.video key={`workspace-${selectedCategory || 'all-sectors'}`} autoPlay loop muted playsInline preload="metadata" poster={getCategoryImage(selectedCategory || 'tüm sektörler')} aria-hidden="true" initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 0.62, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.65 }} className="absolute inset-x-0 bottom-0 top-16 h-[calc(100%-4rem)] w-full object-cover sm:top-[72px] sm:h-[calc(100%-72px)]">
+                 <motion.video key={`workspace-${selectedCategory || 'all-sectors'}`} autoPlay loop muted playsInline preload="auto" poster={getCategoryImage(selectedCategory || 'tüm sektörler')} aria-hidden="true" initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 0.84, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.65 }} className="absolute inset-0 h-full w-full object-cover">
                    <source src={getCategoryVideo(selectedCategory || 'tüm sektörler')!} type="video/mp4" />
                  </motion.video>
                  }
                </AnimatePresence>
-               <div className="absolute inset-x-0 bottom-0 top-16 bg-[#071218]/35 sm:top-[72px]"></div>
-               <div className="absolute inset-x-0 bottom-0 top-16 bg-[linear-gradient(90deg,rgba(7,18,24,0.12),rgba(7,18,24,0.52)_50%,rgba(7,18,24,0.12))] sm:top-[72px]"></div>
+               <div className="absolute inset-0 bg-[#071218]/15 sm:bg-[#071218]/25"></div>
+               <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,18,24,0.04),rgba(7,18,24,0.24)_50%,rgba(7,18,24,0.04))] sm:bg-[linear-gradient(90deg,rgba(7,18,24,0.08),rgba(7,18,24,0.38)_50%,rgba(7,18,24,0.08))]"></div>
              </>}
-             <div className="workspace-ambient absolute inset-0 overflow-hidden"></div>
-             <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.035)_0.7px,transparent_0.7px)] bg-[size:18px_18px] opacity-40"></div>
-             <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#36505d]/30 to-transparent"></div>
+             {currentView !== 'dashboard' && <><div className="workspace-ambient absolute inset-0 overflow-hidden"></div><div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.035)_0.7px,transparent_0.7px)] bg-[size:18px_18px] opacity-40"></div><div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#36505d]/30 to-transparent"></div></>}
           </div>
 
             <div className="w-full max-w-[1240px] mx-auto px-3 sm:px-6 lg:px-8 pb-24 sm:pb-12 pt-3 sm:pt-7 relative z-10 transition-all duration-700 fade-in">
