@@ -104,7 +104,7 @@ const App = () => {
   }, [currentView, user]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [showAllCategories, setShowAllCategories] = useState(true);
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const categoryMenuRef = React.useRef<HTMLDivElement>(null);
   const [selectedTask, setSelectedTask] = useState<string | null>(null);
@@ -362,7 +362,7 @@ const App = () => {
                     <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300"><span className="flex h-8 w-8 items-center justify-center rounded-md border border-white/15 bg-black/25 text-cyan-200">{selectedCategory ? getCategoryIcon(selectedCategory) : <FolderOpen size={17} />}</span>{selectedCategory || 'Tüm sektörler'}</div>
                     <div className="mt-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
                       <div><h1 className="text-2xl font-black text-white">Hazırlamak istediğiniz belgeyi seçin</h1><p className="mt-1 text-sm text-slate-300">İş türünü veya sektörü seçin; belgeyi doldurmaya hemen başlayın.</p></div>
-                      {(selectedTask || selectedCategory || showAllCategories || searchQuery) && <button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setShowAllCategories(false); setSearchQuery(''); }} className="min-h-10 shrink-0 text-left text-xs font-semibold text-amber-300 hover:text-white sm:text-right">Filtreleri temizle</button>}
+                      {(selectedTask || selectedCategory || searchQuery) && <button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setShowAllCategories(true); setSearchQuery(''); }} className="min-h-10 shrink-0 text-left text-xs font-semibold text-amber-300 hover:text-white sm:text-right">Filtreleri temizle</button>}
                     </div>
 
                     <div className="mt-5 grid grid-cols-2 gap-2 lg:grid-cols-4">
@@ -387,7 +387,7 @@ const App = () => {
                           <ChevronDown size={17} className={`ml-2 shrink-0 text-amber-300 transition-transform ${categoryMenuOpen ? 'rotate-180' : ''}`} />
                         </button>
                         <AnimatePresence>
-                          {categoryMenuOpen && <motion.div role="listbox" aria-label="Sektör seç" initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }} className="absolute right-0 top-[calc(100%+0.5rem)] z-30 max-h-72 w-full min-w-64 overflow-y-auto rounded-lg border border-white/10 bg-[#111b22]/98 p-1.5 shadow-[0_20px_45px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
+                          {categoryMenuOpen && <motion.div role="listbox" aria-label="Sektör seç" initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }} className="absolute right-0 top-[calc(100%+0.5rem)] z-30 grid max-h-[min(60vh,28rem)] w-full min-w-64 touch-pan-y grid-cols-1 gap-1 overflow-y-auto overscroll-contain rounded-lg border border-white/10 bg-[#111b22]/98 p-1.5 shadow-[0_20px_45px_rgba(0,0,0,0.42)] backdrop-blur-2xl md:max-h-none md:w-[34rem] md:grid-cols-2 md:overflow-visible">
                             {[null, ...uniqueCategories].map(category => {
                               const active = selectedCategory === category;
                               return <button key={category || 'all'} type="button" role="option" aria-selected={active} onClick={() => { setSelectedCategory(category); setShowAllCategories(category === null); setCategoryMenuOpen(false); }} className={`flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sm transition-colors ${active ? 'bg-amber-300 text-[#111b22]' : 'text-slate-200 hover:bg-white/10 hover:text-white'}`}>
