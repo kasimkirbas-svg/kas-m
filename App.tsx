@@ -137,9 +137,10 @@ const App = () => {
   const getCategoryImage = (categoryName: string) => {
     const lower = categoryName.toLocaleLowerCase('tr');
     const base = 'https://images.unsplash.com/';
+    if (lower.includes('gıda')) return '/gida-poster.jpg';
+    if (lower.includes('standart')) return '/standart-poster.jpg';
     if (lower.includes('enerji')) return `${base}photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1600&q=84`;
     if (lower.includes('fabrika') || lower.includes('imalat')) return `${base}photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1600&q=84`;
-    if (lower.includes('gıda')) return `${base}photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1600&q=84`;
     if (lower.includes('hava')) return `${base}photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=84`;
     if (lower.includes('liman') || lower.includes('lojistik')) return `${base}photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=84`;
     if (lower.includes('maden')) return `${base}photo-1578319439584-104c94d37305?auto=format&fit=crop&w=1600&q=84`;
@@ -151,15 +152,12 @@ const App = () => {
   const getCategoryVideo = (categoryName: string) => {
     const lower = categoryName.toLocaleLowerCase('tr');
     if (lower.includes('enerji')) return '/enerji.mp4';
-    if (lower.includes('fabrika') || lower.includes('imalat') || lower.includes('gıda') || lower.includes('kimya') || lower.includes('metal')) return '/fabrika.mp4';
+    if (lower.includes('gıda')) return '/gida.mp4';
+    if (lower.includes('fabrika') || lower.includes('imalat')) return '/fabrika.mp4';
+    if (lower.includes('standart')) return '/standart.mp4';
     if (lower.includes('inşaat') || lower.includes('tersane')) return '/209883_medium.mp4';
     if (lower.includes('hava')) return '/40353-425442466_medium.mp4';
-    if (lower.includes('liman') || lower.includes('lojistik')) return '/277105_medium.mp4';
-    if (lower.includes('maden')) return '/292294_medium.mp4';
-    if (lower.includes('tarım') || lower.includes('orman')) return '/67467-522170635_medium.mp4';
-    if (lower.includes('otel') || lower.includes('hastane')) return '/159052-818026310_medium.mp4';
-    if (lower.includes('şirket') || lower.includes('ofis')) return '/13232-246463976_medium.mp4';
-    return '/19024-298313254_medium.mp4';
+    return null;
   };
 
   const handleAuthSuccess = (loggedInUser: User) => {
@@ -236,9 +234,11 @@ const App = () => {
              <div className="absolute inset-0 bg-[#16222a]"></div>
              {currentView === 'dashboard' && <>
                <AnimatePresence mode="wait">
+                 {getCategoryVideo(selectedCategory || 'tüm sektörler') &&
                  <motion.video key={`workspace-${selectedCategory || 'all-sectors'}`} autoPlay loop muted playsInline preload="metadata" poster={getCategoryImage(selectedCategory || 'tüm sektörler')} aria-hidden="true" initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 0.62, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.65 }} className="absolute inset-x-0 bottom-0 top-16 h-[calc(100%-4rem)] w-full object-cover sm:top-[72px] sm:h-[calc(100%-72px)]">
-                   <source src={getCategoryVideo(selectedCategory || 'tüm sektörler')} type="video/mp4" />
+                   <source src={getCategoryVideo(selectedCategory || 'tüm sektörler')!} type="video/mp4" />
                  </motion.video>
+                 }
                </AnimatePresence>
                <div className="absolute inset-x-0 bottom-0 top-16 bg-[#071218]/35 sm:top-[72px]"></div>
                <div className="absolute inset-x-0 bottom-0 top-16 bg-[linear-gradient(90deg,rgba(7,18,24,0.12),rgba(7,18,24,0.52)_50%,rgba(7,18,24,0.12))] sm:top-[72px]"></div>

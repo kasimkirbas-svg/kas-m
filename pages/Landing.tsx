@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin, Menu, X, Users, Download, MonitorSmartphone, Eye, HardDriveDownload, LogIn, UserPlus } from 'lucide-react';
+import { Shield, FileText, Zap, ChevronRight, Activity, Cpu, ShieldAlert, Target, Search, ChevronDown, CheckCircle2, Factory, HardHat, Facebook, Twitter, Instagram, Linkedin, Menu, X, Users, Download, MonitorSmartphone, Eye, HardDriveDownload, LogIn, UserPlus, Plane, Ship, Truck, Pickaxe, Building2, Briefcase, Trees, UtensilsCrossed, FlaskConical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface LandingProps {
@@ -263,24 +263,33 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
             <p className="text-slate-600 dark:text-slate-400 font-light text-lg">Her endüstrinin dinamiğine uygun güvenli altyapı protokolleri</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               {[ 
-                { icon: <Factory className="w-8 h-8 text-[#FFD700]"/>, title: "İmalat Tesisleri", desc: "Ağır sanayi ve imalathaneler için sıfır toleranslı makine güvenlik formları, LOTO operasyonları.", category: "Endüstri 4.0", video: "fabrika.mp4" },
-                { icon: <Zap className="w-8 h-8 text-cyan-300"/>, title: "Enerji Santralleri", desc: "Yüksek gerilim işlemleri, RES/GES risk rejimleri ve trafo bakım talimatnameleri.", category: "Kritik Tesis", video: "enerji.mp4" },
-                { icon: <HardHat className="w-8 h-8 text-amber-300"/>, title: "İnşaat Protokolleri", desc: "Yüksekte çalışma onayı, iskele kontrolleri, iş makinesi günlük fişleri, genel durum formları.", category: "Ağır Risk", video: "209883_medium.mp4" },
-                { icon: <Activity className="w-8 h-8 text-sky-300"/>, title: "Havacılık Tesisleri", desc: "Apron risk değerlendirmeleri, jet yakıtı depolama denetimleri ve hangarlardaki rejimleri.", category: "Kritik Operasyon", video: "40353-425442466_medium.mp4" }
+                { icon: <Zap />, title: "Enerji Santralleri", desc: "Yüksek gerilim, RES/GES/HES ve enerji işletme güvenliği dokümanları.", video: "enerji.mp4" },
+                { icon: <Factory />, title: "Fabrikalar ve İmalathaneler", desc: "Makine güvenliği, LOTO, üretim sahası ve bakım süreçleri.", video: "fabrika.mp4" },
+                { icon: <UtensilsCrossed />, title: "Gıda Fabrikaları", desc: "Hijyen, sanitasyon, soğuk zincir ve gıda üretim güvenliği.", video: "gida.mp4", poster: "gida-poster.jpg" },
+                { icon: <Plane />, title: "Hava Limanları", desc: "Apron, hangar, yer hizmetleri ve havacılık operasyon güvenliği.", video: "40353-425442466_medium.mp4" },
+                { icon: <HardHat />, title: "İnşaat ve Tersaneler", desc: "Yüksekte çalışma, iskele, iş makineleri ve tersane operasyonları.", video: "209883_medium.mp4" },
+                { icon: <FlaskConical />, title: "Kimya Fabrikası", desc: "Kimyasal maruziyet, proses, depolama ve patlama güvenliği." },
+                { icon: <Ship />, title: "Liman İşletmeciliği", desc: "Rıhtım, yükleme, tahliye ve liman saha operasyonları." },
+                { icon: <Truck />, title: "Lojistik ve Taşımacılık", desc: "Yük bağlama, taşıma, güzergâh ve sevkiyat güvenliği." },
+                { icon: <Pickaxe />, title: "Maden İşletmeleri", desc: "Yer altı ve açık ocak çalışmalarına yönelik İSG dokümanları." },
+                { icon: <Activity />, title: "Metal ve Döküm", desc: "Sıcak metal, döküm, pres ve ağır üretim süreçleri." },
+                { icon: <Building2 />, title: "Otel, Bina ve Hastaneler", desc: "Bina işletimi, sağlık tesisleri ve hizmet alanı güvenliği." },
+                { icon: <Briefcase />, title: "Şirketler ve Ofisler", desc: "Ofis, küçük işletme ve idari çalışma alanı dokümanları." },
+                { icon: <Trees />, title: "Tarım, Hayvancılık ve Ormancılık", desc: "Tarım makineleri, pestisit, hayvancılık ve orman işleri." },
+                { icon: <FileText />, title: "Standart Dokümanlar", desc: "Tüm işyerlerinde kullanılan ortak İSG form ve kayıtları.", video: "standart.mp4", poster: "standart-poster.jpg" }
               ].map((item, i) => (
-               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: i*0.1, duration: 0.6 }} className="group relative rounded-3xl overflow-hidden p-8 border border-slate-300 dark:border-white/10 hover:border-yellow-500/30 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col h-[380px]">
-                    <video autoPlay loop muted playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-all duration-700">
+               <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once:true }} transition={{ delay: Math.min(i*0.04, 0.28), duration: 0.5 }} className="group relative flex h-[300px] flex-col overflow-hidden rounded-lg border border-slate-300 bg-[#132730] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.35)] transition-colors hover:border-yellow-500/40 dark:border-white/10">
+                  {item.video ? <video autoPlay loop muted playsInline preload="metadata" poster={item.poster ? `/${item.poster}` : undefined} className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-105">
                       <source src={`/${item.video}`} type="video/mp4" />
-                    </video>
+                    </video> : <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(34,211,238,0.18),transparent_34%),linear-gradient(145deg,#18343f,#0d1b22)]" />}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#132730]/95 via-[#132730]/70 to-transparent group-hover:via-[#17313b]/55 transition-all duration-500"></div>
                   
                   <div className="relative z-10 flex flex-col h-full">
-                    <div className="mb-6 w-16 h-16 rounded-2xl bg-white/80 dark:bg-[#1a3540]/90 border border-slate-300 dark:border-white/10 flex items-center justify-center group-hover:bg-yellow-500/20 group-hover:border-yellow-500/50 backdrop-blur-md transition-all duration-500 group-hover:scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]">{item.icon}</div>
-                    <span className="px-3 py-1 bg-[#18313b]/85 border border-slate-300 dark:border-white/10 backdrop-blur-md text-slate-900 dark:text-white text-[10px] font-black tracking-widest uppercase rounded w-max mb-6 group-hover:border-yellow-500/30 transition-colors">{item.category}</span>
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight drop-shadow-lg group-hover:text-yellow-400 transition-colors">{item.title}</h3>
-                    <p className="text-slate-700 dark:text-slate-300 text-sm font-light leading-relaxed group-hover:text-slate-900 dark:group-hover:text-white transition-colors mt-auto mb-4 drop-shadow-md">{item.desc}</p>
+                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-md border border-white/15 bg-[#1a3540]/90 text-amber-300 backdrop-blur-md [&>svg]:h-6 [&>svg]:w-6">{item.icon}</div>
+                    <h3 className="text-xl font-black text-white mb-3 drop-shadow-lg group-hover:text-yellow-400 transition-colors">{item.title}</h3>
+                    <p className="mt-auto text-sm leading-relaxed text-slate-300 drop-shadow-md">{item.desc}</p>
                   </div>
                </motion.div>
               ))}
