@@ -234,6 +234,15 @@ const App = () => {
            {/* Global single-theme workspace background */}
            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
              <div className="absolute inset-0 bg-[#16222a]"></div>
+             {currentView === 'dashboard' && <>
+               <AnimatePresence mode="wait">
+                 <motion.video key={`workspace-${selectedCategory || 'all-sectors'}`} autoPlay loop muted playsInline preload="metadata" poster={getCategoryImage(selectedCategory || 'tüm sektörler')} aria-hidden="true" initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 0.62, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.65 }} className="absolute inset-x-0 bottom-0 top-16 h-[calc(100%-4rem)] w-full object-cover sm:top-[72px] sm:h-[calc(100%-72px)]">
+                   <source src={getCategoryVideo(selectedCategory || 'tüm sektörler')} type="video/mp4" />
+                 </motion.video>
+               </AnimatePresence>
+               <div className="absolute inset-x-0 bottom-0 top-16 bg-[#071218]/35 sm:top-[72px]"></div>
+               <div className="absolute inset-x-0 bottom-0 top-16 bg-[linear-gradient(90deg,rgba(7,18,24,0.12),rgba(7,18,24,0.52)_50%,rgba(7,18,24,0.12))] sm:top-[72px]"></div>
+             </>}
              <div className="workspace-ambient absolute inset-0 overflow-hidden"></div>
              <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.035)_0.7px,transparent_0.7px)] bg-[size:18px_18px] opacity-40"></div>
              <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#36505d]/30 to-transparent"></div>
@@ -319,11 +328,8 @@ const App = () => {
             {currentView === 'dashboard' && (
               <div className="premium-document-list mx-auto min-w-0 max-w-5xl overflow-hidden rounded-lg border border-white/10 bg-[#1b2a33]/90 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
                 <header className="relative overflow-hidden border-b border-white/10 p-4 sm:p-6">
-                  <motion.img key={`poster-${selectedCategory || 'all-sectors'}`} src={getCategoryImage(selectedCategory || 'tüm sektörler')} alt="" initial={{ opacity: 0 }} animate={{ opacity: 0.62 }} transition={{ duration: 0.35 }} className="absolute inset-0 h-full w-full object-cover object-center" />
                   <AnimatePresence mode="wait">
-                    <motion.video key={selectedCategory || 'all-sectors'} autoPlay loop muted playsInline preload="metadata" poster={getCategoryImage(selectedCategory || 'tüm sektörler')} aria-hidden="true" initial={{ opacity: 0, scale: 1.025 }} animate={{ opacity: 0.72, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }} className="absolute inset-0 h-full w-full object-cover object-center">
-                      <source src={getCategoryVideo(selectedCategory || 'tüm sektörler')} type="video/mp4" />
-                    </motion.video>
+                    <motion.img key={selectedCategory || 'all-sectors'} src={getCategoryImage(selectedCategory || 'tüm sektörler')} alt="" initial={{ opacity: 0, scale: 1.025 }} animate={{ opacity: 0.68, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="absolute inset-0 h-full w-full object-cover object-center" />
                   </AnimatePresence>
                   <div className="absolute inset-0 bg-gradient-to-r from-[#10222b]/95 via-[#10222b]/78 to-[#10222b]/20" />
                   <div className="relative z-10">
