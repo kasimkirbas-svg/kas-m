@@ -352,12 +352,12 @@ const App = () => {
             </AnimatePresence>
 
             {currentView === 'dashboard' && (
-              <div className="premium-document-list mx-auto min-w-0 max-w-5xl overflow-hidden rounded-lg border border-white/10 bg-[#1b2a33]/90 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
-                <header className="relative overflow-hidden border-b border-white/10 p-4 sm:p-6">
+              <div className="premium-document-list mx-auto min-w-0 max-w-5xl rounded-lg border border-white/10 bg-[#1b2a33]/90 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
+                <header className="relative z-20 rounded-t-lg border-b border-white/10 p-4 sm:p-6">
                   <AnimatePresence mode="wait">
-                    <motion.img key={selectedCategory || 'all-sectors'} src={getCategoryImage(selectedCategory || 'tüm sektörler')} alt="" initial={{ opacity: 0, scale: 1.025 }} animate={{ opacity: 0.68, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="absolute inset-0 h-full w-full object-cover object-center" />
+                    {selectedCategory ? <motion.img key={selectedCategory} src={getCategoryImage(selectedCategory)} alt="" initial={{ opacity: 0, scale: 1.025 }} animate={{ opacity: 0.68, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="absolute inset-0 h-full w-full rounded-t-lg object-cover object-center" /> : <motion.div key="all-sectors-ambient" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 overflow-hidden rounded-t-lg bg-[#10242d]"><div className="absolute -inset-10 scale-110 bg-[conic-gradient(from_115deg_at_50%_50%,#10242d,#31515c,#182f39,#6d5a28,#10242d)] opacity-70 blur-2xl" /></motion.div>}
                   </AnimatePresence>
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#10222b]/95 via-[#10222b]/78 to-[#10222b]/20" />
+                  <div className="absolute inset-0 rounded-t-lg bg-gradient-to-r from-[#10222b]/95 via-[#10222b]/78 to-[#10222b]/20" />
                   <div className="relative z-10">
                     <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300"><span className="flex h-8 w-8 items-center justify-center rounded-md border border-white/15 bg-black/25 text-cyan-200">{selectedCategory ? getCategoryIcon(selectedCategory) : <FolderOpen size={17} />}</span>{selectedCategory || 'Tüm sektörler'}</div>
                     <div className="mt-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
@@ -401,7 +401,7 @@ const App = () => {
                   </div>
                 </header>
 
-                <main>
+                <main className="relative z-10 overflow-hidden rounded-b-lg">
                   <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6"><div><h2 className="text-base font-black text-white">Belgeler</h2><p className="mt-0.5 text-[11px] text-slate-500">{selectedCategory || (showAllCategories ? 'Tüm sektörler' : 'Seçim bekleniyor')}</p></div>{(selectedCategory || selectedTask || showAllCategories || searchQuery) && <span className="rounded bg-white/5 px-2.5 py-1.5 text-xs font-bold text-slate-300">{filteredTemplates.length} belge</span>}</div>
 
                   {selectedCategory || selectedTask || showAllCategories || searchQuery ? <div className="divide-y divide-white/[0.07]">
