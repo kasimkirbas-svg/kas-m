@@ -1,7 +1,7 @@
 ﻿/// <reference path="../vendor.d.ts" />
 import React, { useState, useEffect, useRef } from "react";
 import { DocumentField, DocumentTemplate } from "../types";
-import { ArrowLeft, Check, ChevronDown, Download, FileText, Eye, Lightbulb, PencilLine, SlidersHorizontal, Upload } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronDown, Download, FileText, Eye, Lightbulb, SlidersHorizontal, Upload } from "lucide-react";
 import { renderAsync } from "docx-preview";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
@@ -47,22 +47,6 @@ const getCalculatedRiskResult = (score: number, usesFrequency: boolean) => {
 const fitWithin = ({ width, height }: ImageDimensions, maxWidth: number, maxHeight: number): [number, number] => {
   const scale = Math.min(maxWidth / width, maxHeight / height, 1);
   return [Math.max(1, Math.round(width * scale)), Math.max(1, Math.round(height * scale))];
-};
-
-const formatGuidanceValue = (field: DocumentField, value: any) => {
-  if (field.type === 'image') return value ? 'Görsel seçildi' : '';
-  if (!Array.isArray(value)) return String(value || '');
-  if (!value.length) return '';
-  const rows = value.slice(0, 3).map((row: Record<string, any>, index: number) => {
-    const summary = Object.entries(row)
-      .filter(([, entryValue]) => entryValue && !String(entryValue).startsWith('data:image/'))
-      .slice(0, 4)
-      .map(([key, entryValue]) => `${getSubFieldLabel(key)}: ${entryValue}`)
-      .join(' · ');
-    return `${index + 1}. ${summary || 'Satır eklendi, bilgileri bekliyor'}`;
-  });
-  if (value.length > rows.length) rows.push(`+ ${value.length - rows.length} satır daha`);
-  return rows.join('\n');
 };
 
 const constrainImage = (file: File, maxPixels = 1600): Promise<{ dataUrl: string; dimensions: ImageDimensions }> => new Promise((resolve, reject) => {
@@ -147,8 +131,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const activeSection = visibleSections[activeSectionIndex];
   const guidanceField = activeSection?.fields.find(field => field.key === focusedFieldKey) || activeSection?.fields[0];
   const fieldGuidance = guidanceField ? getFieldGuidance(guidanceField) : null;
-  const guidanceValue = guidanceField ? formData[guidanceField.key] : '';
-  const guidanceValueText = guidanceField ? formatGuidanceValue(guidanceField, guidanceValue) : '';
+  const activeFieldIndex = Math.max(0, activeSection?.fields.findIndex(field => field.key === guidanceField?.key) ?? 0);
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
   const requiredFields = visibleFields.filter(isFieldRequired);
   const completedRequiredFields = requiredFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
@@ -448,7 +431,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       </div>
       
       {/* SOL PANEL (Magic Variable Editörü) */}
-      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-[58%] shrink-0 min-h-[calc(100svh-61px)] lg:h-full overflow-y-auto px-3 sm:px-6 lg:px-8 pt-4 pb-24 sm:pt-6 sm:pb-24 lg:py-8 bg-[#16222a] border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
+      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-[55%] shrink-0 min-h-[calc(100svh-61px)] lg:h-full overflow-y-auto px-3 sm:px-6 lg:px-8 pt-4 pb-24 sm:pt-6 sm:pb-24 lg:py-8 bg-[#16222a] border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
         {/* Glow effect on left panel */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
 
@@ -456,7 +439,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           <ArrowLeft size={17} /> Belgelere dön
         </button>
 
-        <div className="mb-5">
+        <div className="mb-4">
            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-400">{template.category}</p>
            <h1 className="mb-2 text-2xl font-bold leading-snug text-white">
              {getDocumentTitle(template.id, template.title)}
@@ -467,10 +450,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            </div>
         </div>
         
-        <nav className="relative z-10 mb-4 grid grid-cols-2 gap-2 sm:flex" aria-label="Belge bölümleri">
+        <nav className="relative z-10 mb-4 flex gap-2 overflow-x-auto pb-1 custom-scrollbar" aria-label="Belge bölümleri">
           {visibleSections.map((section, sectionIndex) => {
             const isActive = section.id === activeSectionId;
-            return <button key={section.id} type="button" onClick={() => setOpenSections({ [section.id]: true })} aria-current={isActive ? 'step' : undefined} className={`flex min-h-11 flex-1 items-center gap-2 rounded-md border px-3 text-left text-xs font-semibold transition-colors ${isActive ? 'border-yellow-400 bg-yellow-400 text-black' : 'border-white/10 bg-white/[0.025] text-slate-400 hover:border-white/20 hover:text-white'}`}><span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded text-[10px] font-black ${isActive ? 'bg-black/15' : 'bg-white/5 text-yellow-400'}`}>{sectionIndex + 1}</span><span className="line-clamp-2">{section.title}</span></button>;
+            return <button key={section.id} type="button" onClick={() => { setOpenSections({ [section.id]: true }); setFocusedFieldKey(null); }} aria-current={isActive ? 'step' : undefined} className={`flex min-h-10 shrink-0 items-center gap-2 rounded-md border px-3 text-left text-xs font-semibold transition-colors ${isActive ? 'border-yellow-400 bg-yellow-400 text-black' : 'border-white/10 bg-white/[0.025] text-slate-400 hover:border-white/20 hover:text-white'}`}><span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded text-[10px] font-black ${isActive ? 'bg-black/15' : 'bg-white/5 text-yellow-400'}`}>{sectionIndex + 1}</span><span>{section.title}</span></button>;
           })}
         </nav>
 
@@ -478,19 +461,22 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           {visibleSections.map((section, sectionIndex) => {
             if (section.id !== activeSectionId) return null;
             const sectionFields = section.fields;
-            return <section key={section.id} className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.025]">
+            return <section key={section.id} className="overflow-hidden rounded-lg border border-white/10 bg-[#192a33] shadow-[0_18px_45px_rgba(0,0,0,0.12)]">
               <div className="flex w-full items-center gap-3 border-b border-white/5 px-4 py-4 text-left">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-yellow-400/10 text-xs font-bold text-yellow-400">{sectionIndex + 1}</span>
-                <span className="min-w-0 flex-1"><strong className="block text-sm font-semibold text-white">{section.title}</strong><span className="block truncate text-[11px] text-slate-500">{section.description}</span></span>
+                <span className="min-w-0 flex-1"><strong className="block text-sm font-semibold text-white">{section.title}</strong><span className="block truncate text-[11px] text-slate-500">{section.description}</span></span><span className="shrink-0 text-[10px] font-semibold text-slate-500">Alan {activeFieldIndex + 1} / {sectionFields.length}</span>
               </div>
-              <div className="grid grid-cols-1 gap-5 px-4 py-5">
-            {sectionFields.map(field => {
+              {guidanceField && fieldGuidance && <div className="border-b border-white/[0.06] bg-[#14242c] px-4 py-3">
+                <div className="flex gap-3"><span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-amber-300/10 text-amber-300"><Lightbulb size={16} /></span><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><p className="text-xs font-bold text-white">Bu alana ne yazılır?</p><span className={`rounded px-1.5 py-0.5 text-[8px] font-bold uppercase ${isFieldRequired(guidanceField) ? 'bg-amber-300 text-[#111b22]' : 'bg-white/5 text-slate-500'}`}>{isFieldRequired(guidanceField) ? 'Zorunlu' : 'İsteğe bağlı'}</span></div><p className="mt-1 text-[11px] leading-5 text-slate-300">{fieldGuidance.instruction}</p><p className="mt-1 text-[10px] leading-4 text-slate-500">{fieldGuidance.example}</p></div></div>
+              </div>}
+              <div className="grid grid-cols-1 gap-5 px-4 py-5 sm:px-5">
+            {sectionFields.filter(field => field.key === guidanceField?.key).map(field => {
               const riskColumnGroups = field.type === 'list' ? getRiskColumnGroups(field.options) : [];
               const riskFactorFields = riskColumnGroups.flatMap(group => [group.probability, group.severity, group.frequency].filter(Boolean));
               const calculatedRiskFields = riskColumnGroups.flatMap(group => [group.score, group.result].filter(Boolean));
               const fieldRequired = isFieldRequired(field);
               return (
-                <div key={field.key} className={`group rounded-md transition-shadow ${guidanceField?.key === field.key ? 'outline outline-1 outline-offset-4 outline-amber-300/20' : ''}`} onFocusCapture={() => setFocusedFieldKey(field.key)}>
+                <div key={field.key} className="group" onFocusCapture={() => setFocusedFieldKey(field.key)}>
                   <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-slate-300 group-focus-within:text-yellow-400 transition-colors">
                     <span className="min-w-0 flex-1">{getFieldLabel(field)}</span>
                     <span className={`shrink-0 text-[9px] font-semibold uppercase ${fieldRequired ? 'text-yellow-400' : 'text-slate-600'}`}>{fieldRequired ? 'Zorunlu' : 'İsteğe bağlı'}</span>
@@ -570,10 +556,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
               );
             })}
               </div>
-              {visibleSections.length > 1 && <div className="flex items-center justify-between gap-3 border-t border-white/5 px-4 py-3">
-                <button type="button" disabled={sectionIndex === 0} onClick={() => setOpenSections({ [visibleSections[sectionIndex - 1].id]: true })} className="min-h-10 px-3 text-xs font-semibold text-slate-400 hover:text-white disabled:invisible">Önceki bölüm</button>
-                {sectionIndex < visibleSections.length - 1 ? <button type="button" onClick={() => setOpenSections({ [visibleSections[sectionIndex + 1].id]: true })} className="min-h-10 rounded-md bg-yellow-400 px-4 text-xs font-bold text-black hover:bg-yellow-300">Sonraki bölüm</button> : <span className="flex items-center gap-2 text-xs font-semibold text-emerald-300"><Check size={15} /> Son bölüm</span>}
-              </div>}
+              <div className="flex items-center justify-between gap-3 border-t border-white/5 px-4 py-3">
+                <button type="button" disabled={activeFieldIndex === 0 && sectionIndex === 0} onClick={() => { if (activeFieldIndex > 0) setFocusedFieldKey(sectionFields[activeFieldIndex - 1].key); else { const previousSection = visibleSections[sectionIndex - 1]; setOpenSections({ [previousSection.id]: true }); setFocusedFieldKey(previousSection.fields[previousSection.fields.length - 1].key); } }} className="flex min-h-10 items-center gap-1.5 px-2 text-xs font-semibold text-slate-400 hover:text-white disabled:invisible"><ArrowLeft size={14} /> Önceki</button>
+                {activeFieldIndex < sectionFields.length - 1 || sectionIndex < visibleSections.length - 1 ? <button type="button" onClick={() => { if (activeFieldIndex < sectionFields.length - 1) setFocusedFieldKey(sectionFields[activeFieldIndex + 1].key); else { const nextSection = visibleSections[sectionIndex + 1]; setOpenSections({ [nextSection.id]: true }); setFocusedFieldKey(nextSection.fields[0].key); } }} className="flex min-h-10 items-center gap-1.5 rounded-md bg-yellow-400 px-4 text-xs font-bold text-black hover:bg-yellow-300">Sonraki <ArrowRight size={14} /></button> : <span className="flex items-center gap-2 text-xs font-semibold text-emerald-300"><Check size={15} /> Tüm alanlar gösterildi</span>}
+              </div>
             </section>;
           })}
         </div>
@@ -588,24 +574,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       </div>
 
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
-      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-[42%] min-h-[calc(100svh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
+      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-[45%] min-h-[calc(100svh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
         <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#111b22]/90 px-4 py-3 sm:px-6">
           <div className="min-w-0"><strong className="block text-sm text-white">Belgede kontrol edin: {visibleSections[activeSectionIndex]?.title || 'Belge'}</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">Soldaki alanı doldurun; değişiklik sağdaki belgeye otomatik işlenir.</span></div>
           <span className="shrink-0 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-2 py-1 text-[9px] font-bold uppercase text-emerald-300">Canlı</span>
         </div>
-        {guidanceField && fieldGuidance && <aside className="shrink-0 border-b border-white/10 bg-[#14242c] px-4 py-3 sm:px-6" aria-label="Alan asistanı">
-          <div className="overflow-hidden rounded-lg border border-white/10 bg-[#1a2d36] shadow-sm">
-            <div className="flex items-center gap-3 border-b border-white/[0.07] px-3 py-2.5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-amber-300/10 text-amber-300"><Lightbulb size={16} /></span>
-              <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-white">{getFieldLabel(guidanceField)}</p><p className="text-[10px] text-slate-500">Alan asistanı</p></div>
-              <span className={`rounded px-2 py-1 text-[9px] font-bold uppercase ${isFieldRequired(guidanceField) ? 'bg-amber-300 text-[#111b22]' : 'bg-white/5 text-slate-400'}`}>{isFieldRequired(guidanceField) ? 'Zorunlu' : 'İsteğe bağlı'}</span>
-            </div>
-            <div className="grid gap-px bg-white/[0.07] sm:grid-cols-2">
-              <div className="bg-[#1a2d36] px-3 py-3"><p className="text-[10px] font-bold uppercase tracking-[0.1em] text-amber-300">Nasıl doldurulur?</p><p className="mt-1 text-[11px] leading-5 text-slate-300">{fieldGuidance.instruction}</p><p className="mt-1.5 border-l-2 border-amber-300/40 pl-2 text-[10px] leading-4 text-slate-500">{fieldGuidance.example}</p></div>
-              <div className="bg-[#1a2d36] px-3 py-3"><p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-cyan-300"><PencilLine size={12} /> Yazdığınız</p>{guidanceValueText ? <p className="mt-1 max-h-24 overflow-auto whitespace-pre-wrap break-words text-xs leading-5 text-white custom-scrollbar">{guidanceValueText}</p> : <p className="mt-1 text-[11px] leading-5 text-slate-500">Soldaki alanı doldurduğunuzda içeriğiniz burada görünür.</p>}</div>
-            </div>
-          </div>
-        </aside>}
         <div ref={previewViewportRef} className="relative flex-1 overflow-auto bg-[#52616a] p-4 custom-scrollbar sm:p-6">
           {loading && <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#1b2d36]/90"><span className="flex items-center gap-3 text-sm font-semibold text-slate-200"><span className="h-5 w-5 animate-spin rounded-full border-2 border-yellow-300/30 border-t-yellow-300" /> Belge hazırlanıyor</span></div>}
           {loadError ? <div className="mx-auto mt-12 max-w-sm rounded-md border border-red-400/20 bg-[#16222a] p-5 text-center text-sm leading-6 text-red-200">{loadError}</div> : <div className="mx-auto origin-top-left" style={{ width: previewWidth * previewScale, height: previewHeight * previewScale }}><div ref={previewRef} className="docx-live-preview origin-top-left text-black shadow-[0_18px_45px_rgba(0,0,0,0.32)]" style={{ width: previewWidth, minHeight: previewHeight, transform: `scale(${previewScale})` }} /></div>}
