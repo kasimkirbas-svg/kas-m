@@ -70,7 +70,6 @@ export const reconcileFieldsWithDocx = (configuredFields: DocumentField[], buffe
   if (!loops.length) return configuredFields;
 
   const loopKeys = new Set(loops.flatMap(loop => loop.fields));
-  const scalarFields = configuredFields.filter(field => field.type !== 'list' && !loopKeys.has(field.key));
   const listFields: DocumentField[] = loops.map(loop => {
     const configured = configuredFields.find(field => field.key === loop.key && field.type === 'list');
     return {
@@ -88,5 +87,11 @@ export const reconcileFieldsWithDocx = (configuredFields: DocumentField[], buffe
     ...field,
     options: field.options?.map(option => option.replace(/^%/, '')),
   }));
-  return [...scalarFields, ...listFields];
+  const listFieldsByKey = new Map(listFields.map(field => [field.key, field]));
+  const orderedFields = configuredFields.flatMap(field => {
+    if (field.type === 'list') return listFieldsByKey.has(field.key) ? [listFieldsByKey.get(field.key)!] : [];
+    return loopKeys.has(field.key) ? [] : [field];
+  });
+  const configuredKeys = new Set(configuredFields.map(field => field.key));
+  return [...orderedFields, ...listFields.filter(field => !configuredKeys.has(field.key))];
 };

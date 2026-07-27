@@ -137,15 +137,15 @@ const App = () => {
   const getCategoryImage = (categoryName: string) => {
     const lower = categoryName.toLocaleLowerCase('tr');
     const base = 'https://images.unsplash.com/';
-    if (lower.includes('enerji')) return `${base}photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=900&q=72`;
-    if (lower.includes('fabrika') || lower.includes('imalat')) return `${base}photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=900&q=72`;
-    if (lower.includes('gıda')) return `${base}photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=72`;
-    if (lower.includes('hava')) return `${base}photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=72`;
-    if (lower.includes('liman') || lower.includes('lojistik')) return `${base}photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=900&q=72`;
-    if (lower.includes('maden')) return `${base}photo-1578319439584-104c94d37305?auto=format&fit=crop&w=900&q=72`;
-    if (lower.includes('metal')) return `${base}photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=72`;
-    if (lower.includes('tarım') || lower.includes('orman')) return `${base}photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=72`;
-    return `${base}photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=900&q=72`;
+    if (lower.includes('enerji')) return `${base}photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('fabrika') || lower.includes('imalat')) return `${base}photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('gıda')) return `${base}photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('hava')) return `${base}photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('liman') || lower.includes('lojistik')) return `${base}photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('maden')) return `${base}photo-1578319439584-104c94d37305?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('metal')) return `${base}photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('tarım') || lower.includes('orman')) return `${base}photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=84`;
+    return `${base}photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=84`;
   };
 
   const handleAuthSuccess = (loggedInUser: User) => {
@@ -303,70 +303,41 @@ const App = () => {
             </AnimatePresence>
 
             {currentView === 'dashboard' && (
-              <div className="premium-dashboard grid items-start gap-4 lg:grid-cols-[296px_minmax(0,1fr)] lg:gap-6">
-                <aside className="premium-sidebar overflow-hidden rounded-xl border border-white/10 bg-[#18272f]/95 shadow-[0_22px_55px_rgba(0,0,0,0.2)] lg:sticky lg:top-24">
-                  <div className="border-b border-white/10 p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300">Yeni belge</p>
-                    <h1 className="mt-2 text-xl font-black text-white">Ne hazırlıyorsunuz?</h1>
-                    <div className="premium-search mt-4 flex min-h-12 items-center rounded-lg border border-white/10 bg-[#101a20] focus-within:border-amber-400/60">
-                      <Search className="ml-3 h-4 w-4 shrink-0 text-amber-300" />
-                      <input type="search" placeholder="Belge ara" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="w-full min-w-0 bg-transparent px-3 py-3 text-sm text-white placeholder-slate-600 outline-none" />
+              <div className="premium-document-list mx-auto min-w-0 max-w-5xl overflow-hidden rounded-lg border border-white/10 bg-[#1b2a33]/90 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
+                <header className="relative overflow-hidden border-b border-white/10 p-4 sm:p-6">
+                  <AnimatePresence mode="wait">
+                    <motion.img key={selectedCategory || 'all-sectors'} src={getCategoryImage(selectedCategory || 'tüm sektörler')} alt="" initial={{ opacity: 0, scale: 1.025 }} animate={{ opacity: 0.62, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="absolute inset-0 h-full w-full object-cover object-center" />
+                  </AnimatePresence>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#10222b]/95 via-[#10222b]/78 to-[#10222b]/20" />
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300"><span className="flex h-8 w-8 items-center justify-center rounded-md border border-white/15 bg-black/25 text-cyan-200">{selectedCategory ? getCategoryIcon(selectedCategory) : <FolderOpen size={17} />}</span>{selectedCategory || 'Tüm sektörler'}</div>
+                    <div className="mt-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+                      <div><h1 className="text-2xl font-black text-white">Hazırlamak istediğiniz belgeyi seçin</h1><p className="mt-1 text-sm text-slate-300">İş türünü veya sektörü seçin; belgeyi doldurmaya hemen başlayın.</p></div>
+                      {(selectedTask || selectedCategory || searchQuery) && <button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setSearchQuery(''); }} className="min-h-10 shrink-0 text-left text-xs font-semibold text-amber-300 hover:text-white sm:text-right">Filtreleri temizle</button>}
                     </div>
-                  </div>
 
-                  <div className="p-3">
+                    <div className="mt-5 grid grid-cols-2 gap-2 lg:grid-cols-4">
                     {[
                       { id: 'risk', icon: AlertTriangle, title: 'Risk değerlendirme' },
                       { id: 'emergency', icon: ShieldAlert, title: 'Acil durum' },
                       { id: 'training', icon: GraduationCap, title: 'Eğitim ve görevlendirme' },
                       { id: 'control', icon: ClipboardCheck, title: 'Saha kontrolü' }
                     ].map(task => (
-                      <button key={task.id} onClick={() => setSelectedTask(current => current === task.id ? null : task.id)} aria-pressed={selectedTask === task.id} className={`premium-task mb-1 flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-semibold transition-colors ${selectedTask === task.id ? 'bg-amber-300 text-[#111b22]' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}>
-                        <task.icon size={17} /><span className="flex-1">{task.title}</span>{selectedTask === task.id && <CheckCircle2 size={16} />}
+                      <button key={task.id} onClick={() => setSelectedTask(current => current === task.id ? null : task.id)} aria-pressed={selectedTask === task.id} className={`flex min-h-12 items-center gap-2 rounded-md border px-3 text-left text-xs font-bold transition-colors sm:text-sm ${selectedTask === task.id ? 'border-amber-300 bg-amber-300 text-[#111b22]' : 'border-white/10 bg-[#101a20] text-slate-300 hover:border-white/20 hover:text-white'}`}>
+                        <task.icon size={17} className="shrink-0" /><span className="min-w-0 flex-1">{task.title}</span>{selectedTask === task.id && <CheckCircle2 size={15} className="shrink-0" />}
                       </button>
                     ))}
-                  </div>
-
-                  <div className="border-t border-white/10 p-4">
-                    <div className="flex items-center justify-between gap-2"><span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Seçili sektör</span><Briefcase size={14} className="text-cyan-300" /></div>
-                    <strong className="mt-2 block truncate text-sm text-white">{selectedCategory || 'Tüm sektörler'}</strong>
-                    {(selectedTask || selectedCategory || searchQuery) && <button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setSearchQuery(''); }} className="mt-3 w-full text-center text-xs font-semibold text-amber-300 hover:underline">Filtreleri temizle</button>}
-                  </div>
-                </aside>
-
-                <main className="premium-document-list min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#1b2a33]/78 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
-                  <section className="sector-showcase border-b border-white/10" aria-labelledby="sector-title">
-                    <div className="sector-hero relative min-h-[210px] overflow-hidden sm:min-h-[248px]">
-                      <AnimatePresence mode="wait">
-                        <motion.img key={selectedCategory || 'all'} src={getCategoryImage(selectedCategory || 'tüm sektörler')} alt="" initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="absolute inset-0 h-full w-full object-cover" />
-                      </AnimatePresence>
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#0d171d] via-[#0d171d]/88 to-[#0d171d]/20" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0d171d] via-transparent to-black/15" />
-                      <div className="relative z-10 flex min-h-[210px] max-w-xl flex-col justify-end p-5 sm:min-h-[248px] sm:p-7">
-                        <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/15 bg-black/35 text-amber-300 backdrop-blur-md">{selectedCategory ? getCategoryIcon(selectedCategory) : <FolderOpen size={22} />}</span>
-                        <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300">Çalışma alanı</p>
-                        <h2 id="sector-title" className="mt-2 max-w-lg text-2xl font-black leading-tight text-white sm:text-3xl">{selectedCategory || 'Tüm sektörler'}</h2>
-                        <div className="mt-3 flex items-center gap-3 text-xs text-slate-300"><span>{selectedCategory ? archiveTemplates.filter(item => item.category === selectedCategory).length : archiveTemplates.length} belge</span><span className="h-1 w-1 rounded-full bg-cyan-300"/><span>Düzenlemeye hazır</span></div>
-                      </div>
                     </div>
 
-                    <div className="sector-mosaic-wrap p-4 sm:p-5">
-                      <div className="mb-3 flex items-center justify-between"><strong className="text-xs text-white">Sektör değiştir</strong>{selectedCategory && <button onClick={() => setSelectedCategory(null)} className="text-[11px] font-semibold text-cyan-300 hover:text-white">Tümünü göster</button>}</div>
-                      <div className="sector-mosaic grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
-                        {uniqueCategories.map(category => (
-                          <button key={category} onClick={() => setSelectedCategory(category)} aria-pressed={selectedCategory === category} className={`sector-mosaic-card group relative min-h-[82px] overflow-hidden rounded-lg border text-left ${selectedCategory === category ? 'border-amber-300' : 'border-white/10'}`}>
-                            <img src={getCategoryImage(category)} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-50 transition duration-500 group-hover:scale-105 group-hover:opacity-70" />
-                            <span className="absolute inset-0 bg-gradient-to-r from-[#101a20]/95 via-[#101a20]/72 to-black/10" />
-                            <span className="relative z-10 flex min-h-[82px] items-center gap-2.5 p-3"><span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border bg-black/35 ${selectedCategory === category ? 'border-amber-300/50 text-amber-300' : 'border-white/10 text-cyan-200'}`}>{getCategoryIcon(category)}</span><span className="min-w-0 overflow-hidden"><strong className="line-clamp-2 block [overflow-wrap:anywhere] text-[10px] leading-4 text-white sm:text-[11px]">{category}</strong><small className="mt-1 block text-[9px] text-slate-300">{archiveTemplates.filter(item => item.category === category).length} belge</small></span></span>
-                          </button>
-                        ))}
-                      </div>
+                    <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(14rem,0.55fr)]">
+                      <label className="premium-search flex min-h-12 items-center rounded-md border border-white/10 bg-[#101a20]/95 focus-within:border-amber-400/60"><Search className="ml-3 h-4 w-4 shrink-0 text-amber-300" /><input type="search" aria-label="Belge ara" placeholder="Belge adıyla ara" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="w-full min-w-0 bg-transparent px-3 py-3 text-sm text-white placeholder-slate-600 outline-none" /></label>
+                      <label className="flex min-h-12 items-center rounded-md border border-white/10 bg-[#101a20]/95 px-3 focus-within:border-amber-400/60"><Briefcase size={16} className="mr-2 shrink-0 text-cyan-300" /><select aria-label="Sektör seç" value={selectedCategory || ''} onChange={event => setSelectedCategory(event.target.value || null)} className="w-full bg-transparent text-sm text-slate-200 outline-none"><option value="">Tüm sektörler</option>{uniqueCategories.map(category => <option key={category} value={category}>{category}</option>)}</select></label>
                     </div>
-                  </section>
-                  <header className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6">
-                    <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-300">{selectedCategory || 'Tüm sektörler'}</p><h2 className="mt-1 text-xl font-black text-white">Belgeler</h2></div>
-                    <span className="rounded-md bg-white/5 px-3 py-2 text-xs font-bold text-slate-300">{filteredTemplates.length} sonuç</span>
-                  </header>
+                  </div>
+                </header>
+
+                <main>
+                  <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6"><div><h2 className="text-base font-black text-white">Belgeler</h2><p className="mt-0.5 text-[11px] text-slate-500">{selectedCategory || 'Tüm sektörler'}</p></div><span className="rounded bg-white/5 px-2.5 py-1.5 text-xs font-bold text-slate-300">{filteredTemplates.length} belge</span></div>
 
                   <div className="divide-y divide-white/[0.07]">
                     <AnimatePresence initial={false}>

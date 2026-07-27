@@ -18,6 +18,32 @@ interface DocumentEditorProps {
 
 type ImageDimensions = { width: number; height: number };
 
+const normalizeRiskKey = (key: string) => key.toLocaleLowerCase('tr-TR').replace(/[ı]/g, 'i').replace(/[^a-z0-9]/g, '');
+const findRiskSubField = (options: string[] | undefined, patterns: RegExp[]) =>
+  options?.find(option => patterns.some(pattern => pattern.test(normalizeRiskKey(option))));
+
+const getRiskColumns = (options: string[] | undefined) => {
+  const probability = findRiskSubField(options, [/^olasilik$/, /^probability$/]);
+  const severity = findRiskSubField(options, [/^siddet$/, /^severity$/]);
+  const frequency = findRiskSubField(options, [/^frekans$/, /^frequency$/]);
+  const score = findRiskSubField(options, [/^risk(?:skoru|puani|puan)$/, /^riskScore$/i]);
+  const result = findRiskSubField(options, [/^risk(?:duzeyi|sonucu|sonuc)$/, /^sonuc$/, /^result$/]);
+  return { probability, severity, frequency, score, result, isCalculatedRisk: Boolean(probability && severity && score) };
+};
+
+const getCalculatedRiskResult = (score: number, usesFrequency: boolean) => {
+  if (usesFrequency) {
+    if (score >= 400) return 'Tolerans Dışı';
+    if (score >= 200) return 'Yüksek Risk';
+    if (score >= 70) return 'Önemli Risk';
+    if (score >= 20) return 'Olası Risk';
+    return 'Kabul Edilebilir Risk';
+  }
+  if (score >= 15) return 'Yüksek Risk';
+  if (score >= 8) return 'Orta Risk';
+  return 'Düşük Risk';
+};
+
 const fitWithin = ({ width, height }: ImageDimensions, maxWidth: number, maxHeight: number): [number, number] => {
   const scale = Math.min(maxWidth / width, maxHeight / height, 1);
   return [Math.max(1, Math.round(width * scale)), Math.max(1, Math.round(height * scale))];
@@ -98,6 +124,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const imageDimensions = useRef(new Map<string, ImageDimensions>());
   const filterFields = documentFields.filter(field => field.type === 'select' && /^is/i.test(field.key) && !/liste$/i.test(field.key));
   const fieldSections = buildFieldSections(documentFields.filter(field => !filterFields.some(filter => filter.key === field.key)));
+  const visibleSections = fieldSections.map(section => ({ ...section, fields: section.fields.filter(field => isFieldVisible(field, formData)) })).filter(section => section.fields.length > 0);
+  const activeSectionId = visibleSections.find(section => openSections[section.id])?.id || visibleSections[0]?.id;
+  const activeSectionIndex = Math.max(0, visibleSections.findIndex(section => section.id === activeSectionId));
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
   const completedFields = visibleFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
   const completionRate = visibleFields.length ? Math.round((completedFields / visibleFields.length) * 100) : 100;
@@ -167,11 +196,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   }, [previewWidth, mobileView]);
 
   useEffect(() => {
-    const previewBuffer = originalPreviewBuffer || docxArrayBuffer;
-    if (!previewBuffer || !previewRef.current) return;
-    const timeout = window.setTimeout(() => void updatePreview(previewBuffer, originalPreviewBuffer ? null : formData), 180);
+    if (!docxArrayBuffer || !previewRef.current) return;
+    const timeout = window.setTimeout(() => void updatePreview(docxArrayBuffer, formData), 180);
     return () => window.clearTimeout(timeout);
-  }, [docxArrayBuffer, originalPreviewBuffer, formData]);
+  }, [docxArrayBuffer, formData]);
 
   const updatePreview = async (buffer: ArrayBuffer, data: Record<string, any> | null) => {
     const renderId = ++previewRenderId.current;
@@ -291,7 +319,19 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const handleListChange = (fieldKey: string, index: number, subKey: string, value: string) => {
     setFormData(prev => {
       const newList = [...(prev[fieldKey] || [])];
-      newList[index] = { ...newList[index], [subKey]: value };
+      const field = documentFields.find(item => item.key === fieldKey);
+      const riskColumns = getRiskColumns(field?.options);
+      const nextRow = { ...newList[index], [subKey]: value };
+      if (riskColumns.isCalculatedRisk && riskColumns.probability && riskColumns.severity && riskColumns.score) {
+        const probability = Number(nextRow[riskColumns.probability]);
+        const severity = Number(nextRow[riskColumns.severity]);
+        const frequency = riskColumns.frequency ? Number(nextRow[riskColumns.frequency]) : 1;
+        const hasInputs = Number.isFinite(probability) && Number.isFinite(severity) && Number.isFinite(frequency);
+        const score = hasInputs ? probability * severity * frequency : 0;
+        nextRow[riskColumns.score] = hasInputs ? String(Number(score.toFixed(2))) : '';
+        if (riskColumns.result) nextRow[riskColumns.result] = hasInputs ? getCalculatedRiskResult(score, Boolean(riskColumns.frequency)) : '';
+      }
+      newList[index] = nextRow;
       return { ...prev, [fieldKey]: newList };
     });
   };
@@ -385,48 +425,44 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
       </div>
       
       {/* SOL PANEL (Magic Variable Editörü) */}
-      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 shrink-0 min-h-[calc(100svh-61px)] lg:h-full overflow-y-auto px-3 sm:px-6 lg:px-8 pt-4 pb-24 sm:pt-6 sm:pb-24 lg:py-10 bg-[#16222a] border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
+      <div className={`${mobileView === "form" ? "flex" : "hidden"} lg:flex w-full lg:w-[58%] shrink-0 min-h-[calc(100svh-61px)] lg:h-full overflow-y-auto px-3 sm:px-6 lg:px-8 pt-4 pb-24 sm:pt-6 sm:pb-24 lg:py-8 bg-[#16222a] border-r border-white/5 relative z-10 custom-scrollbar shadow-2xl flex-col`}>
         {/* Glow effect on left panel */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-[100px] pointer-events-none mix-blend-screen"></div>
 
-        <button onClick={onBack} className="flex items-center min-h-10 w-max text-slate-400 hover:text-yellow-500 mb-4 sm:mb-6 lg:mb-8 transition-colors font-medium text-sm group">
-          <div className="w-8 h-8 rounded-full bg-white/5 group-hover:bg-yellow-500/10 flex items-center justify-center mr-3 transition-colors border border-white/5 group-hover:border-yellow-500/30">
-            <ArrowLeft size={16} />
-          </div>
-          Geri Dön
+        <button onClick={onBack} className="mb-4 flex min-h-10 w-max items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-yellow-400 sm:mb-5">
+          <ArrowLeft size={17} /> Belgelere dön
         </button>
 
-        <div className="mb-6">
-           <p className="text-yellow-400 text-[11px] font-bold uppercase tracking-[0.18em] mb-3">{template.category}</p>
-           <h1 className="text-2xl font-bold mb-2 text-white leading-snug">
+        <div className="mb-5">
+           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-400">{template.category}</p>
+           <h1 className="mb-2 text-2xl font-bold leading-snug text-white">
              {getDocumentTitle(template.id, template.title)}
            </h1>
-           <p className="text-slate-400 text-xs leading-relaxed">
-             Zorunlu alanlardan başlayın. Bilmediğiniz isteğe bağlı alanları boş bırakabilir, daha sonra geri dönüp tamamlayabilirsiniz.
-           </p>
-           <div className="mt-4 flex items-start gap-3 rounded-lg border border-cyan-300/15 bg-cyan-300/[0.045] p-3 text-xs leading-5 text-slate-300">
-             <Eye size={17} className="mt-0.5 shrink-0 text-cyan-300" />
-             <p><strong className="block text-white">Adım adım ilerleyin</strong>Bir bölümü tamamlayıp sıradakine geçin. Son dosya eklendiğinde belge rehberi sağ tarafta ayrıca gösterilecek.</p>
-           </div>
-           <div className="mt-5 flex items-center gap-3">
+           <div className="mt-4 flex items-center gap-3">
              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-yellow-400 transition-all duration-300" style={{ width: `${completionRate}%` }} /></div>
-             <span className="whitespace-nowrap text-xs font-semibold tabular-nums text-slate-300">{completedFields}/{visibleFields.length} alan</span>
+             <span className="whitespace-nowrap text-xs font-semibold tabular-nums text-slate-300">%{completionRate} tamamlandı</span>
            </div>
         </div>
         
-        <div className="space-y-3 flex-1 relative z-10">
-          {fieldSections.map(section => {
-            const sectionFields = section.fields.filter(field => isFieldVisible(field, formData));
-            if (!sectionFields.length) return null;
-            const isOpen = openSections[section.id];
+        <nav className="relative z-10 mb-4 grid grid-cols-2 gap-2 sm:flex" aria-label="Belge bölümleri">
+          {visibleSections.map((section, sectionIndex) => {
+            const isActive = section.id === activeSectionId;
+            return <button key={section.id} type="button" onClick={() => setOpenSections({ [section.id]: true })} aria-current={isActive ? 'step' : undefined} className={`flex min-h-11 flex-1 items-center gap-2 rounded-md border px-3 text-left text-xs font-semibold transition-colors ${isActive ? 'border-yellow-400 bg-yellow-400 text-black' : 'border-white/10 bg-white/[0.025] text-slate-400 hover:border-white/20 hover:text-white'}`}><span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded text-[10px] font-black ${isActive ? 'bg-black/15' : 'bg-white/5 text-yellow-400'}`}>{sectionIndex + 1}</span><span className="line-clamp-2">{section.title}</span></button>;
+          })}
+        </nav>
+
+        <div className="flex-1 relative z-10">
+          {visibleSections.map((section, sectionIndex) => {
+            if (section.id !== activeSectionId) return null;
+            const sectionFields = section.fields;
             return <section key={section.id} className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.025]">
-              <button type="button" onClick={() => setOpenSections({ [section.id]: !isOpen })} className="flex w-full items-center gap-3 px-4 py-4 text-left hover:bg-white/[0.035] transition-colors" aria-expanded={isOpen}>
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-yellow-400/10 text-xs font-bold text-yellow-400">{sectionFields.length}</span>
+              <div className="flex w-full items-center gap-3 border-b border-white/5 px-4 py-4 text-left">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-yellow-400/10 text-xs font-bold text-yellow-400">{sectionIndex + 1}</span>
                 <span className="min-w-0 flex-1"><strong className="block text-sm font-semibold text-white">{section.title}</strong><span className="block truncate text-[11px] text-slate-500">{section.description}</span></span>
-                <ChevronDown size={16} className={`text-slate-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {isOpen && <div className="grid grid-cols-1 gap-5 border-t border-white/5 px-4 py-5">
+              </div>
+              <div className="grid grid-cols-1 gap-5 px-4 py-5">
             {sectionFields.map(field => {
+              const riskColumns = field.type === 'list' ? getRiskColumns(field.options) : null;
               return (
                 <div key={field.key} className="group">
                   <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-slate-300 group-focus-within:text-yellow-400 transition-colors">
@@ -479,7 +515,16 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                                         }).catch(() => setDownloadError('Görsel okunamadı. PNG veya JPG dosyası seçin.'));
                                       }} className="hidden" id={`${field.key}-${idx}-${subFieldName}`} />
                                       <label htmlFor={`${field.key}-${idx}-${subFieldName}`} className="flex min-h-9 cursor-pointer items-center justify-center gap-1.5 rounded border border-white/10 bg-black/60 px-3 text-xs text-yellow-400 hover:border-yellow-500/50"><Upload size={13} />{item[subFieldName] ? 'Görsel hazır' : 'Görsel seç'}</label>
-                                    </> : <input type="text" value={item[subFieldName] || ""} readOnly={subFieldName === getSequenceKey(field.key)} onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)} className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs read-only:text-amber-300" placeholder="..." />}
+                                    </> : <input
+                                      type={riskColumns && [riskColumns.probability, riskColumns.severity, riskColumns.frequency].includes(subFieldName) ? 'number' : 'text'}
+                                      min={riskColumns && [riskColumns.probability, riskColumns.severity, riskColumns.frequency].includes(subFieldName) ? '0' : undefined}
+                                      step={riskColumns && [riskColumns.probability, riskColumns.severity, riskColumns.frequency].includes(subFieldName) ? 'any' : undefined}
+                                      value={item[subFieldName] || ""}
+                                      readOnly={subFieldName === getSequenceKey(field.key) || Boolean(riskColumns && [riskColumns.score, riskColumns.result].includes(subFieldName))}
+                                      onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)}
+                                      className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs read-only:text-amber-300 read-only:cursor-not-allowed"
+                                      placeholder={riskColumns && [riskColumns.score, riskColumns.result].includes(subFieldName) ? 'Otomatik hesaplanır' : '...'}
+                                    />}
                                   </div>
                                 )) : (
                                   <div className="col-span-2">
@@ -498,6 +543,10 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                 </div>
               );
             })}
+              </div>
+              {visibleSections.length > 1 && <div className="flex items-center justify-between gap-3 border-t border-white/5 px-4 py-3">
+                <button type="button" disabled={sectionIndex === 0} onClick={() => setOpenSections({ [visibleSections[sectionIndex - 1].id]: true })} className="min-h-10 px-3 text-xs font-semibold text-slate-400 hover:text-white disabled:invisible">Önceki bölüm</button>
+                {sectionIndex < visibleSections.length - 1 ? <button type="button" onClick={() => setOpenSections({ [visibleSections[sectionIndex + 1].id]: true })} className="min-h-10 rounded-md bg-yellow-400 px-4 text-xs font-bold text-black hover:bg-yellow-300">Sonraki bölüm</button> : <span className="flex items-center gap-2 text-xs font-semibold text-emerald-300"><Check size={15} /> Son bölüm</span>}
               </div>}
             </section>;
           })}
@@ -507,24 +556,22 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         <div className="fixed lg:sticky bottom-0 inset-x-0 lg:inset-x-auto px-3 sm:px-6 lg:px-0 pt-3 mt-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-white/10 z-20 bg-[#16222a]/96 backdrop-blur-xl">
           {downloadError && <p role="alert" className="mb-3 rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">{downloadError}</p>}
           <button onClick={handleDownload} disabled={loading || !docxArrayBuffer} className="flex w-full min-h-12 items-center justify-center gap-2 rounded-lg bg-yellow-400 px-4 py-3.5 text-sm font-bold text-black hover:bg-yellow-300 active:translate-y-px transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-             {loading ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" /> Şablon hazırlanıyor</> : <><Download size={18} /> Doldurulmuş Belgeyi Oluştur</>}
+             {loading ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" /> Belge hazırlanıyor</> : <><Download size={18} /> Belgeyi Oluştur ve İndir</>}
           </button>
         </div>
       </div>
 
       {/* SAĞ PANEL: CANLI ÖNİZLEME (Docx Preview) */}
-      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-1/2 min-h-[calc(100svh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
+      <div className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex w-full lg:w-[42%] min-h-[calc(100svh-61px)] lg:h-full bg-[#1a2b34] flex-col relative`}>
         <div className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#111b22]/90 px-4 py-3 sm:px-6">
-          <div className="min-w-0"><strong className="block text-sm text-white">Belge rehberi hazırlanıyor</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">Göndereceğiniz son dosya burada örnek olarak gösterilecek.</span></div>
-          <span className="shrink-0 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[9px] font-bold uppercase text-slate-400">Beklemede</span>
+          <div className="min-w-0"><strong className="block text-sm text-white">Belgede kontrol edin: {visibleSections[activeSectionIndex]?.title || 'Belge'}</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">Soldaki alanı doldurun; değişiklik sağdaki belgeye otomatik işlenir.</span></div>
+          <span className="shrink-0 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-2 py-1 text-[9px] font-bold uppercase text-emerald-300">Canlı</span>
         </div>
-        <div className="flex flex-1 items-center justify-center bg-[#1b2d36] p-6 sm:p-10">
-          <div className="w-full max-w-md border border-dashed border-white/15 bg-[#16222a]/65 p-8 text-center shadow-xl">
-            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400/10 text-yellow-400"><FileText size={25} /></span>
-            <h2 className="mt-5 text-lg font-bold text-white">Önizleme alanı boş bırakıldı</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">Son düzenlenebilir dosyanız eklendiğinde, acemi uzmanın bakarak ilerleyeceği belge rehberi bu alanda yer alacak.</p>
+        <div ref={previewViewportRef} className="relative flex-1 overflow-auto bg-[#52616a] p-4 custom-scrollbar sm:p-6">
+          {loading && <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#1b2d36]/90"><span className="flex items-center gap-3 text-sm font-semibold text-slate-200"><span className="h-5 w-5 animate-spin rounded-full border-2 border-yellow-300/30 border-t-yellow-300" /> Belge hazırlanıyor</span></div>}
+          {loadError ? <div className="mx-auto mt-12 max-w-sm rounded-md border border-red-400/20 bg-[#16222a] p-5 text-center text-sm leading-6 text-red-200">{loadError}</div> : <div className="mx-auto origin-top-left" style={{ width: previewWidth * previewScale, height: previewHeight * previewScale }}><div ref={previewRef} className="docx-live-preview origin-top-left text-black shadow-[0_18px_45px_rgba(0,0,0,0.32)]" style={{ width: previewWidth, minHeight: previewHeight, transform: `scale(${previewScale})` }} /></div>}
+          {!loading && !loadError && !docxArrayBuffer && <div className="mx-auto mt-12 max-w-sm rounded-md border border-white/10 bg-[#16222a] p-5 text-center text-sm text-slate-300">Belge önizlemesi yüklenemedi.</div>}
           </div>
-        </div>
       </div>
     </div>
   );

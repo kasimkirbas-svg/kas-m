@@ -113,33 +113,48 @@ export const getFieldLabel = (field: DocumentField) => {
 
 export const getSubFieldLabel = (key: string) => getFieldLabel({ key, label: key, type: 'text' });
 
-const resolveSection = (field: DocumentField) => {
-  const key = field.key.toLocaleLowerCase('tr-TR');
-  if (field.type === 'list') return 'lists';
-  if (/(logo|dokuman|formno|revizyon|yayintarihi|evrakno|date$|tarih$)/.test(key)) return 'document';
-  if (/(firma|isyeri|tesis|adres|telefon|vergi|sgk|nace)/.test(key)) return 'business';
-  if (/(adsoyad|muhendis|personel|calisan|sorumlu|yetkili|hazirlayan|prepared|teblig|tebellug)/.test(key)) return 'people';
-  return 'details';
-};
-
-const SECTION_META = {
-  document: { title: 'Doküman Bilgileri', description: 'Form kimliği, tarih ve revizyon bilgileri' },
-  business: { title: 'İşyeri ve Tesis', description: 'Firma, tesis ve iletişim bilgileri' },
-  people: { title: 'Kişiler ve Yetkililer', description: 'Görevli, sorumlu ve onay bilgileri' },
-  details: { title: 'Dokümana Özel Bilgiler', description: 'Bu şablona özgü teknik ve operasyonel alanlar' },
-  lists: { title: 'Tablo ve Kayıtlar', description: 'İhtiyacınız kadar satır ekleyebileceğiniz kayıtlar' },
-};
-
 export const buildFieldSections = (fields: DocumentField[] = []): FieldSection[] => {
-  const grouped = new Map<string, DocumentField[]>();
-  fields.forEach(field => {
-    const section = resolveSection(field);
-    grouped.set(section, [...(grouped.get(section) || []), field]);
+  const sections: FieldSection[] = [];
+  const firstListIndex = fields.findIndex(field => field.type === 'list');
+  let scalarFields: DocumentField[] = [];
+  let scalarStartIndex = 0;
+
+  const flushScalars = () => {
+    if (!scalarFields.length) return;
+    const normalizedKeys = scalarFields.map(field => field.key.toLocaleLowerCase('tr-TR')).join(' ');
+    const isAfterTables = firstListIndex >= 0 && scalarStartIndex > firstListIndex;
+    const title = isAfterTables
+      ? (/imza|onay|hazirlayan|hekim|isveren|adsoyad/.test(normalizedKeys) ? 'Kişiler ve İmzalar' : 'Sonuç ve Rapor Özeti')
+      : scalarStartIndex === 0
+        ? 'Belge ve İşyeri Bilgileri'
+        : 'Değerlendirme Bilgileri';
+    sections.push({
+      id: `fields-${scalarStartIndex}`,
+      title,
+      description: `${scalarFields.length} bilgiyi belgedeki sırayla tamamlayın`,
+      fields: scalarFields,
+    });
+    scalarFields = [];
+  };
+
+  fields.forEach((field, fieldIndex) => {
+    if (field.type === 'list') {
+      flushScalars();
+      sections.push({
+        id: `table-${field.key}`,
+        title: getFieldLabel(field),
+        description: `${field.options?.length || 1} sütunlu belge tablosunu doldurun`,
+        fields: [field],
+      });
+      scalarStartIndex = fieldIndex + 1;
+      return;
+    }
+    if (!scalarFields.length) scalarStartIndex = fieldIndex;
+    scalarFields.push(field);
+    if (scalarFields.length === 10 && (firstListIndex < 0 || fieldIndex < firstListIndex)) flushScalars();
   });
-  return Object.entries(SECTION_META).flatMap(([id, meta]) => {
-    const sectionFields = grouped.get(id) || [];
-    return sectionFields.length ? [{ id, ...meta, fields: sectionFields }] : [];
-  }).sort((left, right) => fields.indexOf(left.fields[0]) - fields.indexOf(right.fields[0]));
+  flushScalars();
+  return sections;
 };
 
 export const isFieldVisible = (field: DocumentField, data: Record<string, unknown>) =>
