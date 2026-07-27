@@ -8,7 +8,8 @@ import {
   Car, Building2, Trees, Activity, Building, Zap, MapPin, SearchCode,
   FileBox, UserCheck, CheckSquare, Award, FileClock, FolderOpen, ArrowRight,
   ShieldAlert, UserPlus, FileArchive, Settings, Crown, ChevronRight, CheckCircle2,
-  Flame, Target, Compass, Eye, PenLine, ClipboardCheck, AlertTriangle, GraduationCap
+  Flame, Target, Compass, Eye, PenLine, ClipboardCheck, AlertTriangle, GraduationCap,
+  ChevronDown, Globe2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -103,6 +104,8 @@ const App = () => {
   }, [currentView, user]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
+  const categoryMenuRef = React.useRef<HTMLDivElement>(null);
   const [selectedTask, setSelectedTask] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [remoteTemplates, setRemoteTemplates] = useState<DocumentTemplate[]>([]);
@@ -112,6 +115,15 @@ const App = () => {
       .map(template => ({ ...template, originalUrl: getOriginalDocumentUrl(template.id) }));
   }, [remoteTemplates]);
   const uniqueCategories = React.useMemo(() => Array.from(new Set(archiveTemplates.map(template => template.category))), [archiveTemplates]);
+
+  useEffect(() => {
+    if (!categoryMenuOpen) return;
+    const closeCategoryMenu = (event: PointerEvent) => {
+      if (!categoryMenuRef.current?.contains(event.target as Node)) setCategoryMenuOpen(false);
+    };
+    document.addEventListener('pointerdown', closeCategoryMenu);
+    return () => document.removeEventListener('pointerdown', closeCategoryMenu);
+  }, [categoryMenuOpen]);
 
   useEffect(() => {
     if (!user) return;
@@ -137,6 +149,7 @@ const App = () => {
   const getCategoryImage = (categoryName: string) => {
     const lower = categoryName.toLocaleLowerCase('tr');
     const base = 'https://images.unsplash.com/';
+    if (lower.includes('tüm sektörler')) return '/world-poster.jpg';
     if (lower.includes('gıda')) return '/gida-poster.jpg';
     if (lower.includes('standart')) return '/standart-poster.jpg';
     if (lower.includes('enerji')) return `${base}photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1600&q=84`;
@@ -156,7 +169,7 @@ const App = () => {
 
   const getCategoryVideo = (categoryName: string) => {
     const lower = categoryName.toLocaleLowerCase('tr');
-    if (lower.includes('tüm sektörler')) return '/standart.mp4';
+    if (lower.includes('tüm sektörler')) return '/19024-298313254_medium.mp4';
     if (lower.includes('enerji')) return '/enerji.mp4';
     if (lower.includes('gıda')) return '/gida.mp4';
     if (lower.includes('standart')) return '/standart.mp4';
@@ -366,7 +379,23 @@ const App = () => {
 
                     <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(14rem,0.55fr)]">
                       <label className="premium-search flex min-h-12 items-center rounded-md border border-white/10 bg-[#101a20]/95 focus-within:border-amber-400/60"><Search className="ml-3 h-4 w-4 shrink-0 text-amber-300" /><input type="search" aria-label="Belge ara" placeholder="Belge adıyla ara" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="w-full min-w-0 bg-transparent px-3 py-3 text-sm text-white placeholder-slate-600 outline-none" /></label>
-                      <label className="flex min-h-12 items-center rounded-md border border-white/15 bg-[#101a20] px-3 focus-within:border-amber-400/70"><Briefcase size={16} className="mr-2 shrink-0 text-cyan-300" /><select aria-label="Sektör seç" value={selectedCategory || ''} onChange={event => setSelectedCategory(event.target.value || null)} className="w-full bg-[#101a20] text-sm text-white outline-none [color-scheme:dark] [&>option]:bg-[#101a20] [&>option]:text-white"><option value="">Tüm sektörler</option>{uniqueCategories.map(category => <option key={category} value={category}>{category}</option>)}</select></label>
+                      <div ref={categoryMenuRef} className="relative">
+                        <button type="button" onClick={() => setCategoryMenuOpen(open => !open)} aria-haspopup="listbox" aria-expanded={categoryMenuOpen} className="flex min-h-12 w-full items-center rounded-lg border border-white/10 bg-[#18252d]/80 px-3 text-left text-sm text-white shadow-sm backdrop-blur-xl transition-colors hover:border-amber-400/60 hover:bg-[#22343e]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70">
+                          <span className="mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-black/20 text-amber-300">{selectedCategory ? getCategoryIcon(selectedCategory) : <Globe2 size={17} />}</span>
+                          <span className="min-w-0 flex-1 truncate font-semibold">{selectedCategory || 'Tüm sektörler'}</span>
+                          <ChevronDown size={17} className={`ml-2 shrink-0 text-amber-300 transition-transform ${categoryMenuOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        <AnimatePresence>
+                          {categoryMenuOpen && <motion.div role="listbox" aria-label="Sektör seç" initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }} className="absolute right-0 top-[calc(100%+0.5rem)] z-30 max-h-72 w-full min-w-64 overflow-y-auto rounded-lg border border-white/10 bg-[#111b22]/98 p-1.5 shadow-[0_20px_45px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
+                            {[null, ...uniqueCategories].map(category => {
+                              const active = selectedCategory === category;
+                              return <button key={category || 'all'} type="button" role="option" aria-selected={active} onClick={() => { setSelectedCategory(category); setCategoryMenuOpen(false); }} className={`flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sm transition-colors ${active ? 'bg-amber-300 text-[#111b22]' : 'text-slate-200 hover:bg-white/10 hover:text-white'}`}>
+                                <span className="flex h-7 w-7 shrink-0 items-center justify-center">{category ? getCategoryIcon(category) : <Globe2 size={17} />}</span><span className="min-w-0 flex-1">{category || 'Tüm sektörler'}</span>{active && <CheckCircle2 size={16} className="shrink-0" />}
+                              </button>;
+                            })}
+                          </motion.div>}
+                        </AnimatePresence>
+                      </div>
                     </div>
                   </div>
                 </header>
