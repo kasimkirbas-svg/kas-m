@@ -148,6 +148,20 @@ const App = () => {
     return `${base}photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=84`;
   };
 
+  const getCategoryVideo = (categoryName: string) => {
+    const lower = categoryName.toLocaleLowerCase('tr');
+    if (lower.includes('enerji')) return '/enerji.mp4';
+    if (lower.includes('fabrika') || lower.includes('imalat') || lower.includes('gıda') || lower.includes('kimya') || lower.includes('metal')) return '/fabrika.mp4';
+    if (lower.includes('inşaat') || lower.includes('tersane')) return '/209883_medium.mp4';
+    if (lower.includes('hava')) return '/40353-425442466_medium.mp4';
+    if (lower.includes('liman') || lower.includes('lojistik')) return '/277105_medium.mp4';
+    if (lower.includes('maden')) return '/292294_medium.mp4';
+    if (lower.includes('tarım') || lower.includes('orman')) return '/67467-522170635_medium.mp4';
+    if (lower.includes('otel') || lower.includes('hastane')) return '/159052-818026310_medium.mp4';
+    if (lower.includes('şirket') || lower.includes('ofis')) return '/13232-246463976_medium.mp4';
+    return '/19024-298313254_medium.mp4';
+  };
+
   const handleAuthSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
     setCurrentView(isAdminRole(loggedInUser.role) ? 'admin' : 'dashboard');
@@ -305,8 +319,11 @@ const App = () => {
             {currentView === 'dashboard' && (
               <div className="premium-document-list mx-auto min-w-0 max-w-5xl overflow-hidden rounded-lg border border-white/10 bg-[#1b2a33]/90 shadow-[0_22px_55px_rgba(0,0,0,0.14)]">
                 <header className="relative overflow-hidden border-b border-white/10 p-4 sm:p-6">
+                  <motion.img key={`poster-${selectedCategory || 'all-sectors'}`} src={getCategoryImage(selectedCategory || 'tüm sektörler')} alt="" initial={{ opacity: 0 }} animate={{ opacity: 0.62 }} transition={{ duration: 0.35 }} className="absolute inset-0 h-full w-full object-cover object-center" />
                   <AnimatePresence mode="wait">
-                    <motion.img key={selectedCategory || 'all-sectors'} src={getCategoryImage(selectedCategory || 'tüm sektörler')} alt="" initial={{ opacity: 0, scale: 1.025 }} animate={{ opacity: 0.62, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="absolute inset-0 h-full w-full object-cover object-center" />
+                    <motion.video key={selectedCategory || 'all-sectors'} autoPlay loop muted playsInline preload="metadata" poster={getCategoryImage(selectedCategory || 'tüm sektörler')} aria-hidden="true" initial={{ opacity: 0, scale: 1.025 }} animate={{ opacity: 0.72, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }} className="absolute inset-0 h-full w-full object-cover object-center">
+                      <source src={getCategoryVideo(selectedCategory || 'tüm sektörler')} type="video/mp4" />
+                    </motion.video>
                   </AnimatePresence>
                   <div className="absolute inset-0 bg-gradient-to-r from-[#10222b]/95 via-[#10222b]/78 to-[#10222b]/20" />
                   <div className="relative z-10">
