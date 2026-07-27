@@ -22,14 +22,14 @@ const normalizeRiskKey = (key: string) => key.toLocaleLowerCase('tr-TR').replace
 const findRiskSubField = (options: string[] | undefined, patterns: RegExp[]) =>
   options?.find(option => patterns.some(pattern => pattern.test(normalizeRiskKey(option))));
 
-const getRiskColumns = (options: string[] | undefined) => {
-  const probability = findRiskSubField(options, [/^olasilik$/, /^probability$/]);
-  const severity = findRiskSubField(options, [/^siddet$/, /^severity$/]);
-  const frequency = findRiskSubField(options, [/^frekans$/, /^frequency$/]);
-  const score = findRiskSubField(options, [/^risk(?:skoru|puani|puan)$/, /^riskScore$/i]);
-  const result = findRiskSubField(options, [/^risk(?:duzeyi|sonucu|sonuc)$/, /^sonuc$/, /^result$/]);
-  return { probability, severity, frequency, score, result, isCalculatedRisk: Boolean(probability && severity && score) };
-};
+const getRiskColumnGroups = (options: string[] | undefined) => ['', '1', '2'].flatMap(suffix => {
+  const probability = findRiskSubField(options, [new RegExp(`^(?:olasilik|probability)${suffix}$`), ...(suffix ? [new RegExp(`^o${suffix}$`)] : [])]);
+  const severity = findRiskSubField(options, [new RegExp(`^(?:siddet|severity)${suffix}$`), ...(suffix ? [new RegExp(`^s${suffix}$`)] : [])]);
+  const frequency = findRiskSubField(options, [new RegExp(`^(?:frekans|frequency)${suffix}$`), ...(suffix ? [new RegExp(`^f${suffix}$`)] : [])]);
+  const score = findRiskSubField(options, [new RegExp(`^risk(?:skoru|puani|puan)${suffix}$`), ...(suffix ? [new RegExp(`^rp${suffix}$`)] : [])]);
+  const result = findRiskSubField(options, [new RegExp(`^risk(?:duzeyi|sonucu|sonuc)${suffix}$`), new RegExp(`^sonuc${suffix}$`), ...(suffix ? [new RegExp(`^result${suffix}$`)] : [/^result$/])]);
+  return probability && severity && score ? [{ probability, severity, frequency, score, result }] : [];
+});
 
 const getCalculatedRiskResult = (score: number, usesFrequency: boolean) => {
   if (usesFrequency) {
@@ -320,9 +320,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
     setFormData(prev => {
       const newList = [...(prev[fieldKey] || [])];
       const field = documentFields.find(item => item.key === fieldKey);
-      const riskColumns = getRiskColumns(field?.options);
+      const riskColumnGroups = getRiskColumnGroups(field?.options);
       const nextRow = { ...newList[index], [subKey]: value };
-      if (riskColumns.isCalculatedRisk && riskColumns.probability && riskColumns.severity && riskColumns.score) {
+      riskColumnGroups.forEach(riskColumns => {
         const probability = Number(nextRow[riskColumns.probability]);
         const severity = Number(nextRow[riskColumns.severity]);
         const frequency = riskColumns.frequency ? Number(nextRow[riskColumns.frequency]) : 1;
@@ -330,7 +330,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
         const score = hasInputs ? probability * severity * frequency : 0;
         nextRow[riskColumns.score] = hasInputs ? String(Number(score.toFixed(2))) : '';
         if (riskColumns.result) nextRow[riskColumns.result] = hasInputs ? getCalculatedRiskResult(score, Boolean(riskColumns.frequency)) : '';
-      }
+      });
       newList[index] = nextRow;
       return { ...prev, [fieldKey]: newList };
     });
@@ -462,7 +462,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
               </div>
               <div className="grid grid-cols-1 gap-5 px-4 py-5">
             {sectionFields.map(field => {
-              const riskColumns = field.type === 'list' ? getRiskColumns(field.options) : null;
+              const riskColumnGroups = field.type === 'list' ? getRiskColumnGroups(field.options) : [];
+              const riskFactorFields = riskColumnGroups.flatMap(group => [group.probability, group.severity, group.frequency].filter(Boolean));
+              const calculatedRiskFields = riskColumnGroups.flatMap(group => [group.score, group.result].filter(Boolean));
               return (
                 <div key={field.key} className="group">
                   <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-slate-300 group-focus-within:text-yellow-400 transition-colors">
@@ -516,14 +518,14 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                                       }} className="hidden" id={`${field.key}-${idx}-${subFieldName}`} />
                                       <label htmlFor={`${field.key}-${idx}-${subFieldName}`} className="flex min-h-9 cursor-pointer items-center justify-center gap-1.5 rounded border border-white/10 bg-black/60 px-3 text-xs text-yellow-400 hover:border-yellow-500/50"><Upload size={13} />{item[subFieldName] ? 'Görsel hazır' : 'Görsel seç'}</label>
                                     </> : <input
-                                      type={riskColumns && [riskColumns.probability, riskColumns.severity, riskColumns.frequency].includes(subFieldName) ? 'number' : 'text'}
-                                      min={riskColumns && [riskColumns.probability, riskColumns.severity, riskColumns.frequency].includes(subFieldName) ? '0' : undefined}
-                                      step={riskColumns && [riskColumns.probability, riskColumns.severity, riskColumns.frequency].includes(subFieldName) ? 'any' : undefined}
+                                      type={riskFactorFields.includes(subFieldName) ? 'number' : 'text'}
+                                      min={riskFactorFields.includes(subFieldName) ? '0' : undefined}
+                                      step={riskFactorFields.includes(subFieldName) ? 'any' : undefined}
                                       value={item[subFieldName] || ""}
-                                      readOnly={subFieldName === getSequenceKey(field.key) || Boolean(riskColumns && [riskColumns.score, riskColumns.result].includes(subFieldName))}
+                                      readOnly={subFieldName === getSequenceKey(field.key) || calculatedRiskFields.includes(subFieldName)}
                                       onChange={(e) => handleListChange(field.key, idx, subFieldName, e.target.value)}
                                       className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded focus:ring-1 focus:border-yellow-500/50 outline-none shadow-inner text-xs read-only:text-amber-300 read-only:cursor-not-allowed"
-                                      placeholder={riskColumns && [riskColumns.score, riskColumns.result].includes(subFieldName) ? 'Otomatik hesaplanır' : '...'}
+                                      placeholder={calculatedRiskFields.includes(subFieldName) ? 'Otomatik hesaplanır' : '...'}
                                     />}
                                   </div>
                                 )) : (
