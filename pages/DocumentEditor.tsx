@@ -7,7 +7,7 @@ import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import ImageModule from "docxtemplater-image-module-free";
 import { saveAs } from "file-saver";
-import { buildFieldSections, getDocumentTitle, getFieldGuidance, getFieldLabel, getSubFieldLabel, isFieldVisible } from "../services/documentFieldService";
+import { buildFieldSections, getDocumentTitle, getFieldGuidance, getFieldLabel, getSubFieldLabel, isFieldRequired, isFieldVisible } from "../services/documentFieldService";
 import { reconcileFieldsWithDocx } from "../services/docxFieldService";
 
 interface DocumentEditorProps {
@@ -150,8 +150,9 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const guidanceValue = guidanceField ? formData[guidanceField.key] : '';
   const guidanceValueText = guidanceField ? formatGuidanceValue(guidanceField, guidanceValue) : '';
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
-  const completedFields = visibleFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
-  const completionRate = visibleFields.length ? Math.round((completedFields / visibleFields.length) * 100) : 100;
+  const requiredFields = visibleFields.filter(isFieldRequired);
+  const completedRequiredFields = requiredFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
+  const completionRate = requiredFields.length ? Math.round((completedRequiredFields / requiredFields.length) * 100) : 100;
   useEffect(() => {
     setLoadError(null);
     setDownloadError(null);
@@ -360,7 +361,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
 
   const handleDownload = () => {
     if (!docxArrayBuffer) return;
-    const missingRequired = visibleFields.filter(field => field.required && !formData[field.key]);
+    const missingRequired = visibleFields.filter(field => isFieldRequired(field) && (Array.isArray(formData[field.key]) ? formData[field.key].length === 0 : !formData[field.key]));
     if (missingRequired.length) {
       setDownloadError(`Lütfen zorunlu alanları doldurun: ${missingRequired.map(getFieldLabel).join(', ')}`);
       return;
@@ -462,7 +463,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
            </h1>
            <div className="mt-4 flex items-center gap-3">
              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-yellow-400 transition-all duration-300" style={{ width: `${completionRate}%` }} /></div>
-             <span className="whitespace-nowrap text-xs font-semibold tabular-nums text-slate-300">%{completionRate} tamamlandı</span>
+             <span className="whitespace-nowrap text-xs font-semibold tabular-nums text-slate-300">%{completionRate} zorunlu alan</span>
            </div>
         </div>
         
@@ -487,11 +488,12 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
               const riskColumnGroups = field.type === 'list' ? getRiskColumnGroups(field.options) : [];
               const riskFactorFields = riskColumnGroups.flatMap(group => [group.probability, group.severity, group.frequency].filter(Boolean));
               const calculatedRiskFields = riskColumnGroups.flatMap(group => [group.score, group.result].filter(Boolean));
+              const fieldRequired = isFieldRequired(field);
               return (
                 <div key={field.key} className={`group rounded-md transition-shadow ${guidanceField?.key === field.key ? 'outline outline-1 outline-offset-4 outline-amber-300/20' : ''}`} onFocusCapture={() => setFocusedFieldKey(field.key)}>
                   <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-slate-300 group-focus-within:text-yellow-400 transition-colors">
                     <span className="min-w-0 flex-1">{getFieldLabel(field)}</span>
-                    <span className={`shrink-0 text-[9px] font-semibold uppercase ${field.required ? 'text-yellow-400' : 'text-slate-600'}`}>{field.required ? 'Zorunlu' : 'İsteğe bağlı'}</span>
+                    <span className={`shrink-0 text-[9px] font-semibold uppercase ${fieldRequired ? 'text-yellow-400' : 'text-slate-600'}`}>{fieldRequired ? 'Zorunlu' : 'İsteğe bağlı'}</span>
                   </label>
                   {field.type === "image" && (
                     <div className="relative w-full">
@@ -503,13 +505,13 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
                     </div>
                   )}
                   {field.type === "text" && (
-                    <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || (field.required ? "Bu bilgiyi yazın" : "Bilmiyorsanız boş bırakabilirsiniz")} />
+                    <input type="text" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm shadow-inner placeholder-slate-600" placeholder={field.placeholder || (fieldRequired ? "Bu bilgiyi yazın" : "Bilmiyorsanız boş bırakabilirsiniz")} />
                   )}
                   {field.type === "date" && (
                     <input type="date" name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm color-scheme-dark shadow-inner" />
                   )}
                   {field.type === "textarea" && (
-                    <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={5} dir="ltr" className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm leading-6 resize-y shadow-inner custom-scrollbar" placeholder={field.placeholder || (field.required ? "Bu bilgiyi yazın" : "Bilmiyorsanız boş bırakabilirsiniz")} />
+                    <textarea name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} rows={5} dir="ltr" className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-left text-sm leading-6 resize-y shadow-inner custom-scrollbar" placeholder={field.placeholder || (fieldRequired ? "Bu bilgiyi yazın" : "Bilmiyorsanız boş bırakabilirsiniz")} />
                   )}
                   {field.type === "select" && (
                     <select name={field.key} value={formData[field.key] || ""} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-[#1b3039] border border-white/10 rounded-xl focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500/50 outline-none transition-all text-sm shadow-inner text-slate-200">
@@ -591,20 +593,19 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           <div className="min-w-0"><strong className="block text-sm text-white">Belgede kontrol edin: {visibleSections[activeSectionIndex]?.title || 'Belge'}</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">Soldaki alanı doldurun; değişiklik sağdaki belgeye otomatik işlenir.</span></div>
           <span className="shrink-0 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-2 py-1 text-[9px] font-bold uppercase text-emerald-300">Canlı</span>
         </div>
-        {guidanceField && fieldGuidance && <div className="shrink-0 border-b border-white/10 bg-[#16262f] px-4 py-3 sm:px-6">
-          <div className="grid gap-3 xl:grid-cols-2">
-            <div className="rounded-md border border-amber-300/20 bg-amber-300/[0.06] p-3">
-              <div className="mb-1.5 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.12em] text-amber-300"><Lightbulb size={14} /> Ne yazmalısınız?</div>
-              <p className="text-xs font-semibold leading-5 text-white">{getFieldLabel(guidanceField)}</p>
-              <p className="mt-1 text-[11px] leading-4 text-slate-300">{fieldGuidance.instruction}</p>
-              <p className="mt-1.5 text-[10px] leading-4 text-slate-500">{fieldGuidance.example}</p>
+        {guidanceField && fieldGuidance && <aside className="shrink-0 border-b border-white/10 bg-[#14242c] px-4 py-3 sm:px-6" aria-label="Alan asistanı">
+          <div className="overflow-hidden rounded-lg border border-white/10 bg-[#1a2d36] shadow-sm">
+            <div className="flex items-center gap-3 border-b border-white/[0.07] px-3 py-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-amber-300/10 text-amber-300"><Lightbulb size={16} /></span>
+              <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-white">{getFieldLabel(guidanceField)}</p><p className="text-[10px] text-slate-500">Alan asistanı</p></div>
+              <span className={`rounded px-2 py-1 text-[9px] font-bold uppercase ${isFieldRequired(guidanceField) ? 'bg-amber-300 text-[#111b22]' : 'bg-white/5 text-slate-400'}`}>{isFieldRequired(guidanceField) ? 'Zorunlu' : 'İsteğe bağlı'}</span>
             </div>
-            <div className="rounded-md border border-cyan-300/15 bg-cyan-300/[0.05] p-3">
-              <div className="mb-1.5 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.12em] text-cyan-300"><PencilLine size={14} /> Sizin yazdığınız</div>
-              {guidanceValueText ? <p className="max-h-20 overflow-auto whitespace-pre-wrap break-words text-xs leading-5 text-white custom-scrollbar">{guidanceValueText}</p> : <p className="text-[11px] leading-5 text-slate-500">Bu alan henüz boş. Solda yazmaya başladığınızda metniniz burada canlı görünecek.</p>}
+            <div className="grid gap-px bg-white/[0.07] sm:grid-cols-2">
+              <div className="bg-[#1a2d36] px-3 py-3"><p className="text-[10px] font-bold uppercase tracking-[0.1em] text-amber-300">Nasıl doldurulur?</p><p className="mt-1 text-[11px] leading-5 text-slate-300">{fieldGuidance.instruction}</p><p className="mt-1.5 border-l-2 border-amber-300/40 pl-2 text-[10px] leading-4 text-slate-500">{fieldGuidance.example}</p></div>
+              <div className="bg-[#1a2d36] px-3 py-3"><p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-cyan-300"><PencilLine size={12} /> Yazdığınız</p>{guidanceValueText ? <p className="mt-1 max-h-24 overflow-auto whitespace-pre-wrap break-words text-xs leading-5 text-white custom-scrollbar">{guidanceValueText}</p> : <p className="mt-1 text-[11px] leading-5 text-slate-500">Soldaki alanı doldurduğunuzda içeriğiniz burada görünür.</p>}</div>
             </div>
           </div>
-        </div>}
+        </aside>}
         <div ref={previewViewportRef} className="relative flex-1 overflow-auto bg-[#52616a] p-4 custom-scrollbar sm:p-6">
           {loading && <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#1b2d36]/90"><span className="flex items-center gap-3 text-sm font-semibold text-slate-200"><span className="h-5 w-5 animate-spin rounded-full border-2 border-yellow-300/30 border-t-yellow-300" /> Belge hazırlanıyor</span></div>}
           {loadError ? <div className="mx-auto mt-12 max-w-sm rounded-md border border-red-400/20 bg-[#16222a] p-5 text-center text-sm leading-6 text-red-200">{loadError}</div> : <div className="mx-auto origin-top-left" style={{ width: previewWidth * previewScale, height: previewHeight * previewScale }}><div ref={previewRef} className="docx-live-preview origin-top-left text-black shadow-[0_18px_45px_rgba(0,0,0,0.32)]" style={{ width: previewWidth, minHeight: previewHeight, transform: `scale(${previewScale})` }} /></div>}

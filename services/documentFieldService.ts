@@ -113,6 +113,15 @@ export const getFieldLabel = (field: DocumentField) => {
 
 export const getSubFieldLabel = (key: string) => getFieldLabel({ key, label: key, type: 'text' });
 
+export const isFieldRequired = (field: DocumentField) => {
+  if (field.required) return true;
+  if (field.dependsOn || field.type === 'image' || field.type === 'select') return false;
+  if (field.type === 'list') return true;
+  const normalized = `${field.key} ${getFieldLabel(field)}`.toLocaleLowerCase('tr-TR').replace(/[._-]+/g, ' ');
+  if (/revizyon|yenileme|yayın|yayin|telefon|iletişim|iletisim|e-?posta|email|kod|numara|\bno\b|sicil|tescil/.test(normalized)) return false;
+  return /firma|işyeri|isyeri|tesis adı|tesis adi|ünvan|unvan|düzenleme tarihi|duzenleme tarihi|olay tarihi|olay tarihi saati|tarih$|hazırlayan|hazirlayan|yetkili|sorumlu|mühendis|muhendis|raportör|raportor|ad soyad|adsoyad/.test(normalized);
+};
+
 export interface FieldGuidance {
   instruction: string;
   example: string;
