@@ -140,12 +140,17 @@ const App = () => {
     if (lower.includes('gıda')) return '/gida-poster.jpg';
     if (lower.includes('standart')) return '/standart-poster.jpg';
     if (lower.includes('enerji')) return `${base}photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1600&q=84`;
-    if (lower.includes('fabrika') || lower.includes('imalat')) return `${base}photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1600&q=84`;
-    if (lower.includes('hava')) return `${base}photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=84`;
-    if (lower.includes('liman') || lower.includes('lojistik')) return `${base}photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=84`;
-    if (lower.includes('maden')) return `${base}photo-1578319439584-104c94d37305?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('kimya')) return '/kimya-poster.jpg';
+    if (lower.includes('fabrika') || lower.includes('imalat')) return '/fabrika-poster.jpg';
+    if (lower.includes('hava')) return '/hava-poster.jpg';
+    if (lower.includes('inşaat') || lower.includes('tersane')) return '/insaat-poster.jpg';
+    if (lower.includes('lojistik')) return '/lojistik-poster.jpg';
+    if (lower.includes('liman')) return `${base}photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('maden')) return '/maden-poster.jpg';
     if (lower.includes('metal')) return `${base}photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1600&q=84`;
-    if (lower.includes('tarım') || lower.includes('orman')) return `${base}photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=84`;
+    if (lower.includes('otel') || lower.includes('bina') || lower.includes('hastane')) return '/otel-poster.jpg';
+    if (lower.includes('şirket') || lower.includes('ofis')) return '/sirketler-poster.jpg';
+    if (lower.includes('tarım') || lower.includes('orman')) return '/tarim-poster.jpg';
     return `${base}photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=84`;
   };
 
@@ -154,9 +159,11 @@ const App = () => {
     if (lower.includes('tüm sektörler')) return '/standart.mp4';
     if (lower.includes('enerji')) return '/enerji.mp4';
     if (lower.includes('gıda')) return '/gida.mp4';
-    if (lower.includes('fabrika') || lower.includes('imalat')) return '/fabrika.mp4';
     if (lower.includes('standart')) return '/standart.mp4';
     if (lower.includes('kimya')) return '/kimya.mp4';
+    if (lower.includes('fabrika') || lower.includes('imalat')) return '/fabrika.mp4';
+    if (lower.includes('hava')) return '/hava.mp4';
+    if (lower.includes('inşaat') || lower.includes('tersane')) return '/insaat.mp4';
     if (lower.includes('liman')) return '/liman.mp4';
     if (lower.includes('lojistik')) return '/lojistik.mp4';
     if (lower.includes('maden')) return '/maden.mp4';
@@ -359,7 +366,7 @@ const App = () => {
 
                     <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(14rem,0.55fr)]">
                       <label className="premium-search flex min-h-12 items-center rounded-md border border-white/10 bg-[#101a20]/95 focus-within:border-amber-400/60"><Search className="ml-3 h-4 w-4 shrink-0 text-amber-300" /><input type="search" aria-label="Belge ara" placeholder="Belge adıyla ara" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="w-full min-w-0 bg-transparent px-3 py-3 text-sm text-white placeholder-slate-600 outline-none" /></label>
-                      <label className="flex min-h-12 items-center rounded-md border border-white/10 bg-[#101a20]/95 px-3 focus-within:border-amber-400/60"><Briefcase size={16} className="mr-2 shrink-0 text-cyan-300" /><select aria-label="Sektör seç" value={selectedCategory || ''} onChange={event => setSelectedCategory(event.target.value || null)} className="w-full bg-transparent text-sm text-slate-200 outline-none"><option value="">Tüm sektörler</option>{uniqueCategories.map(category => <option key={category} value={category}>{category}</option>)}</select></label>
+                      <label className="flex min-h-12 items-center rounded-md border border-white/15 bg-[#101a20] px-3 focus-within:border-amber-400/70"><Briefcase size={16} className="mr-2 shrink-0 text-cyan-300" /><select aria-label="Sektör seç" value={selectedCategory || ''} onChange={event => setSelectedCategory(event.target.value || null)} className="w-full bg-[#101a20] text-sm text-white outline-none [color-scheme:dark] [&>option]:bg-[#101a20] [&>option]:text-white"><option value="">Tüm sektörler</option>{uniqueCategories.map(category => <option key={category} value={category}>{category}</option>)}</select></label>
                     </div>
                   </div>
                 </header>

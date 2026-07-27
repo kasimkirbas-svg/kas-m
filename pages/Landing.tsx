@@ -266,17 +266,17 @@ export const Landing: React.FC<LandingProps> = ({ onLoginClick, onRegisterClick 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               {[ 
                 { icon: <Zap />, title: "Enerji Santralleri", desc: "Yüksek gerilim, RES/GES/HES ve enerji işletme güvenliği dokümanları.", video: "enerji.mp4" },
-                { icon: <Factory />, title: "Fabrikalar ve İmalathaneler", desc: "Makine güvenliği, LOTO, üretim sahası ve bakım süreçleri.", video: "fabrika.mp4" },
+                { icon: <Factory />, title: "Fabrikalar ve İmalathaneler", desc: "Makine güvenliği, LOTO, üretim sahası ve bakım süreçleri.", video: "fabrika.mp4", poster: "fabrika-poster.jpg" },
                 { icon: <UtensilsCrossed />, title: "Gıda Fabrikaları", desc: "Hijyen, sanitasyon, soğuk zincir ve gıda üretim güvenliği.", video: "gida.mp4", poster: "gida-poster.jpg" },
-                { icon: <Plane />, title: "Hava Limanları", desc: "Apron, hangar, yer hizmetleri ve havacılık operasyon güvenliği." },
-                { icon: <HardHat />, title: "İnşaat ve Tersaneler", desc: "Yüksekte çalışma, iskele, iş makineleri ve tersane operasyonları." },
-                { icon: <FlaskConical />, title: "Kimya Fabrikası", desc: "Kimyasal maruziyet, proses, depolama ve patlama güvenliği.", video: "kimya.mp4" },
+                { icon: <Plane />, title: "Hava Limanları", desc: "Apron, hangar, yer hizmetleri ve havacılık operasyon güvenliği.", video: "hava.mp4", poster: "hava-poster.jpg" },
+                { icon: <HardHat />, title: "İnşaat ve Tersaneler", desc: "Yüksekte çalışma, iskele, iş makineleri ve tersane operasyonları.", video: "insaat.mp4", poster: "insaat-poster.jpg" },
+                { icon: <FlaskConical />, title: "Kimya Fabrikası", desc: "Kimyasal maruziyet, proses, depolama ve patlama güvenliği.", video: "kimya.mp4", poster: "kimya-poster.jpg" },
                 { icon: <Ship />, title: "Liman İşletmeciliği", desc: "Rıhtım, yükleme, tahliye ve liman saha operasyonları.", video: "liman.mp4" },
-                { icon: <Truck />, title: "Lojistik ve Taşımacılık", desc: "Yük bağlama, taşıma, güzergâh ve sevkiyat güvenliği.", video: "lojistik.mp4" },
-                { icon: <Pickaxe />, title: "Maden İşletmeleri", desc: "Yer altı ve açık ocak çalışmalarına yönelik İSG dokümanları.", video: "maden.mp4" },
+                { icon: <Truck />, title: "Lojistik ve Taşımacılık", desc: "Yük bağlama, taşıma, güzergâh ve sevkiyat güvenliği.", video: "lojistik.mp4", poster: "lojistik-poster.jpg" },
+                { icon: <Pickaxe />, title: "Maden İşletmeleri", desc: "Yer altı ve açık ocak çalışmalarına yönelik İSG dokümanları.", video: "maden.mp4", poster: "maden-poster.jpg" },
                 { icon: <Activity />, title: "Metal ve Döküm", desc: "Sıcak metal, döküm, pres ve ağır üretim süreçleri.", video: "277105_medium.mp4" },
-                { icon: <Building2 />, title: "Otel, Bina ve Hastaneler", desc: "Bina işletimi, sağlık tesisleri ve hizmet alanı güvenliği.", video: "otel.mp4" },
-                { icon: <Briefcase />, title: "Şirketler ve Ofisler", desc: "Ofis, küçük işletme ve idari çalışma alanı dokümanları.", video: "sirketler.mp4" },
+                { icon: <Building2 />, title: "Otel, Bina ve Hastaneler", desc: "Bina işletimi, sağlık tesisleri ve hizmet alanı güvenliği.", video: "otel.mp4", poster: "otel-poster.jpg" },
+                { icon: <Briefcase />, title: "Şirketler ve Ofisler", desc: "Ofis, küçük işletme ve idari çalışma alanı dokümanları.", video: "sirketler.mp4", poster: "sirketler-poster.jpg" },
                 { icon: <Trees />, title: "Tarım, Hayvancılık ve Ormancılık", desc: "Tarım makineleri, pestisit, hayvancılık ve orman işleri.", video: "tarim.mp4" },
                 { icon: <FileText />, title: "Standart Dokümanlar", desc: "Tüm işyerlerinde kullanılan ortak İSG form ve kayıtları.", video: "standart.mp4", poster: "standart-poster.jpg" }
               ].map((item, i) => (
