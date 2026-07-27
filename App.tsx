@@ -104,6 +104,7 @@ const App = () => {
   }, [currentView, user]);
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showAllCategories, setShowAllCategories] = useState(false);
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
   const categoryMenuRef = React.useRef<HTMLDivElement>(null);
   const [selectedTask, setSelectedTask] = useState<string | null>(null);
@@ -361,7 +362,7 @@ const App = () => {
                     <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300"><span className="flex h-8 w-8 items-center justify-center rounded-md border border-white/15 bg-black/25 text-cyan-200">{selectedCategory ? getCategoryIcon(selectedCategory) : <FolderOpen size={17} />}</span>{selectedCategory || 'Tüm sektörler'}</div>
                     <div className="mt-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
                       <div><h1 className="text-2xl font-black text-white">Hazırlamak istediğiniz belgeyi seçin</h1><p className="mt-1 text-sm text-slate-300">İş türünü veya sektörü seçin; belgeyi doldurmaya hemen başlayın.</p></div>
-                      {(selectedTask || selectedCategory || searchQuery) && <button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setSearchQuery(''); }} className="min-h-10 shrink-0 text-left text-xs font-semibold text-amber-300 hover:text-white sm:text-right">Filtreleri temizle</button>}
+                      {(selectedTask || selectedCategory || showAllCategories || searchQuery) && <button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setShowAllCategories(false); setSearchQuery(''); }} className="min-h-10 shrink-0 text-left text-xs font-semibold text-amber-300 hover:text-white sm:text-right">Filtreleri temizle</button>}
                     </div>
 
                     <div className="mt-5 grid grid-cols-2 gap-2 lg:grid-cols-4">
@@ -389,7 +390,7 @@ const App = () => {
                           {categoryMenuOpen && <motion.div role="listbox" aria-label="Sektör seç" initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }} className="absolute right-0 top-[calc(100%+0.5rem)] z-30 max-h-72 w-full min-w-64 overflow-y-auto rounded-lg border border-white/10 bg-[#111b22]/98 p-1.5 shadow-[0_20px_45px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
                             {[null, ...uniqueCategories].map(category => {
                               const active = selectedCategory === category;
-                              return <button key={category || 'all'} type="button" role="option" aria-selected={active} onClick={() => { setSelectedCategory(category); setCategoryMenuOpen(false); }} className={`flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sm transition-colors ${active ? 'bg-amber-300 text-[#111b22]' : 'text-slate-200 hover:bg-white/10 hover:text-white'}`}>
+                              return <button key={category || 'all'} type="button" role="option" aria-selected={active} onClick={() => { setSelectedCategory(category); setShowAllCategories(category === null); setCategoryMenuOpen(false); }} className={`flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sm transition-colors ${active ? 'bg-amber-300 text-[#111b22]' : 'text-slate-200 hover:bg-white/10 hover:text-white'}`}>
                                 <span className="flex h-7 w-7 shrink-0 items-center justify-center">{category ? getCategoryIcon(category) : <Globe2 size={17} />}</span><span className="min-w-0 flex-1">{category || 'Tüm sektörler'}</span>{active && <CheckCircle2 size={16} className="shrink-0" />}
                               </button>;
                             })}
@@ -401,9 +402,9 @@ const App = () => {
                 </header>
 
                 <main>
-                  <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6"><div><h2 className="text-base font-black text-white">Belgeler</h2><p className="mt-0.5 text-[11px] text-slate-500">{selectedCategory || 'Tüm sektörler'}</p></div><span className="rounded bg-white/5 px-2.5 py-1.5 text-xs font-bold text-slate-300">{filteredTemplates.length} belge</span></div>
+                  <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6"><div><h2 className="text-base font-black text-white">Belgeler</h2><p className="mt-0.5 text-[11px] text-slate-500">{selectedCategory || (showAllCategories ? 'Tüm sektörler' : 'Seçim bekleniyor')}</p></div>{(selectedCategory || selectedTask || showAllCategories || searchQuery) && <span className="rounded bg-white/5 px-2.5 py-1.5 text-xs font-bold text-slate-300">{filteredTemplates.length} belge</span>}</div>
 
-                  <div className="divide-y divide-white/[0.07]">
+                  {selectedCategory || selectedTask || showAllCategories || searchQuery ? <div className="divide-y divide-white/[0.07]">
                     <AnimatePresence initial={false}>
                       {filteredTemplates.map(template => (
                         <motion.article key={template.id} layout initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="premium-document-row group grid gap-3 px-4 py-4 transition-colors hover:bg-white/[0.035] sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:px-6">
@@ -416,8 +417,13 @@ const App = () => {
                         </motion.article>
                       ))}
                     </AnimatePresence>
-                    {filteredTemplates.length === 0 && <div className="px-6 py-20 text-center"><SearchCode className="mx-auto h-10 w-10 text-slate-600"/><h3 className="mt-4 font-bold text-white">Belge bulunamadı</h3><button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setSearchQuery(''); }} className="mt-3 text-xs font-semibold text-amber-300 hover:underline">Tüm belgeleri göster</button></div>}
-                  </div>
+                    {filteredTemplates.length === 0 && <div className="px-6 py-20 text-center"><SearchCode className="mx-auto h-10 w-10 text-slate-600"/><h3 className="mt-4 font-bold text-white">Belge bulunamadı</h3><button onClick={() => { setSelectedTask(null); setSelectedCategory(null); setShowAllCategories(true); setSearchQuery(''); }} className="mt-3 text-xs font-semibold text-amber-300 hover:underline">Tüm belgeleri göster</button></div>}
+                  </div> : <div className="flex min-h-64 flex-col items-center justify-center px-6 py-12 text-center sm:min-h-72">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-[#18252d]/80 text-amber-300 shadow-[0_12px_30px_rgba(0,0,0,0.2)] backdrop-blur-xl"><Globe2 size={27} /></span>
+                    <h2 className="mt-5 text-xl font-black text-white">Çalışma alanınızı seçin</h2>
+                    <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">Sektörünüzü veya yapmak istediğiniz işi seçtiğinizde yalnızca ilgili belgeler burada görünecek.</p>
+                    <button type="button" onClick={() => setCategoryMenuOpen(true)} className="mt-6 flex min-h-11 items-center gap-2 rounded-lg border border-amber-300/40 bg-amber-300 px-5 text-sm font-bold text-[#111b22] shadow-[0_10px_24px_rgba(229,184,44,0.16)] transition-colors hover:bg-amber-200"><Briefcase size={17} /> Sektör seçin <ChevronRight size={16} /></button>
+                  </div>}
                 </main>
               </div>
             )}
