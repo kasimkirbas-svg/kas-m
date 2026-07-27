@@ -113,6 +113,33 @@ export const getFieldLabel = (field: DocumentField) => {
 
 export const getSubFieldLabel = (key: string) => getFieldLabel({ key, label: key, type: 'text' });
 
+export interface FieldGuidance {
+  instruction: string;
+  example: string;
+}
+
+export const getFieldGuidance = (field: DocumentField): FieldGuidance => {
+  const label = getFieldLabel(field);
+  const normalized = `${field.key} ${label}`.toLocaleLowerCase('tr-TR');
+  if (field.type === 'image') return { instruction: `${label} için okunaklı, kırpılmamış bir PNG veya JPG yükleyin.`, example: 'Örnek: Şirket logosu veya sahadan çekilmiş net fotoğraf' };
+  if (field.type === 'date') return { instruction: `${label} bilgisini belgenin düzenlendiği veya olayın gerçekleştiği gerçek tarihe göre seçin.`, example: 'Örnek: 27.07.2026' };
+  if (field.type === 'select') return { instruction: `${label} için durumunuza uyan tek seçeneği işaretleyin.`, example: `Seçenekler: ${field.options?.slice(0, 4).join(', ') || 'Listeden uygun değeri seçin'}` };
+  if (field.type === 'list') {
+    const columns = field.options?.slice(0, 5).map(getSubFieldLabel).join(', ');
+    const isRiskTable = /risk|tehlike|olasılık|şiddet|frekans/.test(normalized);
+    return isRiskTable
+      ? { instruction: 'Her tehlikeyi ayrı satıra yazın; olasılık, şiddet ve varsa frekans değerlerini girin. Risk puanı ve sonucu otomatik hesaplanır.', example: columns ? `Doldurulacak başlıca sütunlar: ${columns}` : 'Örnek: Kaygan zemin, düşme, ıslak alanın yalıtılması' }
+      : { instruction: `${label} tablosunda her kişi, olay veya kayıt için ayrı bir satır ekleyin.`, example: columns ? `Doldurulacak başlıca sütunlar: ${columns}` : 'Her kaydı kısa ve doğrulanabilir bilgilerle tamamlayın.' };
+  }
+  if (/adres|konum|olay yeri|tesis yeri/.test(normalized)) return { instruction: `${label} bilgisini il, ilçe, mahalle ve açık adres içerecek şekilde yazın.`, example: 'Örnek: Ataşehir Mah. Örnek Cad. No: 12, İstanbul' };
+  if (/ünvan|unvan|firma|işyeri|isyeri|tesis adı|tesis adi/.test(normalized)) return { instruction: `${label} bilgisini resmi kayıtlarda geçtiği biçimiyle, kısaltmadan yazın.`, example: 'Örnek: Zeyron İş Sağlığı ve Güvenliği Ltd. Şti.' };
+  if (/ad soyad|adsoyad|hazırlayan|hazirlayan|mühendis|muhendis|yetkili|sorumlu|raportör|raportor/.test(normalized)) return { instruction: `${label} için kişinin adını, soyadını ve gerekiyorsa görev veya ünvanını yazın.`, example: 'Örnek: Ayşe Yılmaz - B Sınıfı İş Güvenliği Uzmanı' };
+  if (/telefon|iletişim|iletisim|e-?posta|email/.test(normalized)) return { instruction: `${label} bilgisini güncel ve ulaşılabilir olacak şekilde yazın.`, example: 'Örnek: 05xx xxx xx xx / uzman@firma.com' };
+  if (/no|numara|kodu|sicil|tescil/.test(normalized)) return { instruction: `${label} değerini ilgili resmi kayıt veya belgeden aynen aktarın.`, example: field.placeholder || 'Örnek: İSG-FRM-001' };
+  if (/açıklama|aciklama|olay|karar|gündem|gundem|tespit|önlem|onlem|faaliyet|talimat/.test(normalized) || field.type === 'textarea') return { instruction: `${label} alanında ne olduğunu, nerede olduğunu, kimleri etkilediğini ve alınacak aksiyonu kısa ve somut cümlelerle açıklayın.`, example: field.placeholder || 'Örnek: Üretim girişindeki ıslak zemin nedeniyle kayma riski tespit edildi; alan izole edilerek kaymaz kaplama uygulanacaktır.' };
+  return { instruction: `${label} bilgisini belgedeki amaca uygun, güncel ve doğrulanabilir biçimde yazın.`, example: field.placeholder || `Örnek bir ${label.toLocaleLowerCase('tr-TR')} değeri girin.` };
+};
+
 export const buildFieldSections = (fields: DocumentField[] = []): FieldSection[] => {
   const sections: FieldSection[] = [];
   const firstListIndex = fields.findIndex(field => field.type === 'list');

@@ -1,13 +1,13 @@
 ﻿/// <reference path="../vendor.d.ts" />
 import React, { useState, useEffect, useRef } from "react";
 import { DocumentField, DocumentTemplate } from "../types";
-import { ArrowLeft, Check, ChevronDown, Download, FileText, Eye, SlidersHorizontal, Upload } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, Download, FileText, Eye, Lightbulb, PencilLine, SlidersHorizontal, Upload } from "lucide-react";
 import { renderAsync } from "docx-preview";
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import ImageModule from "docxtemplater-image-module-free";
 import { saveAs } from "file-saver";
-import { buildFieldSections, getDocumentTitle, getFieldLabel, getSubFieldLabel, isFieldVisible } from "../services/documentFieldService";
+import { buildFieldSections, getDocumentTitle, getFieldGuidance, getFieldLabel, getSubFieldLabel, isFieldVisible } from "../services/documentFieldService";
 import { reconcileFieldsWithDocx } from "../services/docxFieldService";
 
 interface DocumentEditorProps {
@@ -47,6 +47,22 @@ const getCalculatedRiskResult = (score: number, usesFrequency: boolean) => {
 const fitWithin = ({ width, height }: ImageDimensions, maxWidth: number, maxHeight: number): [number, number] => {
   const scale = Math.min(maxWidth / width, maxHeight / height, 1);
   return [Math.max(1, Math.round(width * scale)), Math.max(1, Math.round(height * scale))];
+};
+
+const formatGuidanceValue = (field: DocumentField, value: any) => {
+  if (field.type === 'image') return value ? 'Görsel seçildi' : '';
+  if (!Array.isArray(value)) return String(value || '');
+  if (!value.length) return '';
+  const rows = value.slice(0, 3).map((row: Record<string, any>, index: number) => {
+    const summary = Object.entries(row)
+      .filter(([, entryValue]) => entryValue && !String(entryValue).startsWith('data:image/'))
+      .slice(0, 4)
+      .map(([key, entryValue]) => `${getSubFieldLabel(key)}: ${entryValue}`)
+      .join(' · ');
+    return `${index + 1}. ${summary || 'Satır eklendi, bilgileri bekliyor'}`;
+  });
+  if (value.length > rows.length) rows.push(`+ ${value.length - rows.length} satır daha`);
+  return rows.join('\n');
 };
 
 const constrainImage = (file: File, maxPixels = 1600): Promise<{ dataUrl: string; dimensions: ImageDimensions }> => new Promise((resolve, reject) => {
@@ -118,6 +134,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const [filterConfirmed, setFilterConfirmed] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [bulkRowCounts, setBulkRowCounts] = useState<Record<string, number>>({});
+  const [focusedFieldKey, setFocusedFieldKey] = useState<string | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const previewViewportRef = useRef<HTMLDivElement>(null);
   const previewRenderId = useRef(0);
@@ -127,6 +144,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
   const visibleSections = fieldSections.map(section => ({ ...section, fields: section.fields.filter(field => isFieldVisible(field, formData)) })).filter(section => section.fields.length > 0);
   const activeSectionId = visibleSections.find(section => openSections[section.id])?.id || visibleSections[0]?.id;
   const activeSectionIndex = Math.max(0, visibleSections.findIndex(section => section.id === activeSectionId));
+  const activeSection = visibleSections[activeSectionIndex];
+  const guidanceField = activeSection?.fields.find(field => field.key === focusedFieldKey) || activeSection?.fields[0];
+  const fieldGuidance = guidanceField ? getFieldGuidance(guidanceField) : null;
+  const guidanceValue = guidanceField ? formData[guidanceField.key] : '';
+  const guidanceValueText = guidanceField ? formatGuidanceValue(guidanceField, guidanceValue) : '';
   const visibleFields = documentFields.filter(field => isFieldVisible(field, formData));
   const completedFields = visibleFields.filter(field => Array.isArray(formData[field.key]) ? formData[field.key].length > 0 : Boolean(formData[field.key])).length;
   const completionRate = visibleFields.length ? Math.round((completedFields / visibleFields.length) * 100) : 100;
@@ -466,7 +488,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
               const riskFactorFields = riskColumnGroups.flatMap(group => [group.probability, group.severity, group.frequency].filter(Boolean));
               const calculatedRiskFields = riskColumnGroups.flatMap(group => [group.score, group.result].filter(Boolean));
               return (
-                <div key={field.key} className="group">
+                <div key={field.key} className={`group rounded-md transition-shadow ${guidanceField?.key === field.key ? 'outline outline-1 outline-offset-4 outline-amber-300/20' : ''}`} onFocusCapture={() => setFocusedFieldKey(field.key)}>
                   <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-slate-300 group-focus-within:text-yellow-400 transition-colors">
                     <span className="min-w-0 flex-1">{getFieldLabel(field)}</span>
                     <span className={`shrink-0 text-[9px] font-semibold uppercase ${field.required ? 'text-yellow-400' : 'text-slate-600'}`}>{field.required ? 'Zorunlu' : 'İsteğe bağlı'}</span>
@@ -569,6 +591,20 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({ template, onBack
           <div className="min-w-0"><strong className="block text-sm text-white">Belgede kontrol edin: {visibleSections[activeSectionIndex]?.title || 'Belge'}</strong><span className="block truncate text-[10px] text-slate-400 sm:text-xs">Soldaki alanı doldurun; değişiklik sağdaki belgeye otomatik işlenir.</span></div>
           <span className="shrink-0 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-2 py-1 text-[9px] font-bold uppercase text-emerald-300">Canlı</span>
         </div>
+        {guidanceField && fieldGuidance && <div className="shrink-0 border-b border-white/10 bg-[#16262f] px-4 py-3 sm:px-6">
+          <div className="grid gap-3 xl:grid-cols-2">
+            <div className="rounded-md border border-amber-300/20 bg-amber-300/[0.06] p-3">
+              <div className="mb-1.5 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.12em] text-amber-300"><Lightbulb size={14} /> Ne yazmalısınız?</div>
+              <p className="text-xs font-semibold leading-5 text-white">{getFieldLabel(guidanceField)}</p>
+              <p className="mt-1 text-[11px] leading-4 text-slate-300">{fieldGuidance.instruction}</p>
+              <p className="mt-1.5 text-[10px] leading-4 text-slate-500">{fieldGuidance.example}</p>
+            </div>
+            <div className="rounded-md border border-cyan-300/15 bg-cyan-300/[0.05] p-3">
+              <div className="mb-1.5 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.12em] text-cyan-300"><PencilLine size={14} /> Sizin yazdığınız</div>
+              {guidanceValueText ? <p className="max-h-20 overflow-auto whitespace-pre-wrap break-words text-xs leading-5 text-white custom-scrollbar">{guidanceValueText}</p> : <p className="text-[11px] leading-5 text-slate-500">Bu alan henüz boş. Solda yazmaya başladığınızda metniniz burada canlı görünecek.</p>}
+            </div>
+          </div>
+        </div>}
         <div ref={previewViewportRef} className="relative flex-1 overflow-auto bg-[#52616a] p-4 custom-scrollbar sm:p-6">
           {loading && <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#1b2d36]/90"><span className="flex items-center gap-3 text-sm font-semibold text-slate-200"><span className="h-5 w-5 animate-spin rounded-full border-2 border-yellow-300/30 border-t-yellow-300" /> Belge hazırlanıyor</span></div>}
           {loadError ? <div className="mx-auto mt-12 max-w-sm rounded-md border border-red-400/20 bg-[#16222a] p-5 text-center text-sm leading-6 text-red-200">{loadError}</div> : <div className="mx-auto origin-top-left" style={{ width: previewWidth * previewScale, height: previewHeight * previewScale }}><div ref={previewRef} className="docx-live-preview origin-top-left text-black shadow-[0_18px_45px_rgba(0,0,0,0.32)]" style={{ width: previewWidth, minHeight: previewHeight, transform: `scale(${previewScale})` }} /></div>}
